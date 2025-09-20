@@ -6,7 +6,7 @@ on:
         description: "Upstream branch to build"
         type: string
         required: true
-        default: "llvmorg-21.1.1"
+        default: "main"
       config:
         description: "Build config script"
         type: string
@@ -33,7 +33,7 @@ jobs:
           fetch-tags: true
           ref: ${{ inputs.upstream_ref }}
           path: llvm-project
-      - name: get rev
+      - name: patch tree
         run: |
           while read; do
             case $REPLY in *set*LLVM_VERSION_MAJOR*)

@@ -1,0 +1,31 @@
+From 715e0b28b55b43490faa4cff80de9c4178e3b064 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 20 Sep 2025 22:41:56 +0900
+Subject: [PATCH] [LIT][Cygwin] Skip pre-existing check in mkdir-p
+
+On Cygwin, a `file_name.exe` can be accessed without suffix, just as `file_name`.
+In that situation, although trying to `mkdir file_name` will succeed as intended,
+checking if the target file exists before do mkdir reports that already exists,
+causes skipping to do mkdir.
+Therefore, any pre-checking should be skipped on Cygwin. If target really exists
+already, we do jsut ignore such error already.
+---
+ llvm/utils/lit/lit/util.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/llvm/utils/lit/lit/util.py b/llvm/utils/lit/lit/util.py
+index ce4c3c2df343..a5181ab20a7e 100644
+--- a/llvm/utils/lit/lit/util.py
++++ b/llvm/utils/lit/lit/util.py
+@@ -164,7 +164,7 @@ def mkdir(path):
+ def mkdir_p(path):
+     """mkdir_p(path) - Make the "path" directory, if it does not exist; this
+     will also make directories for any missing parent directories."""
+-    if not path or os.path.exists(path):
++    if not path or (sys.platform != "cygwin" and os.path.exists(path)):
+         return
+ 
+     parent = os.path.dirname(path)
+-- 
+2.51.0
+

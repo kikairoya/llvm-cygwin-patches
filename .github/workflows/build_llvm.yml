@@ -1,17 +1,62 @@
-name: Bootstrap LLVM
+name: Build LLVM
 on:
-  schedule:
-    - cron: '21 22 * * 0'
   workflow_dispatch:
+    inputs:
+      upstream_ref:
+        description: "Upstream branch to build"
+        type: string
+        required: true
+        default: "llvmorg-21.1.1"
+      config:
+        description: "Build config script"
+        type: string
+        required: true
+        default: "clang-static"
 
 jobs:
-
-  llvm_bootstrap:
+  do_build:
     runs-on: windows-latest
-    outputs:
-      llvm_version: ${{ steps.build.outputs.llvm_version }}
+    strategy:
+      fail-fast: false
+
     steps:
       - run: git config --global core.autocrlf input
+
+      - name: prepare patches
+        uses: actions/checkout@v5
+        with:
+          path: patches
+      - name: prepare llvm tree
+        uses: actions/checkout@v5
+        with:
+          repository: llvm/llvm-project
+          fetch-tags: true
+          ref: ${{ inputs.upstream_ref }}
+          path: llvm-project
+      - name: get rev
+        run: |
+          while read; do
+            case $REPLY in *set*LLVM_VERSION_MAJOR*)
+              [[ $REPLY =~ [0-9][1-9]* ]] && MAJOR_VER=$BASH_REMATCH;
+              break ;;
+            esac;
+          done < llvm-project/cmake/Modules/LLVMVersion.cmake
+          git -C llvm-project config user.name github-actions
+          git -C llvm-project config user.email github@github.com
+          git -C llvm-project config status.showuntrackedfiles no
+          UPSTREAM_REV=$(git -C llvm-project log -n1 --format=format:%h)
+          PATCH_REV=$(git -C patches log -n1 --format=format:%h)
+          LLVM_VERSION=$MAJOR_VER-$UPSTREAM_REV+mod-$PATCH_REV
+          echo "LLVM_VERSION=$LLVM_VERSION" >> "$GITHUB_ENV"
+          echo "UPSTREAM_REV=$UPSTREAM_REV" >> "$GITHUB_ENV"
+          echo output version tag is set to $LLVM_VERSION
+          if [ -d "$PWD/patches/patches/${{ inputs.upstream_ref }}" ]; then
+            git -C llvm-project am --empty=drop $PWD/patches/patches/${{ inputs.upstream_ref }}/*
+            mkdir -p patches/llvm-cygwin-${{ inputs.config }}-$LLVM_VERSION/diffs
+            git -C llvm-project format-patch -o $PWD/patches/llvm-cygwin-${{ inputs.config }}-$LLVM_VERSION/diffs $UPSTREAM_REV..HEAD
+          fi
+        shell: bash
+
       - id: cache-restore
         uses: actions/cache/restore@v4
         with:
@@ -27,26 +72,17 @@ jobs:
           site: >-
             http://mirrors.kernel.org/sourceware/cygwin/
           packages: |
-            cygutils-extra
+            binutils
+            clang
+            lld
             cmake
-            calm
-            cygport
-            flexdll
-            gdb
             git
             make
             ninja
-            ocaml
             python3
             libxml2-devel
             zlib-devel
             libzstd-devel
-            vim
-            python39-sphinx
-            python39-pytz
-            libpcre2-devel
-            libssh2-devel
-            libssl-devel
 
       - name: prepare cache
         run: |
@@ -67,25 +103,43 @@ jobs:
         name: build
         run: |
           export PATH=/usr/local/bin:/usr/bin:/bin:$PATH
-          mkdir -p pkgs/x86_64/release
-          git clone -b playground https://cygwin.com/git/cygwin-packages/llvm
-          cd llvm
-          pip3 install --user myst_parser
-          BOOTSTRAP=ON cygport llvm.cygport download all-test
-          echo llvm-*.x86_64 | sed -e 's/^llvm-\(.*\)\.x86_64$/llvm_version=\1/' | tee ../pkgs/llvm_version.txt >> "$GITHUB_OUTPUT"
-          cp -R llvm-*.x86_64/dist/* ../pkgs/x86_64/release
-          cd ../pkgs
-          mksetupini --arch x86_64 --inifile=x86_64/setup.ini --releasearea=. --disable-check=missing-required-package,missing-depended-package,missing-build-depended-package,missing-curr
-          bzip2 <x86_64/setup.ini >x86_64/setup.bz2
-          xz -6e <x86_64/setup.ini >x86_64/setup.xz
+          export GITHUB_WORKSPACE="$(cygpath -u '${{github.workspace}}')"
+          cd "$GITHUB_WORKSPACE"
+
+          cd patches
+          cfgname=${{ inputs.config }}
+          cfgfile=config-$cfgname.txt
+          [ -f "$cfgfile" ]
+
+          {
+            echo LLVM_PARALLEL_COMPILE_JOBS=3
+            echo LLVM_PARALLEL_LINK_JOBS=2
+            echo LLVM_FORCE_VC_REVISION=$UPSTREAM_ENV
+            echo LLVM_FORCE_VC_REPOSITORY=llvm-cygwin
+          } >> $cfgfile
+
+          ./runcmake.sh $cfgfile -v | tee ../buildlog-$cfgname-$LLVM_VERSION.txt
+          ./runcmake.sh $cfgfile -v -i --prefix $PWD/llvm-cygwin-$cfgname-$LLVM_VERSION
+
+          tar caf ../llvm-cygwin-$cfgname-$LLVM_VERSION.tar llvm-cygwin-$cfgname-$LLVM_VERSION
+
+          LIT_OPTS="-sv --xunit-xml-output=$PWD/../result-$cfgname-$LLVM_VERSION.xml" ./runcmake.sh $cfgfile -v -- check | tee ../testlog-$cfgname-$LLVM_VERSION.txt
         shell: d:\cygwin\bin\bash.exe -leo pipefail -o igncr '{0}'
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: packages
+          name: artifact
+          overwrite: true
+          path: ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}.tar
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: buildlog
           overwrite: true
           path: |
-            ${{steps.cygwin.outputs.root}}/home/runneradmin/pkgs/
+            ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}.txt
+            ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}.xml
 
       - run: DEL /F ${{ steps.cygwin.outputs.root }}\bin\git.exe
         if: always()

@@ -1,5 +1,16 @@
 name: Cross build Cygwin binary
 on:
+  workflow_call:
+    inputs:
+      upstream_ref:
+        description: "Upstream branch to build"
+        type: string
+        required: true
+        default: "main"
+      config:
+        description: "Build config script"
+        type: string
+        required: true
   workflow_dispatch:
     inputs:
       upstream_ref:

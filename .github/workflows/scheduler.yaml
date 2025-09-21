@@ -1,0 +1,36 @@
+name: Build Scheduler
+on:
+  schedule:
+    - cron: '18 15 * * *'
+    - cron: '18 21 * * *'
+    - cron: '18  3 * * *'
+    - cron: '18  9 * * *'
+
+jobs:
+  call-build-clang-static:
+    if: github.event.schedule == '18 15 * * *'
+    uses: ./.github/workflows/build_llvm.yml
+    with:
+      upstream_ref: "main"
+      config: "clang-static"
+
+  call-build-clang-dylib:
+    if: github.event.schedule == '18  3 * * *'
+    uses: ./.github/workflows/build_llvm.yml
+    with:
+      upstream_ref: "main"
+      config: "clang-dylib"
+
+  call-build-cross-clang-static:
+    if: github.event.schedule == '18  21 * * *'
+    uses: ./.github/workflows/build_cross_llvm.yml
+    with:
+      upstream_ref: "main"
+      config: "cross-clang-static"
+
+  call-build-cross-clang-dylib:
+    if: github.event.schedule == '18  9 * * *'
+    uses: ./.github/workflows/build_cross_llvm.yml
+    with:
+      upstream_ref: "main"
+      config: "cross-clang-dylib"

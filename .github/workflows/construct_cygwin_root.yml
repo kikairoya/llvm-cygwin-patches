@@ -21,8 +21,10 @@ jobs:
           path: |
             cygwinroot.tar.gz
             cygwinpkgs.tar.gz
+            minimal_tar
       - name: tar rootfs
         run: |
+          set -x
           export GITHUB_WORKSPACE="$(wslpath -u '${{github.workspace}}')"
           cd /
           tar xf "$GITHUB_WORKSPACE/cygwinroot.tar.gz" || true
@@ -49,10 +51,19 @@ jobs:
 
       - name: tar rootfs
         run: |
+          set -x
           export GITHUB_WORKSPACE="$(wslpath -u '${{github.workspace}}')"
+          export CYGWINROOT="$(wslpath -u '${{steps.cygwin.outputs.root}}')"
           cd /
           tar cvaf "$GITHUB_WORKSPACE/cygwinroot.tar.gz" "$(wslpath -u '${{ steps.cygwin.outputs.root }}')" > "$GITHUB_WORKSPACE/files.txt"
           tar cvaf "$GITHUB_WORKSPACE/cygwinpkgs.tar.gz" "$(wslpath -u '${{ steps.cygwin.outputs.package-cache }}')" >> "$GITHUB_WORKSPACE/files.txt"
+          mkdir -p "$GITHUB_WORKSPACE/minimal_tar/bin"
+          mkdir -p "$GITHUB_WORKSPACE/minimal_tar/etc"
+          echo "none /mnt cygdrive binary,posix=0,user 0 0" > "$GITHUB_WORKSPACE/minimal_tar/etc/fstab"
+          for f in cygiconv-2.dll cygintl-8.dll cygwin1.dll gzip.exe tar.exe; do
+            cp -L "$CYGWINROOT/bin/$f" "$GITHUB_WORKSPACE/minimal_tar/bin"
+          done
+          find "$GITHUB_WORKSPACE/minimal_tar" >> "$GITHUB_WORKSPACE/files.txt"
         shell: wsl-bash {0}
       - name: prepare new cache key
         run: echo "cache-store-key=${{ hashFiles('files.txt') }}" >> $env:GITHUB_ENV
@@ -64,6 +75,7 @@ jobs:
           path: |
             cygwinroot.tar.gz
             cygwinpkgs.tar.gz
+            minimal_tar
 
       - run: DEL /F ${{ steps.cygwin.outputs.root }}\bin\git.exe
         if: always()

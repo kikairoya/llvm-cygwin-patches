@@ -11,7 +11,7 @@ on:
         description: "Build config script"
         type: string
         required: true
-        default: "clang-static"
+        default: "clang-dylib"
 
 jobs:
   do_build:

@@ -16,8 +16,6 @@ on:
 jobs:
   do_build:
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
 
     steps:
       - run: git config --global core.autocrlf input
@@ -64,8 +62,7 @@ jobs:
         name: build
         run: |
           export PATH=/usr/local/bin:/usr/bin:/bin:$PATH
-          export GITHUB_WORKSPACE="$(cygpath -u '${{github.workspace}}')"
-          cd "$GITHUB_WORKSPACE"
+          cd "$(cygpath -u '${{github.workspace}}')"
 
           cd patches
           cfgname=${{ inputs.config }}
@@ -83,18 +80,33 @@ jobs:
           ./runcmake.sh $cfgfile -v -i --prefix $PWD/llvm-cygwin-$cfgname-$LLVM_VERSION
 
           tar caf ../llvm-cygwin-$cfgname-$LLVM_VERSION.tar llvm-cygwin-$cfgname-$LLVM_VERSION
-
-          LIT_OPTS="-sv --xunit-xml-output=$PWD/../result-$cfgname-$LLVM_VERSION.xml" ./runcmake.sh $cfgfile -v -- check | tee ../testlog-$cfgname-$LLVM_VERSION.txt
         shell: d:\cygwin\bin\bash.exe -leo pipefail -o igncr '{0}'
 
       - uses: actions/upload-artifact@v4
-        if: steps.cache-restore.outputs.cache-hit == 'true'
+        if: ${{ steps.cache-restore.outcome == 'success' }}
         with:
           name: artifact
           overwrite: true
           path: ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}.tar
+
+      - id: test
+        if: ${{ steps.build.outcome == 'success' }}
+        timeout-minutes: 180
+        name: build
+        run: |
+          export PATH=/usr/local/bin:/usr/bin:/bin:$PATH
+          cd "$(cygpath -u '${{github.workspace}}')"
+
+          cd patches
+          cfgname=${{ inputs.config }}
+
+          export LIT_OPTS="-sv --xunit-xml-output=$PWD/../result-$cfgname-$LLVM_VERSION.xml"
+          ./runcmake.sh config-$cfgname.txt -v -- check | tee ../testlog-$cfgname-$LLVM_VERSION.txt
+        shell: d:\cygwin\bin\bash.exe -leo pipefail -o igncr '{0}'
+
+
       - uses: actions/upload-artifact@v4
-        if: steps.cache-restore.outputs.cache-hit == 'true'
+        if: ${{ steps.cache-restore.outcome == 'success' }}
         with:
           name: buildlog
           overwrite: true

@@ -22,12 +22,8 @@ if [ -n "$GITHUB_ENV" ]; then
 fi
 echo output version tag is set to $LLVM_VERSION
 if [ -d "$PWD/patches/patches/$1" ]; then
-  p=($PWD/patches/patches/$1/*)
+  git -C llvm-project am --empty=drop $PWD/patches/patches/$1/*
   c="$PWD/patches/llvm-cygwin-$2-$LLVM_VERSION"
-  if [ -n "$GITHUB_ENV" ]; then
-    echo host-cache-key=$(cat "${p[@]}" | sha1sum | cut -f1 -d' ') >> $"GITHUB_ENV"
-  fi
-  git -C llvm-project am --empty=drop "${p[@]}"
   mkdir -p "$c/diffs"
   git -C llvm-project format-patch -o "$c/diffs" $UPSTREAM_REV..HEAD
 fi

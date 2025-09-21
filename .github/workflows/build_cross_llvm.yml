@@ -22,16 +22,8 @@ jobs:
         uses: actions/checkout@v5
         with:
           path: patches
-      - name: prepare llvm tree
-        uses: actions/checkout@v5
-        with:
-          repository: llvm/llvm-project
-          fetch-tags: true
-          ref: ${{ inputs.upstream_ref }}
-          path: llvm-project
-      - name: patch tree
-        run: bash patches/.github/workflows/apply-cygwin-patches.sh "${{inputs.upstream_ref}}" "linux-clang"
-
+      - id: make-cache-key
+        run: echo host-cache-key=${{ hashFiles(format('patches/patches/{0}/**', inputs.upstream_ref)) }} >> "$GITHUB_ENV"
       - id: cross-cache-restore
         uses: actions/cache/restore@v4
         with:
@@ -39,10 +31,21 @@ jobs:
           path: |
             llvm-head
 
+      - name: prepare llvm tree
+        if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
+        uses: actions/checkout@v5
+        with:
+          repository: llvm/llvm-project
+          fetch-tags: true
+          ref: ${{ inputs.upstream_ref }}
+          path: llvm-project
+
       - id: build-host-tool
-        if: ${{ steps.cross-cache-restore.cache-hit != 'true' }}
+        if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
         name: build
         run: |
+          bash patches/.github/workflows/apply-cygwin-patches.sh "${{inputs.upstream_ref}}" "linux-clang"
+
           set -x
           cd patches
 
@@ -58,9 +61,10 @@ jobs:
 
           ./runcmake.sh $cfgfile -v
           ./runcmake.sh $cfgfile -v -i --prefix "$PWD/../llvm-head"
+        shell: bash
 
       - uses: actions/cache/save@v4
-        if: ${{ steps.cross-cache-restore.cache-hit != 'true' }}
+        if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
         with:
           key: linux-clang-head-${{ inputs.upstream_ref }}-${{ env.host-cache-key }}
           path: |
@@ -77,7 +81,18 @@ jobs:
         uses: actions/checkout@v5
         with:
           path: patches
+      - id: make-cache-key
+        run: echo host-cache-key=${{ hashFiles(format('patches/patches/{0}/**', inputs.upstream_ref)) }} >> "$GITHUB_ENV"
+      - id: cross-cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          fail-on-cache-miss: true
+          key: linux-clang-head-${{ inputs.upstream_ref }}-${{ env.host-cache-key }}
+          path: |
+            llvm-head
+
       - name: prepare llvm tree
+        if: ${{ success() }}
         uses: actions/checkout@v5
         with:
           repository: llvm/llvm-project
@@ -85,9 +100,11 @@ jobs:
           ref: ${{ inputs.upstream_ref }}
           path: llvm-project
       - name: patch tree
+        if: ${{ success() }}
         run: bash patches/.github/workflows/apply-cygwin-patches.sh "${{inputs.upstream_ref}}" "${{inputs.config}}"
 
       - id: cache-restore
+        if: ${{ success() }}
         uses: actions/cache/restore@v4
         with:
           fail-on-cache-miss: true
@@ -104,29 +121,16 @@ jobs:
           tar --strip-components=2 -x -f cygwinroot.tar.gz
           rm -f cygwinroot.tar.gz
           cd cygwin/usr
-          ln -s ../bin
           ln -s ../lib
-
-      - id: cross-cache-restore
-        if: ${{ success() }}
-        uses: actions/cache/restore@v4
-        with:
-          fail-on-cache-miss: true
-          key: linux-clang-head-${{ inputs.upstream_ref }}-
-          restore-keys: |
-            linux-clang-head-${{ inputs.upstream_ref }}-
-          path: |
-            llvm-head
 
       - id: build
         if: ${{ success() }}
         name: build
         run: |
           set -x
-          ls llvm-head
-          ls cygwin
           export PATH=$PWD/llvm-head/bin:$PATH
           export LD_LIBRARY_PATH=$PWD/llvm-head/lib:$LD_LIBRARY_PATH
+          export HOST_TOOL_DIR=$PWD/llvm-head/bin
 
           cd patches
           cfgname=${{ inputs.config }}
@@ -134,8 +138,8 @@ jobs:
           [ -f "$cfgfile" ]
 
           {
-            echo CMAKE_SYSROOT=$PWD/../cygwin
-            echo LLVM_NATIVE_TOOL_DIR=$PWD/../llvm-head/bin
+            echo CMAKE_SYSROOT=$(realpath $PWD/../cygwin)
+            echo LLVM_NATIVE_TOOL_DIR=$HOST_TOOL_DIR
             echo LLVM_PARALLEL_COMPILE_JOBS=4
             echo LLVM_PARALLEL_LINK_JOBS=2
             echo LLVM_FORCE_VC_REVISION=$UPSTREAM_REV
@@ -144,15 +148,16 @@ jobs:
 
           ./runcmake.sh $cfgfile -v | tee ../buildlog-$cfgname-$LLVM_VERSION.txt
           ./runcmake.sh $cfgfile -v -i --prefix $PWD/../llvm-cygwin-$cfgname-$LLVM_VERSION
+        shell: bash
 
       - uses: actions/upload-artifact@v4
-        if: steps.cache-restore.outputs.cache-hit == 'true'
+        if: ${{ steps.cache-restore.outcome == 'success' }}
         with:
           name: artifact
           overwrite: true
           path: ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}
       - uses: actions/upload-artifact@v4
-        if: steps.cache-restore.outputs.cache-hit == 'true'
+        if: ${{ steps.cache-restore.outcome == 'success' }}
         with:
           name: buildlog
           overwrite: true

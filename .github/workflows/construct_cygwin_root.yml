@@ -1,0 +1,70 @@
+name: Construct Cygwin Filesystem
+on:
+  workflow_dispatch:
+
+jobs:
+  do_build:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: true
+
+    steps:
+      - uses: Vampire/setup-wsl@v6
+      - run: git config --global core.autocrlf input
+
+      - id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          key: cygwin-rootfs-
+          restore-keys: |
+            cygwin-rootfs-
+          path: |
+            cygwinroot.tar.gz
+            cygwinpkgs.tar.gz
+      - name: tar rootfs
+        run: |
+          export GITHUB_WORKSPACE="$(wslpath -u '${{github.workspace}}')"
+          cd /
+          tar xf "$GITHUB_WORKSPACE/cygwinroot.tar.gz" || true
+          tar xf "$GITHUB_WORKSPACE/cygwinpkgs.tar.gz" || true
+        shell: wsl-bash {0}
+
+      - id: cygwin
+        uses: cygwin/cygwin-install-action@master
+        with:
+          site: >-
+            http://mirrors.kernel.org/sourceware/cygwin/
+          packages:
+            binutils
+            clang
+            lld
+            cmake
+            git
+            make
+            ninja
+            python3
+            libxml2-devel
+            zlib-devel
+            libzstd-devel
+
+      - name: tar rootfs
+        run: |
+          export GITHUB_WORKSPACE="$(wslpath -u '${{github.workspace}}')"
+          cd /
+          tar cvaf "$GITHUB_WORKSPACE/cygwinroot.tar.gz" "$(wslpath -u '${{ steps.cygwin.outputs.root }}')" > "$GITHUB_WORKSPACE/files.txt"
+          tar cvaf "$GITHUB_WORKSPACE/cygwinpkgs.tar.gz" "$(wslpath -u '${{ steps.cygwin.outputs.package-cache }}')" >> "$GITHUB_WORKSPACE/files.txt"
+        shell: wsl-bash {0}
+      - name: prepare new cache key
+        run: echo "cache-store-key=${{ hashFiles('files.txt') }}" >> $env:GITHUB_ENV
+
+      - uses: actions/cache/save@v4
+        if: ${{ steps.cache-restore.outputs.cache-matched-key != format('cygwin-rootfs-{0}', env.cache-store-key) }}
+        with:
+          key: cygwin-rootfs-${{ env.cache-store-key }}
+          path: |
+            cygwinroot.tar.gz
+            cygwinpkgs.tar.gz
+
+      - run: DEL /F ${{ steps.cygwin.outputs.root }}\bin\git.exe
+        if: always()
+        shell: cmd

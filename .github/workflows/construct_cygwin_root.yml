@@ -9,7 +9,6 @@ jobs:
       fail-fast: true
 
     steps:
-      - uses: Vampire/setup-wsl@v6
       - run: git config --global core.autocrlf input
 
       - id: cache-restore
@@ -20,16 +19,15 @@ jobs:
             cygwin-rootfs-
           path: |
             cygwinroot.tar.gz
-            cygwinpkgs.tar.gz
             minimal_tar
-      - name: tar rootfs
+      - name: unpack Cygwin
         run: |
-          set -x
-          export GITHUB_WORKSPACE="$(wslpath -u '${{github.workspace}}')"
-          cd /
-          tar xf "$GITHUB_WORKSPACE/cygwinroot.tar.gz" || true
-          tar xf "$GITHUB_WORKSPACE/cygwinpkgs.tar.gz" || true
-        shell: wsl-bash {0}
+          move /y cygwinroot.tar.gz minimal_tar
+          cd minimal_tar
+          path %cd%\bin;%path%
+          bin\tar.exe xf cygwinroot.tar.gz
+          del /f cygwinroot.tar.gz
+        shell: cmd
 
       - id: cygwin
         uses: cygwin/cygwin-install-action@master
@@ -51,20 +49,19 @@ jobs:
 
       - name: tar rootfs
         run: |
-          set -x
-          export GITHUB_WORKSPACE="$(wslpath -u '${{github.workspace}}')"
-          export CYGWINROOT="$(wslpath -u '${{steps.cygwin.outputs.root}}')"
-          cd /
-          tar cvaf "$GITHUB_WORKSPACE/cygwinroot.tar.gz" "$(wslpath -u '${{ steps.cygwin.outputs.root }}')" > "$GITHUB_WORKSPACE/files.txt"
-          tar cvaf "$GITHUB_WORKSPACE/cygwinpkgs.tar.gz" "$(wslpath -u '${{ steps.cygwin.outputs.package-cache }}')" >> "$GITHUB_WORKSPACE/files.txt"
-          mkdir -p "$GITHUB_WORKSPACE/minimal_tar/bin"
-          mkdir -p "$GITHUB_WORKSPACE/minimal_tar/etc"
-          echo "none /mnt cygdrive binary,posix=0,user 0 0" > "$GITHUB_WORKSPACE/minimal_tar/etc/fstab"
-          for f in cygiconv-2.dll cygintl-8.dll cygwin1.dll gzip.exe tar.exe; do
-            cp -L "$CYGWINROOT/bin/$f" "$GITHUB_WORKSPACE/minimal_tar/bin"
-          done
-          find "$GITHUB_WORKSPACE/minimal_tar" >> "$GITHUB_WORKSPACE/files.txt"
-        shell: wsl-bash {0}
+          mkdir minimal_tar
+          cd minimal_tar
+          mkdir bin
+          set cygroot=${{steps.cygwin.outputs.root}}
+          for %%f in (cygiconv-2.dll cygintl-8.dll cygwin1.dll cygpath.exe gzip.exe tar.exe) do copy /b /y %cygroot%\bin\%%f bin
+          mkdir etc
+          echo none /mnt cygdrive binary,posix=0,user 0 0 > etc\fstab
+          for /f %%k in ('bin\cygpath -ua ${{steps.cygwin.outputs.root}}') do set ucygroot=%%k
+          path %cd%\bin;%path%
+          bin\tar.exe cvaf cygwinroot.tar %ucygroot% > %GITHUB_WORKSPACE%\files.txt
+          bin\gzip.exe cygwinroot.tar
+          move /y cygwinroot.tar.gz ..
+        shell: cmd
       - name: prepare new cache key
         run: echo "cache-store-key=${{ hashFiles('files.txt') }}" >> $env:GITHUB_ENV
 
@@ -74,7 +71,6 @@ jobs:
           key: cygwin-rootfs-${{ env.cache-store-key }}
           path: |
             cygwinroot.tar.gz
-            cygwinpkgs.tar.gz
             minimal_tar
 
       - run: DEL /F ${{ steps.cygwin.outputs.root }}\bin\git.exe

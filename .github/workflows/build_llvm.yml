@@ -35,6 +35,9 @@ jobs:
         uses: actions/checkout@v5
         with:
           path: patches
+      - name: prepare Cygwin
+        uses: ./patches/.github/actions/prepare-cygwin-root
+
       - name: prepare llvm tree
         uses: actions/checkout@v5
         with:
@@ -45,28 +48,6 @@ jobs:
       - name: patch tree
         run: bash patches/.github/workflows/apply-cygwin-patches.sh "${{inputs.upstream_ref}}" "${{inputs.config}}"
         shell: bash
-
-      - id: cache-restore
-        if: ${{ success() }}
-        uses: actions/cache/restore@v4
-        with:
-          fail-on-cache-miss: true
-          enableCrossOsArchive: true
-          key: cygwin-rootfs-
-          restore-keys: |
-            cygwin-rootfs-
-          path: |
-            cygwinroot.tar.gz
-            minimal_tar
-      - name: unpack Cygwin
-        if: ${{ success() }}
-        run: |
-          move cygwinroot.tar.gz minimal_tar
-          cd minimal_tar
-          path %cd%\bin;%path%
-          bin\tar.exe xf cygwinroot.tar.gz
-          del /f cygwinroot.tar.gz
-        shell: cmd
 
       - id: build
         if: ${{ success() }}
@@ -94,14 +75,13 @@ jobs:
         shell: d:\cygwin\bin\bash.exe -leo pipefail -o igncr '{0}'
 
       - uses: actions/upload-artifact@v4
-        if: ${{ steps.cache-restore.outcome == 'success' }}
+        if: ${{ always() }}
         with:
           name: artifact
           overwrite: true
           path: ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}.tar
 
       - id: test
-        if: ${{ steps.build.outcome == 'success' }}
         timeout-minutes: 180
         name: build
         run: |
@@ -117,7 +97,7 @@ jobs:
 
 
       - uses: actions/upload-artifact@v4
-        if: ${{ steps.cache-restore.outcome == 'success' }}
+        if: ${{ always() }}
         with:
           name: buildlog
           overwrite: true

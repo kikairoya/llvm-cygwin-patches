@@ -103,7 +103,6 @@ jobs:
             llvm-head
 
       - name: prepare llvm tree
-        if: ${{ success() }}
         uses: actions/checkout@v5
         with:
           repository: llvm/llvm-project
@@ -111,11 +110,9 @@ jobs:
           ref: ${{ inputs.upstream_ref }}
           path: llvm-project
       - name: patch tree
-        if: ${{ success() }}
         run: bash patches/.github/workflows/apply-cygwin-patches.sh "${{inputs.upstream_ref}}" "${{inputs.config}}"
 
       - id: cache-restore
-        if: ${{ success() }}
         uses: actions/cache/restore@v4
         with:
           fail-on-cache-miss: true
@@ -127,7 +124,6 @@ jobs:
             cygwinroot.tar.gz
             minimal_tar
       - name: unpack Cygwin
-        if: ${{ success() }}
         run: |
           tar --strip-components=2 -x -f cygwinroot.tar.gz
           rm -f cygwinroot.tar.gz
@@ -135,7 +131,6 @@ jobs:
           ln -s ../lib
 
       - id: build
-        if: ${{ success() }}
         name: build
         run: |
           set -x
@@ -162,13 +157,13 @@ jobs:
         shell: bash
 
       - uses: actions/upload-artifact@v4
-        if: ${{ steps.cache-restore.outcome == 'success' }}
+        if: ${{ always() }}
         with:
           name: artifact
           overwrite: true
           path: ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}
       - uses: actions/upload-artifact@v4
-        if: ${{ steps.cache-restore.outcome == 'success' }}
+        if: ${{ always() }}
         with:
           name: buildlog
           overwrite: true

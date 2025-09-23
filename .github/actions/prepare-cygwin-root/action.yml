@@ -1,16 +1,17 @@
 name: 'Prepare Cygwin root filesystem'
 description: 'Install Cygwin root filesystem with local cache'
+
 inputs:
   skip-update:
     description: Don't launch setup.exe
     required: false
-    default: false
+    default: true
 
 outputs:
   root:
     description: Cygwin root directory in host format
     value: ${{ steps.set-output.outputs.root }}
-  worksspace:
+  workspace:
     description: Workspace directory in unix format
     value: ${{ steps.set-output.outputs.workspace }}
 
@@ -30,6 +31,7 @@ runs:
           else
             echo "setup-cygwin=" >> "$GITHUB_OUTPUT"
           fi
+          echo 'root=D:\cygwin' >> "$GITHUB_OUTPUT"
         else
           echo "is-windows=" >> "$GITHUB_OUTPUT"
           echo "setup-cygwin=" >> "$GITHUB_OUTPUT"
@@ -39,7 +41,7 @@ runs:
     - id: cache-restore
       uses: actions/cache/restore@v4
       with:
-        fail-on-cache-miss: ${{ steps.globals.outputs.is-windows }}
+        fail-on-cache-miss: ${{ ! steps.globals.outputs.is-windows }}
         enableCrossOsArchive: true
         key: cygwin-rootfs-
         restore-keys: |
@@ -60,7 +62,7 @@ runs:
       shell: bash
 
     - name: unpack Cygwin
-      if: steps.globals.outputs.setup-cygwin
+      if: ${{ steps.globals.outputs.is-windows }}
       run: |
         move /y cygwinroot.tar.gz minimal_tar
         cd minimal_tar
@@ -124,19 +126,26 @@ runs:
           minimal_tar
 
     - name: cleanup
-      if: steps.globals.outputs.setup-cygwin
+      if: steps.globals.outputs.is-windows
       run: |
         rmdir /s /q minimal_tar
         del /f cygwinroot.tar.gz
+        cd ${{steps.globals.outputs.root}}
+        mkdir var
+        mkdir var\wrapper-bin
+        echo var\wrapper-bin >> %GITHUB_PATH%
+        echo @echo off > var\wrapper-bin\cygwin-bash.cmd
+        echo set PATH=%cd%\bin;%%PATH%% >> var\wrapper-bin\cygwin-bash.cmd
+        echo %cd%\bin\bash.exe -o igncr -eo pipefail %%* >> var\wrapper-bin\cygwin-bash.cmd
       shell: cmd
 
     - id: set-output
       run: |
-        if [ ${{ steps.globals.outputs.is-windows }} == 'true' ] && [ -n '${{steps.cygwin.outputs.root}}' ]; then
-          echo 'root=${{steps.cygwin.outputs.root}}' >> "$GITHUB_OUTPUT"
-          echo uworkspace=$('${{steps.cygwin.outputs.root}}\bin\cygpath.exe' -ua "$GITHUB_WORKSPACE") >> "$GITHUB_OUTPUT"
+        if [ ${{ steps.globals.outputs.is-windows }} == 'true' ]; then
+          echo 'root=${{steps.globals.outputs.root}}' >> "$GITHUB_OUTPUT"
+          echo workspace=$('${{steps.globals.outputs.root}}\bin\cygpath.exe' -ua "$GITHUB_WORKSPACE") >> "$GITHUB_OUTPUT"
         else
           echo root=$(realpath cygwin) >> $GITHUB_OUTPUT
-          echo uworkspace=$GITHUB_WORKSPACE >> $GITHUB_OUTPUT
+          echo workspace=$GITHUB_WORKSPACE >> $GITHUB_OUTPUT
         fi
       shell: bash

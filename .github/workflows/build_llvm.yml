@@ -32,75 +32,46 @@ jobs:
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
+        id: checkout-patch
         uses: actions/checkout@v5
         with:
           path: patches
+
       - name: prepare Cygwin
+        id: prepare-cygwin
         uses: ./patches/.github/actions/prepare-cygwin-root
 
       - name: prepare llvm tree
-        uses: actions/checkout@v5
+        id: prepare-tree
+        uses: ./patches/.github/actions/patch-llvm
         with:
-          repository: llvm/llvm-project
-          fetch-tags: true
-          ref: ${{ inputs.upstream_ref }}
-          path: llvm-project
-      - name: patch tree
-        run: bash patches/.github/workflows/apply-cygwin-patches.sh "${{inputs.upstream_ref}}" "${{inputs.config}}"
-        shell: bash
+          remote-ref: ${{ inputs.upstream_ref }}
 
-      - id: build
-        if: ${{ success() }}
-        name: build
-        run: |
-          export PATH=/usr/local/bin:/usr/bin:/bin:$PATH
-          cd "$(cygpath -u '${{github.workspace}}')"
-
-          cd patches
-          cfgname=${{ inputs.config }}
-          cfgfile=config-$cfgname.txt
-          [ -f "$cfgfile" ]
-
-          {
-            echo LLVM_PARALLEL_COMPILE_JOBS=3
-            echo LLVM_PARALLEL_LINK_JOBS=2
-            echo LLVM_FORCE_VC_REVISION=$UPSTREAM_ENV
-            echo LLVM_FORCE_VC_REPOSITORY=llvm-cygwin
-          } >> $cfgfile
-
-          ./runcmake.sh $cfgfile -v | tee ../buildlog-$cfgname-$LLVM_VERSION.txt
-          ./runcmake.sh $cfgfile -v -i --prefix $PWD/llvm-cygwin-$cfgname-$LLVM_VERSION
-
-          tar caf ../llvm-cygwin-$cfgname-$LLVM_VERSION.tar llvm-cygwin-$cfgname-$LLVM_VERSION
-        shell: d:\cygwin\bin\bash.exe -leo pipefail -o igncr '{0}'
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ always() }}
+      - name: build llvm
+        id: build-llvm
+        uses: ./patches/.github/actions/build-llvm
+        env:
+          LIT_OPTS: '--show-suites'
         with:
-          name: artifact
-          overwrite: true
-          path: ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}.tar
+          config-name: ${{ inputs.config }}
+          parallel-compile-jobs: 3
+          cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
+          build-target: 'check'
 
-      - id: test
+      - name: check llvm
         timeout-minutes: 180
-        name: build
+        env:
+          BUILD_NAME: ${{ steps.build-llvm.outputs.build-name }}
         run: |
-          export PATH=/usr/local/bin:/usr/bin:/bin:$PATH
-          cd "$(cygpath -u '${{github.workspace}}')"
-
-          cd patches
-          cfgname=${{ inputs.config }}
-
-          export LIT_OPTS="-sv --xunit-xml-output=$PWD/../result-$cfgname-$LLVM_VERSION.xml"
-          ./runcmake.sh config-$cfgname.txt -v -- check | tee ../testlog-$cfgname-$LLVM_VERSION.txt
-        shell: d:\cygwin\bin\bash.exe -leo pipefail -o igncr '{0}'
-
+          export LIT_OPTS="-q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml"
+          cmake --build build-$BUILD_NAME -- check
+          export LIT_OPTS="-sv --xunit-xml-output=$PWD/result-$BUILD_NAME.xml"
+          cmake --build build-$BUILD_NAME -- check
+        shell: cygwin-bash
 
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
-          name: buildlog
+          name: test-log
           overwrite: true
-          path: |
-            ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}.txt
-            ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}.xml
+          path: ${{ github.workspace }}/*-${{ steps.build-llvm.outputs.build-name }}.xml

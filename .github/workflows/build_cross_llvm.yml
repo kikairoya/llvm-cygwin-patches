@@ -33,139 +33,85 @@ jobs:
         uses: actions/checkout@v5
         with:
           path: patches
+
       - id: make-cache-key
-        run: echo host-cache-key=${{ hashFiles(format('patches/patches/{0}/**', inputs.upstream_ref)) }} >> "$GITHUB_ENV"
+        run: echo key=${{ hashFiles(format('patches/patches/{0}/**', inputs.upstream_ref)) }} >> "$GITHUB_OUTPUT"
+        shell: bash
+
       - id: cross-cache-restore
         uses: actions/cache/restore@v4
         with:
-          key: linux-clang-head-${{ inputs.upstream_ref }}-${{ env.host-cache-key }}
+          key: linux-clang-head-${{ inputs.upstream_ref }}-${{ steps.make-cache-key.outputs.key }}
           path: |
             llvm-head
 
       - name: prepare llvm tree
         if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
-        uses: actions/checkout@v5
+        id: prepare-tree
+        uses: ./patches/.github/actions/patch-llvm
         with:
-          repository: llvm/llvm-project
-          fetch-tags: true
-          ref: ${{ inputs.upstream_ref }}
-          path: llvm-project
+          remote-ref: ${{ inputs.upstream_ref }}
 
-      - id: build-host-tool
+      - name: build llvm
         if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
-        name: build
+        id: build-llvm
+        uses: ./patches/.github/actions/build-llvm
+        with:
+          config-name: 'linux-clang'
+
+      - id: install
+        if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
+        env:
+          BUILD_NAME: ${{ steps.build-llvm.outputs.build-name }}
         run: |
-          bash patches/.github/workflows/apply-cygwin-patches.sh "${{inputs.upstream_ref}}" "linux-clang"
-
-          set -x
-          cd patches
-
-          cfgfile=config-linux-clang.txt
-          [ -f "$cfgfile" ]
-
-          {
-            echo LLVM_PARALLEL_COMPILE_JOBS=4
-            echo LLVM_PARALLEL_LINK_JOBS=2
-            echo LLVM_FORCE_VC_REVISION=$UPSTREAM_REV
-            echo LLVM_FORCE_VC_REPOSITORY=llvm-cygwin
-          } >> $cfgfile
-
-          ./runcmake.sh $cfgfile -v
-          ./runcmake.sh $cfgfile -v -i --prefix "$PWD/../llvm-head"
+          cmake --install build-$BUILD_NAME --prefix $PWD/llvm-head
         shell: bash
 
       - uses: actions/cache/save@v4
         if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
         with:
-          key: linux-clang-head-${{ inputs.upstream_ref }}-${{ env.host-cache-key }}
+          key: linux-clang-head-${{ inputs.upstream_ref }}-${{ steps.make-cache-key.outputs.key }}
           path: |
             llvm-head
 
   do_build:
     runs-on: ubuntu-latest
     needs: [prepare_host]
-    strategy:
-      fail-fast: true
 
     steps:
       - name: prepare patches
+        id: checkout-patch
         uses: actions/checkout@v5
         with:
           path: patches
+
       - id: make-cache-key
-        run: echo host-cache-key=${{ hashFiles(format('patches/patches/{0}/**', inputs.upstream_ref)) }} >> "$GITHUB_ENV"
+        run: echo key=${{ hashFiles(format('patches/patches/{0}/**', inputs.upstream_ref)) }} >> "$GITHUB_OUTPUT"
+        shell: bash
+
       - id: cross-cache-restore
         uses: actions/cache/restore@v4
         with:
           fail-on-cache-miss: true
-          key: linux-clang-head-${{ inputs.upstream_ref }}-${{ env.host-cache-key }}
+          key: linux-clang-head-${{ inputs.upstream_ref }}-${{ steps.make-cache-key.outputs.key }}
           path: |
             llvm-head
 
+      - name: prepare Cygwin
+        id: prepare-cygwin
+        uses: ./patches/.github/actions/prepare-cygwin-root
+
       - name: prepare llvm tree
-        uses: actions/checkout@v5
+        id: prepare-tree
+        uses: ./patches/.github/actions/patch-llvm
         with:
-          repository: llvm/llvm-project
-          fetch-tags: true
-          ref: ${{ inputs.upstream_ref }}
-          path: llvm-project
-      - name: patch tree
-        run: bash patches/.github/workflows/apply-cygwin-patches.sh "${{inputs.upstream_ref}}" "${{inputs.config}}"
+          remote-ref: ${{ inputs.upstream_ref }}
 
-      - id: cache-restore
-        uses: actions/cache/restore@v4
+      - name: build llvm
+        id: build-llvm
+        uses: ./patches/.github/actions/build-llvm
+        env:
+          CROSS_SYSROOT: ${{ steps.prepare-cygwin.outputs.root }}
+          HOST_TOOLCHAIN: ${{ format('{0}/llvm-head/bin', github.workspace) }}
         with:
-          fail-on-cache-miss: true
-          enableCrossOsArchive: true
-          key: cygwin-rootfs-
-          restore-keys: |
-            cygwin-rootfs-
-          path: |
-            cygwinroot.tar.gz
-            minimal_tar
-      - name: unpack Cygwin
-        run: |
-          tar --strip-components=2 -x -f cygwinroot.tar.gz
-          rm -f cygwinroot.tar.gz
-          cd cygwin/usr
-          ln -s ../lib
-
-      - id: build
-        name: build
-        run: |
-          set -x
-          export PATH=$PWD/llvm-head/bin:$PATH
-          export LD_LIBRARY_PATH=$PWD/llvm-head/lib:$LD_LIBRARY_PATH
-          export HOST_TOOL_DIR=$PWD/llvm-head/bin
-
-          cd patches
-          cfgname=${{ inputs.config }}
-          cfgfile=config-$cfgname.txt
-          [ -f "$cfgfile" ]
-
-          {
-            echo CMAKE_SYSROOT=$(realpath $PWD/../cygwin)
-            echo LLVM_NATIVE_TOOL_DIR=$HOST_TOOL_DIR
-            echo LLVM_PARALLEL_COMPILE_JOBS=4
-            echo LLVM_PARALLEL_LINK_JOBS=2
-            echo LLVM_FORCE_VC_REVISION=$UPSTREAM_REV
-            echo LLVM_FORCE_VC_REPOSITORY=llvm-cygwin
-          } >> $cfgfile
-
-          ./runcmake.sh $cfgfile -v | tee ../buildlog-$cfgname-$LLVM_VERSION.txt
-          ./runcmake.sh $cfgfile -v -i --prefix $PWD/../llvm-cygwin-$cfgname-$LLVM_VERSION
-        shell: bash
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ always() }}
-        with:
-          name: artifact
-          overwrite: true
-          path: ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}
-      - uses: actions/upload-artifact@v4
-        if: ${{ always() }}
-        with:
-          name: buildlog
-          overwrite: true
-          path: |
-            ${{ github.workspace }}/*-${{ env.LLVM_VERSION }}.txt
+          config-name: ${{ inputs.config }}

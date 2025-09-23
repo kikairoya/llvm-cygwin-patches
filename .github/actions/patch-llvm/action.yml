@@ -1,0 +1,63 @@
+name: Patch LLVM tree
+description: Apply unmerged patches to LLVM tree
+
+inputs:
+  patch-path:
+    description: Path to be used to clone patches
+    required: false
+    default: 'patches'
+  llvm-path:
+    description: Path to be going to clone LLVM
+    required: false
+    default: 'llvm-project'
+  remote-ref:
+    description: Upstream ref to be patched
+    required: false
+    default: 'main'
+  diffs-path:
+    description: Path to output diffs after patching
+    required: false
+    default: 'diffs'
+
+outputs:
+  upstream-commit:
+    description: Upstream commit hash
+    value: ${{ steps.checkout-llvm.outputs.upstream-rev }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: checkout llvm tree
+      id: checkout-llvm
+      uses: actions/checkout@v5
+      with:
+        repository: llvm/llvm-project
+        fetch-tags: true
+        ref: ${{ inputs.remote-ref }}
+        path: ${{ inputs.llvm-path }}
+
+    - name: apply patches
+      id: apply-patch
+      env:
+        INPUTS_REMOTE_REF: ${{ inputs.remote-ref }}
+        INPUTS_PATCH_PATH: ${{ inputs.patch-path }}
+        INPUTS_LLVM_PATH: ${{ inputs.llvm-path }}
+        INPUTS_DIFFS_PATH: ${{ inputs.diffs-path }}
+        UPSTREAM_COMMIT: ${{ steps.checkout-llvm.outputs.commit }}
+      run: |
+        mkdir -p $INPUTS_DIFFS_PATH
+        pushd $INPUTS_DIFFS_PATH
+        DIFFS_PATH=$PWD
+        popd
+        pushd $INPUTS_PATCH_PATH
+        PATCH_PATH=$PWD
+        popd
+        cd $INPUTS_LLVM_PATH
+        git config user.name github-actions
+        git config user.email github@github.com
+        git config status.showuntrackedfiles no
+        if [ -d "$PATCH_PATH/patches/$INPUTS_REMOTE_REF" ]; then
+          git am --empty=drop $PATCH_PATH/patches/$INPUTS_REMOTE_REF/*
+        fi
+        git format-patch -o $DIFFS_PATH $UPSTREAM_COMMIT..HEAD
+      shell: bash

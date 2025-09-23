@@ -3,74 +3,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  do_build:
+  do-update:
     runs-on: windows-latest
-    strategy:
-      fail-fast: true
 
     steps:
-      - run: git config --global core.autocrlf input
-
-      - id: cache-restore
-        uses: actions/cache/restore@v4
+      - name: prepare patches
+        uses: actions/checkout@v5
         with:
-          key: cygwin-rootfs-
-          restore-keys: |
-            cygwin-rootfs-
-          path: |
-            cygwinroot.tar.gz
-            minimal_tar
-      - name: unpack Cygwin
-        run: |
-          move /y cygwinroot.tar.gz minimal_tar
-          cd minimal_tar
-          path %cd%\bin;%path%
-          bin\tar.exe xf cygwinroot.tar.gz
-          del /f cygwinroot.tar.gz
-        shell: cmd
-
-      - id: cygwin
-        uses: cygwin/cygwin-install-action@master
+          path: patches
+      - name: update Cygwin
+        uses: ./patches/.github/actions/prepare-cygwin-root
         with:
-          add-to-path: false
-          site: >-
-            http://mirrors.kernel.org/sourceware/cygwin/
-          packages:
-            binutils
-            clang
-            lld
-            cmake
-            git
-            make
-            ninja
-            python3
-            libxml2-devel
-            zlib-devel
-            libzstd-devel
-
-      - name: tar rootfs
-        run: |
-          mkdir minimal_tar
-          cd minimal_tar
-          mkdir bin
-          set cygroot=${{steps.cygwin.outputs.root}}
-          for %%f in (cygiconv-2.dll cygintl-8.dll cygwin1.dll cygpath.exe gzip.exe tar.exe) do copy /b /y %cygroot%\bin\%%f bin
-          mkdir etc
-          echo none /mnt cygdrive binary,posix=0,user 0 0 > etc\fstab
-          for /f %%k in ('bin\cygpath -ua ${{steps.cygwin.outputs.root}}') do set ucygroot=%%k
-          path %cd%\bin;%path%
-          bin\tar.exe cvaf cygwinroot.tar %ucygroot% > %GITHUB_WORKSPACE%\files.txt
-          bin\gzip.exe cygwinroot.tar
-          move /y cygwinroot.tar.gz ..
-        shell: cmd
-      - name: prepare new cache key
-        run: echo "cache-store-key=${{ hashFiles('files.txt') }}" >> $env:GITHUB_ENV
-
-      - uses: actions/cache/save@v4
-        if: ${{ steps.cache-restore.outputs.cache-matched-key != format('cygwin-rootfs-{0}', env.cache-store-key) }}
-        with:
-          key: cygwin-rootfs-${{ env.cache-store-key }}
-          enableCrossOsArchive: true
-          path: |
-            cygwinroot.tar.gz
-            minimal_tar
+          skip-update: false

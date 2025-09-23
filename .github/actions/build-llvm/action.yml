@@ -1,0 +1,95 @@
+name: Build LLVM tree
+description: Build patched LLVM
+
+inputs:
+  patch-path:
+    description: Path to be used to clone patches
+    required: false
+    default: 'patches'
+  llvm-path:
+    description: Path to be going to clone LLVM
+    required: false
+    default: 'llvm-project'
+  config-name:
+    description: Build configuration name
+    required: true
+  cygwin-root:
+    description: Cygwih root path
+    reuqired: false
+  build-project:
+    description: Project root to build, relative to llvm-project
+    required: false
+    default: 'llvm'
+  build-target:
+    description: Target name to build
+    required: false
+    default: ''
+  parallel-compile-jobs:
+    description: LLVM_PARALLEL_COMPILE_JOBS
+    required: false
+  parallel-link-jobs:
+    description: LLVM_PARALLEL_LINK_JOBS
+    required: false
+
+outputs:
+  build-name:
+    description: Build identifier name
+    value: ${{ steps.set-buildname.outputs.build-name }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: set-buildname
+      name: set-buildname
+      env:
+        INPUTS_PATCH_PATH: ${{ inputs.patch-path }}
+        INPUTS_LLVM_PATH: ${{ inputs.llvm-path }}
+        INPUTS_PARALLEL_COMPILE_JOBS: ${{ inputs.parallel-compile-jobs }}
+        INPUTS_PARALLEL_LINK_JOBS: ${{ inputs.parallel-link-jobs }}
+        CONFIG_NAME: ${{ inputs.config-name }}
+      run: |
+        UPSTREAM_REV=$(git -C $INPUTS_LLVM_PATH log -n1 --format=format:%h FETCH_HEAD)
+        PATCH_REV=$(git -C $INPUTS_PATCH_PATH log -n1 --format=format:%h FETCH_HEAD)
+        echo build-name=$CONFIG_NAME-$UPSTREAM_REV+mod-$PATCH_REV >> "$GITHUB_OUTPUT"
+        cp patches/config-$CONFIG_NAME.cmake config-init.cmake
+        echo "set(LLVM_PARALLEL_COMPILE_JOBS \"${INPUTS_PARALLEL_COMPILE_JOBS:-4}\" CACHE STRING \"\" FORCE)" >> config-init.cmake
+        echo "set(LLVM_PARALLEL_LINK_JOBS \"${INPUTS_PARALLEL_LINK_JOBS:-2}\" CACHE STRING \"\" FORCE)" >> config-init.cmake
+        echo "set(LLVM_FORCE_VC_REVISION \"${UPSTREAM_REV:-HEAD}\" CACHE STRING \"\" FORCE)" >> config-init.cmake
+        echo "set(LLVM_FORCE_VC_REPOSITORY \"llvm-cygwin\" CACHE STRING \"\" FORCE)" >> config-init.cmake
+      shell: bash
+
+    - id: build
+      name: build
+      env:
+        BUILD_NAME: ${{ steps.set-buildname.outputs.build-name }}
+        BUILD_TARGET: ${{ inputs.build-target }}
+        CYGWIN_ROOT: ${{ inputs.cygwin-root }}
+      run: |
+        if [ -n "$CYGWIN_ROOT" ]; then
+          set +h
+          pushd "$CYGWIN_ROOT"
+          cd bin
+          export PATH=$PWD:$PATH
+          popd
+        fi
+
+        cmake -G Ninja -B build-$BUILD_NAME -S llvm-project/llvm -C config-init.cmake | tee configlog-$BUILD_NAME.txt
+        cmake --build build-$BUILD_NAME -- $BUILD_TARGET | tee buildlog-$BUILD_NAME.txt
+
+        mv -f config-init.cmake diffs build-$BUILD_NAME || true
+        tar caf llvm-cygwin-$BUILD_NAME.tar build-$BUILD_NAME
+      shell: bash
+
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() }}
+      with:
+        name: build-artifact
+        overwrite: true
+        path: ${{ github.workspace }}/llvm-cygwin-${{ steps.set-buildname.outputs.build-name }}.tar
+
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() }}
+      with:
+        name: build-log
+        overwrite: true
+        path: ${{ github.workspace }}/*log-${{ steps.set-buildname.outputs.build-name }}.txt

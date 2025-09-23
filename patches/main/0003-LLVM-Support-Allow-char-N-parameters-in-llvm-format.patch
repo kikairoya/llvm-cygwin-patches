@@ -1,7 +1,8 @@
 From f5d7184d3dd6a99718148654f7e8cb7828002ef8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 18 Sep 2025 18:50:38 +0900
-Subject: [PATCH] [LLVM][Support] Allow `char[N]` parameters in `llvm::format`
+Subject: [PATCH 03/12] [LLVM][Support] Allow `char[N]` parameters in
+ `llvm::format`
 
 Cygwin builds are currently broken after #157312, which effectively reverted #138117.
 The root cause is that Cygwin defines `DL_info::dli_fname` as `char[N]`, which

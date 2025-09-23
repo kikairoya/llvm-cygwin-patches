@@ -1,7 +1,7 @@
-From ececfda3d24c37edea76d580316c8ac037d819f5 Mon Sep 17 00:00:00 2001
+From e3048058f2b88a759981300e5204bfa132636d0c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 9 Jul 2025 21:23:51 +0900
-Subject: [PATCH 4/4] [Clang-Python][Test] Set $PATH for run tests
+Subject: [PATCH 10/12] [Clang-Python][Test] Set $PATH for run tests
 
 ---
  clang/bindings/python/tests/CMakeLists.txt | 5 +++++

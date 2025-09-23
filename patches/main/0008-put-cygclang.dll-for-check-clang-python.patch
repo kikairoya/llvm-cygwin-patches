@@ -1,7 +1,7 @@
-From 1f29a3c9e9c3ed8799cfe25d11f28a61d1767cbd Mon Sep 17 00:00:00 2001
+From 96a09a50a1309dfa7be6a113354e79547580c827 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 25 Jul 2025 23:50:48 +0900
-Subject: [PATCH 3/4] put cygclang.dll for check-clang-python
+Subject: [PATCH 08/12] put cygclang.dll for check-clang-python
 
 ---
  clang/tools/libclang/CMakeLists.txt | 17 ++++++++++++-----

@@ -2,7 +2,7 @@ name: Build LLVM
 on:
   workflow_call:
     inputs:
-      upstream_ref:
+      upstream-branch:
         description: "Upstream branch to build"
         type: string
         required: true
@@ -13,7 +13,7 @@ on:
         required: true
   workflow_dispatch:
     inputs:
-      upstream_ref:
+      upstream-branch:
         description: "Upstream branch to build"
         type: string
         required: true
@@ -24,12 +24,17 @@ on:
         required: true
         default: "clang-dylib"
 
+concurrency:
+  group: build-self-cygwin
+
 jobs:
-  do_build:
+  build:
     runs-on: windows-latest
-    name: Build LLVM ${{ inputs.upstream_ref }} ${{ inputs.config }}
-    concurrency:
-      group: build-self-cygwin
+    name: Build LLVM ${{ inputs.upstream-branch }} ${{ inputs.config }}
+
+    outputs:
+      build-name: ${{ steps.build-llvm.outputs.build-name }}
+      upstream-commit: ${{ steps.build-llvm.outputs.upstream-commit }}
 
     steps:
       - run: git config --global core.autocrlf input
@@ -48,7 +53,7 @@ jobs:
         id: prepare-tree
         uses: ./patches/.github/actions/patch-llvm
         with:
-          remote-ref: ${{ inputs.upstream_ref }}
+          branch-name: ${{ inputs.upstream-branch }}
 
       - name: build llvm
         id: build-llvm
@@ -61,15 +66,43 @@ jobs:
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-target: 'check'
 
+  check:
+    runs-on: windows-latest
+    name: Check LLVM ${{ inputs.upstream-branch }} ${{ inputs.config }}
+    needs: build
+
+    steps:
+      - run: git config --global core.autocrlf input
+
+      - name: prepare patches
+        id: checkout-patch
+        uses: actions/checkout@v5
+        with:
+          path: patches
+
+      - name: prepare Cygwin
+        id: prepare-cygwin
+        uses: ./patches/.github/actions/prepare-cygwin-root
+
+      - name: prepare llvm tree
+        id: prepare-tree
+        uses: ./patches/.github/actions/patch-llvm
+        with:
+          branch-name: ${{ inputs.upstream-branch }}
+          remote-ref: ${{ needs.build.outputs.upstream-commit }}
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: build-artifact
+
       - name: check llvm
-        timeout-minutes: 180
         env:
-          BUILD_NAME: ${{ steps.build-llvm.outputs.build-name }}
+          BUILD_NAME: ${{ needs.build.outputs.build-name }}
         run: |
-          export LIT_OPTS="-q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml"
-          cmake --build build-$BUILD_NAME -- check
-          export LIT_OPTS="-sv --xunit-xml-output=$PWD/result-$BUILD_NAME.xml"
-          cmake --build build-$BUILD_NAME -- check
+          tar xf llvm-cygwin-$BUILD_NAME.tar
+          git -C build-$BUILD_NAME am diffs/*
+          bash build-$BUILD_NAME/check-all-*.sh -q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml
+          bash build-$BUILD_NAME/check-all-*.sh -sv --xunit-xml-output=$PWD/result-$BUILD_NAME.xml > testlog-$BUILD_NAME.txt
         shell: cygwin-bash '{0}'
 
       - uses: actions/upload-artifact@v4
@@ -77,4 +110,6 @@ jobs:
         with:
           name: test-log
           overwrite: true
-          path: ${{ github.workspace }}/*-${{ steps.build-llvm.outputs.build-name }}.xml
+          path: |
+            ${{ github.workspace }}/*-${{ needs.build.outputs.build-name }}.xml
+            ${{ github.workspace }}/*-${{ needs.build.outputs.build-name }}.txt

@@ -2,7 +2,7 @@ name: Cross build Cygwin binary
 on:
   workflow_call:
     inputs:
-      upstream_ref:
+      upstream-branch:
         description: "Upstream branch to build"
         type: string
         required: true
@@ -13,7 +13,7 @@ on:
         required: true
   workflow_dispatch:
     inputs:
-      upstream_ref:
+      upstream-branch:
         description: "Upstream branch to build"
         type: string
         required: true
@@ -25,7 +25,7 @@ on:
         default: "cross-clang-dylib"
 
 jobs:
-  prepare_host:
+  prepare-host:
     runs-on: ubuntu-latest
     name: Prepare host LLVM
     concurrency:
@@ -44,7 +44,7 @@ jobs:
       - id: cross-cache-restore
         uses: actions/cache/restore@v4
         with:
-          key: linux-clang-head-${{ inputs.upstream_ref }}-${{ steps.make-cache-key.outputs.key }}
+          key: linux-clang-head-${{ inputs.upstream-branch }}-${{ steps.make-cache-key.outputs.key }}
           path: |
             llvm-head
 
@@ -53,7 +53,7 @@ jobs:
         id: prepare-tree
         uses: ./patches/.github/actions/patch-llvm
         with:
-          remote-ref: ${{ inputs.upstream_ref }}
+          branch-name: ${{ inputs.upstream-branch }}
 
       - name: build llvm
         if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
@@ -73,16 +73,16 @@ jobs:
       - uses: actions/cache/save@v4
         if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
         with:
-          key: linux-clang-head-${{ inputs.upstream_ref }}-${{ steps.make-cache-key.outputs.key }}
+          key: linux-clang-head-${{ inputs.upstream-branch }}-${{ steps.make-cache-key.outputs.key }}
           path: |
             llvm-head
 
-  do_build:
+  build:
     runs-on: ubuntu-latest
-    name: Cross build LLVM ${{ inputs.upstream_ref }} ${{ inputs.config }}
+    name: Cross build LLVM ${{ inputs.upstream-branch }} ${{ inputs.config }}
     concurrency:
       group: build-cross-cygwin-from-linux
-    needs: [prepare_host]
+    needs: prepare-host
 
     steps:
       - name: prepare patches
@@ -92,14 +92,14 @@ jobs:
           path: patches
 
       - id: make-cache-key
-        run: echo key=${{ hashFiles(format('patches/patches/{0}/**', inputs.upstream_ref)) }} >> "$GITHUB_OUTPUT"
+        run: echo key=${{ hashFiles(format('patches/patches/{0}/**', inputs.upstream-branch)) }} >> "$GITHUB_OUTPUT"
         shell: bash
 
       - id: cross-cache-restore
         uses: actions/cache/restore@v4
         with:
           fail-on-cache-miss: true
-          key: linux-clang-head-${{ inputs.upstream_ref }}-${{ steps.make-cache-key.outputs.key }}
+          key: linux-clang-head-${{ inputs.upstream-branch }}-${{ steps.make-cache-key.outputs.key }}
           path: |
             llvm-head
 
@@ -111,7 +111,7 @@ jobs:
         id: prepare-tree
         uses: ./patches/.github/actions/patch-llvm
         with:
-          remote-ref: ${{ inputs.upstream_ref }}
+          branch-name: ${{ inputs.upstreambranch }}
 
       - name: build llvm
         id: build-llvm

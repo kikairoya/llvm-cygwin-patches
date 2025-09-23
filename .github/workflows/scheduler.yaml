@@ -12,29 +12,29 @@ jobs:
     name: Schedule build clang-static
     uses: ./.github/workflows/build_llvm.yml
     with:
-      upstream_ref: "main"
-      config: "clang-static"
+      upstream-branch: 'main'
+      config: 'clang-static'
 
   call-build-clang-dylib:
     if: github.event.schedule == '18 3 * * *'
     name: Schedule build clang-dylib
     uses: ./.github/workflows/build_llvm.yml
     with:
-      upstream_ref: "main"
-      config: "clang-dylib"
+      upstream-branch: 'main'
+      config: 'clang-dylib'
 
   call-build-cross-clang-static:
     if: github.event.schedule == '18 21 * * *'
     name: Schedule build cross-clang-static
     uses: ./.github/workflows/build_cross_llvm.yml
     with:
-      upstream_ref: "main"
-      config: "cross-clang-static"
+      upstream-branch: 'main'
+      config: 'cross-clang-static'
 
   call-build-cross-clang-dylib:
     if: github.event.schedule == '18 9 * * *'
     name: Schedule build cross-clang-dylib
     uses: ./.github/workflows/build_cross_llvm.yml
     with:
-      upstream_ref: "main"
-      config: "cross-clang-dylib"
+      upstream-branch: 'main'
+      config: 'cross-clang-dylib'

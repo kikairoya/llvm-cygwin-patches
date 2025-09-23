@@ -27,6 +27,8 @@ on:
 jobs:
   prepare_host:
     runs-on: ubuntu-latest
+    concurrency:
+      group: build-self-linux
 
     steps:
       - name: prepare patches
@@ -76,6 +78,8 @@ jobs:
 
   do_build:
     runs-on: ubuntu-latest
+    concurrency:
+      group: build-cross-cygwin-from-linux
     needs: [prepare_host]
 
     steps:

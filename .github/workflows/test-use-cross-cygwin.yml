@@ -5,32 +5,20 @@ on:
 jobs:
   do_build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
 
     steps:
-      - id: cache-restore
-        uses: actions/cache/restore@v4
+      - name: checkout
+        uses: actions/checkout@v5
+      - name: update Cygwin
+        uses: ./.github/actions/prepare-cygwin-root
         with:
-          fail-on-cache-miss: true
-          key: cygwin-rootfs-
-          restore-keys: |
-            cygwin-rootfs-
-          path: |
-            cygwinroot.tar.gz
-            minimal_tar
-      - name: unpack Cygwin
-        if: ${{ success() }}
-        run: |
-          tar --strip-components=2 -x -f cygwinroot.tar.gz
-          rm -f cygwinroot.tar.gz
-          cd cygwin/usr
-          ln -s ../bin
-          ln -s ../lib
+          install-dir: 'd:\thecygwin'
+          cache-key-base: 'key'
+
       - name: check cygwin
-        if: ${{ success() }}
         run: |
-          ls cygwin
-          ls cygwin/bin
-          ls cygwin/usr/bin
-          ls -l cygwin/dev
+          echo ${{ steps.cygwin.outputs.root }}
+          echo ${{ steps.cygwin.outputs.workspace }}
+          ls
+          ls thecygwin
+        shell: bash

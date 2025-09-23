@@ -5,13 +5,13 @@ on:
 jobs:
   do-update:
     runs-on: windows-latest
+    concurrency:
+      group: construct-cygwin
 
     steps:
-      - name: prepare patches
+      - name: checkout
         uses: actions/checkout@v5
-        with:
-          path: patches
       - name: update Cygwin
-        uses: ./patches/.github/actions/prepare-cygwin-root
+        uses: ./.github/actions/prepare-cygwin-root
         with:
           skip-update: false

@@ -27,6 +27,8 @@ on:
 jobs:
   do_build:
     runs-on: windows-latest
+    concurrency:
+      group: build-self-cygwin
 
     steps:
       - run: git config --global core.autocrlf input

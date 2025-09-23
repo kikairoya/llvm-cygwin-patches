@@ -5,36 +5,29 @@ on:
 jobs:
   do_build:
     runs-on: windows-latest
-    strategy:
-      fail-fast: true
 
     steps:
-      - run: git config --global core.autocrlf input
-      - id: cache-restore
-        uses: actions/cache/restore@v4
+      - name: checkout
+        uses: actions/checkout@v5
+      - name: update Cygwin
+        id: cygwin
+        uses: ./.github/actions/prepare-cygwin-root
         with:
-          key: cygwin-rootfs-
-          restore-keys: |
-            cygwin-rootfs-
-          path: |
-            cygwinroot.tar.gz
-            minimal_tar
-      - name: unpack Cygwin
-        run: |
-          move cygwinroot.tar.gz minimal_tar
-          cd minimal_tar
-          path %cd%\bin;%path%
-          bin\tar.exe xf cygwinroot.tar.gz
-          del /f cygwinroot.tar.gz
-        shell: cmd
+          install-dir: 'd:\thecygwin'
+          cache-key-base: 'key'
+
       - name: check cygwin
         run: |
-          export PATH=/usr/local/bin:/usr/bin:/bin:$PATH
-          export GITHUB_WORKSPACE="$(cygpath -u '${{github.workspace}}')"
-          cd "$GITHUB_WORKSPACE"
-          pwd
+          echo ${{ steps.cygwin.outputs.root }}
+          echo ${{ steps.cygwin.outputs.workspace }}
+        shell: cmd
+
+      - name: check cygwin
+        run: |
+          echo ${{ steps.cygwin.outputs.root }}
+          echo ${{ steps.cygwin.outputs.workspace }}
           ls
           ls /
           ls /usr
-        shell: d:\cygwin\bin\bash.exe -leo pipefail -o igncr '{0}'
-
+          mount
+        shell: cygwin-bash '{0}'

@@ -27,6 +27,7 @@ on:
 jobs:
   do_build:
     runs-on: windows-latest
+    name: Build LLVM ${{ inputs.upstream_ref }} ${{ inputs.config }}
     concurrency:
       group: build-self-cygwin
 
@@ -69,7 +70,7 @@ jobs:
           cmake --build build-$BUILD_NAME -- check
           export LIT_OPTS="-sv --xunit-xml-output=$PWD/result-$BUILD_NAME.xml"
           cmake --build build-$BUILD_NAME -- check
-        shell: cygwin-bash
+        shell: cygwin-bash '{0}'
 
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}

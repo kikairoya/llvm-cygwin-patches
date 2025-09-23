@@ -36,7 +36,7 @@ runs:
         ref: ${{ inputs.remote-ref }}
         path: ${{ inputs.llvm-path }}
 
-    - name: apply patches
+    - name: apply patches to ${{ inputs.remote-ref }}
       id: apply-patch
       env:
         INPUTS_REMOTE_REF: ${{ inputs.remote-ref }}
@@ -46,12 +46,12 @@ runs:
         UPSTREAM_COMMIT: ${{ steps.checkout-llvm.outputs.commit }}
       run: |
         mkdir -p $INPUTS_DIFFS_PATH
-        pushd $INPUTS_DIFFS_PATH
+        pushd $INPUTS_DIFFS_PATH > /dev/null
         DIFFS_PATH=$PWD
-        popd
-        pushd $INPUTS_PATCH_PATH
+        popd > /dev/null
+        pushd $INPUTS_PATCH_PATH > /dev/null
         PATCH_PATH=$PWD
-        popd
+        popd > /dev/null
         cd $INPUTS_LLVM_PATH
         git config user.name github-actions
         git config user.email github@github.com

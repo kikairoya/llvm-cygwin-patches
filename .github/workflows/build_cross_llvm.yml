@@ -27,6 +27,7 @@ on:
 jobs:
   prepare_host:
     runs-on: ubuntu-latest
+    name: Prepare host LLVM
     concurrency:
       group: build-self-linux
 
@@ -78,6 +79,7 @@ jobs:
 
   do_build:
     runs-on: ubuntu-latest
+    name: Cross build LLVM ${{ inputs.upstream_ref }} ${{ inputs.config }}
     concurrency:
       group: build-cross-cygwin-from-linux
     needs: [prepare_host]

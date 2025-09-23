@@ -64,7 +64,7 @@ runs:
         cygroot=$(basename ${INPUTS_INSTALL_DIR//\\/\/})
         mkdir $cygroot
         cd $cygroot
-        echo "root=$PWD/$cygroot" >> "$GITHUB_OUTPUT"
+        echo "root=$PWD" >> "$GITHUB_OUTPUT"
         tar --strip-components=$(tar -t -f $archive 2>/dev/null | head -n1 | grep -o / | wc -l) -x -f $archive
         rm -f $archive
         cd usr

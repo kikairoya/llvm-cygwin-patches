@@ -9,6 +9,7 @@ on:
 jobs:
   call-build-clang-static:
     if: github.event.schedule == '18 15 * * *'
+    name: Schedule build clang-static
     uses: ./.github/workflows/build_llvm.yml
     with:
       upstream_ref: "main"
@@ -16,13 +17,15 @@ jobs:
 
   call-build-clang-dylib:
     if: github.event.schedule == '18 3 * * *'
+    name: Schedule build clang-dylib
     uses: ./.github/workflows/build_llvm.yml
     with:
       upstream_ref: "main"
       config: "clang-dylib"
 
   call-build-cross-clang-static:
-    if: github.event.schedule == '18  21 * * *'
+    if: github.event.schedule == '18 21 * * *'
+    name: Schedule build cross-clang-static
     uses: ./.github/workflows/build_cross_llvm.yml
     with:
       upstream_ref: "main"
@@ -30,6 +33,7 @@ jobs:
 
   call-build-cross-clang-dylib:
     if: github.event.schedule == '18 9 * * *'
+    name: Schedule build cross-clang-dylib
     uses: ./.github/workflows/build_cross_llvm.yml
     with:
       upstream_ref: "main"

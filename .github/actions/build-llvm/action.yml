@@ -59,7 +59,7 @@ runs:
       shell: bash
 
     - id: build
-      name: build
+      name: build ${{ steps.set-buildname.outputs.build-name }}
       env:
         BUILD_NAME: ${{ steps.set-buildname.outputs.build-name }}
         BUILD_TARGET: ${{ inputs.build-target }}
@@ -67,15 +67,33 @@ runs:
       run: |
         if [ -n "$CYGWIN_ROOT" ]; then
           set +h
-          pushd "$CYGWIN_ROOT"
+          pushd "$CYGWIN_ROOT" > /dev/null
           cd bin
           export PATH=$PWD:$PATH
-          popd
+          popd > /dev/null
         fi
 
         cmake -G Ninja -B build-$BUILD_NAME -S llvm-project/llvm -C config-init.cmake | tee configlog-$BUILD_NAME.txt
         cmake --build build-$BUILD_NAME -- $BUILD_TARGET | tee buildlog-$BUILD_NAME.txt
+      shell: bash
 
+    - id: archive
+      if: ${{ always() }}
+      name: archive ${{ steps.set-buildname.outputs.build-name }}
+      env:
+        BUILD_NAME: ${{ steps.set-buildname.outputs.build-name }}
+        BUILD_TARGET: ${{ inputs.build-target }}
+        CYGWIN_ROOT: ${{ inputs.cygwin-root }}
+      run: |
+        if [ -n "$CYGWIN_ROOT" ]; then
+          set +h
+          pushd "$CYGWIN_ROOT" > /dev/null
+          cd bin
+          export PATH=$PWD:$PATH
+          popd > /dev/null
+        fi
+
+        mkdir -p build-$BUILD_NAME
         mv -f config-init.cmake diffs build-$BUILD_NAME || true
         tar caf llvm-cygwin-$BUILD_NAME.tar build-$BUILD_NAME
       shell: bash

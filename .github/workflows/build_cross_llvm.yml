@@ -3,26 +3,56 @@ on:
   workflow_call:
     inputs:
       upstream-branch:
-        description: "Upstream branch to build"
+        description: 'Upstream branch to build'
         type: string
         required: true
-        default: "main"
+        default: 'main'
+      patch-series-host:
+        description: 'Patch series to apply for host tool'
+        type: string
+        required: true
+        default: 'cross'
+      patch-series:
+        description: 'Patch series to apply for target tool'
+        type: string
+        required: true
+        default: 'main'
+      config-host:
+        description: 'Build config script for host tool'
+        type: string
+        required: false
+        default: 'linux-clang'
       config:
-        description: "Build config script"
+        description: 'Build config script for target tool'
         type: string
         required: true
   workflow_dispatch:
     inputs:
       upstream-branch:
-        description: "Upstream branch to build"
+        description: 'Upstream branch to build'
         type: string
         required: true
-        default: "main"
+        default: 'main'
+      patch-series-host:
+        description: 'Patch series to apply for host tool'
+        type: string
+        required: true
+        default: 'cross'
+      patch-series:
+        description: 'Patch series to apply for target tool'
+        type: string
+        required: true
+        default: 'main'
+      config-host:
+        description: 'Build config script for host tool'
+        type: string
+        required: false
+        default: 'linux-clang'
       config:
-        description: "Build config script"
+        description: 'Build config script for target tool'
         type: string
         required: true
-        default: "cross-clang-dylib"
+        default: 'cross-clang-dylib'
 
 jobs:
   prepare-host:
@@ -53,14 +83,15 @@ jobs:
         id: prepare-tree
         uses: ./patches/.github/actions/patch-llvm
         with:
-          branch-name: ${{ inputs.upstream-branch }}
+          remote-ref: ${{ inputs.upstream-branch }}
+          patch-series: ${{ inputs.patch-series-host }}
 
       - name: build llvm
         if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
         id: build-llvm
         uses: ./patches/.github/actions/build-llvm
         with:
-          config-name: 'linux-clang'
+          config-name: ${{ inputs.config-host }}
 
       - id: install
         if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
@@ -111,7 +142,8 @@ jobs:
         id: prepare-tree
         uses: ./patches/.github/actions/patch-llvm
         with:
-          branch-name: ${{ inputs.upstreambranch }}
+          remote-ref: ${{ inputs.upstream-branch }}
+          patch-series: ${{ inputs.patch-series }}
 
       - name: build llvm
         id: build-llvm

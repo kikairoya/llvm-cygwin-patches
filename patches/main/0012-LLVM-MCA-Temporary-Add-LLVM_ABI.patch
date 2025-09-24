@@ -1,7 +1,7 @@
-From a672d5dd17a5a5352285fbbad92b660533339f9b Mon Sep 17 00:00:00 2001
+From 0a1c08d30beca53bf04f012994d2c486c5d1cbb7 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 14 Jun 2025 08:14:26 +0900
-Subject: [PATCH 12/12] [LLVM][MCA](Temporary) Add LLVM_ABI
+Subject: [PATCH 12/13] [LLVM][MCA](Temporary) Add LLVM_ABI
 
 ---
  llvm/include/llvm/MCA/Support.h | 9 +++++----

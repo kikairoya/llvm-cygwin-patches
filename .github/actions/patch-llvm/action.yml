@@ -12,12 +12,11 @@ inputs:
     default: 'llvm-project'
   remote-ref:
     description: Explicit pstream ref to be patched
-    required: false
+    required: true
     default: ''
-  branch-name:
-    description: Source patch directory
-    required: false
-    default: 'main'
+  patch-series:
+    description: Source patch series
+    required: true
   diffs-path:
     description: Path to output diffs after patching
     required: false
@@ -37,15 +36,15 @@ runs:
       with:
         repository: llvm/llvm-project
         fetch-tags: true
-        ref: ${{ inputs.remote-ref || inputs.branch-name }}
+        ref: ${{ inputs.remote-ref }}
         path: ${{ inputs.llvm-path }}
 
-    - name: apply patches to ${{ inputs.remote-ref || inputs.branch-name }}
+    - name: apply patches to ${{ inputs.remote-ref }}
       id: apply-patch
       env:
         INPUTS_PATCH_PATH: ${{ inputs.patch-path }}
         INPUTS_LLVM_PATH: ${{ inputs.llvm-path }}
-        INPUTS_BRANCH_NAME: ${{ inputs.branch-name }}
+        INPUTS_PATCH_SERIES: ${{ inputs.patch-series }}
         INPUTS_DIFFS_PATH: ${{ inputs.diffs-path }}
         UPSTREAM_COMMIT: ${{ steps.checkout-llvm.outputs.commit }}
       run: |
@@ -60,8 +59,8 @@ runs:
         git config user.name github-actions
         git config user.email github@github.com
         git config status.showuntrackedfiles no
-        if [ -d "$PATCH_PATH/patches/$INPUTS_BRANCH_NAME" ]; then
-          git am --empty=drop $PATCH_PATH/patches/$INPUTS_BRANCH_NAME/*
+        if [ -d "$PATCH_PATH/patches/$INPUTS_PATCH_SERIES" ]; then
+          git am --empty=drop $PATCH_PATH/patches/$INPUTS_PATCH_SERIES/*
         fi
         git format-patch -o $DIFFS_PATH $UPSTREAM_COMMIT..HEAD
       shell: bash

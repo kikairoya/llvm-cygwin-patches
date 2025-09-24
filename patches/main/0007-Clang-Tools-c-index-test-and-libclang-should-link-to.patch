@@ -1,7 +1,7 @@
-From 656d77a8226edfe3c879d2726fdb1dc624101d43 Mon Sep 17 00:00:00 2001
+From a6b81bf2144a3b64e0670ed158c22d54438108eb Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 16 May 2025 18:24:46 +0900
-Subject: [PATCH 06/12] [Clang-Tools] c-index-test and libclang should link to
+Subject: [PATCH 07/13] [Clang-Tools] c-index-test and libclang should link to
  libclang-cpp if available
 
 c-index-test requires libclang and other components doesn't contained

@@ -3,26 +3,36 @@ on:
   workflow_call:
     inputs:
       upstream-branch:
-        description: "Upstream branch to build"
+        description: 'Upstream branch to build'
         type: string
         required: true
-        default: "main"
+        default: 'main'
+      patch-series:
+        description: 'Patch series to apply'
+        type: string
+        required: true
+        default: 'main'
       config:
-        description: "Build config script"
+        description: 'Build config script'
         type: string
         required: true
   workflow_dispatch:
     inputs:
       upstream-branch:
-        description: "Upstream branch to build"
+        description: 'Upstream branch to build'
         type: string
         required: true
-        default: "main"
+        default: 'main'
+      patch-series:
+        description: 'Patch series to apply'
+        type: string
+        required: true
+        default: 'main'
       config:
-        description: "Build config script"
+        description: 'Build config script'
         type: string
         required: true
-        default: "clang-dylib"
+        default: 'clang-dylib'
 
 concurrency:
   group: build-self-cygwin
@@ -53,7 +63,8 @@ jobs:
         id: prepare-tree
         uses: ./patches/.github/actions/patch-llvm
         with:
-          branch-name: ${{ inputs.upstream-branch }}
+          remote-ref: ${{ inputs.upstream-branch }}
+          patch-series: ${{ inputs.patch-series }}
 
       - name: build llvm
         id: build-llvm
@@ -88,7 +99,7 @@ jobs:
         id: prepare-tree
         uses: ./patches/.github/actions/patch-llvm
         with:
-          branch-name: ${{ inputs.upstream-branch }}
+          patch-series: ${{ inputs.patch-series }}
           remote-ref: ${{ needs.build.outputs.upstream-commit }}
 
       - uses: actions/download-artifact@v5

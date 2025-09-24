@@ -13,6 +13,7 @@ jobs:
     uses: ./.github/workflows/build_llvm.yml
     with:
       upstream-branch: 'main'
+      patch-series: 'main'
       config: 'clang-static'
 
   call-build-clang-dylib:
@@ -21,6 +22,7 @@ jobs:
     uses: ./.github/workflows/build_llvm.yml
     with:
       upstream-branch: 'main'
+      patch-series: 'main'
       config: 'clang-dylib'
 
   call-build-cross-clang-static:
@@ -29,6 +31,7 @@ jobs:
     uses: ./.github/workflows/build_cross_llvm.yml
     with:
       upstream-branch: 'main'
+      patch-series: 'cross'
       config: 'cross-clang-static'
 
   call-build-cross-clang-dylib:
@@ -37,4 +40,5 @@ jobs:
     uses: ./.github/workflows/build_cross_llvm.yml
     with:
       upstream-branch: 'main'
+      patch-series: 'cross'
       config: 'cross-clang-dylib'

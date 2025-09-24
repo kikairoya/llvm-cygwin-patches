@@ -113,6 +113,15 @@ jobs:
           tar xf llvm-cygwin-$BUILD_NAME.tar
           git -C build-$BUILD_NAME am diffs/*
           bash build-$BUILD_NAME/check-all-*.sh -q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml
+          if [ -f patches/xfail-${{ inputs.config }}.txt ]; then
+            export LIT_XFAIL="$(sed '2,$s/^/;/' < patches/xfail-${{ inputs.config }}.txt | tr -d '\n')"
+          fi
+          if [ -f patches/filter-out-${{ inputs.config }}.txt ]; then
+            export LIT_FILTER_OUT="($(sed '2,$s/^/)|(/' < filter-out-${{ inputs.config }}.txt | tr -d '\n'))"
+          fi
+          if [ -f patches/filter-${{ inputs.config }}.txt ]; then
+            export LIT_FILTER="($(sed '2,$s/^/)|(/' < filter-${{ inputs.config }}.txt | tr -d '\n'))"
+          fi
           bash build-$BUILD_NAME/check-all-*.sh -sv --xunit-xml-output=$PWD/result-$BUILD_NAME.xml > testlog-$BUILD_NAME.txt
         shell: cygwin-bash '{0}'
 

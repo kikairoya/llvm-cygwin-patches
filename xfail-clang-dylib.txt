@@ -1,0 +1,24 @@
+Clang :: APINotes/case-for-private-apinotes-file.c
+Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
+Clang :: Driver/clang-offload-bundler.c
+Clang :: Driver/mingw-sysroot.cpp
+Clang :: Lexer/case-insensitive-include-absolute.c
+Clang :: Lexer/case-insensitive-include.c
+Clang :: Lexer/case-insensitive-system-include.c
+Clang :: Modules/inferred-framework-case.m
+Clang :: Preprocessor/nonportable-include-with-hmap.c
+Clang Tools :: clang-tidy/CTTestTidyModule.cpp
+Clang-Unit :: Interpreter/./ClangReplInterpreterTests.exe/22/27
+Clang-Unit :: Interpreter/./ClangReplInterpreterTests.exe/InterpreterTest/FindMangledNameSymbol
+Clang-Unit :: Interpreter/ExceptionTests/./ClangReplInterpreterExceptionTests.exe/0/1
+LLVM :: ExecutionEngine/MCJIT/2003-01-15-AlignmentTest.ll
+LLVM :: ExecutionEngine/MCJIT/2003-05-06-LivenessClobber.ll
+LLVM :: ExecutionEngine/MCJIT/2003-08-15-AllocaAssertion.ll
+LLVM :: ExecutionEngine/MCJIT/2003-08-23-RegisterAllocatePhysReg.ll
+LLVM :: ExecutionEngine/MCJIT/test-loadstore.ll
+LLVM :: ExecutionEngine/OrcLazy/debug-descriptor.ll
+LLVM :: Other/can-execute.txt
+LLVM :: tools/llvm-rc/windres-preproc.test
+LLVM-Unit :: Support/./SupportTests.exe/FileSystemTest/permissions
+LLVM-Unit :: Support/./SupportTests.exe/ProgramEnvTest/TestExecuteEmptyEnvironment
+lit :: shtest-ulimit.py

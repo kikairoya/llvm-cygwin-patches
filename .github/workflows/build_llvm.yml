@@ -44,7 +44,7 @@ jobs:
 
     outputs:
       build-name: ${{ steps.build-llvm.outputs.build-name }}
-      upstream-commit: ${{ steps.build-llvm.outputs.upstream-commit }}
+      upstream-commit: ${{ steps.prepare-tree.outputs.commit }}
 
     steps:
       - run: git config --global core.autocrlf input

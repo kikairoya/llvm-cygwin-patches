@@ -15,3 +15,4 @@ jobs:
         uses: ./.github/actions/prepare-cygwin-root
         with:
           skip-update: false
+          allow-test-packages: true

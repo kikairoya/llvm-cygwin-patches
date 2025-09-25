@@ -61,6 +61,9 @@ jobs:
     concurrency:
       group: build-self-linux
 
+    outputs:
+      host-tool-key: linux-clang-head-${{ inputs.upstream-branch }}-${{ steps.make-cache-key.outputs.key }}
+
     steps:
       - name: prepare patches
         uses: actions/checkout@v5
@@ -68,7 +71,7 @@ jobs:
           path: patches
 
       - id: make-cache-key
-        run: echo key=${{ hashFiles(format('patches/patches/{0}/**', inputs.upstream_ref)) }} >> "$GITHUB_OUTPUT"
+        run: echo key=${{ hashFiles(format('patches/patches/{0}/**', inputs.upstream_branch)) }} >> "$GITHUB_OUTPUT"
         shell: bash
 
       - id: cross-cache-restore
@@ -122,15 +125,11 @@ jobs:
         with:
           path: patches
 
-      - id: make-cache-key
-        run: echo key=${{ hashFiles(format('patches/patches/{0}/**', inputs.upstream-branch)) }} >> "$GITHUB_OUTPUT"
-        shell: bash
-
       - id: cross-cache-restore
         uses: actions/cache/restore@v4
         with:
           fail-on-cache-miss: true
-          key: linux-clang-head-${{ inputs.upstream-branch }}-${{ steps.make-cache-key.outputs.key }}
+          key: ${{ needs.prepare-host.outputs.host-tool-key }}
           path: |
             llvm-head
 

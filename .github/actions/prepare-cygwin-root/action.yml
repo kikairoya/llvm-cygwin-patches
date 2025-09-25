@@ -13,6 +13,10 @@ inputs:
     description: Cache identifier
     requried: false
     default: ''
+  allow-test-packages:
+    description: Consider package versions marked test for installation
+    required: false
+    default: false
 
 outputs:
   root:
@@ -97,6 +101,7 @@ runs:
       with:
         add-to-path: false
         install-dir: ${{steps.unpack-cygwin-windows.outputs.root}}
+        allow-test-packages: ${{inputs.allow-test-packages}}
         site: >-
           http://mirrors.kernel.org/sourceware/cygwin/
         packages:
@@ -111,6 +116,15 @@ runs:
           libxml2-devel
           zlib-devel
           libzstd-devel
+
+    - name: upgrade Cygwin packages
+      if: steps.globals.outputs.setup-cygwin
+      env:
+        SETUPEXE: ${{steps.cygwin.outputs.setup}}
+        TESTOPT: ${{ inputs.allow-test-packages && '-t' || '' }}
+      run: |
+        %SETUPEXE% -ogqOrn %TESTOPT%
+      shell: cmd
 
     - name: tar rootfs
       id: archive-root

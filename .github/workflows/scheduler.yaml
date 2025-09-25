@@ -31,8 +31,10 @@ jobs:
     uses: ./.github/workflows/build_cross_llvm.yml
     with:
       upstream-branch: 'main'
-      patch-series: 'cross'
+      patch-series: 'main'
+      patch-series-host: 'cross'
       config: 'cross-clang-static'
+      config-host: 'linux-clang'
 
   call-build-cross-clang-dylib:
     if: github.event.schedule == '18 9 * * *'
@@ -40,5 +42,7 @@ jobs:
     uses: ./.github/workflows/build_cross_llvm.yml
     with:
       upstream-branch: 'main'
-      patch-series: 'cross'
+      patch-series: 'main'
+      patch-series-host: 'cross'
       config: 'cross-clang-dylib'
+      config-host: 'linux-clang'

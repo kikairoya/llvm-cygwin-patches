@@ -115,6 +115,7 @@ jobs:
           BUILD_NAME: ${{ needs.build.outputs.build-name }}
         run: |
           tar xf llvm-cygwin-$BUILD_NAME.tar
+          rm llvm-cygwin-$BUILD_NAME.tar
           export LIT_OPTS="-q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml"
           bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh
           if [ -f patches/xfail-${{ inputs.config }}.txt ]; then

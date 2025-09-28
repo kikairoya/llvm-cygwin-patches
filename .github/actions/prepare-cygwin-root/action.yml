@@ -113,6 +113,7 @@ runs:
           make
           ninja
           python3
+          perl
           libxml2-devel
           zlib-devel
           libzstd-devel

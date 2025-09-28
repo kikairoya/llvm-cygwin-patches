@@ -43,7 +43,7 @@ jobs:
     name: Select target
     outputs:
       upstream-branch: ${{ inputs.upstream-branch || 'main' }}
-      patch-series: ${{ inputs.patch-series || inputs.upstream-branch }}
+      patch-series: ${{ inputs.patch-series || inputs.upstream-branch || 'main' }}
       config: ${{ inputs.config || steps.selector.outputs.config }}
 
     steps:
@@ -75,7 +75,7 @@ jobs:
 
     outputs:
       build-name: ${{ steps.build-llvm.outputs.build-name }}
-      upstream-commit: ${{ steps.prepare-tree.outputs.commit }}
+      upstream-commit: ${{ steps.prepare-tree.outputs.upstream-commit }}
       patch-commit: ${{ steps.checkout-patch.outputs.commit }}
 
     steps:
@@ -142,7 +142,7 @@ jobs:
           name: build-artifact
 
       - name: check llvm
-        timeout-minutes: 330
+        timeout-minutes: 240
         env:
           BUILD_NAME: ${{ needs.build.outputs.build-name }}
           CONFIG: ${{ needs.select.output.config }}

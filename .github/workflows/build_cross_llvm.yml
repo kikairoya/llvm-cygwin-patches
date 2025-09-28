@@ -63,7 +63,7 @@ jobs:
     outputs:
       upstream-branch: ${{ inputs.upstream-branch || 'main' }}
       patch-series-host: ${{ inputs.patch-series-host || 'cross' }}
-      patch-series: ${{ inputs.patch-series || inputs.upstream-branch }}
+      patch-series: ${{ inputs.patch-series || inputs.upstream-branch || 'main' }}
       config-host: ${{ inputs.config-host || 'linux-clang' }}
       configs: ${{ steps.selector.outputs.configs }}
 
@@ -87,7 +87,7 @@ jobs:
       group: build-self-linux
 
     outputs:
-      host-tool-key: linux-clang-head-${{ needs.select.outputs.upstream-branch }}-${{ steps.make-cache-key.outputs.key }}
+      upstream-commit: ${{ steps.prepare-tree.outputs.upstream-commit }}
 
     steps:
       - name: prepare patches
@@ -118,7 +118,7 @@ jobs:
           cmake --install build-$BUILD_NAME --prefix $PWD/llvm-head
         shell: bash
 
-      - uses: actions/upload-artifact@4
+      - uses: actions/upload-artifact@v4
         with:
           name: host-tool
           overwrite: true
@@ -154,7 +154,7 @@ jobs:
         id: prepare-tree
         uses: ./patches/.github/actions/patch-llvm
         with:
-          remote-ref: ${{ needs.select.outputs.upstream-branch }}
+          remote-ref: ${{ needs.prepare-host.outputs.upstream-commit }}
           patch-series: ${{ needs.select.outputs.patch-series }}
 
       - name: build llvm

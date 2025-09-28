@@ -1,5 +1,8 @@
 name: Build LLVM
 on:
+  schedule:
+    - cron: '18 15 * * *'
+    - cron: '18 3 * * *'
   workflow_call:
     inputs:
       upstream-branch:
@@ -35,9 +38,38 @@ on:
         default: 'clang-dylib'
 
 jobs:
+  select:
+    runs-on: ubuntu-latest
+    name: Select target
+    outputs:
+      upstream-branch: ${{ inputs.upstream-branch || 'main' }}
+      patch-series: ${{ inputs.patch-series || inputs.upstream-branch }}
+      config: ${{ inputs.config || steps.selector.outputs.config }}
+
+    steps:
+      - id: selector
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          case "$SCHEDULE" in
+            '18 15 * * *')
+              echo config=clang-static >> "$GITHUB_OUTPUT"
+              ;;
+            '18 3 * * *')
+              echo config=clang-dylib >> "$GITHUB_OUTPUT"
+              ;;
+            '')
+              ;;
+            *)
+              false
+              ;;
+          esac
+        shell: bash
+
   build:
     runs-on: windows-latest
-    name: Build LLVM ${{ inputs.upstream-branch }} ${{ inputs.config }}
+    needs: select
+    name: Build LLVM ${{ needs.select.outputs.upstream-branch }} ${{ needs.select.outputs.config }}
     concurrency:
       group: build-self-cygwin
 
@@ -63,8 +95,8 @@ jobs:
         id: prepare-tree
         uses: ./patches/.github/actions/patch-llvm
         with:
-          remote-ref: ${{ inputs.upstream-branch }}
-          patch-series: ${{ inputs.patch-series }}
+          remote-ref: ${{ needs.select.outputs.upstream-branch }}
+          patch-series: ${{ needs.select.outputs.patch-series }}
 
       - name: build llvm
         id: build-llvm
@@ -72,15 +104,15 @@ jobs:
         env:
           LIT_OPTS: '--show-suites'
         with:
-          config-name: ${{ inputs.config }}
+          config-name: ${{ needs.select.outputs.config }}
           parallel-compile-jobs: 3
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-target: 'check'
 
   check:
     runs-on: windows-latest
-    name: Check LLVM ${{ inputs.upstream-branch }} ${{ inputs.config }}
-    needs: build
+    needs: [select, build]
+    name: Check LLVM ${{ needs.select.outputs.upstream-branch }} ${{ needs.select.outputs.config }}
     concurrency:
       group: test-self-cygwin
 
@@ -102,7 +134,7 @@ jobs:
         id: prepare-tree
         uses: ./patches/.github/actions/patch-llvm
         with:
-          patch-series: ${{ inputs.patch-series }}
+          patch-series: ${{ needs.select.outputs.patch-series }}
           remote-ref: ${{ needs.build.outputs.upstream-commit }}
 
       - uses: actions/download-artifact@v5
@@ -113,19 +145,20 @@ jobs:
         timeout-minutes: 330
         env:
           BUILD_NAME: ${{ needs.build.outputs.build-name }}
+          CONFIG: ${{ needs.select.output.config }}
         run: |
           tar xf llvm-cygwin-$BUILD_NAME.tar
           rm llvm-cygwin-$BUILD_NAME.tar
           export LIT_OPTS="-q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml"
           bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh
-          if [ -f patches/xfail-${{ inputs.config }}.txt ]; then
-            export LIT_XFAIL="$(sed '2,$s/^/;/' < patches/xfail-${{ inputs.config }}.txt | tr -d '\n')"
+          if [ -f patches/xfail-$CONFIG.txt ]; then
+            export LIT_XFAIL="$(sed '2,$s/^/;/' < patches/xfail-$CONFIG.txt | tr -d '\n')"
           fi
-          if [ -f patches/filter-out-${{ inputs.config }}.txt ]; then
-            export LIT_FILTER_OUT="($(sed '2,$s/^/)|(/' < patches/filter-out-${{ inputs.config }}.txt | tr -d '\n'))"
+          if [ -f patches/filter-out-$CONFIG.txt ]; then
+            export LIT_FILTER_OUT="($(sed '2,$s/^/)|(/' < patches/filter-out-$CONFIG.txt | tr -d '\n'))"
           fi
-          if [ -f patches/filter-${{ inputs.config }}.txt ]; then
-            export LIT_FILTER="($(sed '2,$s/^/)|(/' < patches/filter-${{ inputs.config }}.txt | tr -d '\n'))"
+          if [ -f patches/filter-$CONFIG.txt ]; then
+            export LIT_FILTER="($(sed '2,$s/^/)|(/' < patches/filter-$CONFIG.txt | tr -d '\n'))"
           fi
           export LIT_OPTS="-sv -j2 --xunit-xml-output=$PWD/result-$BUILD_NAME.xml"
           env | grep ^LIT > env-$BUILD_NAME.txt || true

@@ -44,7 +44,7 @@ jobs:
     outputs:
       build-name: ${{ steps.build-llvm.outputs.build-name }}
       upstream-commit: ${{ steps.prepare-tree.outputs.commit }}
-      patch-commit: ${{ steps.checkout-patch.outputs.upstream-rev }}
+      patch-commit: ${{ steps.checkout-patch.outputs.commit }}
 
     steps:
       - run: git config --global core.autocrlf input
@@ -129,7 +129,7 @@ jobs:
           fi
           export LIT_OPTS="-sv -j2 --xunit-xml-output=$PWD/result-$BUILD_NAME.xml"
           env | grep ^LIT > env-$BUILD_NAME.txt || true
-          bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh | tee > testlog-$BUILD_NAME.txt
+          bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh | tee testlog-$BUILD_NAME.txt
         shell: cygwin-bash '{0}'
 
       - uses: actions/upload-artifact@v4

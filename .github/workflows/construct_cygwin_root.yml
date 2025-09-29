@@ -16,7 +16,7 @@ jobs:
         uses: ./.github/actions/prepare-cygwin-root
         with:
           skip-update: false
-          allow-test-packages: true
+          allow-test-packages: false
       - name: show packages
         run: |
           ${{ steps.cygwin.outputs.root }}\bin\cat.exe /etc/setup/installed.db

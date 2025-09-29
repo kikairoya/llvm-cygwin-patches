@@ -2,48 +2,22 @@ name: Cross build Cygwin binary
 on:
   schedule:
     - cron: '18 21 * * *'
-  workflow_call:
-    inputs:
-      upstream-branch:
-        description: 'Upstream branch to build'
-        type: string
-        required: true
-        default: 'main'
-      patch-series-host:
-        description: 'Patch series to apply for host tool'
-        type: string
-        required: true
-        default: 'cross'
-      patch-series:
-        description: 'Patch series to apply for target tool'
-        type: string
-        required: true
-        default: 'main'
-      config-host:
-        description: 'Build config script for host tool'
-        type: string
-        required: false
-        default: 'linux-clang'
-      config:
-        description: 'Build config script for target tool'
-        type: string
-        required: true
   workflow_dispatch:
     inputs:
       upstream-branch:
         description: 'Upstream branch to build'
         type: string
-        required: true
+        required: false
         default: 'main'
       patch-series-host:
         description: 'Patch series to apply for host tool'
         type: string
-        required: true
+        required: false
         default: 'cross'
       patch-series:
         description: 'Patch series to apply for target tool'
         type: string
-        required: true
+        required: false
         default: 'main'
       config-host:
         description: 'Build config script for host tool'
@@ -53,7 +27,7 @@ on:
       config:
         description: 'Build config script for target tool'
         type: string
-        required: true
+        required: false
         default: 'cross-clang-dylib'
 
 jobs:
@@ -96,7 +70,6 @@ jobs:
           path: patches
 
       - name: prepare llvm tree
-        if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
         id: prepare-tree
         uses: ./patches/.github/actions/patch-llvm
         with:
@@ -104,14 +77,12 @@ jobs:
           patch-series: ${{ needs.select.outputs.patch-series-host }}
 
       - name: build llvm
-        if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
         id: build-llvm
         uses: ./patches/.github/actions/build-llvm
         with:
-          config-name: ${{ needs.select.output.config-host }}
+          config-name: ${{ needs.select.outputs.config-host }}
 
       - id: install
-        if: ${{ steps.cross-cache-restore.outputs.cache-hit != 'true' }}
         env:
           BUILD_NAME: ${{ steps.build-llvm.outputs.build-name }}
         run: |
@@ -122,6 +93,7 @@ jobs:
         with:
           name: host-tool
           overwrite: true
+          retention-days: 1
           path: |
             llvm-head
 
@@ -145,6 +117,8 @@ jobs:
       - uses: actions/download-artifact@v5
         with:
           name: host-tool
+          path: |
+            llvm-head
 
       - name: prepare Cygwin
         id: prepare-cygwin

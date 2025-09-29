@@ -10,15 +10,12 @@ jobs:
       - name: checkout
         uses: actions/checkout@v5
       - name: update Cygwin
+        id: cygwin
         uses: ./.github/actions/prepare-cygwin-root
-        with:
-          install-dir: 'd:\thecygwin'
-          cache-key-base: 'key'
-
       - name: check cygwin
         run: |
           echo ${{ steps.cygwin.outputs.root }}
           echo ${{ steps.cygwin.outputs.workspace }}
           ls
-          ls thecygwin
+          ls ${{ steps.cygwin.outputs.root }}
         shell: bash

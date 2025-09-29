@@ -1,1 +1,2 @@
 ^Clang :: Index/crash-recovery-modules.m$
+^LLVM :: ExecutionEngine/MCJIT/stubs-sm-pic.ll$

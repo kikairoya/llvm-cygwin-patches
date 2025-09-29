@@ -64,7 +64,7 @@ runs:
         INPUTS_INSTALL_DIR: ${{ inputs.install-dir }}
       run: |
         archive=$PWD/cygwin_tarstrap/cygwinroot.tar.gz
-        : ${INPUTS_INSTALL_DIR:=cygwin}
+        : ${INPUTS_INSTALL_DIR:=$PWD/cygwin}
         cygroot=$(basename ${INPUTS_INSTALL_DIR//\\/\/})
         mkdir $cygroot
         cd $cygroot
@@ -74,6 +74,7 @@ runs:
         cd usr
         ln -s ../bin
         ln -s ../lib
+        cat ../etc/setup/installed.db
       shell: bash
 
     - name: unpack Cygwin
@@ -122,7 +123,7 @@ runs:
       if: steps.globals.outputs.setup-cygwin
       env:
         SETUPEXE: ${{steps.cygwin.outputs.setup}}
-        TESTOPT: ${{ inputs.allow-test-packages && '-t' || '' }}
+        TESTOPT: ${{ inputs.allow-test-packages == 'true' && '-t' || '' }}
       run: |
         %SETUPEXE% -ogqOrn %TESTOPT%
       shell: cmd
@@ -164,10 +165,19 @@ runs:
         path: cygwin_tarstrap
 
     - name: cleanup
+      id: cleanup
       if: steps.globals.outputs.is-windows
+      env:
+        SETUPROOT: ${{steps.cygwin.outputs.root}}
+        UNPACKROOT: ${{steps.unpack-cygwin-windows.outputs.root}}
       run: |
         rmdir /s /q cygwin_tarstrap
-        cd ${{steps.unpack-cygwin-windows.outputs.root}}
+        set root=D:\cygwin
+        if exist %SETUPROOT% set root=%SETUPROOT%
+        if exist %UNPACKROOT% set root=%UNPACKROOT%
+        cd %root%
+        echo root=%cd%>> %GITHUB_OUTPUT%
+        type etc\setup\installed.db
         mkdir var
         mkdir var\wrapper-bin
         echo %cd%\var\wrapper-bin>> %GITHUB_PATH%
@@ -177,12 +187,16 @@ runs:
       shell: cmd
 
     - id: set-output
+      env:
+        ISWIN: ${{ steps.globals.outputs.is-windows }}
+        WINROOT: ${{steps.cleanup.outputs.root}}
+        LNXROOT: ${{steps.unpack-cygwin-linux.outputs.root}}
       run: |
-        if [ '${{ steps.globals.outputs.is-windows }}' == 'true' ]; then
-          echo 'root=${{steps.unpack-cygwin-windows.outputs.root}}' >> "$GITHUB_OUTPUT"
-          echo workspace=$("${{steps.unpack-cygwin-windows.outputs.root}}\bin\cygpath.exe" -ua '${{ github.workspace }}') >> "$GITHUB_OUTPUT"
+        if [ "$ISWIN" == "true" ]; then
+          echo "root=$WINROOT" >> "$GITHUB_OUTPUT"
+          echo workspace=$("$WINROOT\bin\cygpath.exe" -ua "$GITHUB_WORKSPACE") >> "$GITHUB_OUTPUT"
         else
-          echo root=${{steps.unpack-cygwin-linux.outputs.root}} >> $GITHUB_OUTPUT
+          echo root=$LNXROOT >> $GITHUB_OUTPUT
           echo workspace=$GITHUB_WORKSPACE >> $GITHUB_OUTPUT
         fi
       shell: bash

@@ -1,6 +1,8 @@
 Clang :: APINotes/case-for-private-apinotes-file.c
 Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
 Clang :: Driver/clang-offload-bundler.c
+Clang :: Driver/DTLTO/dtlto.c
+Clang :: Driver/DTLTO/ps5-dtlto.c
 Clang :: Driver/mingw-sysroot.cpp
 Clang :: Interpreter/pretty-print.c
 Clang :: Interpreter/pretty-print.cpp
@@ -17,6 +19,15 @@ LLVM :: ExecutionEngine/MCJIT/2003-08-23-RegisterAllocatePhysReg.ll
 LLVM :: ExecutionEngine/MCJIT/test-loadstore.ll
 LLVM :: ExecutionEngine/OrcLazy/debug-descriptor.ll
 LLVM :: Other/can-execute.txt
+LLVM :: tools/llvm-ar/error-opening-permission.test
+LLVM :: tools/llvm-dwarfdump/X86/output.s
+LLVM :: tools/llvm-ifs/fail-file-write.test
+LLVM :: tools/llvm-ranlib/error-opening-permission.test
 LLVM :: tools/llvm-rc/windres-preproc.test
 LLVM-Unit :: Support/./SupportTests.exe/FileSystemTest/permissions
 lit :: shtest-ulimit.py
+lld :: COFF/lto-cache-errors.ll
+lld :: COFF/nodefaultlib.test
+lld :: COFF/thinlto-emit-imports.ll
+lld :: MachO/invalid/invalid-lto-object-path.ll
+lld :: MachO/thinlto-emit-imports.ll

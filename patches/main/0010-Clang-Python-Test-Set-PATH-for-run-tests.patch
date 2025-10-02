@@ -1,4 +1,4 @@
-From 0d460575206fb58dcb251b00656bcc7727715d17 Mon Sep 17 00:00:00 2001
+From 836574d3a96f2ec50d6287cf19edd2d173ac43eb Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 9 Jul 2025 21:23:51 +0900
 Subject: [PATCH 10/13] [Clang-Python][Test] Set $PATH for run tests
@@ -8,7 +8,7 @@ Subject: [PATCH 10/13] [Clang-Python][Test] Set $PATH for run tests
  1 file changed, 5 insertions(+)
 
 diff --git a/clang/bindings/python/tests/CMakeLists.txt b/clang/bindings/python/tests/CMakeLists.txt
-index d9a6bbf452bd..77a72092c3f0 100644
+index d9a6bbf452bd..ea4ec43c3455 100644
 --- a/clang/bindings/python/tests/CMakeLists.txt
 +++ b/clang/bindings/python/tests/CMakeLists.txt
 @@ -2,10 +2,15 @@
@@ -16,7 +16,7 @@ index d9a6bbf452bd..77a72092c3f0 100644
  # Avoid configurations including '-include' from interfering with
  # our tests by setting CLANG_NO_DEFAULT_CONFIG.
 +set(set_runtime_path)
-+if ((WIN32 OR CYGWIN) AND (LLVM_LINK_LLVM_DYLIB OR CLANG_LINK_CLANG_DYLIB))
++if ((WIN32 OR CYGWIN) AND (LLVM_LINK_LLVM_DYLIB OR BUILD_SHARED_LIBS))
 +  set(set_runtime_path "\"PATH=$<TARGET_FILE_DIR:libclang>:$ENV{PATH}\"")
 +endif()
  add_custom_target(check-clang-python

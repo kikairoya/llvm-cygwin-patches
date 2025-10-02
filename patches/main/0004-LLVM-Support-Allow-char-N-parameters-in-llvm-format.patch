@@ -1,7 +1,7 @@
-From f5d7184d3dd6a99718148654f7e8cb7828002ef8 Mon Sep 17 00:00:00 2001
+From f74084cc62f3c707649a61547cdda5699f967364 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 18 Sep 2025 18:50:38 +0900
-Subject: [PATCH 03/13] [LLVM][Support] Allow `char[N]` parameters in
+Subject: [PATCH 04/13] [LLVM][Support] Allow `char[N]` parameters in
  `llvm::format`
 
 Cygwin builds are currently broken after #157312, which effectively reverted #138117.
@@ -18,28 +18,21 @@ Other array types remain rejected:
 - Non-character arrays (e.g., `int[N]`) are also rejected, since passing such
   arrays to `printf` is meaningless.
 ---
- llvm/include/llvm/Support/Format.h    | 16 +++++++-
+ llvm/include/llvm/Support/Format.h    | 15 ++++++-
  llvm/unittests/Support/CMakeLists.txt |  1 +
  llvm/unittests/Support/Format.cpp     | 56 +++++++++++++++++++++++++++
- 3 files changed, 71 insertions(+), 2 deletions(-)
+ 3 files changed, 70 insertions(+), 2 deletions(-)
  create mode 100644 llvm/unittests/Support/Format.cpp
 
 diff --git a/llvm/include/llvm/Support/Format.h b/llvm/include/llvm/Support/Format.h
-index 2553002b3789..6cd73a213177 100644
+index 34b224dba540..b549341a40e7 100644
 --- a/llvm/include/llvm/Support/Format.h
 +++ b/llvm/include/llvm/Support/Format.h
-@@ -78,6 +78,7 @@ public:
+@@ -78,9 +78,20 @@ public:
  /// printed, this synthesizes the string into a temporary buffer provided and
  /// returns whether or not it is big enough.
  
 +namespace detail {
- // Helper to validate that format() parameters are scalars or pointers.
- template <typename... Args> struct validate_format_parameters;
- template <typename Arg, typename... Args>
-@@ -88,9 +89,19 @@ struct validate_format_parameters<Arg, Args...> {
- };
- template <> struct validate_format_parameters<> {};
- 
 +template <typename T> struct decay_if_c_char_array {
 +  using type = T;
 +};
@@ -57,16 +50,15 @@ index 2553002b3789..6cd73a213177 100644
  
    template <std::size_t... Is>
    int snprint_tuple(char *Buffer, unsigned BufferSize,
-@@ -105,7 +116,8 @@ class format_object final : public format_object_base {
- public:
+@@ -96,7 +107,7 @@ public:
    format_object(const char *fmt, const Ts &... vals)
        : format_object_base(fmt), Vals(vals...) {
--    validate_format_parameters<Ts...>();
-+    detail::validate_format_parameters<
-+        detail::decay_if_c_char_array_t<Ts>...>();
+     static_assert(
+-        (std::is_scalar_v<Ts> && ...),
++        (std::is_scalar_v<detail::decay_if_c_char_array_t<Ts>> && ...),
+         "format can't be used with non fundamental / non pointer type");
    }
  
-   int snprint(char *Buffer, unsigned BufferSize) const override {
 diff --git a/llvm/unittests/Support/CMakeLists.txt b/llvm/unittests/Support/CMakeLists.txt
 index d1dfb1dc4a72..1f2a68545d10 100644
 --- a/llvm/unittests/Support/CMakeLists.txt

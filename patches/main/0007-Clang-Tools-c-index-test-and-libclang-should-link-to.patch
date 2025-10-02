@@ -1,4 +1,4 @@
-From a6b81bf2144a3b64e0670ed158c22d54438108eb Mon Sep 17 00:00:00 2001
+From ad4ba65dda006176358db42f3518de7c642169b0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 16 May 2025 18:24:46 +0900
 Subject: [PATCH 07/13] [Clang-Tools] c-index-test and libclang should link to

@@ -87,6 +87,7 @@ jobs:
           BUILD_NAME: ${{ steps.build-llvm.outputs.build-name }}
         run: |
           cmake --install build-$BUILD_NAME --prefix $PWD/llvm-head
+          tar caf llvm-head.tar llvm-head
         shell: bash
 
       - uses: actions/upload-artifact@v4
@@ -95,7 +96,7 @@ jobs:
           overwrite: true
           retention-days: 1
           path: |
-            llvm-head
+            llvm-head.tar
 
   build:
     runs-on: ubuntu-latest
@@ -117,8 +118,11 @@ jobs:
       - uses: actions/download-artifact@v5
         with:
           name: host-tool
-          path: |
-            llvm-head
+
+      - run: |
+          find . -maxdepth 3 -name llvm-head.tar
+          find . -maxdepth 3 -name llvm-head.tar | xargs tar xf
+        shell: bash
 
       - name: prepare Cygwin
         id: prepare-cygwin

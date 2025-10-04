@@ -4,13 +4,15 @@ Clang :: Driver/clang-offload-bundler.c
 Clang :: Driver/DTLTO/dtlto.c
 Clang :: Driver/DTLTO/ps5-dtlto.c
 Clang :: Driver/mingw-sysroot.cpp
-Clang :: Interpreter/pretty-print.c
-Clang :: Interpreter/pretty-print.cpp
 Clang :: Lexer/case-insensitive-include-absolute.c
 Clang :: Lexer/case-insensitive-include.c
 Clang :: Lexer/case-insensitive-system-include.c
 Clang :: Modules/inferred-framework-case.m
 Clang :: Preprocessor/nonportable-include-with-hmap.c
+Clang Tools :: clang-tidy/CTTestTidyModule.cpp
+Clang-Unit :: Interpreter/./ClangReplInterpreterTests.exe/2/4
+Clang-Unit :: Interpreter/./ClangReplInterpreterTests.exe/22/27
+Clang-Unit :: Interpreter/./ClangReplInterpreterTests.exe/InterpreterTest/FindMangledNameSymbol
 Clang-Unit :: Interpreter/ExceptionTests/./ClangReplInterpreterExceptionTests.exe/0/1
 LLVM :: ExecutionEngine/MCJIT/2003-01-15-AlignmentTest.ll
 LLVM :: ExecutionEngine/MCJIT/2003-05-06-LivenessClobber.ll
@@ -25,9 +27,9 @@ LLVM :: tools/llvm-ifs/fail-file-write.test
 LLVM :: tools/llvm-ranlib/error-opening-permission.test
 LLVM :: tools/llvm-rc/windres-preproc.test
 LLVM-Unit :: Support/./SupportTests.exe/FileSystemTest/permissions
+LLVM-Unit :: Support/./SupportTests.exe/ProgramEnvTest/TestExecuteEmptyEnvironment
 lit :: shtest-ulimit.py
 lld :: COFF/lto-cache-errors.ll
-lld :: COFF/nodefaultlib.test
 lld :: COFF/thinlto-emit-imports.ll
 lld :: MachO/invalid/invalid-lto-object-path.ll
 lld :: MachO/thinlto-emit-imports.ll

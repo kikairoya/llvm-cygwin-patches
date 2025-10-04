@@ -36,41 +36,38 @@ on_int() {
 }
 trap on_int SIGINT
 
-tar xf llvm-cygwin-$BUILD_NAME.tar
-rm llvm-cygwin-$BUILD_NAME.tar
-
-export LIT_OPTS="-q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml"
-bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh
-
-if [ -f patches/xfail-$CONFIG.txt ]; then
-  export LIT_XFAIL="$(sed '2,$s/^/;/' < patches/xfail-$CONFIG.txt | tr -d '\n')"
+if [ -f llvm-cygwin-$BUILD_NAME.tar ]; then
+  tar xf llvm-cygwin-$BUILD_NAME.tar
+  rm llvm-cygwin-$BUILD_NAME.tar
 fi
-if [ -f patches/filter-out-$CONFIG.txt ]; then
-  export LIT_FILTER_OUT="($(sed '2,$s/^/)|(/' < patches/filter-out-$CONFIG.txt | tr -d '\n'))"
-fi
-if [ -f patches/filter-$CONFIG.txt ]; then
-  export LIT_FILTER="($(sed '2,$s/^/)|(/' < patches/filter-$CONFIG.txt | tr -d '\n'))"
-fi
-export LIT_OPTS="-sv -j2 --xunit-xml-output=$PWD/result-$BUILD_NAME.xml"
-env | grep ^LIT > env-$BUILD_NAME.txt || true
 
 set -o pipefail
-result=
-if ! bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh | tee testlog-$BUILD_NAME.txt; then
-  result=1
+if [ -z "$CONFIG" ]; then
+  export LIT_OPTS="-q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml"
+  bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh
+else
+  if [ -f patches/xfail-$CONFIG.txt ]; then
+    export LIT_XFAIL="$(sed '2,$s/^/;/' < patches/xfail-$CONFIG.txt | tr -d '\n')"
+  fi
+  if [ -f patches/filter-out-$CONFIG.txt ]; then
+    export LIT_FILTER_OUT="($(sed '2,$s/^/)|(/' < patches/filter-out-$CONFIG.txt | tr -d '\n'))"
+  fi
+  export LIT_OPTS="-sv -j2 --xunit-xml-output=$PWD/result-$CONFIG-$BUILD_NAME.xml"
+  env | grep ^LIT > env-$BUILD_NAME.txt || true
+  result=
+  if ! bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh | tee testlog-$CONFIG-$BUILD_NAME.txt; then
+    result=1
+  fi
+  if [ -f patches/xfail-$CONFIG.txt ]; then
+    echo additional XFAIL:
+    cat patches/xfail-$CONFIG.txt
+  fi
+  if [ -f patches/filter-out-$CONFIG.txt ]; then
+    echo additional FILTER_OUT:
+    cat patches/filter-out-$CONFIG.txt
+  fi
+  exit $result
 fi
 
-if [ -f patches/xfail-$CONFIG.txt ]; then
-  echo XFAIL:
-  cat patches/xfail-$CONFIG.txt
-fi
-if [ -f patches/filter-out-$CONFIG.txt ]; then
-  echo FILTER_OUT:
-  cat patches/filter-out-$CONFIG.txt
-fi
-if [ -f patches/filter-$CONFIG.txt ]; then
-  echo FILTER:
-  cat patches/filter-$CONFIG.txt
-fi
 
-exit $result
+

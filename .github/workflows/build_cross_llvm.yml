@@ -49,7 +49,7 @@ jobs:
           if [ -n "$CONFIG" ]; then
             echo "configs=[\"$CONFIG\"]" >> "$GITHUB_OUTPUT"
           else
-            echo "configs=[\"cross-clang-static\", \"cross-clang-dylib\"]" >> "$GITHUB_OUTPUT"
+            echo "configs=[\"cross-clang-static\", \"cross-clang-dylib\", \"cross-clang-shared\", \"cross-clang-builddylib\"]" >> "$GITHUB_OUTPUT"
           fi
         shell: bash
 
@@ -101,10 +101,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Cross build LLVM ${{ needs.select.outputs.upstream-branch }} ${{ matrix.config }}
-    concurrency:
-      group: build-cross-cygwin-from-linux
     needs: [select, prepare-host]
     strategy:
+      fail-fast: false
+      max-parallel: 2
       matrix:
         config: ${{ fromJSON(needs.select.outputs.configs) }}
 
@@ -120,8 +120,8 @@ jobs:
           name: host-tool
 
       - run: |
-          find . -maxdepth 3 -name llvm-head.tar
-          find . -maxdepth 3 -name llvm-head.tar | xargs tar xf
+          tar xf llvm-head.tar
+          rm llvm-head.tar
         shell: bash
 
       - name: prepare Cygwin

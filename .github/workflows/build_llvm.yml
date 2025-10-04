@@ -1,8 +1,7 @@
 name: Build LLVM
 on:
   schedule:
-    - cron: '18 15 * * *'
-    - cron: '18 3 * * *'
+    - cron: '18 0 * * *'
   workflow_dispatch:
     inputs:
       upstream-branch:
@@ -36,10 +35,7 @@ jobs:
           SCHEDULE: ${{ github.event.schedule }}
         run: |
           case "$SCHEDULE" in
-            '18 15 * * *')
-              echo config=clang-static >> "$GITHUB_OUTPUT"
-              ;;
-            '18 3 * * *')
+            '18'*)
               echo config=clang-dylib >> "$GITHUB_OUTPUT"
               ;;
             '')
@@ -125,12 +121,34 @@ jobs:
         with:
           name: build-artifact
 
-      - name: check llvm
+      - name: check llvm dry-run
+        id: check-0
         env:
           BUILD_NAME: ${{ needs.build.outputs.build-name }}
-          CONFIG: ${{ needs.select.outputs.config }}
+          CONFIG: ''
           CYGWINROOT: ${{ steps.prepare-cygwin.outputs.root }}
-          TIMEOUT: '240m'
+          TIMEOUT: '180m'
+        run: ./patches/scripts/runtest.sh
+        shell: bash
+
+      - name: check llvm 1st
+        id: check-1
+        if: ${{ success() || (! cancelled() && steps.check-0.outcome == 'failure') }}
+        env:
+          BUILD_NAME: ${{ needs.build.outputs.build-name }}
+          CONFIG: 1-${{ needs.select.outputs.config }}
+          CYGWINROOT: ${{ steps.prepare-cygwin.outputs.root }}
+          TIMEOUT: '180m'
+        run: ./patches/scripts/runtest.sh
+        shell: bash
+
+      - name: check llvm 2nd
+        if: ${{ success() || (! cancelled() && (steps.check-0.outcome == 'failure' || steps.check-1.outcome == 'failure')) }}
+        env:
+          BUILD_NAME: ${{ needs.build.outputs.build-name }}
+          CONFIG: 2-${{ needs.select.outputs.config }}
+          CYGWINROOT: ${{ steps.prepare-cygwin.outputs.root }}
+          TIMEOUT: '180m'
         run: ./patches/scripts/runtest.sh
         shell: bash
 

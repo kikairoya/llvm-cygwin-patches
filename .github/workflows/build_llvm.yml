@@ -119,7 +119,7 @@ jobs:
 
       - uses: actions/download-artifact@v5
         with:
-          name: build-artifact
+          name: build-artifact-${{ needs.select.outputs.config }}
 
       - name: check llvm dry-run
         id: check-0
@@ -133,22 +133,20 @@ jobs:
 
       - name: check llvm 1st
         id: check-1
-        if: ${{ success() || (! cancelled() && steps.check-0.outcome == 'failure') }}
         env:
           BUILD_NAME: ${{ needs.build.outputs.build-name }}
           CONFIG: 1-${{ needs.select.outputs.config }}
           CYGWINROOT: ${{ steps.prepare-cygwin.outputs.root }}
-          TIMEOUT: '180m'
+          TIMEOUT: '170m'
         run: ./patches/scripts/runtest.sh
         shell: bash
 
       - name: check llvm 2nd
-        if: ${{ success() || (! cancelled() && (steps.check-0.outcome == 'failure' || steps.check-1.outcome == 'failure')) }}
         env:
           BUILD_NAME: ${{ needs.build.outputs.build-name }}
           CONFIG: 2-${{ needs.select.outputs.config }}
           CYGWINROOT: ${{ steps.prepare-cygwin.outputs.root }}
-          TIMEOUT: '180m'
+          TIMEOUT: '170m'
         run: ./patches/scripts/runtest.sh
         shell: bash
 

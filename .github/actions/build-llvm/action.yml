@@ -101,13 +101,13 @@ runs:
     - uses: actions/upload-artifact@v4
       if: ${{ always() }}
       with:
-        name: build-artifact
+        name: build-artifact-${{ inputs.config-name }}
         overwrite: true
         path: ${{ github.workspace }}/llvm-cygwin-${{ steps.set-buildname.outputs.build-name }}.tar
 
     - uses: actions/upload-artifact@v4
       if: ${{ always() }}
       with:
-        name: build-log
+        name: build-log-${{ inputs.config-name }}
         overwrite: true
         path: ${{ github.workspace }}/*log-${{ steps.set-buildname.outputs.build-name }}.txt

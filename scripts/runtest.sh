@@ -14,12 +14,14 @@ send_signal() {
   (
     set +e
     cd /proc
-    for f in *; do
-      case $(readlink $f/exe 2>/dev/null) in
+    for i in *; do
+      f=$(readlink $i/exe 2>/dev/null)
+      case $f in
         /usr/bin/*|"")
           ;;
         *)
-          kill $s $f
+          echo "killing $i [$f]"
+          kill $s $i
           ;;
       esac
     done

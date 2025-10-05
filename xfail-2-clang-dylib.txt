@@ -30,7 +30,6 @@ LLVM-Unit :: Support/./SupportTests.exe/FileSystemTest/permissions
 LLVM-Unit :: Support/./SupportTests.exe/ProgramEnvTest/TestExecuteEmptyEnvironment
 lit :: shtest-ulimit.py
 lld :: COFF/lto-cache-errors.ll
-lld :: COFF/nodefaultlib.test
 lld :: COFF/thinlto-emit-imports.ll
 lld :: MachO/invalid/invalid-lto-object-path.ll
 lld :: MachO/thinlto-emit-imports.ll

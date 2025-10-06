@@ -1,7 +1,7 @@
 name: Build LLVM
 on:
   schedule:
-    - cron: '18 0 * * *'
+    - cron: '18 22 * * *'
   workflow_dispatch:
     inputs:
       upstream-branch:
@@ -127,7 +127,7 @@ jobs:
           BUILD_NAME: ${{ needs.build.outputs.build-name }}
           CONFIG: ''
           CYGWINROOT: ${{ steps.prepare-cygwin.outputs.root }}
-          TIMEOUT: '180m'
+          TIMEOUT_MINUTES: 180
         run: ./patches/scripts/runtest.sh
         shell: bash
 
@@ -137,7 +137,7 @@ jobs:
           BUILD_NAME: ${{ needs.build.outputs.build-name }}
           CONFIG: 1-${{ needs.select.outputs.config }}
           CYGWINROOT: ${{ steps.prepare-cygwin.outputs.root }}
-          TIMEOUT: '170m'
+          TIMEOUT_MINUTES: 180
         run: ./patches/scripts/runtest.sh
         shell: bash
 
@@ -146,7 +146,7 @@ jobs:
           BUILD_NAME: ${{ needs.build.outputs.build-name }}
           CONFIG: 2-${{ needs.select.outputs.config }}
           CYGWINROOT: ${{ steps.prepare-cygwin.outputs.root }}
-          TIMEOUT: '170m'
+          TIMEOUT_MINUTES: 180
         run: ./patches/scripts/runtest.sh
         shell: bash
 

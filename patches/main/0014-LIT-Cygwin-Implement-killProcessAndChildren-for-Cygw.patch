@@ -1,0 +1,63 @@
+From 829158d2c4244be8ccb99ff42fa12c234c4af03f Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 7 Sep 2025 14:11:39 +0900
+Subject: [PATCH 14/14] [LIT][Cygwin] Implement killProcessAndChildren for
+ Cygwin using /proc/<pid>
+
+---
+ llvm/utils/lit/lit/util.py | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/llvm/utils/lit/lit/util.py b/llvm/utils/lit/lit/util.py
+index a5181ab20a7e..a9502c096f4c 100644
+--- a/llvm/utils/lit/lit/util.py
++++ b/llvm/utils/lit/lit/util.py
+@@ -497,7 +497,7 @@ def killProcessAndChildrenIsSupported():
+         otherwise is contains a string describing why the function is
+         not supported.
+     """
+-    if platform.system() == "AIX" or platform.system() == "OS/390":
++    if platform.system() == "AIX" or platform.system() == "OS/390" or sys.platform == "cygwin":
+         return (True, "")
+     try:
+         import psutil  # noqa: F401
+@@ -511,6 +511,27 @@ def killProcessAndChildrenIsSupported():
+             " your operating system's package manager.",
+         )
+ 
++def killProcessAndChildrenByProcPid(pid):
++    from pathlib import Path
++
++    pidmap = dict()
++    for f in Path('/proc').glob('*/ppid'):
++        try:
++            pidmap[int(f.parent.name)] = int(f.read_text())
++        except:
++            pass
++
++    for p in pidmap.keys():
++        if p == pid:
++            os.kill(p, signal.SIGKILL)
++            continue
++        q = p
++        while q in pidmap:
++            if q == pid:
++                os.kill(p, signal.SIGKILL)
++                break
++            q = pidmap[q]
++    os.kill(pid, signal.SIGKILL)
+ 
+ def killProcessAndChildren(pid):
+     """This function kills a process with ``pid`` and all its running children
+@@ -526,6 +547,8 @@ def killProcessAndChildren(pid):
+     elif platform.system() == "OS/390":
+         # FIXME: Only the process is killed.
+         subprocess.call("kill -KILL $(ps -s {} -o pid=)".format(pid), shell=True)
++    elif sys.platform == "cygwin":
++        killProcessAndChildrenByProcPid(pid)
+     else:
+         import psutil
+ 
+-- 
+2.51.0
+

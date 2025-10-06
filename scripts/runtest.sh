@@ -1,11 +1,11 @@
-set -e
+set -ex
 [[ -v BUILD_NAME ]]
-[[ -v TIMEOUT ]]
+[[ -v TIMEOUT_MINUTES ]]
 if [[ $(uname) != CYGWIN* ]]; then
   [[ -v CYGWINROOT ]]
   r="$(cygpath -ua "$CYGWINROOT")"
   unset CYGWINROOT
-  exec env PATH="$r/bin:$PATH" env timeout -s INT $TIMEOUT bash "$0" "$@"
+  exec env PATH="$r/bin:$PATH" env timeout -s INT "${TIMEOUT_MINUTES}m" bash "$0" "$@"
 fi
 [[ $(uname) = CYGWIN* ]]
 cd $(cygpath -ua $GITHUB_WORKSPACE)
@@ -20,7 +20,7 @@ send_signal() {
         /usr/bin/*|"")
           ;;
         *)
-          echo "killing $i [$f]"
+          echo "killing $i [$f]" 1>&2
           kill $s $i
           ;;
       esac
@@ -54,7 +54,7 @@ else
   if [ -f patches/filter-out-$CONFIG.txt ]; then
     export LIT_FILTER_OUT="($(sed '2,$s/^/)|(/' < patches/filter-out-$CONFIG.txt | tr -d '\n'))"
   fi
-  export LIT_OPTS="-sv -j2 --xunit-xml-output=$PWD/result-$CONFIG-$BUILD_NAME.xml"
+  export LIT_OPTS="-sv -j3 --xunit-xml-output=$PWD/result-$CONFIG-$BUILD_NAME.xml --timeout 120 --max-time $(( ${TIMEOUT_MINUTES:-180} * 60 - 120 ))"
   env | grep ^LIT > env-$BUILD_NAME.txt || true
   result=
   if ! bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh | tee testlog-$CONFIG-$BUILD_NAME.txt; then

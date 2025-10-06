@@ -1,7 +1,7 @@
-From 7d6fab63320db2af609093aaed2d514a94e4771e Mon Sep 17 00:00:00 2001
+From 46f7ae6eb71b3648bb335dc9273933cfccdd0fd2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Sep 2025 22:41:56 +0900
-Subject: [PATCH 11/13] [LIT][Cygwin] Skip pre-existing check in mkdir-p
+Subject: [PATCH 11/14] [LIT][Cygwin] Skip pre-existing check in mkdir-p
 
 On Cygwin, a `file_name.exe` can be accessed without suffix, just as `file_name`.
 In that situation, although trying to `mkdir file_name` will succeed as intended,

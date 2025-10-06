@@ -1,7 +1,7 @@
 From f74084cc62f3c707649a61547cdda5699f967364 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 18 Sep 2025 18:50:38 +0900
-Subject: [PATCH 04/13] [LLVM][Support] Allow `char[N]` parameters in
+Subject: [PATCH 04/14] [LLVM][Support] Allow `char[N]` parameters in
  `llvm::format`
 
 Cygwin builds are currently broken after #157312, which effectively reverted #138117.

@@ -1,4 +1,4 @@
-From b9d63be4c7fd6ab8a01608a06338477ee8a81b5b Mon Sep 17 00:00:00 2001
+From a25f1744c4dcb011129c6c07701ed0b2c898e918 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 25 Jul 2025 23:50:48 +0900
 Subject: [PATCH 09/14] put cygclang.dll for check-clang-python

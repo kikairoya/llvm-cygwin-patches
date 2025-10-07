@@ -1,4 +1,4 @@
-From 46f7ae6eb71b3648bb335dc9273933cfccdd0fd2 Mon Sep 17 00:00:00 2001
+From 859de72861d6eb438a6d5b0333558d17baf52c15 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Sep 2025 22:41:56 +0900
 Subject: [PATCH 11/14] [LIT][Cygwin] Skip pre-existing check in mkdir-p

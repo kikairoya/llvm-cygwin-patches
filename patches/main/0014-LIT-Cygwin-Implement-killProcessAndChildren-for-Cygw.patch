@@ -1,15 +1,15 @@
-From 829158d2c4244be8ccb99ff42fa12c234c4af03f Mon Sep 17 00:00:00 2001
+From d7d6b60c0d60f5c8562bf7c3db8985797cc3ad9a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 14:11:39 +0900
 Subject: [PATCH 14/14] [LIT][Cygwin] Implement killProcessAndChildren for
  Cygwin using /proc/<pid>
 
 ---
- llvm/utils/lit/lit/util.py | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+ llvm/utils/lit/lit/util.py | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
 diff --git a/llvm/utils/lit/lit/util.py b/llvm/utils/lit/lit/util.py
-index a5181ab20a7e..a9502c096f4c 100644
+index a5181ab20a7e..b050d1883e72 100644
 --- a/llvm/utils/lit/lit/util.py
 +++ b/llvm/utils/lit/lit/util.py
 @@ -497,7 +497,7 @@ def killProcessAndChildrenIsSupported():
@@ -21,11 +21,17 @@ index a5181ab20a7e..a9502c096f4c 100644
          return (True, "")
      try:
          import psutil  # noqa: F401
-@@ -511,6 +511,27 @@ def killProcessAndChildrenIsSupported():
+@@ -511,6 +511,33 @@ def killProcessAndChildrenIsSupported():
              " your operating system's package manager.",
          )
  
 +def killProcessAndChildrenByProcPid(pid):
++    def killSilently(pid):
++        try:
++            os.kill(pid, signal.SIGKILL)
++        except:
++            pass
++
 +    from pathlib import Path
 +
 +    pidmap = dict()
@@ -35,21 +41,21 @@ index a5181ab20a7e..a9502c096f4c 100644
 +        except:
 +            pass
 +
++    def isDescendant(child):
++        while child > 1 and child in pidmap:
++            child = pidmap[child]
++            if child == pid: return True
++        return False
++
 +    for p in pidmap.keys():
-+        if p == pid:
-+            os.kill(p, signal.SIGKILL)
-+            continue
-+        q = p
-+        while q in pidmap:
-+            if q == pid:
-+                os.kill(p, signal.SIGKILL)
-+                break
-+            q = pidmap[q]
-+    os.kill(pid, signal.SIGKILL)
++        if isDescendant(p):
++            killSilently(p)
++
++    killSilently(pid)
  
  def killProcessAndChildren(pid):
      """This function kills a process with ``pid`` and all its running children
-@@ -526,6 +547,8 @@ def killProcessAndChildren(pid):
+@@ -526,6 +553,8 @@ def killProcessAndChildren(pid):
      elif platform.system() == "OS/390":
          # FIXME: Only the process is killed.
          subprocess.call("kill -KILL $(ps -s {} -o pid=)".format(pid), shell=True)

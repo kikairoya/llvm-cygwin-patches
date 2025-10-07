@@ -1,42 +1,13 @@
 set -ex
 [[ -v BUILD_NAME ]]
-[[ -v TIMEOUT_MINUTES ]]
 if [[ $(uname) != CYGWIN* ]]; then
   [[ -v CYGWINROOT ]]
   r="$(cygpath -ua "$CYGWINROOT")"
   unset CYGWINROOT
-  exec env PATH="$r/bin:$PATH" env timeout -s INT "${TIMEOUT_MINUTES}m" bash "$0" "$@"
+  exec env PATH="$r/bin:$PATH" env bash "$0" "$@"
 fi
 [[ $(uname) = CYGWIN* ]]
 cd $(cygpath -ua $GITHUB_WORKSPACE)
-send_signal() {
-  s=$1
-  (
-    set +e
-    cd /proc
-    for i in *; do
-      f=$(readlink $i/exe 2>/dev/null)
-      case $f in
-        /usr/bin/*|"")
-          ;;
-        *)
-          echo "killing $i [$f]" 1>&2
-          kill $s $i
-          ;;
-      esac
-    done
-  )
-}
-on_int() {
-  trap - SIGINT
-  send_signal -INT
-  sleep 10
-  send_signal -INT
-  sleep 3
-  kill -INT $$
-  return 1
-}
-trap on_int SIGINT
 
 if [ -f llvm-cygwin-$BUILD_NAME.tar ]; then
   tar xf llvm-cygwin-$BUILD_NAME.tar
@@ -45,31 +16,29 @@ fi
 
 set -o pipefail
 if [ -z "$CONFIG" ]; then
-  export LIT_OPTS="-q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml"
+  export LIT_OPTS="-q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml --timeout ${PER_TEST_TIMEOUT:-180} --max-time $(( ${TOTAL_TIMEOUT_MINUTES:-180} * 60 ))"
   bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh
-else
-  if [ -f patches/xfail-$CONFIG.txt ]; then
-    export LIT_XFAIL="$(sed '2,$s/^/;/' < patches/xfail-$CONFIG.txt | tr -d '\n')"
-  fi
-  if [ -f patches/filter-out-$CONFIG.txt ]; then
-    export LIT_FILTER_OUT="($(sed '2,$s/^/)|(/' < patches/filter-out-$CONFIG.txt | tr -d '\n'))"
-  fi
-  export LIT_OPTS="-sv -j3 --xunit-xml-output=$PWD/result-$CONFIG-$BUILD_NAME.xml --timeout 120 --max-time $(( ${TIMEOUT_MINUTES:-180} * 60 - 120 ))"
-  env | grep ^LIT > env-$BUILD_NAME.txt || true
-  result=
-  if ! bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh | tee testlog-$CONFIG-$BUILD_NAME.txt; then
-    result=1
-  fi
-  if [ -f patches/xfail-$CONFIG.txt ]; then
-    echo additional XFAIL:
-    cat patches/xfail-$CONFIG.txt
-  fi
-  if [ -f patches/filter-out-$CONFIG.txt ]; then
-    echo additional FILTER_OUT:
-    cat patches/filter-out-$CONFIG.txt
-  fi
-  exit $result
+  exit
 fi
 
-
-
+if [ -f patches/xfail-$CONFIG.txt ]; then
+  export LIT_XFAIL="$(sed '2,$s/^/;/' < patches/xfail-$CONFIG.txt | tr -d '\n')"
+fi
+if [ -f patches/filter-out-$CONFIG.txt ]; then
+  export LIT_FILTER_OUT="($(sed '2,$s/^/)|(/' < patches/filter-out-$CONFIG.txt | tr -d '\n'))"
+fi
+export LIT_OPTS="-sv -j3 --xunit-xml-output=$PWD/result-$CONFIG-$BUILD_NAME.xml --timeout ${PER_TEST_TIMEOUT:-180} --max-time $(( ${TOTAL_TIMEOUT_MINUTES:-180} * 60 ))"
+env | grep ^LIT > env-$BUILD_NAME.txt || true
+result=
+if ! bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh | tee testlog-$CONFIG-$BUILD_NAME.txt; then
+  result=1
+fi
+if [ -f patches/xfail-$CONFIG.txt ]; then
+  echo additional XFAIL:
+  cat patches/xfail-$CONFIG.txt
+fi
+if [ -f patches/filter-out-$CONFIG.txt ]; then
+  echo additional FILTER_OUT:
+  cat patches/filter-out-$CONFIG.txt
+fi
+exit $result

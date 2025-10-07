@@ -136,7 +136,7 @@ jobs:
           BUILD_NAME: ${{ needs.build.outputs.build-name }}
           CONFIG: 1-${{ needs.select.outputs.config }}
           CYGWINROOT: ${{ steps.prepare-cygwin.outputs.root }}
-          TOTAL_TIMEOUT_MINUTES: 180
+          TOTAL_TIMEOUT_MINUTES: 330
           PER_TEST_TIMEOUT: 180
         run: ./patches/scripts/runtest.sh
         shell: bash
@@ -146,7 +146,7 @@ jobs:
           BUILD_NAME: ${{ needs.build.outputs.build-name }}
           CONFIG: 2-${{ needs.select.outputs.config }}
           CYGWINROOT: ${{ steps.prepare-cygwin.outputs.root }}
-          TOTAL_TIMEOUT_MINUTES: 180
+          TOTAL_TIMEOUT_MINUTES: 330
           PER_TEST_TIMEOUT: 180
         run: ./patches/scripts/runtest.sh
         shell: bash

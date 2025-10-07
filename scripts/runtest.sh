@@ -16,7 +16,7 @@ fi
 
 set -o pipefail
 if [ -z "$CONFIG" ]; then
-  export LIT_OPTS="-q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml --timeout ${PER_TEST_TIMEOUT:-180} --max-time $(( ${TOTAL_TIMEOUT_MINUTES:-180} * 60 ))"
+  export LIT_OPTS="-q --no-execute --ignore-fail --xunit-xml-output=$PWD/dryrun-$BUILD_NAME.xml --timeout ${PER_TEST_TIMEOUT:-180} --max-time $(( ${TOTAL_TIMEOUT_MINUTES:-180} * 60 )) $*"
   bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh
   exit
 fi
@@ -27,7 +27,7 @@ fi
 if [ -f patches/filter-out-$CONFIG.txt ]; then
   export LIT_FILTER_OUT="($(sed '2,$s/^/)|(/' < patches/filter-out-$CONFIG.txt | tr -d '\n'))"
 fi
-export LIT_OPTS="-sv -j3 --xunit-xml-output=$PWD/result-$CONFIG-$BUILD_NAME.xml --timeout ${PER_TEST_TIMEOUT:-180} --max-time $(( ${TOTAL_TIMEOUT_MINUTES:-180} * 60 ))"
+export LIT_OPTS="-sv --xunit-xml-output=$PWD/result-$CONFIG-$BUILD_NAME.xml --timeout ${PER_TEST_TIMEOUT:-180} --max-time $(( ${TOTAL_TIMEOUT_MINUTES:-180} * 60 )) $*"
 env | grep ^LIT > env-$BUILD_NAME.txt || true
 result=
 if ! bash build-$BUILD_NAME/CMakeFiles/check-all-*.sh | tee testlog-$CONFIG-$BUILD_NAME.txt; then

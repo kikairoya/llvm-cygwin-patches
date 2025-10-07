@@ -12,6 +12,7 @@ cd $(cygpath -ua $GITHUB_WORKSPACE)
 if [ -f llvm-cygwin-$BUILD_NAME.tar ]; then
   tar xf llvm-cygwin-$BUILD_NAME.tar
   rm llvm-cygwin-$BUILD_NAME.tar
+  rebase -O build-$BUILD_NAME/bin/*.dll || true
 fi
 
 set -o pipefail

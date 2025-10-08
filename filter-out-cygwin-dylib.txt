@@ -1,0 +1,4 @@
+^Clang :: Index/crash-recovery-modules.m$
+^.*ClangReplInterpreterExceptionTests.*$
+^LLVM :: ExecutionEngine/MCJIT/stubs-sm-pic.ll$
+^lld :: COFF/nodefaultlib.test$

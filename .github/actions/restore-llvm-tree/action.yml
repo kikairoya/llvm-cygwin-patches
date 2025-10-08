@@ -1,0 +1,65 @@
+name: Restore LLVM tree
+description: Restore LLVM tree from artifact
+
+inputs:
+  patch-path:
+    description: Path to be used to clone patches
+    required: true
+  patch-ref:
+    description: Explicit upstream ref of patch collection
+    required: true
+  build-name:
+    description: Build name suffix
+    required: true
+  config-name:
+    description: Build configuration name
+    required: true
+  cygwin-root:
+    description: Cygwih root path
+    required: true
+  artifact-ids:
+    description: IDs to restore artifact, comma-separated
+    required: true
+
+outputs:
+  build-name:
+    description: Build name suffix
+    value: ${{ steps.apply-patch.outputs.build-name }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: prepare patches
+      id: checkout-patch
+      uses: actions/checkout@v5
+      with:
+        path: ${{ inputs.patch-path }}
+        ref: ${{ inputs.patch-ref }}
+
+    - uses: actions/download-artifact@v5
+      with:
+        artifact-ids: ${{ inputs.artifact-ids }}
+        merge-multiple: true
+
+    - name: unpack artifacts
+      env:
+        BUILD_NAME: ${{ inputs.build-name }}
+        CYGWIN_ROOT: ${{ inputs.cygwin-root }}
+        EXTRAN_PROJECT: ${{ inputs.extra-project }}
+      run: |
+        if [ -n "$CYGWIN_ROOT" ]; then
+          set +h
+          pushd "$CYGWIN_ROOT" > /dev/null
+          cd bin
+          export PATH=$PWD:$PATH
+          popd > /dev/null
+        fi
+
+        for f in *-$BUILD_NAME.tar; do
+          echo extracting $f
+          tar xf $f
+          rm $f
+        done
+        rebase -O build-*/bin/*.dll || true
+      shell: bash
+

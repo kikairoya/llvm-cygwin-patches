@@ -1,0 +1,193 @@
+name: Build LLVM tree
+description: Build patched LLVM
+
+inputs:
+  llvm-path:
+    description: Path to source tree
+    required: true
+  patch-path:
+    description: Path to be used to clone patches
+    required: true
+  config-name:
+    description: Build configuration name
+    required: true
+  cygwin-root:
+    description: Cygwih root path
+    reuqired: true
+  build-project:
+    description: Project root to build, relative to llvm-project
+    required: true
+  build-target:
+    description: Target name to build, which is passed to ninja
+    required: false
+    default: ''
+  build-name:
+    description: Build name suffix
+    required: true
+  parallel-compile-jobs:
+    description: LLVM_PARALLEL_COMPILE_JOBS
+    required: false
+  parallel-link-jobs:
+    description: LLVM_PARALLEL_LINK_JOBS
+    required: false
+  extra-lit-opts:
+    description: LIT_OPTS
+    required: false
+  install-prefix:
+    description: PREFIX
+    required: false
+  cmake-flags:
+    description: CMake additional parameter
+    required: false
+  artifact-suffix:
+    description: Additional suffix to artifact name
+    required: false
+    default: ''
+
+outputs:
+  build-name:
+    description: Build identifier name
+    value: ${{ inputs.build-project }}-${{ inputs.build-name }}
+  build-artifact:
+    description: ID of the uploaded build artifact
+    value: ${{ steps.upload-build.outputs.artifact-id }}
+  log-artifact:
+    description: ID of the uploaded build-log artifact
+    value: ${{ steps.upload-log.outputs.artifact-id }}
+  install-artifact:
+    description: ID of the uploaded install artifact
+    value: ${{ steps.upload-install.outputs.artifact-id }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: build
+      name: build ${{ inputs.build-project }} ${{ inputs.config-name }}
+      env:
+        BUILD_NAME: ${{ inputs.build-name }}
+        BUILD_TARGET: ${{ inputs.build-target }}
+        CONFIG_NAME: ${{ inputs.config-name }}
+        CYGWIN_ROOT: ${{ inputs.cygwin-root }}
+        BUILD_PROJECT: ${{ inputs.build-project }}
+        PARALLEL_COMPILE_JOBS: ${{ inputs.parallel-compile-jobs }}
+        PARALLEL_LINK_JOBS: ${{ inputs.parallel-link-jobs }}
+        LLVM_PATH: ${{ inputs.llvm-path }}
+        PATCH_PATH: ${{ inputs.patch-path }}
+        EXTRA_LIT_OPTS: ${{ inputs.extra-lit-opts }}
+        CMAKE_FLAGS: ${{ inputs.cmake-flags }}
+      run: |
+        if [ -n "$CYGWIN_ROOT" ]; then
+          set +h
+          pushd "$CYGWIN_ROOT" > /dev/null
+          cd bin
+          export PATH="$PWD:$PATH"
+          popd > /dev/null
+        fi
+
+        for b in build-*-$BUILD_NAME/bin; do
+          if [ "$b" != "build-$BUILD_PROJECT-$BUILD_NAME/bin" ] && [ -d "$b" ]; then
+            export PATH="$PWD/$b:$PATH"
+          fi
+        done
+
+        if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
+          echo "::group::cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config-$CONFIG_NAME.cmake"
+          cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config-$CONFIG_NAME.cmake | tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
+          echo "::endgroup::"
+        fi
+
+        if [[ $BUILD_TARGET = check* ]]; then
+          pushd $PATCH_PATH > /dev/null
+            if [ -f xfail-$CONFIG_NAME.txt ]; then
+              export LIT_XFAIL="$(sed -e '2,$s/^/;/' xfail-$CONFIG_NAME.txt | tr -d '\n')"
+            fi
+            if [ -f filter-out-$CONFIG_NAME.txt ]; then
+              export LIT_FILTER_OUT="($(sed -e '2,$s/^/)|(/' filter-out-$CONFIG_NAME.txt | tr -d '\n'))"
+            fi
+            if [ -f filter-$CONFIG_NAME.txt ]; then
+              export LIT_FILTER="($(sed -e '2,$s/^/)|(/' filter-$CONFIG_NAME.txt | tr -d '\n'))"
+            fi
+            if [ -f gtest_filter-$CONFIG_NAME.txt ]; then
+              export GTEST_FILTER="-$(sed -e '2,$s/^/:/' gtest_filter-$CONFIG_NAME.txt | tr -d '\n')"
+            fi
+          popd > /dev/null
+
+          export LIT_OPTS="-sv --xunit-xml-output=$(realpath result-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.xml) $EXTRA_LIT_OPTS"
+          env | grep ^LIT_ > env-$BUILD_NAME.txt || true
+        fi
+
+        echo "::group::cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $BUILD_TARGET"
+        cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $BUILD_TARGET | tee buildlog-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.txt
+        echo "::endgroup::"
+      shell: bash
+
+    - id: archive
+      if: ${{ always() }}
+      name: archive ${{ inputs.build-project }} ${{ inputs.config-name }}
+      env:
+        BUILD_NAME: ${{ inputs.build-name }}
+        BUILD_PROJECT: ${{ inputs.build-project }}
+        CYGWIN_ROOT: ${{ inputs.cygwin-root }}
+      run: |
+        if [ -n "$CYGWIN_ROOT" ]; then
+          set +h
+          pushd "$CYGWIN_ROOT" > /dev/null
+          cd bin
+          export PATH=$PWD:$PATH
+          popd > /dev/null
+        fi
+
+        tar caf build-$BUILD_PROJECT-$BUILD_NAME.tar build-$BUILD_PROJECT-$BUILD_NAME
+      shell: bash
+
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() }}
+      id: upload-build
+      with:
+        name: build-artifact-${{ inputs.build-project }}-${{ inputs.build-target || 'all' }}-${{ inputs.config-name }}${{ inputs.artifact-suffix }}
+        overwrite: true
+        path: build-${{ inputs.build-project }}-${{ inputs.build-name }}.tar
+
+    - uses: actions/upload-artifact@v4
+      if: ${{ always() }}
+      id: upload-log
+      with:
+        name: build-log-${{ inputs.build-project }}-${{ inputs.build-target || 'all' }}-${{ inputs.config-name }}${{ inputs.artifact-suffix }}
+        overwrite: true
+        path: |
+          buildlog-*.txt
+          configlog-*.txt
+          result-*.xml
+
+    - id: install
+      if: ${{ inputs.install-prefix != '' }}
+      name: install ${{ inputs.build-project }} ${{ inputs.config-name }}
+      env:
+        BUILD_NAME: ${{ inputs.build-name }}
+        BUILD_PROJECT: ${{ inputs.build-project }}
+        INSTALL_PREFIX: ${{ inputs.install-prefix }}
+        CYGWIN_ROOT: ${{ inputs.cygwin-root }}
+      run: |
+        _mv=$(which mv)
+        if [ -n "$CYGWIN_ROOT" ]; then
+          set +h
+          pushd "$CYGWIN_ROOT" > /dev/null
+          cd bin
+          export PATH=$PWD:$PATH
+          popd > /dev/null
+        fi
+
+        echo "::group::cmake --install build-$BUILD_PROJECT-$BUILD_NAME --prefix $INSTALL_PREFIX"
+        cmake --install build-$BUILD_PROJECT-$BUILD_NAME --prefix $INSTALL_PREFIX
+        echo "::endgroup::"
+        cd $INSTALL_PREFIX
+        tar caf package-cygwin-$BUILD_PROJECT-$BUILD_NAME.tar *
+        $_mv package-cygwin-$BUILD_PROJECT-$BUILD_NAME.tar $GITHUB_WORKSPACE
+      shell: bash
+
+    - uses: actions/upload-artifact@v4
+      if: ${{ inputs.install-prefix != '' }}
+      id: upload-install
+      with:
+        name: package-${{ inputs.build-project }}-${{ inputs.config-name }}${{ inputs.artifact-suffix }}
+        path: package-cygwin-${{ inputs.build-project }}-${{ inputs.build-name }}.tar

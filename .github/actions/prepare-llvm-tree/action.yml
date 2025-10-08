@@ -1,0 +1,114 @@
+name: Prepare LLVM tree
+description: Clone and patch LLVM tree
+
+inputs:
+  llvm-path:
+    description: Path to be going to clone LLVM
+    required: true
+  remote-ref:
+    description: Explicit upstream ref to be patched
+    required: true
+  patch-path:
+    description: Path to be used to clone patches
+    required: true
+  patch-ref:
+    description: Explicit upstream ref of patch collection
+    required: true
+  patch-series:
+    description: Source patch series
+    required: true
+  cygwin-root:
+    description: Cygwih root path
+    required: true
+
+outputs:
+  upstream-commit:
+    description: Upstream commit hash
+    value: ${{ steps.checkout-llvm.outputs.commit }}
+  patch-commit:
+    description: Patch commit hash
+    value: ${{ steps.checkout-patch.outputs.commit }}
+  build-name:
+    description: Build name suffix
+    value: ${{ steps.apply-patch.outputs.build-name }}
+  source-artifact:
+    description: ID of the uploaded patched source tree artifact
+    value: ${{ steps.upload-source.outputs.artifact-id }}
+  patch-artifact:
+    description: ID of the uploaded applied patch artifact
+    value: ${{ steps.upload-patch.outputs.artifact-id }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: prepare patches
+      id: checkout-patch
+      uses: actions/checkout@v5
+      with:
+        path: ${{ inputs.patch-path }}
+        ref: ${{ inputs.patch-ref }}
+
+    - name: checkout llvm tree
+      id: checkout-llvm
+      uses: actions/checkout@v5
+      with:
+        repository: llvm/llvm-project
+        fetch-tags: true
+        ref: ${{ inputs.remote-ref }}
+        path: ${{ inputs.llvm-path }}
+
+    - name: apply patches to ${{ inputs.remote-ref }}
+      id: apply-patch
+      env:
+        INPUTS_PATCH_PATH: ${{ inputs.patch-path }}
+        INPUTS_LLVM_PATH: ${{ inputs.llvm-path }}
+        INPUTS_PATCH_SERIES: ${{ inputs.patch-series }}
+        CYGWIN_ROOT: ${{ inputs.cygwin-root }}
+      run: |
+        UPSTREAM_REV=$(git -C $INPUTS_LLVM_PATH log -n1 --format=format:%h HEAD)
+        PATCH_REV=$(git -C $INPUTS_PATCH_PATH log -n1 --format=format:%h HEAD)
+
+        BUILD_NAME=$UPSTREAM_REV+mod-$PATCH_REV
+        echo build-name=$BUILD_NAME >> "$GITHUB_OUTPUT"
+
+        pushd $INPUTS_PATCH_PATH > /dev/null
+          PATCH_PATH=$PWD
+        popd > /dev/null
+
+        pushd $INPUTS_LLVM_PATH > /dev/null
+          LLVM_PATH=$PWD
+          git config user.name github-actions
+          git config user.email github@github.com
+          git config status.showuntrackedfiles no
+          if [ -d "$PATCH_PATH/patches/$INPUTS_PATCH_SERIES" ]; then
+            git am --empty=drop $PATCH_PATH/patches/$INPUTS_PATCH_SERIES/*
+          fi
+        popd > /dev/null
+
+        tar -caf llvm-source-$BUILD_NAME.tar --exclude=.git $INPUTS_LLVM_PATH
+
+        mkdir -p llvm-patches
+        git -C $LLVM_PATH format-patch -o $PWD/llvm-patches $UPSTREAM_REV..HEAD
+
+        if [ -n "$CYGWIN_ROOT" ]; then
+          set +h
+          pushd "$CYGWIN_ROOT" > /dev/null
+          cd bin
+          export PATH=$PWD:$PATH
+          popd > /dev/null
+        fi
+
+        tar -caf llvm-patches-$BUILD_NAME.tar llvm-patches
+      shell: bash
+
+    - uses: actions/upload-artifact@v4
+      id: upload-source
+      with:
+        name: llvm-source
+        path: llvm-source-*.tar
+
+    - uses: actions/upload-artifact@v4
+      id: upload-patch
+      with:
+        name: llvm-patches
+        path: llvm-patches-*.tar

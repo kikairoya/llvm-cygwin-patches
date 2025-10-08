@@ -74,7 +74,9 @@ runs:
         cd usr
         ln -s ../bin
         ln -s ../lib
+        echo "::group::installed packages"
         cat ../etc/setup/installed.db
+        echo "::endgroup::"
       shell: bash
 
     - name: unpack Cygwin
@@ -177,7 +179,9 @@ runs:
         if exist %UNPACKROOT% set root=%UNPACKROOT%
         cd %root%
         echo root=%cd%>> %GITHUB_OUTPUT%
+        echo ::group::installed packages
         type etc\setup\installed.db
+        echo ::endgroup::
         mkdir var
         mkdir var\wrapper-bin
         echo %cd%\var\wrapper-bin>> %GITHUB_PATH%

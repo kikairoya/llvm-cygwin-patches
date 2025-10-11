@@ -1,0 +1,6 @@
+upstream-branch=main
+patch-series=main
+build-host=windows-latest
+enable-llvm=true
+enable-clang=true
+enable-lld=true

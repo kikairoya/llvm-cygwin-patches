@@ -55,11 +55,13 @@ runs:
           popd > /dev/null
         fi
 
-        for f in *-$BUILD_NAME.tar; do
+        for f in *.tar; do
           echo extracting $f
           tar xf $f
           rm $f
         done
-        rebase -O build-*/bin/*.dll || true
+        if type rebase 2> /dev/null; then
+          find . -name '*.dll' | xargs rebase -O || true
+        fi
       shell: bash
 

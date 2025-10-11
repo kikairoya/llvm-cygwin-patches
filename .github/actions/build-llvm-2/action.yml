@@ -91,29 +91,30 @@ runs:
         done
 
         if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
-          echo "::group::cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config-$CONFIG_NAME.cmake"
-          cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config-$CONFIG_NAME.cmake | tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
+          echo "::group::cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake"
+          cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake | tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
           echo "::endgroup::"
         fi
 
         if [[ $BUILD_TARGET = check* ]]; then
-          pushd $PATCH_PATH > /dev/null
-            if [ -f xfail-$CONFIG_NAME.txt ]; then
-              export LIT_XFAIL="$(sed -e '2,$s/^/;/' xfail-$CONFIG_NAME.txt | tr -d '\n')"
+          pushd $PATCH_PATH/config/$CONFIG_NAME > /dev/null
+            if [ -f xfail.txt ]; then
+              export LIT_XFAIL="$(sed -e '2,$s#^#;#' xfail.txt | tr -d '\n')"
             fi
-            if [ -f filter-out-$CONFIG_NAME.txt ]; then
-              export LIT_FILTER_OUT="($(sed -e '2,$s/^/)|(/' filter-out-$CONFIG_NAME.txt | tr -d '\n'))"
+            if [ -f filter-out.txt ]; then
+              export LIT_FILTER_OUT="($(sed -e '2,$s#^#)|(#' filter-out.txt | tr -d '\n'))"
             fi
-            if [ -f filter-$CONFIG_NAME.txt ]; then
-              export LIT_FILTER="($(sed -e '2,$s/^/)|(/' filter-$CONFIG_NAME.txt | tr -d '\n'))"
+            if [ -f filter.txt ]; then
+              export LIT_FILTER="($(sed -e '2,$s#^#)|(#' filter.txt | tr -d '\n'))"
             fi
-            if [ -f gtest_filter-$CONFIG_NAME.txt ]; then
-              export GTEST_FILTER="-$(sed -e '2,$s/^/:/' gtest_filter-$CONFIG_NAME.txt | tr -d '\n')"
+            if [ -f gtest_filter.txt ]; then
+              export GTEST_FILTER="$(sed -e '1s#^#-#;2,$s#^#:#' gtest_filter.txt | tr -d '\n')"
             fi
           popd > /dev/null
 
           export LIT_OPTS="-sv --xunit-xml-output=$(realpath result-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.xml) $EXTRA_LIT_OPTS"
           env | grep ^LIT_ > env-$BUILD_NAME.txt || true
+          env | grep ^GTEST_ >> env-$BUILD_NAME.txt || true
         fi
 
         echo "::group::cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $BUILD_TARGET"
@@ -157,6 +158,7 @@ runs:
         path: |
           buildlog-*.txt
           configlog-*.txt
+          env-*.txt
           result-*.xml
 
     - id: install

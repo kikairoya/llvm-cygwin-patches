@@ -4,16 +4,18 @@ on:
   #  - cron: '18 22 * * *'
   workflow_dispatch:
     inputs:
-      upstream-branch:
-        description: 'Upstream branch to build'
+      config-name:
+        description: 'Build config name'
         type: string
         required: false
-        default: 'main'
-      patch-series:
-        description: 'Patch series to apply'
+        default: 'cygwin-dylib'
+  workflow_call:
+    inputs:
+      config-name:
+        description: 'Build config name'
         type: string
         required: false
-        default: 'main'
+        default: 'cygwin-dylib'
 
 jobs:
   select:
@@ -21,10 +23,14 @@ jobs:
     name: Select target
 
     outputs:
-      config-name: 'cygwin-dylib'
       patch-path: 'patches'
       llvm-path: 'llvm-project'
-      upstream-branch: ${{ inputs.patch-series || inputs.upstream-branch || 'main' }}
+      config-name: ${{ inputs.config-name || 'cygwin-dylib' }}
+      upstream-branch: ${{ steps.config.outputs.upstream-branch }}
+      build-host: ${{ steps.config.outputs.build-host }}
+      enable-llvm: ${{ steps.config.outputs.enable-llvm }}
+      enable-clang: ${{ steps.config.outputs.enable-clang }}
+      enable-lld: ${{ steps.config.outputs.enable-lld }}
       build-name: ${{ steps.prepare-tree.outputs.build-name }}
       upstream-commit: ${{ steps.prepare-tree.outputs.upstream-commit }}
       patch-commit: ${{ steps.prepare-tree.outputs.patch-commit }}
@@ -37,20 +43,26 @@ jobs:
         with:
           path: self
 
+      - run: cat "self/config/$CONFIG_NAME/conf.txt" >> "$GITHUB_OUTPUT"
+        env:
+          CONFIG_NAME: ${{ inputs.config-name }}
+        id: config
+
       - name: prepare build tree
         id: prepare-tree
         uses: ./self/.github/actions/prepare-llvm-tree
         with:
           llvm-path: 'llvm-project'
-          remote-ref: ${{ inputs.upstream-branch || 'main' }}
+          remote-ref: ${{ steps.config.outputs.upstream-branch }}
           patch-path: 'patches'
           patch-ref: ''
-          patch-series: ${{ inputs.patch-series || inputs.upstream-branch || 'main' }}
+          patch-series: ${{ steps.config.outputs.patch-series }}
           cygwin-root: ''
 
   build-llvm:
-    runs-on: windows-latest
     needs: select
+    runs-on: ${{ needs.select.outputs.build-host }}
+    if: ${{ needs.select.outputs.enable-llvm }}
     name: Build LLVM ${{ needs.select.outputs.upstream-branch }}
 
     outputs:
@@ -94,8 +106,8 @@ jobs:
           install-prefix: install
 
   check-llvm:
-    runs-on: windows-latest
     needs: [select, build-llvm]
+    runs-on: ${{ needs.select.outputs.build-host }}
     name: Check LLVM ${{ needs.select.outputs.upstream-branch }}
 
     steps:
@@ -135,8 +147,9 @@ jobs:
           build-name: ${{ needs.select.outputs.build-name }}
 
   build-clang:
-    runs-on: windows-latest
     needs: [select, build-llvm]
+    runs-on: ${{ needs.select.outputs.build-host }}
+    if: ${{ needs.select.outputs.enable-clang }}
     name: Build Clang ${{ needs.select.outputs.upstream-branch }}
 
     outputs:
@@ -180,8 +193,8 @@ jobs:
           install-prefix: install
 
   check-clang:
-    runs-on: windows-latest
     needs: [select, build-clang]
+    runs-on: ${{ needs.select.outputs.build-host }}
     name: Check Clang ${{ needs.select.outputs.upstream-branch }}
 
     steps:
@@ -221,8 +234,9 @@ jobs:
           build-name: ${{ needs.select.outputs.build-name }}
 
   build-lld:
-    runs-on: windows-latest
     needs: [select, build-llvm]
+    runs-on: ${{ needs.select.outputs.build-host }}
+    if: ${{ needs.select.outputs.enable-lld }}
     name: Build LLD ${{ needs.select.outputs.upstream-branch }}
 
     outputs:
@@ -266,8 +280,8 @@ jobs:
           install-prefix: install
 
   check-lld:
-    runs-on: windows-latest
     needs: [select, build-lld]
+    runs-on: ${{ needs.select.outputs.build-host }}
     name: Check LLD ${{ needs.select.outputs.upstream-branch }}
 
     steps:

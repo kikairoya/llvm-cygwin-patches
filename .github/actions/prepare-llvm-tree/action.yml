@@ -90,7 +90,7 @@ runs:
         mkdir -p llvm-patches
         git -C $LLVM_PATH format-patch -o $PWD/llvm-patches $UPSTREAM_REV..HEAD
 
-        if [ -n "$CYGWIN_ROOT" ]; then
+        if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
           set +h
           pushd "$CYGWIN_ROOT" > /dev/null
           cd bin

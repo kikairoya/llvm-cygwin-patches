@@ -47,7 +47,7 @@ runs:
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
         EXTRAN_PROJECT: ${{ inputs.extra-project }}
       run: |
-        if [ -n "$CYGWIN_ROOT" ]; then
+        if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
           set +h
           pushd "$CYGWIN_ROOT" > /dev/null
           cd bin

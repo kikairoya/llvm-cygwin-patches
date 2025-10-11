@@ -1,0 +1,5 @@
+upstream-branch=main
+patch-series=main
+build-host=ubuntu-latest
+enable-llvm=true
+disable-llvm-test=true

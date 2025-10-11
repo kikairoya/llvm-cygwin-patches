@@ -8,14 +8,25 @@ on:
         description: 'Build config name'
         type: string
         required: false
-        default: 'cygwin-dylib'
+        default: ''
   workflow_call:
     inputs:
       config-name:
         description: 'Build config name'
         type: string
         required: false
-        default: 'cygwin-dylib'
+        default: ''
+    outputs:
+      config-name:
+        value: ${{ jobs.select.outputs.config-name }}
+      patch-path:
+        value: ${{ jobs.select.outputs.patch-path }}
+      patch-commit:
+        value: ${{ jobs.select.outputs.patch-commit }}
+      build-name:
+        value: ${{ jobs.select.outputs.build-name }}
+      source-artifact:
+        value: ${{ jobs.select.outputs.source-artifact }}
 
 jobs:
   select:
@@ -29,8 +40,11 @@ jobs:
       upstream-branch: ${{ steps.config.outputs.upstream-branch }}
       build-host: ${{ steps.config.outputs.build-host }}
       enable-llvm: ${{ steps.config.outputs.enable-llvm }}
+      disable-llvm-test: ${{ steps.config.outputs.disable-llvm-test }}
       enable-clang: ${{ steps.config.outputs.enable-clang }}
+      disable-clang-test: ${{ steps.config.outputs.disable-clang-test }}
       enable-lld: ${{ steps.config.outputs.enable-lld }}
+      disable-lld-test: ${{ steps.config.outputs.disable-lld-test }}
       build-name: ${{ steps.prepare-tree.outputs.build-name }}
       upstream-commit: ${{ steps.prepare-tree.outputs.upstream-commit }}
       patch-commit: ${{ steps.prepare-tree.outputs.patch-commit }}
@@ -45,7 +59,7 @@ jobs:
 
       - run: cat "self/config/$CONFIG_NAME/conf.txt" >> "$GITHUB_OUTPUT"
         env:
-          CONFIG_NAME: ${{ inputs.config-name }}
+          CONFIG_NAME: ${{ inputs.config-name || 'cygwin-dylib' }}
         id: config
 
       - name: prepare build tree
@@ -108,6 +122,7 @@ jobs:
   check-llvm:
     needs: [select, build-llvm]
     runs-on: ${{ needs.select.outputs.build-host }}
+    if: ${{ ! needs.select.outputs.disable-llvm-test }}
     name: Check LLVM ${{ needs.select.outputs.upstream-branch }}
 
     steps:
@@ -195,6 +210,7 @@ jobs:
   check-clang:
     needs: [select, build-clang]
     runs-on: ${{ needs.select.outputs.build-host }}
+    if: ${{ ! needs.select.outputs.disable-clang-test }}
     name: Check Clang ${{ needs.select.outputs.upstream-branch }}
 
     steps:
@@ -282,6 +298,7 @@ jobs:
   check-lld:
     needs: [select, build-lld]
     runs-on: ${{ needs.select.outputs.build-host }}
+    if: ${{ ! needs.select.outputs.disable-lld-test }}
     name: Check LLD ${{ needs.select.outputs.upstream-branch }}
 
     steps:

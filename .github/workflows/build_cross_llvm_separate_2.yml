@@ -1,0 +1,111 @@
+name: Cross build Cygwin binary 2
+on:
+  #schedule:
+  #  - cron: '18 12 * * *'
+  workflow_dispatch:
+    inputs:
+      host-config-name:
+        description: 'Build config name'
+        type: string
+        required: false
+        default: ''
+      target-config-name:
+        description: 'Build config name'
+        type: string
+        required: false
+        default: ''
+
+jobs:
+  select:
+    runs-on: ubuntu-latest
+    name: Select targets
+    outputs:
+      config-names: ${{ steps.selector.outputs.config-names }}
+      host-config: ${{ steps.selector.outputs.host-config }}
+
+    steps:
+      - id: selector
+        env:
+          TARGET_CONFIG_NAME: ${{ inputs.target-config-name }}
+          HOST_CONFIG_NAME: ${{ inputs.host-config-name }}
+        run: |
+          case $TARGET_CONFIG_NAME in
+            '')
+              echo 'config-names=["cross-dylib"]' >> "$GITHUB_OUTPUT"
+              ;;
+            [*])
+              echo "config-names=$TARGET_CONFIG_NAME" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "config-names=[\"$TARGET_CONFIG_NAME\"]" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+          case $HOST_CONFIG_NAME in
+            '')
+              echo 'host-config=linux-dylib' >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "host-config=$HOST_CONFIG_NAME" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+        shell: bash
+
+  prepare:
+    needs: select
+    uses: ./.github/workflows/build_llvm_separate.yml
+    with:
+      config-name: ${{ needs.select.outputs.host-config }}
+
+  build-llvm:
+    needs: [select, prepare]
+    strategy:
+      fail-fast: false
+      matrix:
+        config-name: ${{ fromJSON(needs.select.outputs.config-names) }}
+    runs-on: ubuntu-latest
+    name: Build LLVM
+
+    steps:
+      - name: prepare patches
+        id: checkout-self
+        uses: actions/checkout@v5
+        with:
+          path: self
+
+      - name: prepare Cygwin
+        id: prepare-cygwin
+        uses: ./self/.github/actions/prepare-cygwin-root
+
+      - name: restore build tree
+        id: prepare-tree
+        uses: ./self/.github/actions/restore-llvm-tree
+        with:
+          config-name: ${{ matrix.config-name }}
+          patch-path: ${{ needs.prepare.outputs.patch-path }}
+          patch-ref: ${{ needs.prepare.outputs.patch-commit }}
+          build-name: ${{ needs.prepare.outputs.build-name }}
+          cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
+          artifact-ids: ${{ needs.prepare.outputs.source-artifact }}
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: package-llvm-${{ needs.prepare.outputs.config-name }}
+
+      - name: restore host tool
+        run: |
+          mkdir -p stage1
+          tar -xf package-llvm-*.tar -C stage1
+        shell: bash
+
+      - name: build llvm
+        id: build
+        uses: ./self/.github/actions/build-llvm-2
+        with:
+          llvm-path: 'llvm-project'
+          patch-path: 'patches'
+          config-name: ${{ matrix.config-name }}
+          cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
+          build-project: llvm
+          build-name: ${{ needs.prepare.outputs.build-name }}
+          install-prefix: install
+          stage1-bindir: ${{ github.workspace }}/stage1/bin

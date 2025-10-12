@@ -31,7 +31,7 @@ jobs:
         run: |
           case $TARGET_CONFIG_NAME in
             '')
-              echo 'config-names=["cross-dylib"]' >> "$GITHUB_OUTPUT"
+              echo 'config-names=["cross-dylib", "cross-static", "cross-shared", "cross-builddylib"]' >> "$GITHUB_OUTPUT"
               ;;
             [*])
               echo "config-names=$TARGET_CONFIG_NAME" >> "$GITHUB_OUTPUT"
@@ -60,6 +60,7 @@ jobs:
     needs: [select, prepare]
     strategy:
       fail-fast: false
+      max-parallel: 2
       matrix:
         config-name: ${{ fromJSON(needs.select.outputs.config-names) }}
     runs-on: ubuntu-latest

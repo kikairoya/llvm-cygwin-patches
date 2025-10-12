@@ -1,4 +1,4 @@
-name: Build LLVM multistage
+name: Build LLVM Cygwin binary with patches
 on:
   schedule:
     - cron: '18 22 * * *'
@@ -108,7 +108,7 @@ jobs:
 
       - name: build llvm
         id: build
-        uses: ./self/.github/actions/build-llvm-2
+        uses: ./self/.github/actions/build-llvm
         with:
           llvm-path: ${{ needs.select.outputs.llvm-path }}
           patch-path: ${{ needs.select.outputs.patch-path }}
@@ -151,7 +151,7 @@ jobs:
 
       - name: check llvm
         id: check
-        uses: ./self/.github/actions/build-llvm-2
+        uses: ./self/.github/actions/build-llvm
         with:
           llvm-path: ${{ needs.select.outputs.llvm-path }}
           patch-path: ${{ needs.select.outputs.patch-path }}
@@ -196,7 +196,7 @@ jobs:
 
       - name: build clang
         id: build
-        uses: ./self/.github/actions/build-llvm-2
+        uses: ./self/.github/actions/build-llvm
         with:
           llvm-path: ${{ needs.select.outputs.llvm-path }}
           patch-path: ${{ needs.select.outputs.patch-path }}
@@ -239,7 +239,7 @@ jobs:
 
       - name: check clang
         id: check
-        uses: ./self/.github/actions/build-llvm-2
+        uses: ./self/.github/actions/build-llvm
         with:
           llvm-path: ${{ needs.select.outputs.llvm-path }}
           patch-path: ${{ needs.select.outputs.patch-path }}
@@ -284,7 +284,7 @@ jobs:
 
       - name: build lld
         id: build
-        uses: ./self/.github/actions/build-llvm-2
+        uses: ./self/.github/actions/build-llvm
         with:
           llvm-path: ${{ needs.select.outputs.llvm-path }}
           patch-path: ${{ needs.select.outputs.patch-path }}
@@ -327,7 +327,7 @@ jobs:
 
       - name: check lld
         id: check
-        uses: ./self/.github/actions/build-llvm-2
+        uses: ./self/.github/actions/build-llvm
         with:
           llvm-path: ${{ needs.select.outputs.llvm-path }}
           patch-path: ${{ needs.select.outputs.patch-path }}

@@ -1,4 +1,4 @@
-name: Cross build Cygwin binary 2
+name: Cross build LLVM Cygwin binaries with patches
 on:
   schedule:
     - cron: '18 12 * * *'
@@ -52,7 +52,7 @@ jobs:
 
   prepare:
     needs: select
-    uses: ./.github/workflows/build_llvm_separate.yml
+    uses: ./.github/workflows/build-llvm.yml
     with:
       config-name: ${{ needs.select.outputs.host-config }}
 
@@ -64,7 +64,7 @@ jobs:
       matrix:
         config-name: ${{ fromJSON(needs.select.outputs.config-names) }}
     runs-on: ubuntu-latest
-    name: Build LLVM
+    name: Build LLVM ${{ matrix.config-name }}
 
     steps:
       - name: prepare patches
@@ -100,7 +100,7 @@ jobs:
 
       - name: build llvm
         id: build
-        uses: ./self/.github/actions/build-llvm-2
+        uses: ./self/.github/actions/build-llvm
         with:
           llvm-path: 'llvm-project'
           patch-path: 'patches'

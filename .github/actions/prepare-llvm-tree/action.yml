@@ -20,6 +20,9 @@ inputs:
   cygwin-root:
     description: Cygwih root path
     required: true
+  source-retention-days:
+    required: false
+    default: 0
 
 outputs:
   upstream-commit:
@@ -105,12 +108,16 @@ runs:
 
     - uses: actions/upload-artifact@v4
       id: upload-source
+      if: ${{ inputs.source-retention-days >= 0 }}
       with:
         name: llvm-source
         path: llvm-source-${{ steps.apply-patch.outputs.build-name }}.tar
+        retention-days: ${{ inputs.source-retention-days }}
 
     - uses: actions/upload-artifact@v4
       id: upload-patch
+      if: ${{ inputs.source-retention-days >= 0 }}
       with:
         name: llvm-patches
         path: llvm-patches-${{ steps.apply-patch.outputs.build-name }}.tar
+        retention-days: ${{ inputs.source-retention-days }}

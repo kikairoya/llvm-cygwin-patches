@@ -80,9 +80,11 @@ runs:
           git config user.name github-actions
           git config user.email github@github.com
           git config status.showuntrackedfiles no
-          if [ -d "$PATCH_PATH/patches/$INPUTS_PATCH_SERIES" ]; then
-            git am --empty=drop $PATCH_PATH/patches/$INPUTS_PATCH_SERIES/*
-          fi
+          for p in ${INPUTS_PATCH_SERIES/,// }; do
+            if [ -d "$PATCH_PATH/patches/$p" ]; then
+              git am --empty=drop $PATCH_PATH/patches/$p/*
+            fi
+          done
         popd > /dev/null
 
         tar -caf llvm-source-$BUILD_NAME.tar --exclude=.git $INPUTS_LLVM_PATH
@@ -105,10 +107,10 @@ runs:
       id: upload-source
       with:
         name: llvm-source
-        path: llvm-source-*.tar
+        path: llvm-source-${{ steps.apply-patch.outputs.build-name }}.tar
 
     - uses: actions/upload-artifact@v4
       id: upload-patch
       with:
         name: llvm-patches
-        path: llvm-patches-*.tar
+        path: llvm-patches-${{ steps.apply-patch.outputs.build-name }}.tar

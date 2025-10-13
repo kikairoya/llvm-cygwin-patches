@@ -102,7 +102,6 @@ jobs:
           config-name: ${{ needs.select.outputs.config-name }}
           patch-path: ${{ needs.select.outputs.patch-path }}
           patch-ref: ${{ needs.select.outputs.patch-commit }}
-          build-name: ${{ needs.select.outputs.build-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           artifact-ids: ${{ needs.select.outputs.source-artifact }}
 
@@ -145,7 +144,6 @@ jobs:
           config-name: ${{ needs.select.outputs.config-name }}
           patch-path: ${{ needs.select.outputs.patch-path }}
           patch-ref: ${{ needs.select.outputs.patch-commit }}
-          build-name: ${{ needs.select.outputs.build-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           artifact-ids: ${{ needs.build-llvm.outputs.artifacts }}
 
@@ -190,7 +188,6 @@ jobs:
           patch-path: ${{ needs.select.outputs.patch-path }}
           config-name: ${{ needs.select.outputs.config-name }}
           patch-ref: ${{ needs.select.outputs.patch-commit }}
-          build-name: ${{ needs.select.outputs.build-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           artifact-ids: ${{ needs.build-llvm.outputs.artifacts }}
 
@@ -233,7 +230,6 @@ jobs:
           config-name: ${{ needs.select.outputs.config-name }}
           patch-path: ${{ needs.select.outputs.patch-path }}
           patch-ref: ${{ needs.select.outputs.patch-commit }}
-          build-name: ${{ needs.select.outputs.build-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           artifact-ids: ${{ needs.build-clang.outputs.artifacts }}
 
@@ -278,7 +274,6 @@ jobs:
           config-name: ${{ needs.select.outputs.config-name }}
           patch-path: ${{ needs.select.outputs.patch-path }}
           patch-ref: ${{ needs.select.outputs.patch-commit }}
-          build-name: ${{ needs.select.outputs.build-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           artifact-ids: ${{ needs.build-llvm.outputs.artifacts }}
 
@@ -321,7 +316,6 @@ jobs:
           config-name: ${{ needs.select.outputs.config-name }}
           patch-path: ${{ needs.select.outputs.patch-path }}
           patch-ref: ${{ needs.select.outputs.patch-commit }}
-          build-name: ${{ needs.select.outputs.build-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           artifact-ids: ${{ needs.build-lld.outputs.artifacts }}
 

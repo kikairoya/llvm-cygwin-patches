@@ -36,6 +36,7 @@ inputs:
   install-prefix:
     description: PREFIX
     required: false
+    default: '/'
   cmake-flags:
     description: CMake additional parameter
     required: false
@@ -128,7 +129,7 @@ runs:
         fi
 
         echo "::group::Build/Test"
-        cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $BUILD_TARGET | tee buildlog-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.txt
+        cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- --quiet $BUILD_TARGET | tee buildlog-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.txt
         echo "::endgroup::"
       shell: bash
 
@@ -172,7 +173,7 @@ runs:
           result-*.xml
 
     - id: install
-      if: ${{ inputs.install-prefix != '' }}
+      if: ${{ inputs.install-prefix != '/' }}
       name: install ${{ inputs.build-project }} ${{ inputs.config-name }}
       env:
         BUILD_NAME: ${{ inputs.build-name }}
@@ -180,7 +181,6 @@ runs:
         INSTALL_PREFIX: ${{ inputs.install-prefix }}
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
       run: |
-        _mv=$(which mv)
         if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
           set +h
           pushd "$CYGWIN_ROOT" > /dev/null
@@ -189,17 +189,19 @@ runs:
           popd > /dev/null
         fi
 
+        rm -f build-$BUILD_PROJECT-$BUILD_NAME.tar
+
         echo "::group::Install"
-        cmake --install build-$BUILD_PROJECT-$BUILD_NAME --prefix $INSTALL_PREFIX
+        cmake --install build-$BUILD_PROJECT-$BUILD_NAME --prefix install/$INSTALL_PREFIX
         echo "::endgroup::"
 
-        cd $INSTALL_PREFIX
+        cd install
         tar caf package-$BUILD_PROJECT-$BUILD_NAME.tar *
-        $_mv package-$BUILD_PROJECT-$BUILD_NAME.tar $GITHUB_WORKSPACE
+        mv package-$BUILD_PROJECT-$BUILD_NAME.tar ..
       shell: bash
 
     - uses: actions/upload-artifact@v4
-      if: ${{ inputs.install-prefix != '' }}
+      if: ${{ inputs.install-prefix != '/' }}
       id: upload-install
       with:
         name: package-${{ inputs.build-project }}-${{ inputs.config-name }}${{ inputs.artifact-suffix }}

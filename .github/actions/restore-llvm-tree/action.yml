@@ -8,9 +8,6 @@ inputs:
   patch-ref:
     description: Explicit upstream ref of patch collection
     required: true
-  build-name:
-    description: Build name suffix
-    required: true
   config-name:
     description: Build configuration name
     required: true
@@ -20,11 +17,6 @@ inputs:
   artifact-ids:
     description: IDs to restore artifact, comma-separated
     required: true
-
-outputs:
-  build-name:
-    description: Build name suffix
-    value: ${{ steps.apply-patch.outputs.build-name }}
 
 runs:
   using: "composite"
@@ -43,9 +35,7 @@ runs:
 
     - name: unpack artifacts
       env:
-        BUILD_NAME: ${{ inputs.build-name }}
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
-        EXTRAN_PROJECT: ${{ inputs.extra-project }}
       run: |
         if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
           set +h

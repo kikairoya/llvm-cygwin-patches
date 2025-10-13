@@ -84,7 +84,6 @@ jobs:
           config-name: ${{ matrix.config-name }}
           patch-path: ${{ needs.prepare.outputs.patch-path }}
           patch-ref: ${{ needs.prepare.outputs.patch-commit }}
-          build-name: ${{ needs.prepare.outputs.build-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           artifact-ids: ${{ needs.prepare.outputs.source-artifact }}
 
@@ -96,6 +95,7 @@ jobs:
         run: |
           mkdir -p stage1
           tar -xf package-llvm-*.tar -C stage1
+          rm package-llvm-*.tar
         shell: bash
 
       - name: build llvm
@@ -108,5 +108,5 @@ jobs:
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-project: llvm
           build-name: ${{ needs.prepare.outputs.build-name }}
-          install-prefix: install
+          install-prefix: ''
           stage1-bindir: ${{ github.workspace }}/stage1/bin

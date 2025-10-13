@@ -1,0 +1,85 @@
+From ae9f3190c6d0da4d293dc5ceb59e22eca2bb404d Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Fri, 16 May 2025 18:24:46 +0900
+Subject: [PATCH 06/12] [Clang-Tools] c-index-test and libclang should link to
+ libclang-cpp if available
+
+c-index-test requires libclang and other components doesn't contained
+by libclang. This causes mixing of some libraries linked both of static
+and shared leads link error or undefined behavior.
+Linking libclang to libclang-cpp instead of individual components avoid
+this problem. In case of libclang-cpp disabled, libclang should contain
+all components but not touched in this commit.
+---
+ clang/tools/c-index-test/CMakeLists.txt |  6 +++++
+ clang/tools/libclang/CMakeLists.txt     | 30 ++++++++++++++-----------
+ 2 files changed, 23 insertions(+), 13 deletions(-)
+
+diff --git a/clang/tools/c-index-test/CMakeLists.txt b/clang/tools/c-index-test/CMakeLists.txt
+index 24e7c9692ca5..3b38a22e1180 100644
+--- a/clang/tools/c-index-test/CMakeLists.txt
++++ b/clang/tools/c-index-test/CMakeLists.txt
+@@ -18,6 +18,9 @@ if (LLVM_BUILD_STATIC)
+   target_link_libraries(c-index-test
+     PRIVATE
+     libclang_static
++  )
++  clang_target_link_libraries(c-index-test
++    PRIVATE
+     clangCodeGen
+     clangIndex
+   )
+@@ -25,6 +28,9 @@ else()
+   target_link_libraries(c-index-test
+     PRIVATE
+     libclang
++  )
++  clang_target_link_libraries(c-index-test
++    PRIVATE
+     clangAST
+     clangBasic
+     clangFrontend
+diff --git a/clang/tools/libclang/CMakeLists.txt b/clang/tools/libclang/CMakeLists.txt
+index e0ff7605b68b..be2c3664d023 100644
+--- a/clang/tools/libclang/CMakeLists.txt
++++ b/clang/tools/libclang/CMakeLists.txt
+@@ -57,19 +57,23 @@ set(SOURCES
+   ../../include/clang-c/Index.h
+   )
+ 
+-set(LIBS
+-  clangAST
+-  clangBasic
+-  clangDriver
+-  clangExtractAPI
+-  clangFrontend
+-  clangIndex
+-  clangLex
+-  clangRewrite
+-  clangSema
+-  clangSerialization
+-  clangTooling
+-)
++if (TARGET clang-cpp)
++  set (LIBS clang-cpp)
++else ()
++  set(LIBS
++    clangAST
++    clangBasic
++    clangDriver
++    clangExtractAPI
++    clangFrontend
++    clangIndex
++    clangLex
++    clangRewrite
++    clangSema
++    clangSerialization
++    clangTooling
++  )
++endif ()
+ 
+ if (HAVE_LIBDL)
+   list(APPEND LIBS ${CMAKE_DL_LIBS})
+-- 
+2.51.0
+

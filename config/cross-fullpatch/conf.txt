@@ -1,0 +1,7 @@
+upstream-branch=main
+patch-series=full,libcxx
+build-host=ubuntu-latest
+enable-llvm=true
+disable-llvm-test=true
+enable-runtimes=true
+disable-runtimes-test=true

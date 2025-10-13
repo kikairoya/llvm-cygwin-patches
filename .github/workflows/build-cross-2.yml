@@ -1,0 +1,76 @@
+name: Cross build LLVM Cygwin binaries with patches 2
+on:
+  #schedule:
+  #  - cron: '18 12 * * *'
+  workflow_dispatch:
+    inputs:
+      host-config-name:
+        description: 'Build config name'
+        type: string
+        required: false
+        default: ''
+      target-config-name:
+        description: 'Build config name'
+        type: string
+        required: false
+        default: ''
+
+jobs:
+  select:
+    runs-on: ubuntu-latest
+    name: Select targets
+    outputs:
+      config-names: ${{ steps.selector.outputs.config-names }}
+      host-config: ${{ steps.selector.outputs.host-config }}
+
+    steps:
+      - id: selector
+        env:
+          TARGET_CONFIG_NAME: ${{ inputs.target-config-name }}
+          HOST_CONFIG_NAME: ${{ inputs.host-config-name }}
+        run: |
+          case $TARGET_CONFIG_NAME in
+            '')
+              echo 'config-names=["cross-dylib", "cross-static", "cross-shared", "cross-builddylib"]' >> "$GITHUB_OUTPUT"
+              ;;
+            [*])
+              echo "config-names=$TARGET_CONFIG_NAME" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "config-names=[\"$TARGET_CONFIG_NAME\"]" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+          case $HOST_CONFIG_NAME in
+            '')
+              echo 'host-config=linux-dylib' >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "host-config=$HOST_CONFIG_NAME" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+        shell: bash
+
+  prepare:
+    needs: select
+    uses: ./.github/workflows/build-llvm-2.yml
+    with:
+      config-name: ${{ needs.select.outputs.host-config }}
+      install-prefix: 'stage1'
+      build-retention-days: -1
+
+  build:
+    needs: [select, prepare]
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        config-name: ${{ fromJSON(needs.select.outputs.config-names) }}
+    uses: ./.github/workflows/build-llvm-2.yml
+    with:
+      config-name: ${{ matrix.config-name }}
+      build-name: ${{ needs.prepare.outputs.build-name }}
+      patch-commit: ${{ needs.prepare.outputs.patch-commit }}
+      source-artifact: ${{ needs.prepare.outputs.source-artifact }}
+      prereq-artifacts: ${{ needs.prepare.outputs.install-artifacts }}
+      install-prefix: ''
+      stage1-bindir: 'stage1/bin'

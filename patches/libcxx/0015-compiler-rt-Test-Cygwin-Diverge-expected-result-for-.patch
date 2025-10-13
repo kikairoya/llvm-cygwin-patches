@@ -1,0 +1,115 @@
+From 602cba1733e05e2829f2f36f234629d1738ad937 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 13 Sep 2025 19:34:49 +0900
+Subject: [PATCH 15/15] [compiler-rt][Test][Cygwin] Diverge expected result for
+ the Cygwin target
+
+---
+ compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c    | 2 +-
+ compiler-rt/test/profile/Posix/gcov-dlopen.c                 | 1 +
+ compiler-rt/test/profile/Posix/gcov-shared-flush.c           | 1 +
+ compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test | 2 +-
+ compiler-rt/test/profile/Posix/instrprof-fork.c              | 1 +
+ compiler-rt/test/profile/instrprof-merge-entry-cover.c       | 2 +-
+ compiler-rt/test/profile/instrprof-merge.c                   | 2 +-
+ compiler-rt/test/profile/instrprof-without-libc.c            | 2 +-
+ 8 files changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c b/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c
+index 3ffdde6aed3f..31b494569eda 100644
+--- a/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c
++++ b/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c
+@@ -9,7 +9,7 @@
+ #include "fp_lib.h"
+ 
+ int test__compiler_rt_scalbnf(const char *mode, fp_t x, int y) {
+-#if defined(__ve__)
++#if defined(__ve__) || defined(__CYGWIN__)
+   if (fpclassify(x) == FP_SUBNORMAL)
+     return 0;
+ #endif
+diff --git a/compiler-rt/test/profile/Posix/gcov-dlopen.c b/compiler-rt/test/profile/Posix/gcov-dlopen.c
+index 72f11186e084..085a3a333aff 100644
+--- a/compiler-rt/test/profile/Posix/gcov-dlopen.c
++++ b/compiler-rt/test/profile/Posix/gcov-dlopen.c
+@@ -1,6 +1,7 @@
+ /// atexit(3) not supported in dlopen(3)ed+dlclose(3)d DSO
+ // XFAIL: target={{.*netbsd.*}}
+ // XFAIL: target={{.*haiku.*}}
++// UNSUPPORTED: cygwin
+ 
+ // RUN: mkdir -p %t.d && cd %t.d
+ 
+diff --git a/compiler-rt/test/profile/Posix/gcov-shared-flush.c b/compiler-rt/test/profile/Posix/gcov-shared-flush.c
+index f1edbe2503c6..5df7554b63d7 100644
+--- a/compiler-rt/test/profile/Posix/gcov-shared-flush.c
++++ b/compiler-rt/test/profile/Posix/gcov-shared-flush.c
+@@ -1,5 +1,6 @@
+ /// This test fails on Mac (https://bugs.llvm.org/show_bug.cgi?id=38134)
+ // XFAIL: darwin
++// UNSUPPORTED: cygwin
+ 
+ // RUN: mkdir -p %t.d && cd %t.d
+ 
+diff --git a/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test b/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test
+index 0a326a280962..f967c88fa143 100644
+--- a/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test
++++ b/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test
+@@ -1,4 +1,4 @@
+-XFAIL: target={{.*haiku.*}}
++XFAIL: target={{.*haiku.*}}, cygwin
+ RUN: rm -rf %t && split-file %s %t && cd %t
+ RUN: %clang_pgogen -fprofile-update=atomic -fPIC foo.c -c -Xclang -fprofile-instrument-path="default_foo_%m.profraw"
+ RUN: %clang_pgogen -fprofile-update=atomic -fPIC foo2.c -c -Xclang -fprofile-instrument-path="default_foo2_%m.profraw"
+diff --git a/compiler-rt/test/profile/Posix/instrprof-fork.c b/compiler-rt/test/profile/Posix/instrprof-fork.c
+index a1b99b492aa4..afb05d5d63e4 100644
+--- a/compiler-rt/test/profile/Posix/instrprof-fork.c
++++ b/compiler-rt/test/profile/Posix/instrprof-fork.c
+@@ -1,4 +1,5 @@
+ // A simple fork results in two processes writing to the same file
++// XFAIL: cygwin
+ // RUN: rm -fr %t.profdir
+ // RUN: %clang_pgogen=%t.profdir -o %t -O2 %s
+ // RUN: %run %t
+diff --git a/compiler-rt/test/profile/instrprof-merge-entry-cover.c b/compiler-rt/test/profile/instrprof-merge-entry-cover.c
+index a99458898392..d5b6d23cec4d 100644
+--- a/compiler-rt/test/profile/instrprof-merge-entry-cover.c
++++ b/compiler-rt/test/profile/instrprof-merge-entry-cover.c
+@@ -3,7 +3,7 @@
+ // RUN: llvm-profdata show --all-functions --counts %t.profraw  | FileCheck %s
+ 
+ // FIXME: llvm-profdata exits with "Malformed instrumentation profile data"
+-// XFAIL: target={{.*windows.*}}
++// XFAIL: target={{.*windows(?!-cyg).*}}
+ 
+ #include "profile_test.h"
+ #include <stdint.h>
+diff --git a/compiler-rt/test/profile/instrprof-merge.c b/compiler-rt/test/profile/instrprof-merge.c
+index 8be1016da873..4d7d2e43f38a 100644
+--- a/compiler-rt/test/profile/instrprof-merge.c
++++ b/compiler-rt/test/profile/instrprof-merge.c
+@@ -3,7 +3,7 @@
+ // RUN: llvm-profdata show --all-functions --counts %t.profraw  | FileCheck %s
+ 
+ // FIXME: llvm-profdata exits with "Malformed instrumentation profile data"
+-// XFAIL: target={{.*windows.*}}
++// XFAIL: target={{.*windows(?!-cyg).*}}
+ 
+ #include <stdint.h>
+ #include <stdio.h>
+diff --git a/compiler-rt/test/profile/instrprof-without-libc.c b/compiler-rt/test/profile/instrprof-without-libc.c
+index d0d213b07ba2..4a837812b401 100644
+--- a/compiler-rt/test/profile/instrprof-without-libc.c
++++ b/compiler-rt/test/profile/instrprof-without-libc.c
+@@ -11,7 +11,7 @@
+ // UNSUPPORTED: target={{.*msvc.*}}
+ 
+ // The MinGW CRT init files do reference malloc etc, so this test fails.
+-// UNSUPPORTED: target={{.*windows-gnu.*}}
++// UNSUPPORTED: target={{.*windows-gnu.*}}, cygwin
+ 
+ #include <stdint.h>
+ #include <stdlib.h>
+-- 
+2.51.0
+

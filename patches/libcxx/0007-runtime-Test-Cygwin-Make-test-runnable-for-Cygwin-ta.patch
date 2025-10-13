@@ -1,4 +1,4 @@
-From 043660953e5b303ab23b50dad7dd045cd6c8c1d1 Mon Sep 17 00:00:00 2001
+From 7746d4cf6151bcee191803b1d00fabd68165c8b4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 07/15] [runtime][Test][Cygwin] Make test runnable for Cygwin
@@ -121,12 +121,12 @@ index 7a44d0630842..0e5b799051d7 100644
    add_definitions(-D_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS)
 diff --git a/libcxx/test/configs/llvm-libc++-cygwin.cfg.in b/libcxx/test/configs/llvm-libc++-cygwin.cfg.in
 new file mode 100644
-index 000000000000..5ab327d29ddc
+index 000000000000..7e4953b3fd24
 --- /dev/null
 +++ b/libcxx/test/configs/llvm-libc++-cygwin.cfg.in
 @@ -0,0 +1,25 @@
 +# This testing configuration handles running the test suite against LLVM's libc++
-+# using either a DLL or a static library, with MinGW/Clang on Windows.
++# using either a DLL or a static library, with Cygwin.
 +
 +lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
 +
@@ -138,7 +138,7 @@ index 000000000000..5ab327d29ddc
 +    '-nostdlib++ -L %{lib-dir} -lc++'
 +))
 +config.substitutions.append(('%{exec}',
-+    '%{executor} --execdir %T --prepend_env PATH=%{install-prefix}/bin -- '
++    '%{executor} --execdir %{temp} --prepend_env PATH=%{install-prefix}/bin -- '
 +))
 +
 +import os, site
@@ -224,12 +224,12 @@ index db426e5ad802..c60778abd4d4 100644
      set(LIBCXXABI_DEFAULT_TEST_CONFIG "llvm-libc++abi-shared-clangcl.cfg.in")
 diff --git a/libcxxabi/test/configs/llvm-libc++abi-cygwin.cfg.in b/libcxxabi/test/configs/llvm-libc++abi-cygwin.cfg.in
 new file mode 100644
-index 000000000000..0d8b7bdcb1d0
+index 000000000000..938d627fa42d
 --- /dev/null
 +++ b/libcxxabi/test/configs/llvm-libc++abi-cygwin.cfg.in
 @@ -0,0 +1,25 @@
 +# This testing configuration handles running the test suite against LLVM's libc++abi
-+# using a static library merged into libc++ with MinGW/Clang on Windows.
++# using a static library merged into libc++ with Cygwin.
 +
 +lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
 +
@@ -241,7 +241,7 @@ index 000000000000..0d8b7bdcb1d0
 +    '-nostdlib++ -L %{lib} -lc++'
 +))
 +config.substitutions.append(('%{exec}',
-+    '%{executor} --execdir %T --prepend_env PATH=%{install-prefix}/bin -- '
++    '%{executor} --execdir %{temp} --prepend_env PATH=%{install-prefix}/bin -- '
 +))
 +
 +import os, site
@@ -290,12 +290,12 @@ index 5f4b0902d522..ecc0842395ec 100644
    # necessarily the ones that the callers will use anyway) with the
 diff --git a/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in b/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in
 new file mode 100644
-index 000000000000..b29d83fbab30
+index 000000000000..b01784665582
 --- /dev/null
 +++ b/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in
 @@ -0,0 +1,25 @@
 +# This testing configuration handles running the test suite against LLVM's libunwind
-+# using a DLL with MinGW/Clang on Windows.
++# using a DLL with Cygwin.
 +
 +lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
 +
@@ -307,7 +307,7 @@ index 000000000000..b29d83fbab30
 +    '-L %{lib} -lunwind'
 +))
 +config.substitutions.append(('%{exec}',
-+    '%{executor} --execdir %T --prepend_env PATH=%{install-prefix}/bin -- '
++    '%{executor} --execdir %{temp} --prepend_env PATH=%{install-prefix}/bin -- '
 +))
 +
 +import os, site
@@ -321,12 +321,12 @@ index 000000000000..b29d83fbab30
 +)
 diff --git a/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in b/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 new file mode 100644
-index 000000000000..437c53bea2f0
+index 000000000000..dc490a08ba1a
 --- /dev/null
 +++ b/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 @@ -0,0 +1,25 @@
 +# This testing configuration handles running the test suite against LLVM's libunwind
-+# using a static library with MinGW/Clang on Windows.
++# using a static library with Cygwin.
 +
 +lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
 +
@@ -338,7 +338,7 @@ index 000000000000..437c53bea2f0
 +    '-L %{lib} -lunwind'
 +))
 +config.substitutions.append(('%{exec}',
-+    '%{executor} --execdir %T --prepend_env PATH=%{lib} -- '
++    '%{executor} --execdir %{temp} --prepend_env PATH=%{lib} -- '
 +))
 +
 +import os, site

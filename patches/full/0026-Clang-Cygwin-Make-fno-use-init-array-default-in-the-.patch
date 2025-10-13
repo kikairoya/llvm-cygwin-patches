@@ -1,0 +1,62 @@
+From 19896bd2073d9813c8fb16ef7fca698e27161e6d Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Fri, 3 Oct 2025 13:01:49 +0900
+Subject: [PATCH 26/36] [Clang][Cygwin] Make -fno-use-init-array default in the
+ driver
+
+Aligning with MinGW. Without this, boost/serialization/test/test_singleton.cpp fails.
+---
+ clang/lib/Driver/ToolChains/Cygwin.cpp | 8 ++++++++
+ clang/lib/Driver/ToolChains/Cygwin.h   | 4 ++++
+ clang/test/Driver/cygwin.cpp           | 1 +
+ 3 files changed, 13 insertions(+)
+
+diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
+index f6666032fa8c..4c250fe21345 100644
+--- a/clang/lib/Driver/ToolChains/Cygwin.cpp
++++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
+@@ -112,6 +112,14 @@ void Cygwin::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
+   addExternCSystemInclude(DriverArgs, CC1Args, SysRoot + "/usr/include/w32api");
+ }
+ 
++void Cygwin::addClangTargetOptions(const ArgList &DriverArgs,
++                                        ArgStringList &CC1Args,
++                                        Action::OffloadKind) const {
++  if (!DriverArgs.hasFlag(options::OPT_fuse_init_array,
++                          options::OPT_fno_use_init_array, false))
++    CC1Args.push_back("-fno-use-init-array");
++}
++
+ void cygwin::Linker::ConstructJob(Compilation &C, const JobAction &JA,
+                                   const InputInfo &Output,
+                                   const InputInfoList &Inputs,
+diff --git a/clang/lib/Driver/ToolChains/Cygwin.h b/clang/lib/Driver/ToolChains/Cygwin.h
+index 0701d41a6360..75e57945c068 100644
+--- a/clang/lib/Driver/ToolChains/Cygwin.h
++++ b/clang/lib/Driver/ToolChains/Cygwin.h
+@@ -28,6 +28,10 @@ public:
+   AddClangSystemIncludeArgs(const llvm::opt::ArgList &DriverArgs,
+                             llvm::opt::ArgStringList &CC1Args) const override;
+ 
++  void addClangTargetOptions(const llvm::opt::ArgList &DriverArgs,
++                             llvm::opt::ArgStringList &CC1Args,
++                             Action::OffloadKind DeviceOffloadKind) const override;
++
+ protected:
+   Tool *buildLinker() const override;
+ };
+diff --git a/clang/test/Driver/cygwin.cpp b/clang/test/Driver/cygwin.cpp
+index fd1b6249c6c3..c2947c12283a 100644
+--- a/clang/test/Driver/cygwin.cpp
++++ b/clang/test/Driver/cygwin.cpp
+@@ -2,6 +2,7 @@
+ // RUN:   -resource-dir=%S/Inputs/resource_dir \
+ // RUN:   --stdlib=platform 2>&1 | FileCheck --check-prefix=CHECK %s
+ // CHECK:      "-cc1"
++// CHECK-SAME: "-fno-use-init-array"
+ // CHECK-SAME: "-resource-dir" "[[RESOURCE:[^"]+]]"
+ // CHECK-SAME: "-isysroot" "[[SYSROOT:[^"]+]]"
+ // CHECK-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/i686-pc-cygwin/10/../../../../include/c++/10"
+-- 
+2.51.0
+

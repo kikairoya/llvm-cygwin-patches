@@ -47,7 +47,7 @@ runs:
 
         for f in *.tar; do
           echo extracting $f
-          tar xf $f
+          tar -xf $f
           rm $f
         done
         if type rebase 2> /dev/null; then

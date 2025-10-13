@@ -103,7 +103,7 @@ runs:
           popd > /dev/null
         fi
 
-        tar -caf llvm-patches-$BUILD_NAME.tar llvm-patches
+        tar -cf llvm-patches-$BUILD_NAME.tar llvm-patches
       shell: bash
 
     - uses: actions/upload-artifact@v4

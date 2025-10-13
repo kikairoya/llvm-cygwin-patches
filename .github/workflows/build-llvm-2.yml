@@ -91,7 +91,8 @@ jobs:
       disable-runtimes-test: ${{ steps.config.outputs.disable-runtimes-test }}
       build-name: ${{ inputs.build-name || steps.prepare-tree.outputs.build-name }}
       patch-commit: ${{ inputs.patch-commit || steps.prepare-tree.outputs.patch-commit }}
-      source-artifact: ${{ inputs.source-artifact || steps.prepare-tree.outputs.source-artifact }}${{ steps.config.outputs.prereq-artifacts }}
+      source-artifact: ${{ inputs.source-artifact || steps.prepare-tree.outputs.source-artifact }}
+      prereq-artifacts: ${{ inputs.source-artifact || steps.prepare-tree.outputs.source-artifact }}${{ steps.config.outputs.prereq-artifacts }}
 
     steps:
       - name: prepare patches
@@ -137,11 +138,15 @@ jobs:
     name: Build LLVM ${{ needs.select.outputs.upstream-branch }}
 
     outputs:
-      artifacts: ${{ needs.select.outputs.source-artifact }},${{ steps.build.outputs.build-artifact }}
+      artifacts: ${{ needs.select.outputs.prereq-artifacts }},${{ steps.build.outputs.build-artifact }}
       build-artifact: ${{ steps.build.outputs.build-artifact }}
       install-artifact: ${{ steps.build.outputs.install-artifact }}
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -162,7 +167,7 @@ jobs:
           patch-path: ${{ needs.select.outputs.patch-path }}
           patch-ref: ${{ needs.select.outputs.patch-commit }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
-          artifact-ids: ${{ needs.select.outputs.source-artifact }}
+          artifact-ids: ${{ needs.select.outputs.prereq-artifacts }}
 
       - name: build llvm
         id: build
@@ -187,6 +192,10 @@ jobs:
     name: Check LLVM ${{ needs.select.outputs.upstream-branch }}
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -234,6 +243,10 @@ jobs:
       install-artifact: ${{ steps.build.outputs.install-artifact }}
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -277,6 +290,10 @@ jobs:
     name: Check Clang ${{ needs.select.outputs.upstream-branch }}
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -324,6 +341,10 @@ jobs:
       install-artifact: ${{ steps.build.outputs.install-artifact }}
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -367,6 +388,10 @@ jobs:
     name: Check LLD ${{ needs.select.outputs.upstream-branch }}
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -409,11 +434,15 @@ jobs:
     name: Build Runtimes ${{ needs.select.outputs.upstream-branch }}
 
     outputs:
-      artifacts: ${{ needs.select.outputs.source-artifact }},${{ steps.build.outputs.build-artifact }}
+      artifacts: ${{ needs.select.outputs.prereq-artifacts }},${{ steps.build.outputs.build-artifact }}
       build-artifact: ${{ steps.build.outputs.build-artifact }}
       install-artifact: ${{ steps.build.outputs.install-artifact }}
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -434,7 +463,7 @@ jobs:
           config-name: ${{ needs.select.outputs.config-name }}
           patch-ref: ${{ needs.select.outputs.patch-commit }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
-          artifact-ids: ${{ needs.select.outputs.source-artifact }}
+          artifact-ids: ${{ needs.select.outputs.prereq-artifacts }}
 
       - name: build runtimes
         id: build
@@ -456,6 +485,10 @@ jobs:
     name: Check Runtimes ${{ needs.select.outputs.upstream-branch }}
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -487,7 +520,7 @@ jobs:
           config-name: ${{ needs.select.outputs.config-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-project: runtimes
-          build-target: check-all
+          build-target: check-runtimes
           build-name: ${{ needs.select.outputs.build-name }}
           stage1-bindir: ${{ inputs.stage1-bindir }}
 

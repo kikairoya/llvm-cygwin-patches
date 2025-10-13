@@ -89,17 +89,7 @@ runs:
         STAGE1_BINDIR: ${{ inputs.stage1-bindir }}
       run: |
         ## Config, Build, Test
-        if [ -d "$STAGE1_BINDIR" ]; then
-          export STAGE1_BINDIR="$(realpath "$STAGE1_BINDIR")"
-          export PATH="$STAGE1_BINDIR:$PATH"
-        fi
-
-        for b in build-*-$BUILD_NAME/bin; do
-          if [ "$b" != "build-$BUILD_PROJECT-$BUILD_NAME/bin" ] && [ -d "$b" ]; then
-            export PATH="$(realpath "$b"):$PATH"
-          fi
-        done
-
+        set -x
         if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
           set +h
           pushd "$CYGWIN_ROOT" > /dev/null
@@ -108,8 +98,21 @@ runs:
           popd > /dev/null
         fi
 
+        for b in build-*-$BUILD_NAME/bin; do
+          if [ "$b" != "build-$BUILD_PROJECT-$BUILD_NAME/bin" ] && [ -n "$b" ] && pushd "$b" > /dev/null 2>&1; then
+            export PATH="$PWD:$PATH"
+            popd > /dev/null
+          fi
+        done
+
+        if [ -n "$STAGE1_BINDIR" ] && pushd "$STAGE1_BINDIR" > /dev/null 2>&1; then
+          bindir="$PWD"
+          export PATH="$PWD:$PATH"
+          popd > /dev/null
+        fi
+
         if [[ $BUILD_TARGET = check* ]]; then
-          pushd $PATCH_PATH/config/$CONFIG_NAME > /dev/null
+          pushd "$PATCH_PATH/config/$CONFIG_NAME" > /dev/null
             if [ -f xfail.txt ]; then
               export LIT_XFAIL="$(sed -e '2,$s#^#;#' xfail.txt | tr -d '\n')"
             fi
@@ -131,7 +134,8 @@ runs:
 
         if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
           echo "::group::Configure"
-          cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake | tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
+          MSYS_NO_PATHCONV=1 env "STAGE1_BINDIR=$bindir" env
+          MSYS_NO_PATHCONV=1 env "STAGE1_BINDIR=$bindir" env cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake | tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
           echo "::endgroup::"
         fi
 
@@ -156,7 +160,7 @@ runs:
           popd > /dev/null
         fi
 
-        tar caf build-$BUILD_PROJECT-$BUILD_NAME.tar build-$BUILD_PROJECT-$BUILD_NAME
+        tar -cf build-$BUILD_PROJECT-$BUILD_NAME.tar build-$BUILD_PROJECT-$BUILD_NAME
       shell: bash
 
     - uses: actions/upload-artifact@v4
@@ -204,7 +208,8 @@ runs:
         echo "::endgroup::"
 
         cd install
-        tar caf package-$BUILD_PROJECT-$BUILD_NAME.tar *
+        find . -name '*.dll' | xargs -r chmod +x
+        tar -cf package-$BUILD_PROJECT-$BUILD_NAME.tar *
         mv package-$BUILD_PROJECT-$BUILD_NAME.tar ..
       shell: bash
 

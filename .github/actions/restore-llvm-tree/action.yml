@@ -50,8 +50,8 @@ runs:
           tar -xf $f
           rm $f
         done
-        if type rebase 2> /dev/null; then
-          find . -name '*.dll' | xargs rebase -O || true
-        fi
+        #if type rebase 2> /dev/null; then
+        #  find . -name '*.dll' | xargs rebase -O || true
+        #fi
       shell: bash
 

@@ -73,13 +73,12 @@ on:
 jobs:
   select:
     runs-on: ubuntu-latest
-    name: Select target
+    name: Select target ${{ inputs.config-name || 'cygwin-dylib' }}
 
     outputs:
       patch-path: 'patches'
       llvm-path: 'llvm-project'
       config-name: ${{ inputs.config-name || 'cygwin-dylib' }}
-      upstream-branch: ${{ steps.config.outputs.upstream-branch }}
       build-host: ${{ steps.config.outputs.build-host }}
       enable-llvm: ${{ steps.config.outputs.enable-llvm }}
       disable-llvm-test: ${{ steps.config.outputs.disable-llvm-test }}
@@ -135,7 +134,7 @@ jobs:
     needs: select
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ needs.select.outputs.enable-llvm }}
-    name: Build LLVM ${{ needs.select.outputs.upstream-branch }}
+    name: Build LLVM
 
     outputs:
       artifacts: ${{ needs.select.outputs.prereq-artifacts }},${{ steps.build.outputs.build-artifact }}
@@ -189,7 +188,7 @@ jobs:
     needs: [select, build-llvm]
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ ! needs.select.outputs.disable-llvm-test }}
-    name: Check LLVM ${{ needs.select.outputs.upstream-branch }}
+    name: Check LLVM
 
     steps:
       - name: Maximize build disk space
@@ -235,7 +234,7 @@ jobs:
     needs: [select, build-llvm]
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ needs.select.outputs.enable-clang }}
-    name: Build Clang ${{ needs.select.outputs.upstream-branch }}
+    name: Build Clang
 
     outputs:
       artifacts: ${{ needs.build-llvm.outputs.artifacts }},${{ steps.build.outputs.build-artifact }}
@@ -287,7 +286,7 @@ jobs:
     needs: [select, build-clang]
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ ! needs.select.outputs.disable-clang-test }}
-    name: Check Clang ${{ needs.select.outputs.upstream-branch }}
+    name: Check Clang
 
     steps:
       - name: Maximize build disk space
@@ -333,7 +332,7 @@ jobs:
     needs: [select, build-llvm]
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ needs.select.outputs.enable-lld }}
-    name: Build LLD ${{ needs.select.outputs.upstream-branch }}
+    name: Build LLD
 
     outputs:
       artifacts: ${{ needs.build-llvm.outputs.artifacts }},${{ steps.build.outputs.build-artifact }}
@@ -385,7 +384,7 @@ jobs:
     needs: [select, build-lld]
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ ! needs.select.outputs.disable-lld-test }}
-    name: Check LLD ${{ needs.select.outputs.upstream-branch }}
+    name: Check LLD
 
     steps:
       - name: Maximize build disk space
@@ -431,7 +430,7 @@ jobs:
     needs: select
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ needs.select.outputs.enable-runtimes }}
-    name: Build Runtimes ${{ needs.select.outputs.upstream-branch }}
+    name: Build Runtimes
 
     outputs:
       artifacts: ${{ needs.select.outputs.prereq-artifacts }},${{ steps.build.outputs.build-artifact }}
@@ -482,7 +481,7 @@ jobs:
     needs: [select, build-runtimes]
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ ! needs.select.outputs.disable-runtimes-test }}
-    name: Check Runtimes ${{ needs.select.outputs.upstream-branch }}
+    name: Check Runtimes
 
     steps:
       - name: Maximize build disk space

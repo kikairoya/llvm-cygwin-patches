@@ -37,9 +37,6 @@ inputs:
     description: PREFIX
     required: false
     default: '/'
-  cmake-flags:
-    description: CMake additional parameter
-    required: false
   artifact-suffix:
     description: Additional suffix to artifact name
     required: false
@@ -89,7 +86,6 @@ runs:
         STAGE1_BINDIR: ${{ inputs.stage1-bindir }}
       run: |
         ## Config, Build, Test
-        set -x
         if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
           set +h
           pushd "$CYGWIN_ROOT" > /dev/null
@@ -106,7 +102,7 @@ runs:
         done
 
         if [ -n "$STAGE1_BINDIR" ] && pushd "$STAGE1_BINDIR" > /dev/null 2>&1; then
-          bindir="$PWD"
+          MSYS_NO_PATHCONV=1 bindir="$(realpath .)"
           export PATH="$PWD:$PATH"
           popd > /dev/null
         fi
@@ -127,14 +123,13 @@ runs:
             fi
           popd > /dev/null
 
-          export LIT_OPTS="-sv --xunit-xml-output=$(realpath result-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.xml) $EXTRA_LIT_OPTS"
+          MSYS_NO_PATHCONV=1 export LIT_OPTS="-sv --xunit-xml-output=$(realpath result-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.xml) $EXTRA_LIT_OPTS"
           env | grep ^LIT_ > env-$BUILD_NAME.txt || true
           env | grep ^GTEST_ >> env-$BUILD_NAME.txt || true
         fi
 
         if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
           echo "::group::Configure"
-          MSYS_NO_PATHCONV=1 env "STAGE1_BINDIR=$bindir" env
           MSYS_NO_PATHCONV=1 env "STAGE1_BINDIR=$bindir" env cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake | tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
           echo "::endgroup::"
         fi

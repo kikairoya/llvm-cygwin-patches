@@ -21,10 +21,10 @@ inputs:
 outputs:
   root:
     description: Cygwin root directory in host format
-    value: ${{ steps.set-output.outputs.root }}
+    value: ${{ steps.unpack-cygwin-linux.outputs.root || steps.cygwin.outputs.root || steps.unpack-cygwin-windows.outputs.root  }}
   workspace:
     description: Workspace directory in unix format
-    value: ${{ steps.set-output.outputs.workspace }}
+    value: ${{ steps.cleanup.outputs.workspace || github.workspace }}
 
 runs:
   using: "composite"
@@ -170,37 +170,60 @@ runs:
       id: cleanup
       if: steps.globals.outputs.is-windows
       env:
-        SETUPROOT: ${{steps.cygwin.outputs.root}}
-        UNPACKROOT: ${{steps.unpack-cygwin-windows.outputs.root}}
+        CYGWIN_ROOT: ${{ steps.cygwin.outputs.root || steps.unpack-cygwin-windows.outputs.root }}
       run: |
-        rmdir /s /q cygwin_tarstrap
-        set root=D:\cygwin
-        if exist %SETUPROOT% set root=%SETUPROOT%
-        if exist %UNPACKROOT% set root=%UNPACKROOT%
-        cd %root%
-        echo root=%cd%>> %GITHUB_OUTPUT%
-        echo ::group::installed packages
-        type etc\setup\installed.db
-        echo ::endgroup::
-        mkdir var
-        mkdir var\wrapper-bin
-        echo %cd%\var\wrapper-bin>> %GITHUB_PATH%
-        echo @echo off > var\wrapper-bin\cygwin-bash.cmd
-        echo set PATH=%cd%\bin;%%PATH%% >> var\wrapper-bin\cygwin-bash.cmd
-        echo %cd%\bin\bash.exe -o igncr -eo pipefail %%* >> var\wrapper-bin\cygwin-bash.cmd
-      shell: cmd
-
-    - id: set-output
-      env:
-        ISWIN: ${{ steps.globals.outputs.is-windows }}
-        WINROOT: ${{steps.cleanup.outputs.root}}
-        LNXROOT: ${{steps.unpack-cygwin-linux.outputs.root}}
-      run: |
-        if [ "$ISWIN" == "true" ]; then
-          echo "root=$WINROOT" >> "$GITHUB_OUTPUT"
-          echo workspace=$("$WINROOT\bin\cygpath.exe" -ua "$GITHUB_WORKSPACE") >> "$GITHUB_OUTPUT"
-        else
-          echo root=$LNXROOT >> $GITHUB_OUTPUT
-          echo workspace=$GITHUB_WORKSPACE >> $GITHUB_OUTPUT
+        # Run on Cygwin
+        if [[ $(uname -o) = Msys ]] && [ -d "$CYGWIN_ROOT" ]; then
+          PATH="$(cygpath -ua $CYGWIN_ROOT/bin):$PATH" MSYS_NO_PATHCONV=1 exec env \
+            "GITHUB_ACTION_PATH=$($CYGWIN_ROOT/bin/cygpath -ua $GITHUB_ACTION_PATH)" \
+            "GITHUB_ENV=$($CYGWIN_ROOT/bin/cygpath -ua $GITHUB_ENV)" \
+            "GITHUB_EVENT_PATH=$($CYGWIN_ROOT/bin/cygpath -ua $GITHUB_EVENT_PATH)" \
+            "GITHUB_OUTPUT=$($CYGWIN_ROOT/bin/cygpath -ua $GITHUB_OUTPUT)" \
+            "GITHUB_PATH=$($CYGWIN_ROOT/bin/cygpath -ua $GITHUB_PATH)" \
+            "GITHUB_STEP_SUMMARY=$($CYGWIN_ROOT/bin/cygpath -ua $GITHUB_STEP_SUMMARY)" \
+            "GITHUB_WORKSPACE=$($CYGWIN_ROOT/bin/cygpath -ua $GITHUB_WORKSPACE)" \
+            "RUNNER_TEMP=$($CYGWIN_ROOT/bin/cygpath -ua $RUNNER_TEMP)" \
+            "RUNNER_TOOL_CACHE=$($CYGWIN_ROOT/bin/cygpath -ua $RUNNER_TOOL_CACHE)" \
+            env bash -o igncr -eo pipefail "$(cygpath -w "$0")"
         fi
+
+        # or just
+        if [[ $(uname -o) = Msys ]] && [ -d "$CYGWIN_ROOT" ]; then
+          PATH="$(cygpath -ua $CYGWIN_ROOT/bin):$PATH" exec env env bash -o igncr -eo pipefail "$(cygpath -w "$0")"
+        fi
+
+        mkdir -p /var/wrapper-bin
+        cd /var/wrapper-bin
+        echo "$(cygpath -wa .)" >> $GITHUB_PATH
+        {
+          echo "@echo off"
+          echo "set PATH=${CYGWIN_ROOT}\\bin;%PATH%"
+          echo "${CYGWIN_ROOT}\\bin\\bash.exe -o igncr -eo pipefail %*"
+        } | sed 's/$/\r/' > cygwin-bash.cmd
+        chmod +x cygwin-bash.cmd
+        cd -
+
+        echo ::group::installed packages
+        cat /etc/setup/installed.db
+        echo ::endgroup::
+
+        rm -rf cygwin_tarstrap
+      shell: bash
+
+    - name: testcmd
+      if: false
+      run: |
+        uname -a
+      shell: cygwin-bash '{0}'
+
+    - name: testcygbash
+      if: false
+      env:
+        CYGWIN_ROOT: ${{ steps.cygwin.outputs.root || steps.unpack-cygwin-windows.outputs.root }}
+      run: |
+        # Run on Cygwin
+        if [[ $(uname -o) = Msys ]] && [ -d "$CYGWIN_ROOT" ]; then
+          PATH="$(cygpath -ua $CYGWIN_ROOT/bin):$PATH" exec env env bash -o igncr -eo pipefail "$(cygpath -w "$0")"
+        fi
+        uname -a
       shell: bash

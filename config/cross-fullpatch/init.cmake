@@ -1,3 +1,4 @@
+set(LLVM_VERSION_SUFFIX "git-stage1" CACHE STRING "" FORCE)
 include("${CMAKE_CURRENT_LIST_DIR}/../cross-to-cygwin.cmake")
 if ("${CMAKE_SOURCE_DIR}" MATCHES "runtimes")
   set(LLVM_ENABLE_PROJECTS "" CACHE STRING "" FORCE)

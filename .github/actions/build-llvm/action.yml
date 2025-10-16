@@ -82,7 +82,6 @@ runs:
         LLVM_PATH: ${{ inputs.llvm-path }}
         PATCH_PATH: ${{ inputs.patch-path }}
         EXTRA_LIT_OPTS: ${{ inputs.extra-lit-opts }}
-        CMAKE_FLAGS: ${{ inputs.cmake-flags }}
         STAGE1_BINDIR: ${{ inputs.stage1-bindir }}
       run: |
         ## Config, Build, Test

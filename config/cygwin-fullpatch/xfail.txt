@@ -1,4 +1,3 @@
-Clang :: APINotes/case-for-private-apinotes-file.c
 Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
 Clang :: Driver/clang-offload-bundler.c
 Clang :: Driver/DTLTO/dtlto.c
@@ -10,17 +9,8 @@ Clang :: Driver/loongarch-toolchain.c
 Clang :: Driver/mingw-sysroot.cpp
 Clang :: Driver/riscv32-toolchain.c
 Clang :: Driver/riscv64-toolchain.c
-Clang :: Lexer/case-insensitive-include-absolute.c
-Clang :: Lexer/case-insensitive-include.c
-Clang :: Lexer/case-insensitive-system-include.c
 Clang :: Modules/inferred-framework-case.m
-Clang :: Preprocessor/nonportable-include-with-hmap.c
 Clang Tools :: clang-tidy/CTTestTidyModule.cpp
-LLVM :: ExecutionEngine/MCJIT/2003-01-15-AlignmentTest.ll
-LLVM :: ExecutionEngine/MCJIT/2003-05-06-LivenessClobber.ll
-LLVM :: ExecutionEngine/MCJIT/2003-08-15-AllocaAssertion.ll
-LLVM :: ExecutionEngine/MCJIT/2003-08-23-RegisterAllocatePhysReg.ll
-LLVM :: ExecutionEngine/MCJIT/test-loadstore.ll
 LLVM :: ExecutionEngine/OrcLazy/debug-descriptor.ll
 LLVM :: Other/can-execute.txt
 LLVM :: tools/llvm-ar/error-opening-permission.test

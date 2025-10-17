@@ -1,7 +1,7 @@
 name: Cross build LLVM Cygwin binaries with patches
 on:
   schedule:
-    - cron: '18 12 * * *'
+    - cron: '18 14 * * *'
   workflow_dispatch:
     inputs:
       host-config-name:
@@ -55,58 +55,22 @@ jobs:
     uses: ./.github/workflows/build-llvm.yml
     with:
       config-name: ${{ needs.select.outputs.host-config }}
+      install-prefix: 'stage1'
+      build-retention-days: -1
 
-  build-llvm:
+  build:
     needs: [select, prepare]
     strategy:
       fail-fast: false
       max-parallel: 2
       matrix:
         config-name: ${{ fromJSON(needs.select.outputs.config-names) }}
-    runs-on: ubuntu-latest
-    name: Build LLVM ${{ matrix.config-name }}
-
-    steps:
-      - name: prepare patches
-        id: checkout-self
-        uses: actions/checkout@v5
-        with:
-          path: self
-
-      - name: prepare Cygwin
-        id: prepare-cygwin
-        uses: ./self/.github/actions/prepare-cygwin-root
-
-      - name: restore build tree
-        id: prepare-tree
-        uses: ./self/.github/actions/restore-llvm-tree
-        with:
-          config-name: ${{ matrix.config-name }}
-          patch-path: ${{ needs.prepare.outputs.patch-path }}
-          patch-ref: ${{ needs.prepare.outputs.patch-commit }}
-          cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
-          artifact-ids: ${{ needs.prepare.outputs.source-artifact }}
-
-      - uses: actions/download-artifact@v5
-        with:
-          name: package-llvm-${{ needs.prepare.outputs.config-name }}
-
-      - name: restore host tool
-        run: |
-          mkdir -p stage1
-          tar -xf package-llvm-*.tar -C stage1
-          rm package-llvm-*.tar
-        shell: bash
-
-      - name: build llvm
-        id: build
-        uses: ./self/.github/actions/build-llvm
-        with:
-          llvm-path: 'llvm-project'
-          patch-path: 'patches'
-          config-name: ${{ matrix.config-name }}
-          cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
-          build-project: llvm
-          build-name: ${{ needs.prepare.outputs.build-name }}
-          install-prefix: ''
-          stage1-bindir: ${{ github.workspace }}/stage1/bin
+    uses: ./.github/workflows/build-llvm.yml
+    with:
+      config-name: ${{ matrix.config-name }}
+      build-name: ${{ needs.prepare.outputs.build-name }}
+      patch-commit: ${{ needs.prepare.outputs.patch-commit }}
+      source-artifact: ${{ needs.prepare.outputs.source-artifact }}
+      prereq-artifacts: ${{ needs.prepare.outputs.install-artifacts }}
+      install-prefix: ''
+      stage1-bindir: 'stage1/bin'

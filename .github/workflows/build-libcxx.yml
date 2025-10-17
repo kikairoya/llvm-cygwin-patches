@@ -1,12 +1,12 @@
-name: Build LLVM and libc++ Cygwin binaries with patches 3
+name: Build LLVM with libc++ Cygwin binaries with patches
 on:
-  #schedule:
-  #  - cron: '18 12 * * *'
+  schedule:
+    - cron: '18 11 * * *'
   workflow_dispatch:
 
 jobs:
   build-stage0:
-    uses: ./.github/workflows/build-llvm-2.yml
+    uses: ./.github/workflows/build-llvm.yml
     with:
       config-name: linux-fullpatch
       install-prefix: 'stage0'
@@ -14,7 +14,7 @@ jobs:
 
   build-stage1:
     needs: build-stage0
-    uses: ./.github/workflows/build-llvm-2.yml
+    uses: ./.github/workflows/build-llvm.yml
     with:
       config-name: cross-fullpatch
       build-name: ${{ needs.build-stage0.outputs.build-name }}
@@ -27,7 +27,7 @@ jobs:
 
   build-stage2:
     needs: build-stage1
-    uses: ./.github/workflows/build-llvm-2.yml
+    uses: ./.github/workflows/build-llvm.yml
     with:
       config-name: cygwin-fullpatch
       build-name: ${{ needs.build-stage1.outputs.build-name }}

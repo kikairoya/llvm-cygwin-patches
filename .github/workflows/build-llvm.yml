@@ -16,6 +16,44 @@ on:
         type: string
         required: false
         default: ''
+      prereq-artifacts:
+        description: Additional artifacts to be used
+        type: string
+        required: false
+        default: ''
+      stage1-bindir:
+        type: string
+        required: false
+        default: ''
+      install-prefix:
+        description: The path prefixed in package archive
+        type: string
+        required: false
+        default: '/'
+      build-name:
+        type: string
+        required: false
+        default: ''
+      patch-commit:
+        type: string
+        required: false
+        default: ''
+      source-artifact:
+        type: string
+        required: false
+        default: ''
+      source-retention-days:
+        type: number
+        required: false
+        default: 0
+      build-retention-days:
+        type: number
+        required: false
+        default: 0
+      install-retention-days:
+        type: number
+        required: false
+        default: 0
     outputs:
       config-name:
         value: ${{ jobs.select.outputs.config-name }}
@@ -27,17 +65,20 @@ on:
         value: ${{ jobs.select.outputs.build-name }}
       source-artifact:
         value: ${{ jobs.select.outputs.source-artifact }}
+      build-artifacts:
+        value: ${{ jobs.collect-results.outputs.build-artifacts }}
+      install-artifacts:
+        value: ${{ jobs.collect-results.outputs.install-artifacts }}
 
 jobs:
   select:
     runs-on: ubuntu-latest
-    name: Select target
+    name: Select target ${{ inputs.config-name || 'cygwin-dylib' }}
 
     outputs:
       patch-path: 'patches'
       llvm-path: 'llvm-project'
       config-name: ${{ inputs.config-name || 'cygwin-dylib' }}
-      upstream-branch: ${{ steps.config.outputs.upstream-branch }}
       build-host: ${{ steps.config.outputs.build-host }}
       enable-llvm: ${{ steps.config.outputs.enable-llvm }}
       disable-llvm-test: ${{ steps.config.outputs.disable-llvm-test }}
@@ -45,10 +86,12 @@ jobs:
       disable-clang-test: ${{ steps.config.outputs.disable-clang-test }}
       enable-lld: ${{ steps.config.outputs.enable-lld }}
       disable-lld-test: ${{ steps.config.outputs.disable-lld-test }}
-      build-name: ${{ steps.prepare-tree.outputs.build-name }}
-      upstream-commit: ${{ steps.prepare-tree.outputs.upstream-commit }}
-      patch-commit: ${{ steps.prepare-tree.outputs.patch-commit }}
-      source-artifact: ${{ steps.prepare-tree.outputs.source-artifact }}
+      enable-runtimes: ${{ steps.config.outputs.enable-runtimes }}
+      disable-runtimes-test: ${{ steps.config.outputs.disable-runtimes-test }}
+      build-name: ${{ inputs.build-name || steps.prepare-tree.outputs.build-name }}
+      patch-commit: ${{ inputs.patch-commit || steps.prepare-tree.outputs.patch-commit }}
+      source-artifact: ${{ inputs.source-artifact || steps.prepare-tree.outputs.source-artifact }}
+      prereq-artifacts: ${{ inputs.source-artifact || steps.prepare-tree.outputs.source-artifact }}${{ steps.config.outputs.prereq-artifacts }}
 
     steps:
       - name: prepare patches
@@ -57,13 +100,26 @@ jobs:
         with:
           path: self
 
-      - run: cat "self/config/$CONFIG_NAME/conf.txt" >> "$GITHUB_OUTPUT"
+      - run: |
+          if [ -n "$SOURCE_ARTIFACT" ]; then
+            [ "$BUILD_NAME" ]
+            [ "$PATCH_COMMIT" ]
+          fi
+          if [ -n "$PREREQ_ARTIFACTS" ]; then
+            echo "prereq-artifacts=,$PREREQ_ARTIFACTS" >> "$GITHUB_OUTPUT"
+          fi
+          cat "self/config/$CONFIG_NAME/conf.txt" >> "$GITHUB_OUTPUT"
         env:
           CONFIG_NAME: ${{ inputs.config-name || 'cygwin-dylib' }}
+          SOURCE_ARTIFACT: ${{ inputs.source-artifact }}
+          PREREQ_ARTIFACTS: ${{ inputs.prereq-artifacts }}
+          BUILD_NAME: ${{ inputs.build-name }}
+          PATCH_COMMIT: ${{ inputs.patch-commit }}
         id: config
 
       - name: prepare build tree
         id: prepare-tree
+        if: ${{ ! inputs.source-artifact }}
         uses: ./self/.github/actions/prepare-llvm-tree
         with:
           llvm-path: 'llvm-project'
@@ -72,17 +128,24 @@ jobs:
           patch-ref: ''
           patch-series: ${{ steps.config.outputs.patch-series }}
           cygwin-root: ''
+          source-retention-days: ${{ inputs.source-retention-days }}
 
   build-llvm:
     needs: select
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ needs.select.outputs.enable-llvm }}
-    name: Build LLVM ${{ needs.select.outputs.upstream-branch }}
+    name: Build LLVM
 
     outputs:
-      artifacts: ${{ needs.select.outputs.source-artifact }},${{ steps.build.outputs.build-artifact }}
+      artifacts: ${{ needs.select.outputs.prereq-artifacts }},${{ steps.build.outputs.build-artifact }}
+      build-artifact: ${{ steps.build.outputs.build-artifact }}
+      install-artifact: ${{ steps.build.outputs.install-artifact }}
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -103,7 +166,7 @@ jobs:
           patch-path: ${{ needs.select.outputs.patch-path }}
           patch-ref: ${{ needs.select.outputs.patch-commit }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
-          artifact-ids: ${{ needs.select.outputs.source-artifact }}
+          artifact-ids: ${{ needs.select.outputs.prereq-artifacts }}
 
       - name: build llvm
         id: build
@@ -116,15 +179,22 @@ jobs:
           build-project: llvm
           build-name: ${{ needs.select.outputs.build-name }}
           parallel-compile-jobs: 3
-          install-prefix: install
+          install-prefix: ${{ inputs.install-prefix }}
+          stage1-bindir: ${{ inputs.stage1-bindir }}
+          build-retention-days: ${{ inputs.build-retention-days }}
+          install-retention-days: ${{ inputs.install-retention-days }}
 
   check-llvm:
     needs: [select, build-llvm]
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ ! needs.select.outputs.disable-llvm-test }}
-    name: Check LLVM ${{ needs.select.outputs.upstream-branch }}
+    name: Check LLVM
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -158,17 +228,24 @@ jobs:
           build-project: llvm
           build-target: check-all
           build-name: ${{ needs.select.outputs.build-name }}
+          stage1-bindir: ${{ inputs.stage1-bindir }}
 
   build-clang:
     needs: [select, build-llvm]
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ needs.select.outputs.enable-clang }}
-    name: Build Clang ${{ needs.select.outputs.upstream-branch }}
+    name: Build Clang
 
     outputs:
       artifacts: ${{ needs.build-llvm.outputs.artifacts }},${{ steps.build.outputs.build-artifact }}
+      build-artifact: ${{ steps.build.outputs.build-artifact }}
+      install-artifact: ${{ steps.build.outputs.install-artifact }}
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -202,15 +279,20 @@ jobs:
           build-project: clang
           build-name: ${{ needs.select.outputs.build-name }}
           parallel-compile-jobs: 3
-          install-prefix: install
+          install-prefix: ${{ inputs.install-prefix }}
+          stage1-bindir: ${{ inputs.stage1-bindir }}
 
   check-clang:
     needs: [select, build-clang]
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ ! needs.select.outputs.disable-clang-test }}
-    name: Check Clang ${{ needs.select.outputs.upstream-branch }}
+    name: Check Clang
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -244,17 +326,24 @@ jobs:
           build-project: clang
           build-target: check-all
           build-name: ${{ needs.select.outputs.build-name }}
+          stage1-bindir: ${{ inputs.stage1-bindir }}
 
   build-lld:
     needs: [select, build-llvm]
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ needs.select.outputs.enable-lld }}
-    name: Build LLD ${{ needs.select.outputs.upstream-branch }}
+    name: Build LLD
 
     outputs:
       artifacts: ${{ needs.build-llvm.outputs.artifacts }},${{ steps.build.outputs.build-artifact }}
+      build-artifact: ${{ steps.build.outputs.build-artifact }}
+      install-artifact: ${{ steps.build.outputs.install-artifact }}
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -288,15 +377,20 @@ jobs:
           build-project: lld
           build-name: ${{ needs.select.outputs.build-name }}
           parallel-compile-jobs: 3
-          install-prefix: install
+          install-prefix: ${{ inputs.install-prefix }}
+          stage1-bindir: ${{ inputs.stage1-bindir }}
 
   check-lld:
     needs: [select, build-lld]
     runs-on: ${{ needs.select.outputs.build-host }}
     if: ${{ ! needs.select.outputs.disable-lld-test }}
-    name: Check LLD ${{ needs.select.outputs.upstream-branch }}
+    name: Check LLD
 
     steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -330,3 +424,127 @@ jobs:
           build-project: lld
           build-target: check-lld
           build-name: ${{ needs.select.outputs.build-name }}
+          stage1-bindir: ${{ inputs.stage1-bindir }}
+
+  build-runtimes:
+    needs: select
+    runs-on: ${{ needs.select.outputs.build-host }}
+    if: ${{ needs.select.outputs.enable-runtimes }}
+    name: Build Runtimes
+
+    outputs:
+      artifacts: ${{ needs.select.outputs.prereq-artifacts }},${{ steps.build.outputs.build-artifact }}
+      build-artifact: ${{ steps.build.outputs.build-artifact }}
+      install-artifact: ${{ steps.build.outputs.install-artifact }}
+
+    steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
+      - run: git config --global core.autocrlf input
+
+      - name: prepare patches
+        id: checkout-self
+        uses: actions/checkout@v5
+        with:
+          path: self
+
+      - name: prepare Cygwin
+        id: prepare-cygwin
+        uses: ./self/.github/actions/prepare-cygwin-root
+
+      - name: restore build tree
+        id: prepare-tree
+        uses: ./self/.github/actions/restore-llvm-tree
+        with:
+          patch-path: ${{ needs.select.outputs.patch-path }}
+          config-name: ${{ needs.select.outputs.config-name }}
+          patch-ref: ${{ needs.select.outputs.patch-commit }}
+          cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
+          artifact-ids: ${{ needs.select.outputs.prereq-artifacts }}
+
+      - name: build runtimes
+        id: build
+        uses: ./self/.github/actions/build-llvm
+        with:
+          llvm-path: ${{ needs.select.outputs.llvm-path }}
+          patch-path: ${{ needs.select.outputs.patch-path }}
+          config-name: ${{ needs.select.outputs.config-name }}
+          cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
+          build-project: runtimes
+          build-name: ${{ needs.select.outputs.build-name }}
+          install-prefix: ${{ inputs.install-prefix }}
+          stage1-bindir: ${{ inputs.stage1-bindir }}
+
+  check-runtimes:
+    needs: [select, build-runtimes]
+    runs-on: ${{ needs.select.outputs.build-host }}
+    if: ${{ ! needs.select.outputs.disable-runtimes-test }}
+    name: Check Runtimes
+
+    steps:
+      - name: Maximize build disk space
+        if: ${{ runner.os == 'Linux' }}
+        uses: easimon/maximize-build-space@v10
+
+      - run: git config --global core.autocrlf input
+
+      - name: prepare patches
+        id: checkout-self
+        uses: actions/checkout@v5
+        with:
+          path: self
+
+      - name: prepare Cygwin
+        id: prepare-cygwin
+        uses: ./self/.github/actions/prepare-cygwin-root
+
+      - name: restore build tree
+        id: prepare-tree
+        uses: ./self/.github/actions/restore-llvm-tree
+        with:
+          config-name: ${{ needs.select.outputs.config-name }}
+          patch-path: ${{ needs.select.outputs.patch-path }}
+          patch-ref: ${{ needs.select.outputs.patch-commit }}
+          cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
+          artifact-ids: ${{ needs.build-runtimes.outputs.artifacts }}
+
+      - name: check runtimes
+        id: check
+        uses: ./self/.github/actions/build-llvm
+        with:
+          llvm-path: ${{ needs.select.outputs.llvm-path }}
+          patch-path: ${{ needs.select.outputs.patch-path }}
+          config-name: ${{ needs.select.outputs.config-name }}
+          cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
+          build-project: runtimes
+          build-target: check-runtimes
+          build-name: ${{ needs.select.outputs.build-name }}
+          stage1-bindir: ${{ inputs.stage1-bindir }}
+
+  collect-results:
+    needs: [build-llvm, build-clang, build-lld, build-runtimes]
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+
+    outputs:
+      build-artifacts: ${{ steps.collect.outputs.build-artifacts }}
+      install-artifacts: ${{ steps.collect.outputs.install-artifacts }}
+
+    steps:
+      - id: collect
+        env:
+          LLVM_BUILD: ${{ needs.build-llvm.outputs.build-artifact }}
+          LLVM_INSTALL: ${{ needs.build-llvm.outputs.install-artifact }}
+          CLANG_BUILD: ${{ needs.build-clang.outputs.build-artifact }}
+          CLANG_INSTALL: ${{ needs.build-clang.outputs.install-artifact }}
+          LLD_BUILD: ${{ needs.build-lld.outputs.build-artifact }}
+          LLD_INSTALL: ${{ needs.build-lld.outputs.install-artifact }}
+          RUNTIMES_BUILD: ${{ needs.build-runtimes.outputs.build-artifact }}
+          RUNTIMES_INSTALL: ${{ needs.build-runtimes.outputs.install-artifact }}
+        run: |
+          echo build-artifacts=$(echo $LLVM_BUILD $CLANG_BUILD $LLD_BUILD $RUNTIMES_BUILD | sed 's/  */,/g;s/ //g') >> "$GITHUB_OUTPUT"
+          echo install-artifacts=$(echo $LLVM_INSTALL $CLANG_INSTALL $LLD_INSTALL $RUNTIMES_INSTALL | sed 's/  */,/g;s/ //g') >> "$GITHUB_OUTPUT"
+        shell: bash
+      

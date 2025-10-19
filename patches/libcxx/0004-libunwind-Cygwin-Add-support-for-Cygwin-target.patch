@@ -1,4 +1,4 @@
-From 2ed93799f5e8ef456a802fd1fe3b37aa3ff1a8db Mon Sep 17 00:00:00 2001
+From 9d90a366243326d1be36c97797b85cf879fc1dcd Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 04/15] [libunwind][Cygwin] Add support for Cygwin target
@@ -174,7 +174,7 @@ index 8b3055f5cd7c..2e78e85ea017 100644
    _xmm[regNum - UNW_X86_64_XMM0] = value;
  #else
 diff --git a/libunwind/src/Unwind-seh.cpp b/libunwind/src/Unwind-seh.cpp
-index 8b83f10615f2..6e76dd356d74 100644
+index 110c5987c3f1..6783bdccd33a 100644
 --- a/libunwind/src/Unwind-seh.cpp
 +++ b/libunwind/src/Unwind-seh.cpp
 @@ -93,7 +93,7 @@ _GCC_specific_handler(PEXCEPTION_RECORD ms_exc, PVOID frame, PCONTEXT ms_ctx,

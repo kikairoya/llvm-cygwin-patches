@@ -1,0 +1,107 @@
+From efac315751bb086490a64e68e17fc9cc38afe328 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Fri, 17 Oct 2025 19:19:09 +0900
+Subject: [PATCH 07/39] [Unittest][Cygwin] Set $PATH when running unittests
+
+As the Cygwin platform requires $PATH to be set in order to run unittests,
+do the same as for the regular Windows target.
+---
+ clang-tools-extra/clangd/unittests/lit.cfg.py              | 4 ++--
+ clang-tools-extra/include-cleaner/test/Unit/lit.cfg.py     | 4 ++--
+ clang-tools-extra/test/Unit/lit.cfg.py                     | 2 +-
+ clang/test/Unit/lit.cfg.py                                 | 2 +-
+ llvm/utils/lit/tests/Inputs/googletest-cmd-wrapper/lit.cfg | 2 +-
+ polly/test/Unit/lit.cfg                                    | 2 +-
+ 6 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/clang-tools-extra/clangd/unittests/lit.cfg.py b/clang-tools-extra/clangd/unittests/lit.cfg.py
+index 33aa9e61f4ce..666e9879bb4a 100644
+--- a/clang-tools-extra/clangd/unittests/lit.cfg.py
++++ b/clang-tools-extra/clangd/unittests/lit.cfg.py
+@@ -19,12 +19,12 @@ config.parallelism_group = "clangd"
+ 
+ if platform.system() == "Darwin":
+     shlibpath_var = "DYLD_LIBRARY_PATH"
+-elif platform.system() == "Windows":
++elif platform.system() == "Windows" or sys.platform == "cygwin":
+     shlibpath_var = "PATH"
+ else:
+     shlibpath_var = "LD_LIBRARY_PATH"
+ config.environment[shlibpath_var] = os.path.pathsep.join(
+-    ("@SHLIBDIR@", "@LLVM_LIBS_DIR@", config.environment.get(shlibpath_var, ""))
++    (config.shlibdir, config.llvm_libs_dir, config.environment.get(shlibpath_var, ""))
+ )
+ 
+ # It is not realistically possible to account for all options that could
+diff --git a/clang-tools-extra/include-cleaner/test/Unit/lit.cfg.py b/clang-tools-extra/include-cleaner/test/Unit/lit.cfg.py
+index 0963351abe3b..c4454df06b38 100644
+--- a/clang-tools-extra/include-cleaner/test/Unit/lit.cfg.py
++++ b/clang-tools-extra/include-cleaner/test/Unit/lit.cfg.py
+@@ -11,12 +11,12 @@ import platform
+ 
+ if platform.system() == "Darwin":
+     shlibpath_var = "DYLD_LIBRARY_PATH"
+-elif platform.system() == "Windows":
++elif platform.system() == "Windows" or sys.platform == "cygwin":
+     shlibpath_var = "PATH"
+ else:
+     shlibpath_var = "LD_LIBRARY_PATH"
+ config.environment[shlibpath_var] = os.path.pathsep.join(
+-    ("@SHLIBDIR@", "@LLVM_LIBS_DIR@", config.environment.get(shlibpath_var, ""))
++    (config.shlibdir, config.llvm_libs_dir, config.environment.get(shlibpath_var, ""))
+ )
+ 
+ # It is not realistically possible to account for all options that could
+diff --git a/clang-tools-extra/test/Unit/lit.cfg.py b/clang-tools-extra/test/Unit/lit.cfg.py
+index b7376a02c89e..0254829ed67e 100644
+--- a/clang-tools-extra/test/Unit/lit.cfg.py
++++ b/clang-tools-extra/test/Unit/lit.cfg.py
+@@ -21,7 +21,7 @@ config.test_format = lit.formats.GoogleTest(".", "Tests")
+ 
+ if platform.system() == "Darwin":
+     shlibpath_var = "DYLD_LIBRARY_PATH"
+-elif platform.system() == "Windows":
++elif platform.system() == "Windows" or sys.platform == "cygwin":
+     shlibpath_var = "PATH"
+ else:
+     shlibpath_var = "LD_LIBRARY_PATH"
+diff --git a/clang/test/Unit/lit.cfg.py b/clang/test/Unit/lit.cfg.py
+index 37e91d0f8629..ebe35a10e7f3 100644
+--- a/clang/test/Unit/lit.cfg.py
++++ b/clang/test/Unit/lit.cfg.py
+@@ -51,7 +51,7 @@ def find_shlibpath_var():
+         yield "LD_LIBRARY_PATH"
+     elif platform.system() == "Darwin":
+         yield "DYLD_LIBRARY_PATH"
+-    elif platform.system() == "Windows":
++    elif platform.system() == "Windows" or sys.platform == "cygwin":
+         yield "PATH"
+     elif platform.system() == "AIX":
+         yield "LIBPATH"
+diff --git a/llvm/utils/lit/tests/Inputs/googletest-cmd-wrapper/lit.cfg b/llvm/utils/lit/tests/Inputs/googletest-cmd-wrapper/lit.cfg
+index 9f93bac51456..d3eb98792299 100644
+--- a/llvm/utils/lit/tests/Inputs/googletest-cmd-wrapper/lit.cfg
++++ b/llvm/utils/lit/tests/Inputs/googletest-cmd-wrapper/lit.cfg
+@@ -2,5 +2,5 @@ import lit.formats
+ 
+ config.name = "googletest-cmd-wrapper"
+ config.test_format = lit.formats.GoogleTest(
+-    "DummySubDir", "Test" if "win32" in sys.platform else ".exe", [sys.executable]
++    "DummySubDir", "Test" if sys.platform in ["win32", "cygwin"] else ".exe", [sys.executable]
+ )
+diff --git a/polly/test/Unit/lit.cfg b/polly/test/Unit/lit.cfg
+index 6c450fbc54b5..21d7bc4ab25c 100644
+--- a/polly/test/Unit/lit.cfg
++++ b/polly/test/Unit/lit.cfg
+@@ -50,7 +50,7 @@ for var in [
+ 
+ if platform.system() == 'Darwin':
+     shlibpath_var = 'DYLD_LIBRARY_PATH'
+-elif platform.system() == 'Windows':
++elif platform.system() == 'Windows' or sys.platform == "cygwin":
+     shlibpath_var = 'PATH'
+ else:
+     shlibpath_var = 'LD_LIBRARY_PATH'
+-- 
+2.51.0
+

@@ -1,0 +1,25 @@
+From d61426da6761d8bb03e0904697bd76759be1441b Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 10 Jun 2025 21:43:38 +0900
+Subject: [PATCH 32/39] [LIT][Cygwin] Suppress warning on expected result
+
+---
+ llvm/utils/lit/lit/run.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/llvm/utils/lit/lit/run.py b/llvm/utils/lit/lit/run.py
+index 62070e824e87..5830b21be6b0 100644
+--- a/llvm/utils/lit/lit/run.py
++++ b/llvm/utils/lit/lit/run.py
+@@ -137,6 +137,6 @@ class Run(object):
+                     "Raised process limit from %d to %d" % (soft_limit, desired_limit)
+                 )
+         except Exception as ex:
+-            # Warn, unless this is Windows or z/OS, in which case this is expected.
+-            if os.name != "nt" and platform.system() != "OS/390":
++            # Warn, unless this is Windows, z/OS, or Cygwin in which case this is expected.
++            if os.name != "nt" and platform.system() != "OS/390" and platform.sys.platform != "cygwin":
+                 self.lit_config.warning("Failed to raise process limit: %s" % ex)
+-- 
+2.51.0
+

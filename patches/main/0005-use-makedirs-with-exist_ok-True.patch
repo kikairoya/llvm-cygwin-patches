@@ -1,0 +1,32 @@
+From 665e97f6f892081fc22f6d29b15e02ee2d31c78e Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 18 Oct 2025 00:21:24 +0900
+Subject: [PATCH 05/16] use makedirs with exist_ok=True
+
+---
+ llvm/utils/lit/lit/util.py | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/llvm/utils/lit/lit/util.py b/llvm/utils/lit/lit/util.py
+index a5181ab20a7e..6f5b1606a16c 100644
+--- a/llvm/utils/lit/lit/util.py
++++ b/llvm/utils/lit/lit/util.py
+@@ -164,14 +164,7 @@ def mkdir(path):
+ def mkdir_p(path):
+     """mkdir_p(path) - Make the "path" directory, if it does not exist; this
+     will also make directories for any missing parent directories."""
+-    if not path or (sys.platform != "cygwin" and os.path.exists(path)):
+-        return
+-
+-    parent = os.path.dirname(path)
+-    if parent != path:
+-        mkdir_p(parent)
+-
+-    mkdir(path)
++    os.makedirs(path, exist_ok=True)
+ 
+ 
+ def listdir_files(dirname, suffixes=None, exclude_filenames=None, prefixes=None):
+-- 
+2.51.0
+

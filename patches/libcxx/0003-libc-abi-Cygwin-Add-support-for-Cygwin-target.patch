@@ -1,4 +1,4 @@
-From aa593e79eeb90423a77e0c18c2fefe5921cb2c8b Mon Sep 17 00:00:00 2001
+From d8f11016a722def4bf03cef04957b9fb1a983c7c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 03/15] [libc++abi][Cygwin] Add support for Cygwin target
@@ -57,7 +57,7 @@ index 10f2087c68c5..2a9e3737a245 100644
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxxabi/include/__cxxabi_config.h b/libcxxabi/include/__cxxabi_config.h
-index 759445dac91f..c35e6a03d709 100644
+index f5101dbc9e59..4ca9c40c69e2 100644
 --- a/libcxxabi/include/__cxxabi_config.h
 +++ b/libcxxabi/include/__cxxabi_config.h
 @@ -31,23 +31,24 @@

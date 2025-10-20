@@ -1,7 +1,7 @@
-From 5af146cc1b60c718d91ddafcf3d70ef413f7e858 Mon Sep 17 00:00:00 2001
+From 47c74872f07fb256e706ebf81dd39552c6a467f6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Oct 2025 10:04:11 +0900
-Subject: [PATCH 10/39] [LLVM][Support] Remove an unused function-local static
+Subject: [PATCH 10/37] [LLVM][Support] Remove an unused function-local static
  thread_local variable
 
 ---

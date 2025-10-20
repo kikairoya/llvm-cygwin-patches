@@ -1,0 +1,146 @@
+From c9fc27d057d2813b7ef9ce193d5ca748d78cad43 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 18 Oct 2025 16:53:38 +0900
+Subject: [PATCH 06/37] use pathlib.Path.mkdir directly
+
+---
+ llvm/utils/lit/lit/TestRunner.py              | 15 ++++-----
+ llvm/utils/lit/lit/util.py                    | 33 +++----------------
+ .../tests/Inputs/shtest-glob/glob-mkdir.txt   |  8 +++++
+ llvm/utils/lit/tests/shtest-glob.py           |  9 ++---
+ 4 files changed, 25 insertions(+), 40 deletions(-)
+
+diff --git a/llvm/utils/lit/lit/TestRunner.py b/llvm/utils/lit/lit/TestRunner.py
+index a7e2705f609a..f1346c257ec7 100644
+--- a/llvm/utils/lit/lit/TestRunner.py
++++ b/llvm/utils/lit/lit/TestRunner.py
+@@ -462,16 +462,15 @@ def executeBuiltinMkdir(cmd, cmd_shenv):
+     stderr = StringIO()
+     exitCode = 0
+     for dir in args:
+-        cwd = cmd_shenv.cwd
+-        dir = to_unicode(dir) if kIsWindows else to_bytes(dir)
+-        cwd = to_unicode(cwd) if kIsWindows else to_bytes(cwd)
+-        if not os.path.isabs(dir):
+-            dir = lit.util.abs_path_preserve_drive(os.path.join(cwd, dir))
++        dir = pathlib.Path(dir)
++        cwd = pathlib.Path(to_unicode(cmd_shenv.cwd))
++        if not dir.is_absolute():
++            dir = lit.util.abs_path_preserve_drive(cwd / dir)
+         if parent:
+-            lit.util.mkdir_p(dir)
++            dir.mkdir(parents=True, exist_ok=True)
+         else:
+             try:
+-                lit.util.mkdir(dir)
++                dir.mkdir(exist_ok=True)
+             except OSError as err:
+                 stderr.write("Error: 'mkdir' command failed, %s\n" % str(err))
+                 exitCode = 1
+@@ -2395,7 +2394,7 @@ def _runShTest(test, litConfig, useExternalSh, script, tmpBase) -> lit.Test.Resu
+         return out, err, exitCode, timeoutInfo, status
+ 
+     # Create the output directory if it does not already exist.
+-    lit.util.mkdir_p(os.path.dirname(tmpBase))
++    pathlib.Path(tmpBase).parent.mkdir(parents=True, exist_ok=True)
+ 
+     # Re-run failed tests up to test.allowed_retries times.
+     execdir = os.path.dirname(test.getExecPath())
+diff --git a/llvm/utils/lit/lit/util.py b/llvm/utils/lit/lit/util.py
+index 6f5b1606a16c..e4e031b3e089 100644
+--- a/llvm/utils/lit/lit/util.py
++++ b/llvm/utils/lit/lit/util.py
+@@ -5,6 +5,7 @@ import itertools
+ import math
+ import numbers
+ import os
++import pathlib
+ import platform
+ import re
+ import signal
+@@ -131,41 +132,17 @@ def abs_path_preserve_drive(path):
+         # Since Python 3.8, os.path.realpath resolves sustitute drives,
+         # so we should not use it. In Python 3.7, os.path.realpath
+         # was implemented as os.path.abspath.
++        if isinstance(path, pathlib.Path):
++            return path.absolute()
+         return os.path.abspath(path)
+     else:
+         # On UNIX, the current directory always has symbolic links resolved,
+         # so any program accepting relative paths cannot preserve symbolic
+         # links in paths and we should always use os.path.realpath.
++        if isinstance(path, pathlib.Path):
++            return path.resolve()
+         return os.path.realpath(path)
+ 
+-def mkdir(path):
+-    try:
+-        if platform.system() == "Windows":
+-            from ctypes import windll
+-            from ctypes import GetLastError, WinError
+-
+-            path = os.path.abspath(path)
+-            # Make sure that the path uses backslashes here, in case
+-            # python would have happened to use forward slashes, as the
+-            # NT path format only supports backslashes.
+-            path = path.replace("/", "\\")
+-            NTPath = to_unicode(r"\\?\%s" % path)
+-            if not windll.kernel32.CreateDirectoryW(NTPath, None):
+-                raise WinError(GetLastError())
+-        else:
+-            os.mkdir(path)
+-    except OSError:
+-        e = sys.exc_info()[1]
+-        # ignore EEXIST, which may occur during a race condition
+-        if e.errno != errno.EEXIST:
+-            raise
+-
+-
+-def mkdir_p(path):
+-    """mkdir_p(path) - Make the "path" directory, if it does not exist; this
+-    will also make directories for any missing parent directories."""
+-    os.makedirs(path, exist_ok=True)
+-
+ 
+ def listdir_files(dirname, suffixes=None, exclude_filenames=None, prefixes=None):
+     """Yields files in a directory.
+diff --git a/llvm/utils/lit/tests/Inputs/shtest-glob/glob-mkdir.txt b/llvm/utils/lit/tests/Inputs/shtest-glob/glob-mkdir.txt
+index d1329f5dbfaa..2d4f8751fc8e 100644
+--- a/llvm/utils/lit/tests/Inputs/shtest-glob/glob-mkdir.txt
++++ b/llvm/utils/lit/tests/Inputs/shtest-glob/glob-mkdir.txt
+@@ -1,2 +1,10 @@
+ ## Tests glob pattern handling in the mkdir command.
++
++## This mkdir should fail because the `example_file*.input`s are regular files.
+ # RUN: not mkdir %S/example_file*.input
++
++# RUN: mkdir %S/example_dir1.new
++# RUN: mkdir %S/example_dir2.new
++
++## This mkdir should succeed (so RUN should fail) because the `example_dir*.new`s are directories already exist.
++# RUN: not mkdir %S/example_dir*.new
+diff --git a/llvm/utils/lit/tests/shtest-glob.py b/llvm/utils/lit/tests/shtest-glob.py
+index ae90f31907d4..9ddf734e3d3a 100644
+--- a/llvm/utils/lit/tests/shtest-glob.py
++++ b/llvm/utils/lit/tests/shtest-glob.py
+@@ -1,12 +1,13 @@
+ ## Tests glob pattern handling in echo command.
+ 
+ # RUN: not %{lit} -a -v %{inputs}/shtest-glob \
+-# RUN: | FileCheck -dump-input=fail -match-full-lines %s
+-#
++# RUN: | FileCheck -dump-input=fail -match-full-lines --implicit-check-not=Error: %s
+ # END.
+ 
+ # CHECK: UNRESOLVED: shtest-glob :: glob-echo.txt ({{[^)]*}})
+ # CHECK: TypeError: string argument expected, got 'GlobItem'
+ 
+-# CHECK: FAIL: shtest-glob :: glob-mkdir.txt ({{[^)]*}})
+-# CHECK: # error: command failed with exit status: 1
++# CHECK:      FAIL: shtest-glob :: glob-mkdir.txt ({{[^)]*}})
++# CHECK:      # | Error: 'mkdir' command failed, {{.*}}Inputs/shtest-glob/example_file1.input'
++# CHECK-NEXT: # | Error: 'mkdir' command failed, {{.*}}Inputs/shtest-glob/example_file2.input'
++# CHECK:      # error: command failed with exit status: 1
+-- 
+2.51.0
+

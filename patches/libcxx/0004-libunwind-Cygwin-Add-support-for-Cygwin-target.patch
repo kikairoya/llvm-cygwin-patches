@@ -1,11 +1,11 @@
-From 9d90a366243326d1be36c97797b85cf879fc1dcd Mon Sep 17 00:00:00 2001
+From 5a4705c1209588e8e2cd16b5c3cab61465078204 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 04/15] [libunwind][Cygwin] Add support for Cygwin target
 
 ---
  libunwind/include/__libunwind_config.h |  2 +-
- libunwind/include/libunwind.h          |  4 ++--
+ libunwind/include/libunwind.h          |  2 +-
  libunwind/include/unwind.h             |  3 ++-
  libunwind/src/AddressSpace.hpp         | 20 ++++++++++++--------
  libunwind/src/CMakeLists.txt           |  3 +++
@@ -17,10 +17,10 @@ Subject: [PATCH 04/15] [libunwind][Cygwin] Add support for Cygwin target
  libunwind/src/assembly.h               | 10 ++++++++--
  libunwind/src/config.h                 | 18 +++++++++++-------
  libunwind/test/signal_frame.pass.cpp   |  1 +
- 13 files changed, 59 insertions(+), 38 deletions(-)
+ 13 files changed, 58 insertions(+), 37 deletions(-)
 
 diff --git a/libunwind/include/__libunwind_config.h b/libunwind/include/__libunwind_config.h
-index 544b3ec96216..5dedf2c35c4a 100644
+index 343934e88536..4a485d212b79 100644
 --- a/libunwind/include/__libunwind_config.h
 +++ b/libunwind/include/__libunwind_config.h
 @@ -46,7 +46,7 @@
@@ -33,20 +33,18 @@ index 544b3ec96216..5dedf2c35c4a 100644
  #    ifdef __SEH__
  #      define _LIBUNWIND_CURSOR_SIZE 204
 diff --git a/libunwind/include/libunwind.h b/libunwind/include/libunwind.h
-index 94928f436025..bda7b1839cff 100644
+index 18684ce311f9..468044d993ad 100644
 --- a/libunwind/include/libunwind.h
 +++ b/libunwind/include/libunwind.h
-@@ -43,8 +43,8 @@
-   #define LIBUNWIND_AVAIL
+@@ -146,7 +146,7 @@
+ 
  #endif
  
 -#if defined(_WIN32) && defined(__SEH__)
--  #define LIBUNWIND_CURSOR_ALIGNMENT_ATTR __attribute__((__aligned__(16)))
 +#if (defined(_WIN32) || defined(__CYGWIN__)) && defined(__SEH__)
-+#define LIBUNWIND_CURSOR_ALIGNMENT_ATTR __attribute__((__aligned__(16)))
+   #define LIBUNWIND_CURSOR_ALIGNMENT_ATTR __attribute__((__aligned__(16)))
  #else
    #define LIBUNWIND_CURSOR_ALIGNMENT_ATTR
- #endif
 diff --git a/libunwind/include/unwind.h b/libunwind/include/unwind.h
 index b1775d3a3dec..94dda313cc4b 100644
 --- a/libunwind/include/unwind.h
@@ -62,7 +60,7 @@ index b1775d3a3dec..94dda313cc4b 100644
  #include <ntverp.h>
  #endif
 diff --git a/libunwind/src/AddressSpace.hpp b/libunwind/src/AddressSpace.hpp
-index 5551c7d4bef1..be48fe2c374a 100644
+index 63f9cb367ec0..5f7aa94905d0 100644
 --- a/libunwind/src/AddressSpace.hpp
 +++ b/libunwind/src/AddressSpace.hpp
 @@ -24,11 +24,12 @@
@@ -93,7 +91,7 @@ index 5551c7d4bef1..be48fe2c374a 100644
  
  #include <windows.h>
  #include <psapi.h>
-@@ -540,7 +542,8 @@ inline bool LocalAddressSpace::findUnwindSections(pint_t targetAddr,
+@@ -551,7 +553,8 @@ inline bool LocalAddressSpace::findUnwindSections(pint_t targetAddr,
                               (void *)info.arm_section, (void *)info.arm_section_length);
    if (info.arm_section && info.arm_section_length)
      return true;
@@ -103,7 +101,7 @@ index 5551c7d4bef1..be48fe2c374a 100644
    HMODULE mods[1024];
    HANDLE process = GetCurrentProcess();
    DWORD needed;
-@@ -580,7 +583,8 @@ inline bool LocalAddressSpace::findUnwindSections(pint_t targetAddr,
+@@ -591,7 +594,8 @@ inline bool LocalAddressSpace::findUnwindSections(pint_t targetAddr,
      }
    }
    return false;
@@ -128,10 +126,10 @@ index 514c2fcd5bf4..555eb7213f5f 100644
      NOT (CXX_SUPPORTS_FNO_EXCEPTIONS_FLAG AND
           CXX_SUPPORTS_FUNWIND_TABLES_FLAG))
 diff --git a/libunwind/src/Registers.hpp b/libunwind/src/Registers.hpp
-index 8b3055f5cd7c..2e78e85ea017 100644
+index 5a5b57835379..34e4b6c5cc0c 100644
 --- a/libunwind/src/Registers.hpp
 +++ b/libunwind/src/Registers.hpp
-@@ -334,12 +334,12 @@ private:
+@@ -341,12 +341,12 @@ private:
      uint64_t __cs;
      uint64_t __fs;
      uint64_t __gs;
@@ -146,7 +144,7 @@ index 8b3055f5cd7c..2e78e85ea017 100644
    v128 _xmm[16];
  #endif
  };
-@@ -555,7 +555,7 @@ inline void Registers_x86_64::setFloatRegister(int, double) {
+@@ -562,7 +562,7 @@ inline void Registers_x86_64::setFloatRegister(int, double) {
  }
  
  inline bool Registers_x86_64::validVectorRegister(int regNum) const {
@@ -155,7 +153,7 @@ index 8b3055f5cd7c..2e78e85ea017 100644
    if (regNum < UNW_X86_64_XMM0)
      return false;
    if (regNum > UNW_X86_64_XMM15)
-@@ -568,7 +568,7 @@ inline bool Registers_x86_64::validVectorRegister(int regNum) const {
+@@ -575,7 +575,7 @@ inline bool Registers_x86_64::validVectorRegister(int regNum) const {
  }
  
  inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
@@ -164,7 +162,7 @@ index 8b3055f5cd7c..2e78e85ea017 100644
    assert(validVectorRegister(regNum));
    return _xmm[regNum - UNW_X86_64_XMM0];
  #else
-@@ -578,7 +578,7 @@ inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
+@@ -585,7 +585,7 @@ inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
  }
  
  inline void Registers_x86_64::setVectorRegister(int regNum, v128 value) {
@@ -196,7 +194,7 @@ index 110c5987c3f1..6783bdccd33a 100644
    urc = pers(1, action, exc->exception_class, exc, ctx);
    _LIBUNWIND_TRACE_UNWINDING("_GCC_specific_handler() personality returned %d", urc);
 diff --git a/libunwind/src/UnwindCursor.hpp b/libunwind/src/UnwindCursor.hpp
-index 9a1afd3721f5..a889008a8c45 100644
+index 7ec5f9e91578..3d81d5400903 100644
 --- a/libunwind/src/UnwindCursor.hpp
 +++ b/libunwind/src/UnwindCursor.hpp
 @@ -17,9 +17,9 @@
@@ -222,7 +220,7 @@ index 9a1afd3721f5..a889008a8c45 100644
  
  /// \c UnwindCursor contains all state (including all register values) during
  /// an unwind.  This is normally stack-allocated inside a unw_cursor_t.
-@@ -2006,7 +2007,7 @@ bool UnwindCursor<A, R>::getInfoFromSEH(pint_t pc) {
+@@ -2028,7 +2029,7 @@ bool UnwindCursor<A, R>::getInfoFromSEH(pint_t pc) {
    pint_t base;
    RUNTIME_FUNCTION *unwindEntry = lookUpSEHUnwindInfo(pc, &base);
    if (!unwindEntry) {
@@ -231,7 +229,7 @@ index 9a1afd3721f5..a889008a8c45 100644
      return false;
    }
    _info.gp = 0;
-@@ -2669,7 +2670,8 @@ void UnwindCursor<A, R>::setInfoBasedOnIPRegister(bool isReturnAddress) {
+@@ -2699,7 +2700,8 @@ void UnwindCursor<A, R>::setInfoBasedOnIPRegister(bool isReturnAddress) {
      --pc;
  #endif
  
@@ -242,7 +240,7 @@ index 9a1afd3721f5..a889008a8c45 100644
    // In case of this is frame of signal handler, the IP saved in the signal
    // handler points to first non-executed instruction, while FDE/CIE expects IP
 diff --git a/libunwind/src/UnwindRegistersRestore.S b/libunwind/src/UnwindRegistersRestore.S
-index 1077d80bc90d..e3fd3e65b930 100644
+index 5d71d2cf61ad..00d23d08f186 100644
 --- a/libunwind/src/UnwindRegistersRestore.S
 +++ b/libunwind/src/UnwindRegistersRestore.S
 @@ -74,7 +74,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
@@ -264,7 +262,7 @@ index 1077d80bc90d..e3fd3e65b930 100644
    movdqu 192(%rdi),%xmm1
    movdqu 208(%rdi),%xmm2
 diff --git a/libunwind/src/UnwindRegistersSave.S b/libunwind/src/UnwindRegistersSave.S
-index 8bf99ebd942f..e5e9411155b6 100644
+index fe3ba7842619..0f4303363273 100644
 --- a/libunwind/src/UnwindRegistersSave.S
 +++ b/libunwind/src/UnwindRegistersSave.S
 @@ -117,7 +117,7 @@ DEFINE_LIBUNWIND_FUNCTION("#__unw_getcontext")

@@ -1,7 +1,7 @@
-From 013835083a1564164a2a39e628fc4d03d4e6fa95 Mon Sep 17 00:00:00 2001
+From f0580dc913becac17cc0451bab294b06a021448b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 9 Jul 2025 21:23:51 +0900
-Subject: [PATCH 12/39] [Clang-Python][Test][Cygwin] Make check-clang-python
+Subject: [PATCH 12/37] [Clang-Python][Test][Cygwin] Make check-clang-python
  runnable
 
 ---
@@ -30,10 +30,10 @@ index d9a6bbf452bd..ea4ec43c3455 100644
      DEPENDS libclang
      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 diff --git a/clang/tools/libclang/CMakeLists.txt b/clang/tools/libclang/CMakeLists.txt
-index be2c3664d023..fb6135b2cf62 100644
+index 9571598f9987..6f6e5d7b2fc8 100644
 --- a/clang/tools/libclang/CMakeLists.txt
 +++ b/clang/tools/libclang/CMakeLists.txt
-@@ -162,15 +162,22 @@ if(ENABLE_STATIC)
+@@ -159,15 +159,22 @@ if(ENABLE_STATIC)
  endif()
  
  if(ENABLE_SHARED)

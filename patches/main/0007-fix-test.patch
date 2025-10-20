@@ -1,0 +1,25 @@
+From 10db6920d8bbc73d916add4b3556e9f5f070c8bf Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 18 Oct 2025 19:35:16 +0900
+Subject: [PATCH 07/15] fix test
+
+---
+ llvm/utils/lit/tests/shtest-glob.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/llvm/utils/lit/tests/shtest-glob.py b/llvm/utils/lit/tests/shtest-glob.py
+index 9ddf734e3d3a..aa4705b634a7 100644
+--- a/llvm/utils/lit/tests/shtest-glob.py
++++ b/llvm/utils/lit/tests/shtest-glob.py
+@@ -8,6 +8,6 @@
+ # CHECK: TypeError: string argument expected, got 'GlobItem'
+ 
+ # CHECK:      FAIL: shtest-glob :: glob-mkdir.txt ({{[^)]*}})
+-# CHECK:      # | Error: 'mkdir' command failed, {{.*}}Inputs/shtest-glob/example_file1.input'
+-# CHECK-NEXT: # | Error: 'mkdir' command failed, {{.*}}Inputs/shtest-glob/example_file2.input'
++# CHECK:      # | Error: 'mkdir' command failed, {{.*}}example_file1.input'
++# CHECK-NEXT: # | Error: 'mkdir' command failed, {{.*}}example_file2.input'
+ # CHECK:      # error: command failed with exit status: 1
+-- 
+2.51.0
+

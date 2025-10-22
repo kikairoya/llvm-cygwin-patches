@@ -1,7 +1,7 @@
 From 10db6920d8bbc73d916add4b3556e9f5f070c8bf Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Oct 2025 19:35:16 +0900
-Subject: [PATCH 07/37] fix test
+Subject: [PATCH 07/39] fix test
 
 ---
  llvm/utils/lit/tests/shtest-glob.py | 4 ++--
@@ -21,5 +21,5 @@ index 9ddf734e3d3a..aa4705b634a7 100644
 +# CHECK-NEXT: # | Error: 'mkdir' command failed, {{.*}}example_file2.input'
  # CHECK:      # error: command failed with exit status: 1
 -- 
-2.51.0
+2.51.1
 

@@ -1,4 +1,4 @@
-From 112c56302a5db577cad7fc901b52b849074991a6 Mon Sep 17 00:00:00 2001
+From 4cdd3ba49f49f4744deb22ca27ce9f1404609b02 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 05/15] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 05/15] [compiler-rt][Cygwin] Add support for Cygwin target
  6 files changed, 30 insertions(+), 11 deletions(-)
 
 diff --git a/compiler-rt/cmake/config-ix.cmake b/compiler-rt/cmake/config-ix.cmake
-index 67db4383ec3d..6f98d76dc1fe 100644
+index 8dfbdecbd6b9..967c282a8b38 100644
 --- a/compiler-rt/cmake/config-ix.cmake
 +++ b/compiler-rt/cmake/config-ix.cmake
 @@ -66,6 +66,19 @@ if (C_SUPPORTS_NODEFAULTLIBS_FLAG)
@@ -36,7 +36,7 @@ index 67db4383ec3d..6f98d76dc1fe 100644
    if (NOT TARGET unwind)
      # Don't check for a library named unwind, if there's a target with that name within
      # the same build.
-@@ -836,7 +849,7 @@ else()
+@@ -842,7 +855,7 @@ else()
  endif()
  
  if (PROFILE_SUPPORTED_ARCH AND NOT LLVM_USE_SANITIZER AND
@@ -173,5 +173,5 @@ index 633fdb966116..4762c8e3d4a8 100644
    Header.BitmapDelta = (uint32_t)Header.BitmapDelta;
  #endif
 -- 
-2.51.0
+2.51.1
 

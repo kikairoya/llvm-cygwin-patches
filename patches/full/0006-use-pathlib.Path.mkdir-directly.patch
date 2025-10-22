@@ -1,7 +1,7 @@
 From c9fc27d057d2813b7ef9ce193d5ca748d78cad43 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Oct 2025 16:53:38 +0900
-Subject: [PATCH 06/37] use pathlib.Path.mkdir directly
+Subject: [PATCH 06/39] use pathlib.Path.mkdir directly
 
 ---
  llvm/utils/lit/lit/TestRunner.py              | 15 ++++-----
@@ -142,5 +142,5 @@ index ae90f31907d4..9ddf734e3d3a 100644
 +# CHECK-NEXT: # | Error: 'mkdir' command failed, {{.*}}Inputs/shtest-glob/example_file2.input'
 +# CHECK:      # error: command failed with exit status: 1
 -- 
-2.51.0
+2.51.1
 

@@ -1,0 +1,44 @@
+From c1572a6ca963e912abc8132196744ede172fc20d Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Wed, 22 Oct 2025 20:14:33 +0900
+Subject: [PATCH 22/39] [LIT][Cygwin] Mark `ulimit -n` unsupported for Cygwin
+
+Cygwin doesn't support `ulimit -n` because Windows doesn't provide such functionality.
+---
+ llvm/utils/lit/lit/run.py             | 8 ++++++--
+ llvm/utils/lit/tests/shtest-ulimit.py | 2 +-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/llvm/utils/lit/lit/run.py b/llvm/utils/lit/lit/run.py
+index 62070e824e87..55de914d4d2e 100644
+--- a/llvm/utils/lit/lit/run.py
++++ b/llvm/utils/lit/lit/run.py
+@@ -137,6 +137,10 @@ class Run(object):
+                     "Raised process limit from %d to %d" % (soft_limit, desired_limit)
+                 )
+         except Exception as ex:
+-            # Warn, unless this is Windows or z/OS, in which case this is expected.
+-            if os.name != "nt" and platform.system() != "OS/390":
++            # Warn, unless this is Windows, z/OS, or Cygwin in which case this is expected.
++            if (
++                os.name != "nt"
++                and platform.system() != "OS/390"
++                and platform.sys.platform != "cygwin"
++            ):
+                 self.lit_config.warning("Failed to raise process limit: %s" % ex)
+diff --git a/llvm/utils/lit/tests/shtest-ulimit.py b/llvm/utils/lit/tests/shtest-ulimit.py
+index 9a8febd3333c..c3d51067e893 100644
+--- a/llvm/utils/lit/tests/shtest-ulimit.py
++++ b/llvm/utils/lit/tests/shtest-ulimit.py
+@@ -3,7 +3,7 @@
+ # ulimit does not work on non-POSIX platforms.
+ # Solaris for some reason does not respect ulimit -n, so mark it unsupported
+ # as well.
+-# UNSUPPORTED: system-windows, system-solaris
++# UNSUPPORTED: system-windows, system-cygwin, system-solaris
+ 
+ # RUN: not %{lit} -a -v %{inputs}/shtest-ulimit --order=lexical | FileCheck %s
+ 
+-- 
+2.51.1
+

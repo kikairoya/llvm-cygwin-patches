@@ -1,7 +1,7 @@
 From bf1875229b3083276bea7284da33fac761988a38 Mon Sep 17 00:00:00 2001
 From: Jeremy Drake <github@jdrake.com>
 Date: Sat, 13 Sep 2025 12:59:19 -0700
-Subject: [PATCH 02/15] Misc fixes while testting 32-bit
+Subject: [PATCH 02/18] Misc fixes while testting 32-bit
 
 Don't add --disable-high-entropy-va on 32-bit, it's only supported on
 64-bit
@@ -42,5 +42,5 @@ index 079911b0f0ac..b489ff39294f 100644
    if (!saw_nxcompat)
      CmdArgs.push_back("--disable-nxcompat");
 -- 
-2.51.0
+2.51.1
 

@@ -1,86 +1,38 @@
-From 7abb0b8cc3a81fb0270b43e2e06bdf9f543b54b4 Mon Sep 17 00:00:00 2001
+From 61a9d5ea4e3b9771580a792fbc1ab36eadc76f70 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sun, 7 Sep 2025 22:39:48 +0900
-Subject: [PATCH 19/39] update test
+Date: Sun, 7 Sep 2025 20:46:38 +0900
+Subject: [PATCH 19/38] update test
 
 ---
- .../CodeGenCXX/mingw-template-dllexport.cpp   | 52 +++++++------------
- 1 file changed, 20 insertions(+), 32 deletions(-)
+ clang/test/CodeGenCXX/dllexport.cpp                | 2 +-
+ clang/test/CodeGenCXX/mingw-template-dllexport.cpp | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/clang/test/CodeGenCXX/dllexport.cpp b/clang/test/CodeGenCXX/dllexport.cpp
+index 894aea79af9f..2c9e7d36d2cb 100644
+--- a/clang/test/CodeGenCXX/dllexport.cpp
++++ b/clang/test/CodeGenCXX/dllexport.cpp
+@@ -1130,6 +1130,6 @@ public:
+ class __declspec(dllexport) ACE_Service_Object : public ACE_Shared_Object {};
+ // Implicit move constructor declaration.
+ // MSVC2015-DAG: define weak_odr dso_local dllexport {{.+}}ACE_Service_Object@@Q{{.+}}@$$Q
++// PS-DAG: define weak_odr dllexport void @_ZN18ACE_Service_ObjectC1EOS_
+ // The declarations should not be exported.
+ // MSVC2013-NOT: define weak_odr dso_local dllexport {{.+}}ACE_Service_Object@@Q{{.+}}@$$Q
+-// PS-NOT: define weak_odr dllexport void @_ZN18ACE_Service_ObjectC1EOS_
 diff --git a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-index ee90b6d81dc6..2c06aaed6a52 100644
+index 1e2759fbb5cc..15969d2415cc 100644
 --- a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
 +++ b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-@@ -157,30 +157,18 @@ template <class T> int outer<T>::inner::v = 0;
- // FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE1fEv
- // FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE1gEv
- // FUNC-NOT: define{{.*}} @_ZN5outerIiE1hEv
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2Ev
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC2Ev
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1Ev
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC1Ev
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2ERKS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC2ERKS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1ERKS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC1ERKS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2EOS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC2EOS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1EOS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC1EOS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD2Ev
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerD2Ev
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD1Ev
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerD1Ev
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSERKS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inneraSERKS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSEOS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inneraSEOS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1fEv
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inner1fEv
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1gEv
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inner1gEv
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2Ev
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1Ev
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2ERKS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1ERKS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2EOS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1EOS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD2Ev
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD1Ev
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSERKS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSEOS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1fEv
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1gEv
- // FUNC-NOT: define{{.*}} @_ZN5outerIiE5inner1hEv
- template struct __declspec(dllexport) outer<int>;
+@@ -16,7 +16,7 @@ class c {
  
-@@ -196,18 +184,18 @@ template struct __declspec(dllexport) outer<int>;
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEC1EOS0_
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEaSERKS0_
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEaSEOS0_
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1Ev
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1ERKS1_
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1EOS1_
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSERKS1_
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSEOS1_
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerC1Ev
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerC1ERKS1_
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerC1EOS1_
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inneraSERKS1_
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inneraSEOS1_
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE1fEv
- // FUNC:     declare{{.*}} dllimport{{.*}} @_ZN5outerIcE1gEv
- // FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE1hEv
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1fEv
--// FUNC:     declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1gEv
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inner1fEv
-+// FUNC:     declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inner1gEv
- // FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1hEv
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerD1Ev
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerD1Ev
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcED1Ev
- extern template struct __declspec(dllimport) outer<char>;
+ template class __declspec(dllexport) c<int>;
  
+-// CHECK-NOT: define {{.*}} dllexport {{.*}} @_ZN1cIiEC1EOS0_
++// CHECK: define {{.*}} dllexport {{.*}} @_ZN1cIiEC1EOS0_
+ // CHECK: define {{.*}} dllexport {{.*}} @_ZN1cIiE1fEv
+ 
+ extern template class __declspec(dllexport) c<char>;
 -- 
 2.51.1
 

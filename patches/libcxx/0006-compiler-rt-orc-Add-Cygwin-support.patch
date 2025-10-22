@@ -1,4 +1,4 @@
-From a280924ea54331aa0d40cdb1c09bf6e211916c76 Mon Sep 17 00:00:00 2001
+From 88198a6e6812c11f0cb75982c9fd1b9e54263d63 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 19 Sep 2025 19:04:00 +0900
 Subject: [PATCH 06/15] [compiler-rt][orc] Add Cygwin support

@@ -1,7 +1,7 @@
 From 2efd1285dd2206a78e425bdc58310b15b75fe3a4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 17 Oct 2025 20:41:22 +0900
-Subject: [PATCH 04/18] [LIT][Cygwin] Skip pre-check for existence in mkdir-p
+Subject: [PATCH 04/17] [LIT][Cygwin] Skip pre-check for existence in mkdir-p
 
 On Cygwin, a file named `file_name.exe` can be accessed without the suffix,
 simply as `file_name`, as shown below:

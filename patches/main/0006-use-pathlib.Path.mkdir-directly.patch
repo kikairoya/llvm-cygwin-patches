@@ -1,7 +1,7 @@
 From c9fc27d057d2813b7ef9ce193d5ca748d78cad43 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Oct 2025 16:53:38 +0900
-Subject: [PATCH 06/18] use pathlib.Path.mkdir directly
+Subject: [PATCH 06/17] use pathlib.Path.mkdir directly
 
 ---
  llvm/utils/lit/lit/TestRunner.py              | 15 ++++-----

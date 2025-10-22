@@ -1,7 +1,7 @@
 From 8cc551526c31e4a769c369f2a36007097d60417a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Sep 2025 07:02:26 +0900
-Subject: [PATCH 03/39] add /lib/win32api
+Subject: [PATCH 03/38] add /lib/win32api
 
 ---
  clang/lib/Driver/ToolChains/Cygwin.cpp | 1 +

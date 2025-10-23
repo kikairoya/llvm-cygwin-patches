@@ -1,7 +1,7 @@
 From a37027e2704d1786903b9bce97d201e1b8c36361 Mon Sep 17 00:00:00 2001
 From: Tomohiro Kashiwada <kikairoya@gmail.com>
 Date: Wed, 22 Oct 2025 19:50:51 +0900
-Subject: [PATCH 08/17] Update glob-mkdir.txt
+Subject: [PATCH 08/16] Update glob-mkdir.txt
 
 ---
  llvm/utils/lit/tests/Inputs/shtest-glob/glob-mkdir.txt | 2 +-

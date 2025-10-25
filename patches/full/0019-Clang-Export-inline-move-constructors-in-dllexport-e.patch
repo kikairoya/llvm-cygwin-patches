@@ -1,4 +1,4 @@
-From bcf6b6dfe719ebf53637c2589bcfe0dbcd607741 Mon Sep 17 00:00:00 2001
+From 0fc51d236542f065cae4d8634aea27aebbf10bcc Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 18:51:49 +0900
 Subject: [PATCH 19/37] [Clang] Export inline move constructors in dllexport-ed

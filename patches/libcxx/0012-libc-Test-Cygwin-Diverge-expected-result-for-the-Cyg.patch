@@ -1,10 +1,11 @@
-From 7d99e985d3e8456efcf245f234ecad1b530f5d0d Mon Sep 17 00:00:00 2001
+From 257798c4fc0212ce8576608e025bffd4bb98fa45 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:56:10 +0900
 Subject: [PATCH 12/15] [libc++][Test][Cygwin] Diverge expected result for the
  Cygwin target (part 5/5 - locale)
 
 ---
+ .../uchar_h_char8_t.compile.pass.cpp          |  1 +
  .../ext.manip/get_money.pass.cpp              | 46 ++++++------
  .../ext.manip/put_money.pass.cpp              | 11 ++-
  .../std.manip/setfill_wchar_max.pass.cpp      |  2 +-
@@ -34,6 +35,7 @@ Subject: [PATCH 12/15] [libc++][Test][Cygwin] Diverge expected result for the
  .../get_one_wide.pass.cpp                     | 15 ++--
  .../locale.numpunct.byname/grouping.pass.cpp  |  2 +-
  .../thousands_sep.pass.cpp                    |  4 +-
+ .../c.strings/cuchar_char8_t.compile.pass.cpp |  1 +
  .../strings/string.conversions/stod.pass.cpp  |  3 +
  .../strings/string.conversions/stof.pass.cpp  |  3 +
  .../strings/string.conversions/stold.pass.cpp |  3 +
@@ -69,8 +71,20 @@ Subject: [PATCH 12/15] [libc++][Test][Cygwin] Diverge expected result for the
  libcxx/test/support/locale_helpers.h          |  8 +-
  libcxx/test/support/platform_support.h        |  7 ++
  libcxx/utils/libcxx/test/features.py          |  4 +
- 64 files changed, 608 insertions(+), 473 deletions(-)
+ 66 files changed, 610 insertions(+), 473 deletions(-)
 
+diff --git a/libcxx/test/std/depr/depr.c.headers/uchar_h_char8_t.compile.pass.cpp b/libcxx/test/std/depr/depr.c.headers/uchar_h_char8_t.compile.pass.cpp
+index 34b512f9c595..d03c89a25995 100644
+--- a/libcxx/test/std/depr/depr.c.headers/uchar_h_char8_t.compile.pass.cpp
++++ b/libcxx/test/std/depr/depr.c.headers/uchar_h_char8_t.compile.pass.cpp
+@@ -11,6 +11,7 @@
+ // The following platforms do not provide mbrtoc8 and c8rtomb so the tests fail
+ // XFAIL: target={{.+}}-aix{{.*}}
+ // XFAIL: android
++// XFAIL: cygwin
+ // XFAIL: darwin
+ // XFAIL: freebsd
+ // XFAIL: windows
 diff --git a/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp b/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
 index 88672851f7b6..3e344477f3ba 100644
 --- a/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
@@ -1360,6 +1374,18 @@ index ef39e8aa7b68..e5aa641b90aa 100644
  #else
              const char sep = ',';
  #endif
+diff --git a/libcxx/test/std/strings/c.strings/cuchar_char8_t.compile.pass.cpp b/libcxx/test/std/strings/c.strings/cuchar_char8_t.compile.pass.cpp
+index 019265b534c5..faa5eac5c9e2 100644
+--- a/libcxx/test/std/strings/c.strings/cuchar_char8_t.compile.pass.cpp
++++ b/libcxx/test/std/strings/c.strings/cuchar_char8_t.compile.pass.cpp
+@@ -11,6 +11,7 @@
+ // The following platforms do not provide mbrtoc8 and c8rtomb so the tests fail
+ // XFAIL: target={{.+}}-aix{{.*}}
+ // XFAIL: android
++// XFAIL: cygwin
+ // XFAIL: darwin
+ // XFAIL: freebsd
+ // XFAIL: windows
 diff --git a/libcxx/test/std/strings/string.conversions/stod.pass.cpp b/libcxx/test/std/strings/string.conversions/stod.pass.cpp
 index bbe992fbc565..cba2c0f1fbbd 100644
 --- a/libcxx/test/std/strings/string.conversions/stod.pass.cpp

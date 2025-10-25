@@ -1,4 +1,4 @@
-From cfee4468a26f45b7162ca3005a6d3ef51bb9d228 Mon Sep 17 00:00:00 2001
+From a77a4e608435be9a370fdfbbeeb2e3511f225bd1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 04/15] [libunwind][Cygwin] Add support for Cygwin target
@@ -284,7 +284,7 @@ index 619a59751151..69b13791db66 100644
    movdqu %xmm1,192(PTR)
    movdqu %xmm2,208(PTR)
 diff --git a/libunwind/src/assembly.h b/libunwind/src/assembly.h
-index f8e83e138eff..3b6302d0ce7a 100644
+index f0fcd006f207..251ce9646169 100644
 --- a/libunwind/src/assembly.h
 +++ b/libunwind/src/assembly.h
 @@ -161,6 +161,7 @@

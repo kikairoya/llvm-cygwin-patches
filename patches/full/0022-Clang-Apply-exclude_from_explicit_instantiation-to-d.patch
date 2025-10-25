@@ -1,4 +1,4 @@
-From 32efa17c434aea2f03b68e15f3b8d826e8df3197 Mon Sep 17 00:00:00 2001
+From 982a9afde41681e35ea8e569690210f07bcc62dc Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 30 May 2025 20:20:47 +0900
 Subject: [PATCH 22/37] [Clang] Apply exclude_from_explicit_instantiation to

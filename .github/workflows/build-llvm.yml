@@ -229,6 +229,7 @@ jobs:
           build-target: check-all
           build-name: ${{ needs.select.outputs.build-name }}
           stage1-bindir: ${{ inputs.stage1-bindir }}
+          extra-lit-opts: '-j1'
 
   build-clang:
     needs: [select, build-llvm]

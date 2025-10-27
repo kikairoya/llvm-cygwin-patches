@@ -96,7 +96,7 @@ jobs:
     steps:
       - name: prepare patches
         id: checkout-self
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           path: self
 
@@ -144,13 +144,13 @@ jobs:
     steps:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
-        uses: easimon/maximize-build-space@v10
+        uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
 
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
         id: checkout-self
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           path: self
 
@@ -193,13 +193,20 @@ jobs:
     steps:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
-        uses: easimon/maximize-build-space@v10
+        uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
+
+      - name: configure Pagefile
+        if: ${{ runner.os == 'Windows' }}
+        uses: al-cheb/configure-pagefile-action@a3b6ebd6b634da88790d9c58d4b37a7f4a7b8708 # v1.4
+        with:
+          minimum-size: 8GB
+          disk-root: 'C:'
 
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
         id: checkout-self
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           path: self
 
@@ -229,7 +236,7 @@ jobs:
           build-target: check-all
           build-name: ${{ needs.select.outputs.build-name }}
           stage1-bindir: ${{ inputs.stage1-bindir }}
-          extra-lit-opts: '-j1'
+          extra-lit-opts: '-j2'
 
   build-clang:
     needs: [select, build-llvm]
@@ -245,13 +252,13 @@ jobs:
     steps:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
-        uses: easimon/maximize-build-space@v10
+        uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
 
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
         id: checkout-self
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           path: self
 
@@ -292,13 +299,13 @@ jobs:
     steps:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
-        uses: easimon/maximize-build-space@v10
+        uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
 
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
         id: checkout-self
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           path: self
 
@@ -343,13 +350,13 @@ jobs:
     steps:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
-        uses: easimon/maximize-build-space@v10
+        uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
 
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
         id: checkout-self
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           path: self
 
@@ -390,13 +397,13 @@ jobs:
     steps:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
-        uses: easimon/maximize-build-space@v10
+        uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
 
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
         id: checkout-self
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           path: self
 
@@ -441,13 +448,13 @@ jobs:
     steps:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
-        uses: easimon/maximize-build-space@v10
+        uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
 
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
         id: checkout-self
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           path: self
 
@@ -487,13 +494,13 @@ jobs:
     steps:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
-        uses: easimon/maximize-build-space@v10
+        uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
 
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
         id: checkout-self
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           path: self
 

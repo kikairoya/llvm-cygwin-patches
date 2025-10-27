@@ -1,4 +1,4 @@
-From c9ceb901901633746e540d6c2fe2b5beaa6f73a8 Mon Sep 17 00:00:00 2001
+From 667dcb4ead7c8722725bbe9c76d317060a83f13f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 08/15] [libc++][Test][Cygwin] Diverge expected result for the
@@ -6,9 +6,9 @@ Subject: [PATCH 08/15] [libc++][Test][Cygwin] Diverge expected result for the
 
 ---
  libcxx/CMakeLists.txt                | 4 +++-
- libcxx/include/__config              | 2 ++
+ libcxx/include/__config              | 3 +++
  libcxx/utils/libcxx/test/features.py | 4 ++--
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ 3 files changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
 index 0e5b799051d7..5755dd2a81e6 100644
@@ -26,10 +26,17 @@ index 0e5b799051d7..5755dd2a81e6 100644
    # Let the library headers know they are currently being used to build the
    # library.
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 495f7654d5cd..f64b82ed4afd 100644
+index e9a873bbd7ab..582910b19cd2 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -1034,6 +1034,8 @@ typedef __char32_t char32_t;
+@@ -1026,12 +1026,15 @@ typedef __char32_t char32_t;
+ // the latter depends on internal GNU libc details that are not appropriate
+ // to depend on here, so any declarations present when __cpp_char8_t is not
+ // defined are ignored.
++// Cygwin too.
+ #  if defined(_LIBCPP_GLIBC_PREREQ)
+ #    if _LIBCPP_GLIBC_PREREQ(2, 36) && defined(__cpp_char8_t)
+ #      define _LIBCPP_HAS_C8RTOMB_MBRTOC8 1
  #    else
  #      define _LIBCPP_HAS_C8RTOMB_MBRTOC8 0
  #    endif
@@ -39,7 +46,7 @@ index 495f7654d5cd..f64b82ed4afd 100644
  #    define _LIBCPP_HAS_C8RTOMB_MBRTOC8 0
  #  endif
 diff --git a/libcxx/utils/libcxx/test/features.py b/libcxx/utils/libcxx/test/features.py
-index 0a277718b222..c9a2418aad56 100644
+index 5cfc9ad272c0..179572521248 100644
 --- a/libcxx/utils/libcxx/test/features.py
 +++ b/libcxx/utils/libcxx/test/features.py
 @@ -224,7 +224,7 @@ DEFAULT_FEATURES = [

@@ -93,6 +93,10 @@ runs:
           popd > /dev/null
         fi
 
+        pushd '${{ github.action_path}}' > /dev/null
+        MSYS_NO_PATHCONV=1 action_path="$(realpath .)"
+        popd > /dev/null
+
         for b in build-*-$BUILD_NAME/bin; do
           if [ "$b" != "build-$BUILD_PROJECT-$BUILD_NAME/bin" ] && [ -n "$b" ] && pushd "$b" > /dev/null 2>&1; then
             export PATH="$PWD:$PATH"
@@ -122,7 +126,7 @@ runs:
             fi
           popd > /dev/null
 
-          MSYS_NO_PATHCONV=1 export LIT_OPTS="-sv --xunit-xml-output=$(realpath result-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.xml) $EXTRA_LIT_OPTS"
+          MSYS_NO_PATHCONV=1 export LIT_OPTS="-v --xunit-xml-output=$(realpath result-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.xml) $EXTRA_LIT_OPTS"
           env | grep ^LIT_ > env-$BUILD_NAME.txt || true
           env | grep ^GTEST_ >> env-$BUILD_NAME.txt || true
         fi
@@ -133,9 +137,7 @@ runs:
           echo "::endgroup::"
         fi
 
-        echo "::group::Build/Test"
-        cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- --quiet $BUILD_TARGET | tee buildlog-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.txt
-        echo "::endgroup::"
+        MSYS_NO_PATHCONV=1 nice cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $BUILD_TARGET | tee buildlog-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.txt | MSYS_NO_PATHCONV=1 sed -uE -f$action_path/build-grouping.sed
       shell: bash
 
     - id: archive

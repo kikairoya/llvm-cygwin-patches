@@ -146,6 +146,13 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
 
+      - name: configure Pagefile
+        if: ${{ runner.os == 'Windows' }}
+        uses: al-cheb/configure-pagefile-action@a3b6ebd6b634da88790d9c58d4b37a7f4a7b8708 # v1.4
+        with:
+          minimum-size: 16GB
+          disk-root: 'C:'
+
       - run: git config --global core.autocrlf input
 
       - name: prepare patches
@@ -178,7 +185,6 @@ jobs:
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-project: llvm
           build-name: ${{ needs.select.outputs.build-name }}
-          parallel-compile-jobs: 3
           install-prefix: ${{ inputs.install-prefix }}
           stage1-bindir: ${{ inputs.stage1-bindir }}
           build-retention-days: ${{ inputs.build-retention-days }}
@@ -236,7 +242,6 @@ jobs:
           build-target: check-all
           build-name: ${{ needs.select.outputs.build-name }}
           stage1-bindir: ${{ inputs.stage1-bindir }}
-          extra-lit-opts: '-j2'
 
   build-clang:
     needs: [select, build-llvm]
@@ -253,6 +258,13 @@ jobs:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
         uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
+
+      - name: configure Pagefile
+        if: ${{ runner.os == 'Windows' }}
+        uses: al-cheb/configure-pagefile-action@a3b6ebd6b634da88790d9c58d4b37a7f4a7b8708 # v1.4
+        with:
+          minimum-size: 16GB
+          disk-root: 'C:'
 
       - run: git config --global core.autocrlf input
 
@@ -286,7 +298,6 @@ jobs:
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-project: clang
           build-name: ${{ needs.select.outputs.build-name }}
-          parallel-compile-jobs: 3
           install-prefix: ${{ inputs.install-prefix }}
           stage1-bindir: ${{ inputs.stage1-bindir }}
 
@@ -384,7 +395,6 @@ jobs:
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-project: lld
           build-name: ${{ needs.select.outputs.build-name }}
-          parallel-compile-jobs: 3
           install-prefix: ${{ inputs.install-prefix }}
           stage1-bindir: ${{ inputs.stage1-bindir }}
 

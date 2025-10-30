@@ -137,7 +137,7 @@ runs:
           echo "::endgroup::"
         fi
 
-        MSYS_NO_PATHCONV=1 nice cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $BUILD_TARGET | tee buildlog-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.txt | MSYS_NO_PATHCONV=1 sed -uE -f$action_path/build-grouping.sed
+        MSYS_NO_PATHCONV=1 bash -o pipefail -c "nice cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $BUILD_TARGET | tee buildlog-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.txt | sed -uE -f$action_path/build-grouping.sed"
       shell: bash
 
     - id: archive

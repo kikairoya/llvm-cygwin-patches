@@ -9,12 +9,15 @@ MSYS_NO_PATHCONV=1 msyscygpath=/bin/cygpath
 MSYS_NO_PATHCONV=1 [ -x $msyscygpath ] || exit 0
 
 pathenv() {
+  local v
   while read; do
     for e in "$@"; do
       if [ "$REPLY" = "$e" ]; then
-        MSYS_NO_PATHCONV=1 eval $REPLY='"$(MSYS_NO_PATHCONV=1 PATH="$CYGWIN_ROOT/bin:$PATH" "$cygcygpath" -u "$(MSYS_NO_PATHCONV=1 "$msyscygpath" -w "${!e}")")"'
+        MSYS_NO_PATHCONV=1 v="$(MSYS_NO_PATHCONV=1 PATH="$CYGWIN_ROOT/bin:$PATH" "$cygcygpath" -u "$(MSYS_NO_PATHCONV=1 "$msyscygpath" -w "${!e}")")"
+        MSYS_NO_PATHCONV=1 eval "$REPLY='$v'"
       fi
     done
   done < <(env -0 | sed -z 's/=.*$/\n/')
+  unset v
 }
 pathenv "$@"

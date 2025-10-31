@@ -97,7 +97,7 @@ runs:
         BUILD_PROJECT: ${{ inputs.build-project }}
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
       run: |
-        . ${{ github.action_path }}/source_cygpath
+        . '${{ github.action_path }}/source_cygpath'
         tar -cf build-$BUILD_PROJECT-$BUILD_NAME.tar build-$BUILD_PROJECT-$BUILD_NAME
       shell: bash
 
@@ -131,7 +131,7 @@ runs:
         INSTALL_PREFIX: ${{ inputs.install-prefix }}
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
       run: |
-        . ${{ github.action_path }}/source_cygpath
+        . '${{ github.action_path }}/source_cygpath'
         rm -f build-$BUILD_PROJECT-$BUILD_NAME.tar
 
         echo "::group::Install"

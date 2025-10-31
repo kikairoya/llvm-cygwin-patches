@@ -7,14 +7,14 @@ fi
 if [ "$(uname -o)" = "Msys" ] && [ -n "$CYGWIN_ROOT" ]; then
   set +h
   . "$ACTION_PATH/pathenv" ACTION_PATH LLVM_PATH PATCH_PATH STAGE1_BINDIR
-  PATH="$(/bin/cygpath -u "$CYGWIN_ROOT")/bin:$PATH"
-  MSYS_NO_PATHCONV=1 exec /usr/bin/env env bash -e -o pipefail -o igncr "$(cygpath -u "$(/bin/cygpath -w "$0")")" "$@"
+  PATH="$(/bin/cygpath -ua "$CYGWIN_ROOT")/bin:$PATH"
+  MSYS_NO_PATHCONV=1 exec /usr/bin/env env bash -e -o pipefail -o igncr "$(cygpath -ua "$(/bin/cygpath -wa "$0")")" "$@"
   exit
 fi
 
 for b in build-*-$BUILD_NAME/bin "$STAGE1_BINDIR"; do
   if [ "$b" != "build-$BUILD_PROJECT-$BUILD_NAME/bin" ] && [ -n "$b" ]; then
-    PATH="$b:$PATH"
+    PATH="$(realpath "$b"):$PATH"
   fi
 done
 
@@ -45,4 +45,8 @@ if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
   echo "::endgroup::"
 fi
 
-nice cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $BUILD_TARGET | tee buildlog-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.txt | sed -uE -f$ACTION_PATH/build-grouping.sed
+if [ -n always"$RUNNER_DEBUG" ] && command -v free > /dev/null; then
+  efree='e free -hwL'
+fi
+
+nice cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $BUILD_TARGET | tee buildlog-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.txt | sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed

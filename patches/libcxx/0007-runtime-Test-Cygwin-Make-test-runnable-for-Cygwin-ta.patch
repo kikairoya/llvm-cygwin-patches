@@ -1,4 +1,4 @@
-From d496e11c28dd0a299db20a71a05969d378fa5ca7 Mon Sep 17 00:00:00 2001
+From cc5874bf3ab5db92efbee53cc4096189f7800ad1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 07/15] [runtime][Test][Cygwin] Make test runnable for Cygwin
@@ -62,7 +62,7 @@ index 59da054848f3..820ddf2e6142 100644
      base_lib = os.path.join(
          config.compiler_rt_libdir, "libclang_rt.builtins%s.a" % config.target_suffix
 diff --git a/compiler-rt/test/lit.common.cfg.py b/compiler-rt/test/lit.common.cfg.py
-index 8d147055293e..14acbb6abb16 100644
+index 9d2f02189b8b..4b330e4ec8c0 100644
 --- a/compiler-rt/test/lit.common.cfg.py
 +++ b/compiler-rt/test/lit.common.cfg.py
 @@ -78,7 +78,7 @@ def find_compiler_libdir():
@@ -198,10 +198,10 @@ index d69182d68e0d..2d9190f06ccf 100644
  static_assert(__builtin_strcmp(STRINGIFY(erase), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
  static_assert(__builtin_strcmp(STRINGIFY(refresh), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
 diff --git a/libcxx/utils/libcxx/test/features.py b/libcxx/utils/libcxx/test/features.py
-index 1668e4ab01d7..0a277718b222 100644
+index 7d6e78de343c..5cfc9ad272c0 100644
 --- a/libcxx/utils/libcxx/test/features.py
 +++ b/libcxx/utils/libcxx/test/features.py
-@@ -556,6 +556,7 @@ def _getLocaleFlagsAction(cfg, locale, alts, members):
+@@ -539,6 +539,7 @@ def _getLocaleFlagsAction(cfg, locale, alts, members):
  DEFAULT_FEATURES += [
      Feature(name="darwin", when=lambda cfg: "__APPLE__" in compilerMacros(cfg)),
      Feature(name="windows", when=lambda cfg: "_WIN32" in compilerMacros(cfg)),

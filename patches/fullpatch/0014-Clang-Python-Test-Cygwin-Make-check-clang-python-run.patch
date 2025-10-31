@@ -1,0 +1,66 @@
+From 9b022f79eb27b3d7bf624a878c9673770cc5a1f4 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Wed, 9 Jul 2025 21:23:51 +0900
+Subject: [PATCH 14/38] [Clang-Python][Test][Cygwin] Make check-clang-python
+ runnable
+
+---
+ clang/bindings/python/tests/CMakeLists.txt |  5 +++++
+ clang/tools/libclang/CMakeLists.txt        | 17 ++++++++++++-----
+ 2 files changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/clang/bindings/python/tests/CMakeLists.txt b/clang/bindings/python/tests/CMakeLists.txt
+index d9a6bbf452bd..ea4ec43c3455 100644
+--- a/clang/bindings/python/tests/CMakeLists.txt
++++ b/clang/bindings/python/tests/CMakeLists.txt
+@@ -2,10 +2,15 @@
+ 
+ # Avoid configurations including '-include' from interfering with
+ # our tests by setting CLANG_NO_DEFAULT_CONFIG.
++set(set_runtime_path)
++if ((WIN32 OR CYGWIN) AND (LLVM_LINK_LLVM_DYLIB OR BUILD_SHARED_LIBS))
++  set(set_runtime_path "\"PATH=$<TARGET_FILE_DIR:libclang>:$ENV{PATH}\"")
++endif()
+ add_custom_target(check-clang-python
+     COMMAND ${CMAKE_COMMAND} -E env
+             CLANG_NO_DEFAULT_CONFIG=1
+             CLANG_LIBRARY_PATH=$<TARGET_FILE_DIR:libclang>
++            "${set_runtime_path}"
+             "${Python3_EXECUTABLE}" -m unittest discover
+     DEPENDS libclang
+     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+diff --git a/clang/tools/libclang/CMakeLists.txt b/clang/tools/libclang/CMakeLists.txt
+index 9571598f9987..6f6e5d7b2fc8 100644
+--- a/clang/tools/libclang/CMakeLists.txt
++++ b/clang/tools/libclang/CMakeLists.txt
+@@ -159,15 +159,22 @@ if(ENABLE_STATIC)
+ endif()
+ 
+ if(ENABLE_SHARED)
+-  if(WIN32)
++  if(WIN32 OR CYGWIN)
+     set_target_properties(libclang
+       PROPERTIES
+       VERSION ${LIBCLANG_LIBRARY_VERSION}
+       DEFINE_SYMBOL _CINDEX_LIB_)
+-      # Avoid declaring clang c++ symbols that are statically linked into libclang as dllimport'ed.
+-      # If llvm/libclang-cpp dll is also being built for windows clang c++ symbols will still be
+-      # implicitly be exported from libclang.
+-      target_compile_definitions(libclang PRIVATE CLANG_BUILD_STATIC)
++    if (CYGWIN)
++      # We need cygclang.dll alongside with cygclang-${version}.dll in build-tree.
++      # This is only supposed to run check-clang-python, NOT TO TRY INSTALL THIS.
++      add_custom_command(TARGET libclang POST_BUILD
++        COMMAND ${CMAKE_COMMAND} -E create_symlink "$<TARGET_FILE_NAME:libclang>"
++        "$<TARGET_FILE_DIR:libclang>/$<TARGET_FILE_PREFIX:libclang>clang$<TARGET_FILE_SUFFIX:libclang>")
++    endif()
++    # Avoid declaring clang c++ symbols that are statically linked into libclang as dllimport'ed.
++    # If llvm/libclang-cpp dll is also being built for windows clang c++ symbols will still be
++    # implicitly be exported from libclang.
++    target_compile_definitions(libclang PRIVATE CLANG_BUILD_STATIC)
+   elseif(APPLE)
+     set(LIBCLANG_LINK_FLAGS " -Wl,-compatibility_version -Wl,1")
+     set(LIBCLANG_LINK_FLAGS "${LIBCLANG_LINK_FLAGS} -Wl,-current_version -Wl,${LLVM_VERSION_MAJOR}.${LLVM_VERSION_MINOR}.${LLVM_VERSION_PATCH}")
+-- 
+2.51.1
+

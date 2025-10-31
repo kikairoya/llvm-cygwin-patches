@@ -12,7 +12,7 @@ pathenv() {
   local v
   while read; do
     for e in "$@"; do
-      if [ "$REPLY" = "$e" ]; then
+      if [ "$REPLY" = "$e" ] && [ -n "${!REPLY}" ]; then
         MSYS_NO_PATHCONV=1 v="$(MSYS_NO_PATHCONV=1 PATH="$CYGWIN_ROOT/bin:$PATH" "$cygcygpath" -u "$(MSYS_NO_PATHCONV=1 "$msyscygpath" -w "${!e}")")"
         MSYS_NO_PATHCONV=1 eval "$REPLY='$v'"
       fi

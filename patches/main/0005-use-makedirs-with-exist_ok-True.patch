@@ -1,7 +1,7 @@
 From 665e97f6f892081fc22f6d29b15e02ee2d31c78e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Oct 2025 00:21:24 +0900
-Subject: [PATCH 05/16] use makedirs with exist_ok=True
+Subject: [PATCH 05/17] use makedirs with exist_ok=True
 
 ---
  llvm/utils/lit/lit/util.py | 9 +--------

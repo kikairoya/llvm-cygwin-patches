@@ -1,7 +1,7 @@
 From 10db6920d8bbc73d916add4b3556e9f5f070c8bf Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Oct 2025 19:35:16 +0900
-Subject: [PATCH 07/37] fix test
+Subject: [PATCH 07/38] fix test
 
 ---
  llvm/utils/lit/tests/shtest-glob.py | 4 ++--

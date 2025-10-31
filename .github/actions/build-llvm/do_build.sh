@@ -1,6 +1,6 @@
 #!/usr/bin/env -S bash -e -o pipefail
 
-if [ -n "$GITHUB_DEBUG" ]; then
+if [ -n "$RUNNER_DEBUG" ]; then
   set -x
 fi
 

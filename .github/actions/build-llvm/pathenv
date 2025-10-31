@@ -5,7 +5,7 @@ pathenv() { true; }
 [ -n "$CYGWIN_ROOT" ] || return 0
 MSYS_NO_PATHCONV=1 msyscygpath=/bin/cygpath
 MSYS_NO_PATHCONV=1 [ -x $msyscygpath ] || return 0
-MSYS_NO_PATHCONV=1 cygcygpath="$(msyscygpath -u "$CYGWIN_ROOT")/bin/cygpath"
+MSYS_NO_PATHCONV=1 cygcygpath="$($msyscygpath -u "$CYGWIN_ROOT")/bin/cygpath"
 MSYS_NO_PATHCONV=1 [ -x $cygcygpath ] || return 0
 
 pathenv() {
@@ -13,7 +13,7 @@ pathenv() {
   while read; do
     for e in "$@"; do
       if [ "$REPLY" = "$e" ] && [ -n "${!REPLY}" ]; then
-        MSYS_NO_PATHCONV=1 v="$(MSYS_NO_PATHCONV=1 PATH="$(msyscygpath -u "$CYGWIN_ROOT")/bin:$PATH" "$cygcygpath" -u "$(MSYS_NO_PATHCONV=1 "$msyscygpath" -w "${!e}")")"
+        MSYS_NO_PATHCONV=1 v="$(MSYS_NO_PATHCONV=1 PATH="$($msyscygpath -u "$CYGWIN_ROOT")/bin:$PATH" "$cygcygpath" -u "$(MSYS_NO_PATHCONV=1 "$msyscygpath" -w "${!e}")")"
         MSYS_NO_PATHCONV=1 eval "$REPLY='$v'"
       fi
     done

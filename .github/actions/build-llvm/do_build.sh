@@ -7,8 +7,8 @@ fi
 if [ "$(uname -o)" = "Msys" ] && [ -n "$CYGWIN_ROOT" ]; then
   set +h
   . "$ACTION_PATH/pathenv" ACTION_PATH LLVM_PATH PATCH_PATH STAGE1_BINDIR
-  PATH="$CYGWIN_ROOT/bin:$PATH"
-  exec MSYS_NO_PATHCONV=1 /usr/bin/env env bash -e -o pipefail -o igncr "$(cygpath -u "$(/bin/cygpath -w "$0")")" "$@"
+  PATH="$(/bin/cygpath -u "$CYGWIN_ROOT")/bin:$PATH"
+  MSYS_NO_PATHCONV=1 exec /usr/bin/env env bash -e -o pipefail -o igncr "$(cygpath -u "$(/bin/cygpath -w "$0")")" "$@"
   exit
 fi
 

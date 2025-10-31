@@ -1,0 +1,20 @@
+#!/bin/bash
+
+pathenv() { true; }
+[ "$(uname -o)" = "Msys" ] || exit 0
+MSYS_NO_PATHCONV=1 [ -n "$CYGWIN_ROOT" ] || exit 0
+MSYS_NO_PATHCONV=1 cygcygpath="$CYGWIN_ROOT/bin/cygpath"
+MSYS_NO_PATHCONV=1 [ -x $cygcygpath ] || exit 0
+MSYS_NO_PATHCONV=1 msyscygpath=/bin/cygpath
+MSYS_NO_PATHCONV=1 [ -x $msyscygpath ] || exit 0
+
+pathenv() {
+  while read; do
+    for e in "$@"; do
+      if [ "$REPLY" = "$e" ]; then
+        MSYS_NO_PATHCONV=1 $REPLY="$(MSYS_NO_PATHCONV=1 PATH="$CYGWIN_ROOT/bin:$PATH" cygcygpath -u "$(MSYS_NO_PATHCONV=1 msyscygpath -w "$e")")"
+      fi
+    done
+  done < <(env -0 | sed -z 's/=.*$/\n/')
+}
+pathenv "$@"

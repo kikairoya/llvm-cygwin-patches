@@ -120,6 +120,7 @@ runs:
           libxml2-devel
           zlib-devel
           libzstd-devel
+          procps-ng
 
     - name: upgrade Cygwin packages
       if: steps.globals.outputs.setup-cygwin

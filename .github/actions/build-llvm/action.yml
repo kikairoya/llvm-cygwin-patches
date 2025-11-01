@@ -83,61 +83,10 @@ runs:
         PATCH_PATH: ${{ inputs.patch-path }}
         EXTRA_LIT_OPTS: ${{ inputs.extra-lit-opts }}
         STAGE1_BINDIR: ${{ inputs.stage1-bindir }}
+        ACTION_PATH: ${{ github.action_path }}
       run: |
         ## Config, Build, Test
-        if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
-          set +h
-          pushd "$CYGWIN_ROOT" > /dev/null
-          cd bin
-          export PATH="$PWD:$PATH"
-          popd > /dev/null
-        fi
-
-        pushd '${{ github.action_path}}' > /dev/null
-        MSYS_NO_PATHCONV=1 action_path="$(realpath .)"
-        popd > /dev/null
-
-        for b in build-*-$BUILD_NAME/bin; do
-          if [ "$b" != "build-$BUILD_PROJECT-$BUILD_NAME/bin" ] && [ -n "$b" ] && pushd "$b" > /dev/null 2>&1; then
-            export PATH="$PWD:$PATH"
-            popd > /dev/null
-          fi
-        done
-
-        if [ -n "$STAGE1_BINDIR" ] && pushd "$STAGE1_BINDIR" > /dev/null 2>&1; then
-          MSYS_NO_PATHCONV=1 bindir="$(realpath .)"
-          export PATH="$PWD:$PATH"
-          popd > /dev/null
-        fi
-
-        if [[ $BUILD_TARGET = check* ]]; then
-          pushd "$PATCH_PATH/config/$CONFIG_NAME" > /dev/null
-            if [ -f xfail.txt ]; then
-              export LIT_XFAIL="$(sed -e '2,$s#^#;#' xfail.txt | tr -d '\n')"
-            fi
-            if [ -f filter-out.txt ]; then
-              export LIT_FILTER_OUT="($(sed -e '2,$s#^#)|(#' filter-out.txt | tr -d '\n'))"
-            fi
-            if [ -f filter.txt ]; then
-              export LIT_FILTER="($(sed -e '2,$s#^#)|(#' filter.txt | tr -d '\n'))"
-            fi
-            if [ -f gtest_filter.txt ]; then
-              export GTEST_FILTER="$(sed -e '1s#^#-#;2,$s#^#:#' gtest_filter.txt | tr -d '\n')"
-            fi
-          popd > /dev/null
-
-          MSYS_NO_PATHCONV=1 export LIT_OPTS="-v --xunit-xml-output=$(realpath result-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.xml) $EXTRA_LIT_OPTS"
-          env | grep ^LIT_ > env-$BUILD_NAME.txt || true
-          env | grep ^GTEST_ >> env-$BUILD_NAME.txt || true
-        fi
-
-        if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
-          echo "::group::Configure"
-          MSYS_NO_PATHCONV=1 env "STAGE1_BINDIR=$bindir" env cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake | tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
-          echo "::endgroup::"
-        fi
-
-        MSYS_NO_PATHCONV=1 bash -o pipefail -c "nice cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $BUILD_TARGET | tee buildlog-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.txt | sed -uE -f$action_path/build-grouping.sed"
+        . "$ACTION_PATH/do_build.sh"
       shell: bash
 
     - id: archive
@@ -148,14 +97,7 @@ runs:
         BUILD_PROJECT: ${{ inputs.build-project }}
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
       run: |
-        if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
-          set +h
-          pushd "$CYGWIN_ROOT" > /dev/null
-          cd bin
-          export PATH=$PWD:$PATH
-          popd > /dev/null
-        fi
-
+        . '${{ github.action_path }}/source_cygpath'
         tar -cf build-$BUILD_PROJECT-$BUILD_NAME.tar build-$BUILD_PROJECT-$BUILD_NAME
       shell: bash
 
@@ -189,14 +131,7 @@ runs:
         INSTALL_PREFIX: ${{ inputs.install-prefix }}
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
       run: |
-        if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
-          set +h
-          pushd "$CYGWIN_ROOT" > /dev/null
-          cd bin
-          export PATH=$PWD:$PATH
-          popd > /dev/null
-        fi
-
+        . '${{ github.action_path }}/source_cygpath'
         rm -f build-$BUILD_PROJECT-$BUILD_NAME.tar
 
         echo "::group::Install"

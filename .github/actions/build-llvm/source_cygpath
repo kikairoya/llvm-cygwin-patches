@@ -1,0 +1,7 @@
+if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
+  set +h
+  pushd "$CYGWIN_ROOT" > /dev/null
+  cd bin
+  export PATH=$PWD:$PATH
+  popd > /dev/null
+fi

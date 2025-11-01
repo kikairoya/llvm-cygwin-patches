@@ -13,7 +13,7 @@ if [ "$(uname -o)" = "Msys" ] && [ -n "$CYGWIN_ROOT" ]; then
 fi
 
 for b in build-*-$BUILD_NAME/bin "$STAGE1_BINDIR"; do
-  if [ "$b" != "build-$BUILD_PROJECT-$BUILD_NAME/bin" ] && [ -n "$b" ]; then
+  if [ "$b" != "build-$BUILD_PROJECT-$BUILD_NAME/bin" ] && [ -d "$b" ]; then
     PATH="$(realpath "$b"):$PATH"
   fi
 done

@@ -1,0 +1,33 @@
+From 2dc559b9ade29d74d5cd9f93512a9af11725c227 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 4 Nov 2025 23:58:45 +0900
+Subject: [PATCH 12/12] workaround to CAS test failure
+
+---
+ llvm/lib/CAS/OnDiskGraphDB.cpp | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/llvm/lib/CAS/OnDiskGraphDB.cpp b/llvm/lib/CAS/OnDiskGraphDB.cpp
+index 245b6fb83254..1606a3d5b494 100644
+--- a/llvm/lib/CAS/OnDiskGraphDB.cpp
++++ b/llvm/lib/CAS/OnDiskGraphDB.cpp
+@@ -1384,7 +1384,7 @@ Error OnDiskGraphDB::createStandaloneLeaf(IndexProxy &I, ArrayRef<char> Data) {
+     return File.takeError();
+   assert(File->size() == (uint64_t)FileSize);
+   llvm::copy(Data, File->data());
+-  if (Leaf0)
++  //if (Leaf0) // Cygwin needs to enforce accessing at File->data()[Data.size()] by unknown reason.
+     File->data()[Data.size()] = 0;
+   assert(File->data()[Data.size()] == 0);
+   if (Error E = File->keep(Path))
+@@ -1558,7 +1558,6 @@ OnDiskGraphDB::open(StringRef AbsPath, StringRef HashName,
+                     FaultInPolicy Policy) {
+   if (std::error_code EC = sys::fs::create_directories(AbsPath))
+     return createFileError(AbsPath, EC);
+-
+   constexpr uint64_t MB = 1024ull * 1024ull;
+   constexpr uint64_t GB = 1024ull * 1024ull * 1024ull;
+ 
+-- 
+2.51.2
+

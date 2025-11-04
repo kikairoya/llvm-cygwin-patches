@@ -1,7 +1,7 @@
-From 4e1dcd3e8daaca7f029ade98bb21fc06c9126681 Mon Sep 17 00:00:00 2001
+From 3e96e155877aee97258415c42ba8000469926c3d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 16 May 2025 18:24:46 +0900
-Subject: [PATCH 07/36] [Clang-Tools] Use `clang_target_link_libraries` for
+Subject: [PATCH 07/37] [Clang-Tools] Use `clang_target_link_libraries` for
  c-index-test and libclang
 
 `target_link_libraries` shouldn't be used to link clang libraries because

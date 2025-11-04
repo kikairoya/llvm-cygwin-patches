@@ -1,7 +1,7 @@
-From 5dd6acd2ae75a91814b2cd0973e7b84f850d2448 Mon Sep 17 00:00:00 2001
+From 3533bf5dfa9e6284414f463bdb0c13bb580d96b8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 19 May 2025 20:49:59 +0900
-Subject: [PATCH 34/36] [Preprocessor][Cygwin] Unix-style path should be used
+Subject: [PATCH 35/37] [Preprocessor][Cygwin] Unix-style path should be used
  on Cygwin
 
 ---

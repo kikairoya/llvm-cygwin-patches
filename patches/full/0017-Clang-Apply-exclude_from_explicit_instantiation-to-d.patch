@@ -1,7 +1,7 @@
-From 372832c05f0f88596266bd5703f5c85213133fdd Mon Sep 17 00:00:00 2001
+From 7d20cd673fbac46ab48d1414cd3a24d6f8168f55 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 30 May 2025 20:20:47 +0900
-Subject: [PATCH 16/36] [Clang] Apply exclude_from_explicit_instantiation to
+Subject: [PATCH 17/37] [Clang] Apply exclude_from_explicit_instantiation to
  dllimport/dllexport
 
 Attaching `__declspec(dllexport/dllimport)` to explicit instantiation

@@ -1,7 +1,7 @@
-From a247c3bc9773730f15f9053813e650254b726405 Mon Sep 17 00:00:00 2001
+From 65b7f9675668bbcfc74c6baf9059c2927b5b0fb1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 12:42:37 +0900
-Subject: [PATCH 26/36] fix -fno-dllexport-inlines
+Subject: [PATCH 27/37] fix -fno-dllexport-inlines
 
 ---
  clang/lib/Sema/SemaDecl.cpp                   | 30 +++++++++++++++++++

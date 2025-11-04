@@ -1,7 +1,7 @@
-From d9571965c61236af01bbd2449add0e2c71f1cdf5 Mon Sep 17 00:00:00 2001
+From 95b98cbeec7976f9c79260fb0f3954cc31a0e4a8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 10 Jun 2025 21:42:25 +0900
-Subject: [PATCH 29/36] [LIT][Cygwin] Don't add `-gnu` to make Itanium ABI
+Subject: [PATCH 30/37] [LIT][Cygwin] Don't add `-gnu` to make Itanium ABI
  triple for *-cygwin
 
 It is already Itanium ABI one.

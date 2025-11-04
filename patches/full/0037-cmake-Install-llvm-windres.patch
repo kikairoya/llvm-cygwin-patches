@@ -1,7 +1,7 @@
-From a343a4acbfb67b6e3e735e25c72e5c259255f6b4 Mon Sep 17 00:00:00 2001
+From 53e6e8658fc6ef38436118e27d8d681fe27196f1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 19 Sep 2025 00:30:29 +0900
-Subject: [PATCH 36/36] [cmake] Install llvm-windres
+Subject: [PATCH 37/37] [cmake] Install llvm-windres
 
 ---
  llvm/cmake/modules/AddLLVM.cmake | 1 +

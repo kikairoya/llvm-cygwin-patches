@@ -1,7 +1,7 @@
-From a23fc09ac49d57641903e082bf9d16e320d6a9e7 Mon Sep 17 00:00:00 2001
+From 0094bd8bff046a54144b7479b43199503f4a6428 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 2 May 2025 23:16:55 +0900
-Subject: [PATCH 35/36] [Frontend][Cygwin] Handle case-mismatched path properly
+Subject: [PATCH 36/37] [Frontend][Cygwin] Handle case-mismatched path properly
  on cygwin
 
 `realpath` provided by cygwin1.dll does not return real-name: that
@@ -14,10 +14,10 @@ using Win32API.
  2 files changed, 37 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Frontend/DependencyFile.cpp b/clang/lib/Frontend/DependencyFile.cpp
-index 15fa7de35df9..7825f0a0b6d0 100644
+index 93e012b16387..d61bf06cd71b 100644
 --- a/clang/lib/Frontend/DependencyFile.cpp
 +++ b/clang/lib/Frontend/DependencyFile.cpp
-@@ -177,7 +177,7 @@ void DependencyCollector::maybeAddDependency(StringRef Filename,
+@@ -188,7 +188,7 @@ void DependencyCollector::maybeAddDependency(StringRef Filename,
  
  bool DependencyCollector::addDependency(StringRef Filename) {
    StringRef SearchPath;

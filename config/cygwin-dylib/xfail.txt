@@ -15,7 +15,6 @@ Clang :: Lexer/case-insensitive-include.c
 Clang :: Lexer/case-insensitive-system-include.c
 Clang :: Modules/inferred-framework-case.m
 Clang :: Preprocessor/nonportable-include-with-hmap.c
-Clang Tools :: clang-tidy/CTTestTidyModule.cpp
 LLVM :: ExecutionEngine/MCJIT/2003-01-15-AlignmentTest.ll
 LLVM :: ExecutionEngine/MCJIT/2003-05-06-LivenessClobber.ll
 LLVM :: ExecutionEngine/MCJIT/2003-08-15-AllocaAssertion.ll
@@ -28,7 +27,6 @@ LLVM :: tools/llvm-dwarfdump/X86/output.s
 LLVM :: tools/llvm-ifs/fail-file-write.test
 LLVM :: tools/llvm-ranlib/error-opening-permission.test
 LLVM :: tools/llvm-rc/windres-preproc.test
-lit :: shtest-ulimit.py
 lld :: COFF/lto-cache-errors.ll
 lld :: COFF/thinlto-emit-imports.ll
 lld :: MachO/invalid/invalid-lto-object-path.ll

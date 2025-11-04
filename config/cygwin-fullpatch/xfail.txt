@@ -10,7 +10,6 @@ Clang :: Driver/mingw-sysroot.cpp
 Clang :: Driver/riscv32-toolchain.c
 Clang :: Driver/riscv64-toolchain.c
 Clang :: Modules/inferred-framework-case.m
-Clang Tools :: clang-tidy/CTTestTidyModule.cpp
 LLVM :: ExecutionEngine/OrcLazy/debug-descriptor.ll
 LLVM :: Other/can-execute.txt
 LLVM :: tools/llvm-ar/error-opening-permission.test
@@ -18,7 +17,6 @@ LLVM :: tools/llvm-dwarfdump/X86/output.s
 LLVM :: tools/llvm-ifs/fail-file-write.test
 LLVM :: tools/llvm-ranlib/error-opening-permission.test
 LLVM :: tools/llvm-rc/windres-preproc.test
-lit :: shtest-ulimit.py
 lld :: COFF/lto-cache-errors.ll
 lld :: COFF/thinlto-emit-imports.ll
 lld :: MachO/invalid/invalid-lto-object-path.ll

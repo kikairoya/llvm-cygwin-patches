@@ -3,3 +3,4 @@ ProgramEnvTest.TestExecuteEmptyEnvironment
 InterpreterTest.FindMangledNameSymbol
 InterpreterTest.Value
 OnDiskCASTest.OnDiskCASBlobsBigParallelMultiCAS
+JobserverStrategyTest.ParallelForIsLimited

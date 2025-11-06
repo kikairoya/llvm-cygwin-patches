@@ -55,8 +55,14 @@ if [ -n "$RUNNER_DEBUG" ] && command -v free > /dev/null; then
   efree='e free -hwL'
 fi
 
-for t in ${BUILD_TARGET//,/ }; do
-  nice cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $t | \
-    tee buildlog-$t-$BUILD_PROJECT-$BUILD_NAME.txt | \
+if [ -z "$BUILD_TARGET" ]; then
+  cmake --build build-$BUILD_PROJECT-$BUILD_NAME | \
+    tee buildlog-all-$BUILD_PROJECT-$BUILD_NAME.txt | \
     sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed
-done
+else
+  for t in ${BUILD_TARGET//,/ }; do
+    cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $t | \
+      tee buildlog-$t-$BUILD_PROJECT-$BUILD_NAME.txt | \
+      sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed
+  done
+fi

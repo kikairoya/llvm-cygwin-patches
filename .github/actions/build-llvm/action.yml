@@ -120,7 +120,6 @@ runs:
           buildlog-*.txt
           configlog-*.txt
           env-*.txt
-          result-*.xml
 
     - id: install
       if: ${{ inputs.install-prefix != '/' && inputs.install-retention-days >= 0 }}

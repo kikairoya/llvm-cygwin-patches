@@ -39,7 +39,7 @@ if [[ $BUILD_TARGET = check* ]]; then
   fi
   popd > /dev/null
 
-  export LIT_OPTS="-v --xunit-xml-output=$(realpath result-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.xml) $EXTRA_LIT_OPTS"
+  export LIT_OPTS="$EXTRA_LIT_OPTS"
   env | grep ^LIT_ > env-$BUILD_NAME.txt || true
   env | grep ^GTEST_ >> env-$BUILD_NAME.txt || true
 fi

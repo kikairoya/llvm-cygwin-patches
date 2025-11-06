@@ -21,6 +21,10 @@ inputs:
     description: Target name to build, which is passed to ninja
     required: false
     default: ''
+  build-prepare-targets:
+    description: Target names to build prior to build build-target
+    required: false
+    default: ''
   build-name:
     description: Build name suffix
     required: true
@@ -69,6 +73,27 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - id: prebuild
+      if: ${{ inputs.build-prepare-targets != '' }}
+      name: prebuild ${{ inputs.build-project }} ${{ inputs.config-name }}
+      env:
+        BUILD_NAME: ${{ inputs.build-name }}
+        BUILD_TARGET: ${{ inputs.build-prepare-targets }}
+        CONFIG_NAME: ${{ inputs.config-name }}
+        CYGWIN_ROOT: ${{ inputs.cygwin-root }}
+        BUILD_PROJECT: ${{ inputs.build-project }}
+        PARALLEL_COMPILE_JOBS: ${{ inputs.parallel-compile-jobs }}
+        PARALLEL_LINK_JOBS: ${{ inputs.parallel-link-jobs }}
+        LLVM_PATH: ${{ inputs.llvm-path }}
+        PATCH_PATH: ${{ inputs.patch-path }}
+        EXTRA_LIT_OPTS: ${{ inputs.extra-lit-opts }}
+        STAGE1_BINDIR: ${{ inputs.stage1-bindir }}
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        ## Config, Build, Test
+        . "$ACTION_PATH/do_build.sh"
+      shell: bash
+
     - id: build
       name: build ${{ inputs.build-project }} ${{ inputs.config-name }}
       env:

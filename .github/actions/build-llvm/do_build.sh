@@ -46,7 +46,8 @@ fi
 
 if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
   echo "::group::Configure"
-  cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake | tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
+  cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake | \
+    tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
   echo "::endgroup::"
 fi
 
@@ -54,4 +55,8 @@ if [ -n "$RUNNER_DEBUG" ] && command -v free > /dev/null; then
   efree='e free -hwL'
 fi
 
-nice cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $BUILD_TARGET | tee buildlog-$BUILD_TARGET-$BUILD_PROJECT-$BUILD_NAME.txt | sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed
+for t in ${BUILD_TARGET//,/ }; do
+  nice cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $t | \
+    tee buildlog-$t-$BUILD_PROJECT-$BUILD_NAME.txt | \
+    sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed
+done

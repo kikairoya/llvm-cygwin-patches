@@ -240,6 +240,7 @@ jobs:
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-project: llvm
           build-target: check-all
+          build-prepare-targets: llvm-test-depends
           build-name: ${{ needs.select.outputs.build-name }}
           stage1-bindir: ${{ inputs.stage1-bindir }}
 
@@ -344,6 +345,7 @@ jobs:
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-project: clang
           build-target: check-all
+          build-prepare-targets: clang-test-depends
           build-name: ${{ needs.select.outputs.build-name }}
           stage1-bindir: ${{ inputs.stage1-bindir }}
 

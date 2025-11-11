@@ -1,7 +1,7 @@
 From 5a02673773031f782ccef1a510a58cbb80681f76 Mon Sep 17 00:00:00 2001
 From: Takashi Yano <takashi.yano@nifty.ne.jp>
 Date: Thu, 10 Jul 2025 21:55:05 +0900
-Subject: [PATCH 01/12] [Clang][Driver] Revise Cygwin ToolChain to call linker
+Subject: [PATCH 01/28] [Clang][Driver] Revise Cygwin ToolChain to call linker
  directly
 
 ...so that libc++, compiler-rt, and libunwind can be used by the
@@ -30,7 +30,7 @@ Signed-off-by: Takashi Yano <takashi.yano@nifty.ne.jp>
  create mode 100644 clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/gcc/x86_64-pc-msys/10/crtend.o
 
 diff --git a/clang/lib/Driver/ToolChain.cpp b/clang/lib/Driver/ToolChain.cpp
-index 3f9b808b2722..745275a236ed 100644
+index 3f9b808b2722e8b3fd181de70ffb2613f80d0771..745275a236ed33f0ea136aafc05d2934532697e2 100644
 --- a/clang/lib/Driver/ToolChain.cpp
 +++ b/clang/lib/Driver/ToolChain.cpp
 @@ -684,6 +684,8 @@ static StringRef getArchNameForCompilerRTLib(const ToolChain &TC,
@@ -43,7 +43,7 @@ index 3f9b808b2722..745275a236ed 100644
    switch (Triple.getOS()) {
    case llvm::Triple::FreeBSD:
 diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
-index d9c16347daa3..079911b0f0ac 100644
+index d9c16347daa34b63f68a775241f91a281b7be626..079911b0f0acb429c510edee53f883d0b2cef963 100644
 --- a/clang/lib/Driver/ToolChains/Cygwin.cpp
 +++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
 @@ -9,6 +9,7 @@
@@ -358,7 +358,7 @@ index d9c16347daa3..079911b0f0ac 100644
 +
 +auto Cygwin::buildLinker() const -> Tool * { return new cygwin::Linker(*this); }
 diff --git a/clang/lib/Driver/ToolChains/Cygwin.h b/clang/lib/Driver/ToolChains/Cygwin.h
-index d2f72c10c3b0..0701d41a6360 100644
+index d2f72c10c3b018be9844794602b514a8a2ccccd6..0701d41a6360812817bace61bd24b1e9c6fc0270 100644
 --- a/clang/lib/Driver/ToolChains/Cygwin.h
 +++ b/clang/lib/Driver/ToolChains/Cygwin.h
 @@ -27,7 +27,25 @@ public:
@@ -389,21 +389,21 @@ index d2f72c10c3b0..0701d41a6360 100644
  } // end namespace driver
 diff --git a/clang/test/Driver/Inputs/basic_cross_cygwin_tree/usr/lib/gcc/i686-pc-msys/10/crtend.o b/clang/test/Driver/Inputs/basic_cross_cygwin_tree/usr/lib/gcc/i686-pc-msys/10/crtend.o
 new file mode 100644
-index 000000000000..e69de29bb2d1
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/clang/test/Driver/Inputs/basic_cross_cygwin_tree/usr/lib/gcc/x86_64-pc-cygwin/10/crtend.o b/clang/test/Driver/Inputs/basic_cross_cygwin_tree/usr/lib/gcc/x86_64-pc-cygwin/10/crtend.o
 new file mode 100644
-index 000000000000..e69de29bb2d1
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/crt0.o b/clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/crt0.o
 new file mode 100644
-index 000000000000..e69de29bb2d1
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/gcc/i686-pc-cygwin/10/crtend.o b/clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/gcc/i686-pc-cygwin/10/crtend.o
 new file mode 100644
-index 000000000000..e69de29bb2d1
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/gcc/x86_64-pc-msys/10/crtend.o b/clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/gcc/x86_64-pc-msys/10/crtend.o
 new file mode 100644
-index 000000000000..e69de29bb2d1
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/clang/test/Driver/cygwin.cpp b/clang/test/Driver/cygwin.cpp
-index dd75c48ddc6b..fd1b6249c6c3 100644
+index dd75c48ddc6b3bfc9f7372a1082ba9bdf312e2db..fd1b6249c6c3db05c39ce1eb94a1ca992985e139 100644
 --- a/clang/test/Driver/cygwin.cpp
 +++ b/clang/test/Driver/cygwin.cpp
 @@ -15,20 +15,21 @@
@@ -510,5 +510,5 @@ index dd75c48ddc6b..fd1b6249c6c3 100644
 +// CHECK-64-EXENAME-WITH-EXT:      "{{.*}}ld{{(\.exe)?}}"
 +// CHECK-64-EXENAME-WITH-EXT-SAME: "-o" "a.out"
 -- 
-2.51.2
+2.51.0
 

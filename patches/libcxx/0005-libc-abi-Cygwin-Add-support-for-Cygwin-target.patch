@@ -1,4 +1,4 @@
-From c6b45a7c461e721caf5cfe6066a5290f0ff7e180 Mon Sep 17 00:00:00 2001
+From f26d24d0c951cc4d9cfa860e82463bf0f5b3a3cf Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 05/18] [libc++abi][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 05/18] [libc++abi][Cygwin] Add support for Cygwin target
  6 files changed, 39 insertions(+), 23 deletions(-)
 
 diff --git a/libcxxabi/CMakeLists.txt b/libcxxabi/CMakeLists.txt
-index 3dabd87b9c58..db426e5ad802 100644
+index 3dabd87b9c58776ba8f19561787662407957bc55..db426e5ad802e9ae47eb77d9a368cd20cd6935a1 100644
 --- a/libcxxabi/CMakeLists.txt
 +++ b/libcxxabi/CMakeLists.txt
 @@ -137,7 +137,7 @@ if (NOT LIBCXXABI_ENABLE_SHARED AND NOT LIBCXXABI_ENABLE_STATIC)
@@ -35,7 +35,7 @@ index 3dabd87b9c58..db426e5ad802 100644
  endif()
  
 diff --git a/libcxxabi/cmake/config-ix.cmake b/libcxxabi/cmake/config-ix.cmake
-index 10f2087c68c5..2a9e3737a245 100644
+index 10f2087c68c5e79f6f360ae9b079a378f0fed89e..2a9e3737a245d3d2a0af867f9c6e4c5fe79df977 100644
 --- a/libcxxabi/cmake/config-ix.cmake
 +++ b/libcxxabi/cmake/config-ix.cmake
 @@ -69,6 +69,17 @@ if (NOT CXX_SUPPORTS_NOSTDLIBXX_FLAG AND C_SUPPORTS_NODEFAULTLIBS_FLAG)
@@ -57,11 +57,11 @@ index 10f2087c68c5..2a9e3737a245 100644
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxxabi/include/__cxxabi_config.h b/libcxxabi/include/__cxxabi_config.h
-index f5101dbc9e59..4ca9c40c69e2 100644
+index e4fd845b1fb35596e603309612471fdb2aafc893..5d0b460631982fd19c451504241b6cf7ff9ff27f 100644
 --- a/libcxxabi/include/__cxxabi_config.h
 +++ b/libcxxabi/include/__cxxabi_config.h
-@@ -31,23 +31,24 @@
- #  define _LIBCXXABI_COMPILER_IBM
+@@ -23,23 +23,24 @@
+ #  define _LIBCXXABI_COMPILER_GCC
  #endif
  
 -#if defined(_WIN32)
@@ -103,7 +103,7 @@ index f5101dbc9e59..4ca9c40c69e2 100644
   #if !defined(_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS)
    #define _LIBCXXABI_HIDDEN __attribute__((__visibility__("hidden")))
 diff --git a/libcxxabi/include/cxxabi.h b/libcxxabi/include/cxxabi.h
-index 9ea93680f62e..aa6f54655b6d 100644
+index 9ea93680f62e06365ddba048b7a26a19c5b0fa45..aa6f54655b6d06a23950372aab8802d84a1d28a2 100644
 --- a/libcxxabi/include/cxxabi.h
 +++ b/libcxxabi/include/cxxabi.h
 @@ -26,7 +26,7 @@
@@ -125,7 +125,7 @@ index 9ea93680f62e..aa6f54655b6d 100644
  // https://sourceware.org/glibc/wiki/Destructor%20support%20for%20thread_local%20variables
  extern _LIBCXXABI_FUNC_VIS int __cxa_thread_atexit(void (*)(void *), void *,
 diff --git a/libcxxabi/src/CMakeLists.txt b/libcxxabi/src/CMakeLists.txt
-index 38a54b16278a..70170075f481 100644
+index 38a54b16278a789bbe76b230160570a93edd53a0..70170075f4817334b96b2b8e8bcc4c3609422403 100644
 --- a/libcxxabi/src/CMakeLists.txt
 +++ b/libcxxabi/src/CMakeLists.txt
 @@ -36,7 +36,7 @@ else()
@@ -149,7 +149,7 @@ index 38a54b16278a..70170075f481 100644
    list(APPEND LIBCXXABI_LIBRARIES android_support)
  endif()
 diff --git a/libcxxabi/src/fallback_malloc.cpp b/libcxxabi/src/fallback_malloc.cpp
-index 75788fe9be8d..90a256b22429 100644
+index 75788fe9be8d9e7135ebce1adc58983acd43b932..90a256b22429cebb75722fd6d7fae4575bb5ac4a 100644
 --- a/libcxxabi/src/fallback_malloc.cpp
 +++ b/libcxxabi/src/fallback_malloc.cpp
 @@ -256,7 +256,7 @@ namespace __cxxabiv1 {
@@ -162,5 +162,5 @@ index 75788fe9be8d..90a256b22429 100644
      return dest;
  #elif !_LIBCPP_HAS_LIBRARY_ALIGNED_ALLOCATION
 -- 
-2.51.2
+2.51.0
 

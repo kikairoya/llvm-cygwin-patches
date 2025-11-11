@@ -1,4 +1,4 @@
-From 071da4dcb0c8368ba2d65783a7ae8c27a787138f Mon Sep 17 00:00:00 2001
+From 6334044653824b3c9066fe0247aa940fdbcacfe7 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 06/18] [libunwind][Cygwin] Add support for Cygwin target
@@ -20,7 +20,7 @@ Subject: [PATCH 06/18] [libunwind][Cygwin] Add support for Cygwin target
  13 files changed, 58 insertions(+), 37 deletions(-)
 
 diff --git a/libunwind/include/__libunwind_config.h b/libunwind/include/__libunwind_config.h
-index 980d11ef5d4f..3147ed5fba67 100644
+index 980d11ef5d4f237f7ad10af086cc6cf711acadaf..3147ed5fba6737d70e4c59f0ddb1113ceaa1c7a4 100644
 --- a/libunwind/include/__libunwind_config.h
 +++ b/libunwind/include/__libunwind_config.h
 @@ -46,7 +46,7 @@
@@ -33,7 +33,7 @@ index 980d11ef5d4f..3147ed5fba67 100644
  #    ifdef __SEH__
  #      define _LIBUNWIND_CURSOR_SIZE 204
 diff --git a/libunwind/include/libunwind.h b/libunwind/include/libunwind.h
-index 18684ce311f9..468044d993ad 100644
+index 18684ce311f95c4767669a979c278229e8194d61..468044d993adfe5676c0ba1de46ebe0dc02a4361 100644
 --- a/libunwind/include/libunwind.h
 +++ b/libunwind/include/libunwind.h
 @@ -146,7 +146,7 @@
@@ -46,7 +46,7 @@ index 18684ce311f9..468044d993ad 100644
  #else
    #define LIBUNWIND_CURSOR_ALIGNMENT_ATTR
 diff --git a/libunwind/include/unwind.h b/libunwind/include/unwind.h
-index b1775d3a3dec..94dda313cc4b 100644
+index b1775d3a3decc76e1a0916fead1aafbc6fa0fb51..94dda313cc4b6640a4a772e871152480c7bd5752 100644
 --- a/libunwind/include/unwind.h
 +++ b/libunwind/include/unwind.h
 @@ -18,7 +18,8 @@
@@ -60,7 +60,7 @@ index b1775d3a3dec..94dda313cc4b 100644
  #include <ntverp.h>
  #endif
 diff --git a/libunwind/src/AddressSpace.hpp b/libunwind/src/AddressSpace.hpp
-index 63f9cb367ec0..5f7aa94905d0 100644
+index 63f9cb367ec0c742c5082b90e49113604a4d93e3..5f7aa94905d0285dcb55223b650779ae18925d78 100644
 --- a/libunwind/src/AddressSpace.hpp
 +++ b/libunwind/src/AddressSpace.hpp
 @@ -24,11 +24,12 @@
@@ -112,7 +112,7 @@ index 63f9cb367ec0..5f7aa94905d0 100644
    // for us.
    (void)targetAddr;
 diff --git a/libunwind/src/CMakeLists.txt b/libunwind/src/CMakeLists.txt
-index 514c2fcd5bf4..555eb7213f5f 100644
+index 514c2fcd5bf4e7789fbe2d206b9abeaeff036bb0..555eb7213f5f5611eee287f23d2d9c119241349e 100644
 --- a/libunwind/src/CMakeLists.txt
 +++ b/libunwind/src/CMakeLists.txt
 @@ -89,6 +89,9 @@ add_link_flags_if(CXX_SUPPORTS_UNWINDLIB_EQ_NONE_FLAG --unwindlib=none)
@@ -126,7 +126,7 @@ index 514c2fcd5bf4..555eb7213f5f 100644
      NOT (CXX_SUPPORTS_FNO_EXCEPTIONS_FLAG AND
           CXX_SUPPORTS_FUNWIND_TABLES_FLAG))
 diff --git a/libunwind/src/Registers.hpp b/libunwind/src/Registers.hpp
-index 5a5b57835379..34e4b6c5cc0c 100644
+index 5a5b57835379a059e5af38f64eb10c05aeef2327..34e4b6c5cc0cd7d7c26963d14f7fa5c620cae3d1 100644
 --- a/libunwind/src/Registers.hpp
 +++ b/libunwind/src/Registers.hpp
 @@ -341,12 +341,12 @@ private:
@@ -172,7 +172,7 @@ index 5a5b57835379..34e4b6c5cc0c 100644
    _xmm[regNum - UNW_X86_64_XMM0] = value;
  #else
 diff --git a/libunwind/src/Unwind-seh.cpp b/libunwind/src/Unwind-seh.cpp
-index 110c5987c3f1..6783bdccd33a 100644
+index 110c5987c3f1ab4cb555deb0dcd3cf5c1483156c..6783bdccd33a1fe29dc181d92f8ac75cc3fc4468 100644
 --- a/libunwind/src/Unwind-seh.cpp
 +++ b/libunwind/src/Unwind-seh.cpp
 @@ -93,7 +93,7 @@ _GCC_specific_handler(PEXCEPTION_RECORD ms_exc, PVOID frame, PCONTEXT ms_ctx,
@@ -194,7 +194,7 @@ index 110c5987c3f1..6783bdccd33a 100644
    urc = pers(1, action, exc->exception_class, exc, ctx);
    _LIBUNWIND_TRACE_UNWINDING("_GCC_specific_handler() personality returned %d", urc);
 diff --git a/libunwind/src/UnwindCursor.hpp b/libunwind/src/UnwindCursor.hpp
-index 7ec5f9e91578..3d81d5400903 100644
+index 7ec5f9e91578aea68f495582c6bb04e5c87be7a9..3d81d54009032e2fa84d1c89765b961501076ebb 100644
 --- a/libunwind/src/UnwindCursor.hpp
 +++ b/libunwind/src/UnwindCursor.hpp
 @@ -17,9 +17,9 @@
@@ -240,10 +240,10 @@ index 7ec5f9e91578..3d81d5400903 100644
    // In case of this is frame of signal handler, the IP saved in the signal
    // handler points to first non-executed instruction, while FDE/CIE expects IP
 diff --git a/libunwind/src/UnwindRegistersRestore.S b/libunwind/src/UnwindRegistersRestore.S
-index 198735fa800a..c8474c7ea441 100644
+index fd306ed8c5230f13ccbb0e6f5e2a8670d38b3a82..0b9635da697ce2ee07c7a623cf10d79f362a34c5 100644
 --- a/libunwind/src/UnwindRegistersRestore.S
 +++ b/libunwind/src/UnwindRegistersRestore.S
-@@ -77,7 +77,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
+@@ -79,7 +79,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
  #
  # extern "C" void __libunwind_Registers_x86_64_jumpto(Registers_x86_64 *);
  #
@@ -252,7 +252,7 @@ index 198735fa800a..c8474c7ea441 100644
  # On entry, thread_state pointer is in rcx; move it into rdi
  # to share restore code below. Since this routine restores and
  # overwrites all registers, we can use the same registers for
-@@ -118,7 +118,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
+@@ -120,7 +120,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
    # skip fs
    # skip gs
  
@@ -262,10 +262,10 @@ index 198735fa800a..c8474c7ea441 100644
    movdqu 192(%rdi),%xmm1
    movdqu 208(%rdi),%xmm2
 diff --git a/libunwind/src/UnwindRegistersSave.S b/libunwind/src/UnwindRegistersSave.S
-index 619a59751151..69b13791db66 100644
+index b7ddd0a621d183c0d7470fd55ed2478b96d0a6bc..54849cc71ad4f4ad93bbba93d00b25df42a5bc62 100644
 --- a/libunwind/src/UnwindRegistersSave.S
 +++ b/libunwind/src/UnwindRegistersSave.S
-@@ -119,7 +119,7 @@ DEFINE_LIBUNWIND_FUNCTION("#__unw_getcontext")
+@@ -121,7 +121,7 @@ DEFINE_LIBUNWIND_FUNCTION("#__unw_getcontext")
  #  thread_state pointer is in rdi
  #
  DEFINE_LIBUNWIND_FUNCTION(__unw_getcontext)
@@ -274,7 +274,7 @@ index 619a59751151..69b13791db66 100644
  #define PTR %rcx
  #define TMP %rdx
  #else
-@@ -152,7 +152,7 @@ DEFINE_LIBUNWIND_FUNCTION(__unw_getcontext)
+@@ -154,7 +154,7 @@ DEFINE_LIBUNWIND_FUNCTION(__unw_getcontext)
    # skip fs
    # skip gs
  
@@ -284,7 +284,7 @@ index 619a59751151..69b13791db66 100644
    movdqu %xmm1,192(PTR)
    movdqu %xmm2,208(PTR)
 diff --git a/libunwind/src/assembly.h b/libunwind/src/assembly.h
-index f0fcd006f207..251ce9646169 100644
+index f0fcd006f2073d3cb9eac14847bb19c003078a3a..251ce964616912e28d62a4f6dd799302c429ab8d 100644
 --- a/libunwind/src/assembly.h
 +++ b/libunwind/src/assembly.h
 @@ -161,6 +161,7 @@
@@ -335,7 +335,7 @@ index f0fcd006f207..251ce9646169 100644
  #define NO_EXEC_STACK_DIRECTIVE
  
 diff --git a/libunwind/src/config.h b/libunwind/src/config.h
-index deb5a4d4d73d..83156e341f1c 100644
+index deb5a4d4d73d467f72d4e7d183b5d25b0128f7cf..83156e341f1c1a9419adac33e47beadbe0e114b2 100644
 --- a/libunwind/src/config.h
 +++ b/libunwind/src/config.h
 @@ -28,12 +28,12 @@
@@ -378,7 +378,7 @@ index deb5a4d4d73d..83156e341f1c 100644
  #define _LIBUNWIND_REMEMBER_FREE(_ptr)                                         \
    do {                                                                         \
 diff --git a/libunwind/test/signal_frame.pass.cpp b/libunwind/test/signal_frame.pass.cpp
-index 004029cfe1e9..0bc9dfacb536 100644
+index 004029cfe1e90b27d3672ca5403fa23f2b24c115..0bc9dfacb5364bbdbc770c2f1922fed0707d687a 100644
 --- a/libunwind/test/signal_frame.pass.cpp
 +++ b/libunwind/test/signal_frame.pass.cpp
 @@ -24,6 +24,7 @@
@@ -390,5 +390,5 @@ index 004029cfe1e9..0bc9dfacb536 100644
  #undef NDEBUG
  #include <assert.h>
 -- 
-2.51.2
+2.51.0
 

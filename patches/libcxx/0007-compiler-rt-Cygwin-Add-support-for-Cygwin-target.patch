@@ -1,4 +1,4 @@
-From cb0db6d89215d137f01ff8d392321413c0141481 Mon Sep 17 00:00:00 2001
+From 9b7612f40ac5515c2185995cbd311c8d23a433b3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 07/18] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 07/18] [compiler-rt][Cygwin] Add support for Cygwin target
  6 files changed, 30 insertions(+), 11 deletions(-)
 
 diff --git a/compiler-rt/cmake/config-ix.cmake b/compiler-rt/cmake/config-ix.cmake
-index 8dfbdecbd6b9..967c282a8b38 100644
+index 8dfbdecbd6b97df3310b484e7f33e216093e4138..967c282a8b38735c52aa4f47d47dd7f7a013542e 100644
 --- a/compiler-rt/cmake/config-ix.cmake
 +++ b/compiler-rt/cmake/config-ix.cmake
 @@ -66,6 +66,19 @@ if (C_SUPPORTS_NODEFAULTLIBS_FLAG)
@@ -46,7 +46,7 @@ index 8dfbdecbd6b9..967c282a8b38 100644
  else()
    set(COMPILER_RT_HAS_PROFILE FALSE)
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index 6c226aa7d2d4..03649b20ab3a 100644
+index 6c226aa7d2d48f89ad38dbf43ffa6b1887da7868..03649b20ab3a5492c638c267ee977d863a6e47d5 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -116,7 +116,7 @@ index 6c226aa7d2d4..03649b20ab3a 100644
      ${aarch64_SOURCES}
      aarch64/chkstk.S
 diff --git a/compiler-rt/lib/profile/InstrProfilingMerge.c b/compiler-rt/lib/profile/InstrProfilingMerge.c
-index 92721c4fd55e..37b6b43792bf 100644
+index 92721c4fd55ea2bc381a380e4dd89f8aeb594847..37b6b43792bf53a96dbce9b4188cc3dccb37a947 100644
 --- a/compiler-rt/lib/profile/InstrProfilingMerge.c
 +++ b/compiler-rt/lib/profile/InstrProfilingMerge.c
 @@ -100,7 +100,7 @@ int __llvm_profile_check_compatibility(const char *ProfileData,
@@ -129,7 +129,7 @@ index 92721c4fd55e..37b6b43792bf 100644
  #else
    return (uintptr_t)V;
 diff --git a/compiler-rt/lib/profile/InstrProfilingPlatformOther.c b/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
-index 19414ab78b3b..b99be2e14de1 100644
+index 19414ab78b3bea97b746660d8c8c9e3837b31218..b99be2e14de123b57649f3c0d34448bdb08b958d 100644
 --- a/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
 +++ b/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
 @@ -9,7 +9,7 @@
@@ -142,7 +142,7 @@ index 19414ab78b3b..b99be2e14de1 100644
  #include <stdlib.h>
  #include <stdio.h>
 diff --git a/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c b/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c
-index d1b347e86141..3dde4a25e68f 100644
+index d1b347e861411872b6d48a2dfdd082e0c1df0b7f..3dde4a25e68f55282b557dfe422909144b689731 100644
 --- a/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c
 +++ b/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c
 @@ -7,11 +7,12 @@
@@ -160,7 +160,7 @@ index d1b347e86141..3dde4a25e68f 100644
  #if defined(_MSC_VER)
  /* Merge read-write sections into .data. */
 diff --git a/compiler-rt/lib/profile/InstrProfilingWriter.c b/compiler-rt/lib/profile/InstrProfilingWriter.c
-index 633fdb966116..4762c8e3d4a8 100644
+index 633fdb966116275eca4949fdf0fb4cf15ef19ff1..4762c8e3d4a8f83d94685c554233824a3124729f 100644
 --- a/compiler-rt/lib/profile/InstrProfilingWriter.c
 +++ b/compiler-rt/lib/profile/InstrProfilingWriter.c
 @@ -312,7 +312,7 @@ COMPILER_RT_VISIBILITY int lprofWriteDataImpl(
@@ -173,5 +173,5 @@ index 633fdb966116..4762c8e3d4a8 100644
    Header.BitmapDelta = (uint32_t)Header.BitmapDelta;
  #endif
 -- 
-2.51.2
+2.51.0
 

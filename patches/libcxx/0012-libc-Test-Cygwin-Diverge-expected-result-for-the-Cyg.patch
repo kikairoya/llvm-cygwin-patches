@@ -1,4 +1,4 @@
-From 6884eb455d3ed26bcd8455c0e47529bb851c1abc Mon Sep 17 00:00:00 2001
+From b3de7863cbb931cda64721f47b60a47831930d5f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:53:50 +0900
 Subject: [PATCH 12/18] [libc++][Test][Cygwin] Diverge expected result for the
@@ -23,7 +23,7 @@ Subject: [PATCH 12/18] [libc++][Test][Cygwin] Diverge expected result for the
  15 files changed, 37 insertions(+), 4 deletions(-)
 
 diff --git a/libcxx/test/libcxx/memory/trivial_abi/weak_ptr_ret.pass.cpp b/libcxx/test/libcxx/memory/trivial_abi/weak_ptr_ret.pass.cpp
-index 0b1a434ee45b..721dbec03095 100644
+index 0b1a434ee45b52e9c8829729132fa6bbefd29246..721dbec03095bb6ea5410e26a2d9525afd7d17ac 100644
 --- a/libcxx/test/libcxx/memory/trivial_abi/weak_ptr_ret.pass.cpp
 +++ b/libcxx/test/libcxx/memory/trivial_abi/weak_ptr_ret.pass.cpp
 @@ -50,7 +50,7 @@ int main(int, char**) {
@@ -36,7 +36,7 @@ index 0b1a434ee45b..721dbec03095 100644
    // On AIX, structs are never returned in registers.
    // On ARM32, structs larger than 4 bytes cannot be returned in registers.
 diff --git a/libcxx/test/std/depr/depr.c.headers/stdlib_h.aligned_alloc.compile.pass.cpp b/libcxx/test/std/depr/depr.c.headers/stdlib_h.aligned_alloc.compile.pass.cpp
-index aec2c7f98af7..6be1b2c0d52f 100644
+index aec2c7f98af75aa6b9dc0f0b62d572c08ce060d2..6be1b2c0d52fea57a21e63950f6f7641aa77c415 100644
 --- a/libcxx/test/std/depr/depr.c.headers/stdlib_h.aligned_alloc.compile.pass.cpp
 +++ b/libcxx/test/std/depr/depr.c.headers/stdlib_h.aligned_alloc.compile.pass.cpp
 @@ -16,7 +16,7 @@
@@ -49,7 +49,7 @@ index aec2c7f98af7..6be1b2c0d52f 100644
  // ::aligned_alloc is available starting with Android P (API 28)
  // XFAIL: target={{.+}}-android{{(eabi)?(21|22|23|24|25|26|27)}}
 diff --git a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.array/new.size_align.replace.indirect.pass.cpp b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.array/new.size_align.replace.indirect.pass.cpp
-index 3d9856e0b1ba..0db17279c8ed 100644
+index 3d9856e0b1ba42538f70184063a80f5677a1d908..0db17279c8ed9154ff2a92e23ca830f6caefa010 100644
 --- a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.array/new.size_align.replace.indirect.pass.cpp
 +++ b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.array/new.size_align.replace.indirect.pass.cpp
 @@ -15,6 +15,9 @@
@@ -63,7 +63,7 @@ index 3d9856e0b1ba..0db17279c8ed 100644
  // nor does the dynamic library shipped with z/OS.
  // XFAIL: target={{.+}}-zos{{.*}}
 diff --git a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.array/new.size_align_nothrow.replace.indirect.pass.cpp b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.array/new.size_align_nothrow.replace.indirect.pass.cpp
-index c9dc20a34b13..7feaab2c360e 100644
+index c9dc20a34b13ca69e011696546169a309ea1bb0b..7feaab2c360ed3df1a74342f290d27d6b2a2a674 100644
 --- a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.array/new.size_align_nothrow.replace.indirect.pass.cpp
 +++ b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.array/new.size_align_nothrow.replace.indirect.pass.cpp
 @@ -20,6 +20,9 @@
@@ -77,7 +77,7 @@ index c9dc20a34b13..7feaab2c360e 100644
  // nor does the dynamic library shipped with z/OS.
  // XFAIL: target={{.+}}-zos{{.*}}
 diff --git a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/delete_align_val_t_replace.pass.cpp b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/delete_align_val_t_replace.pass.cpp
-index c346c42f157b..f863617cd3ec 100644
+index c346c42f157b02a69d612ca7eff365c60bba9fbd..f863617cd3ec49447bed586620700be199650b45 100644
 --- a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/delete_align_val_t_replace.pass.cpp
 +++ b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/delete_align_val_t_replace.pass.cpp
 @@ -10,6 +10,9 @@
@@ -91,7 +91,7 @@ index c346c42f157b..f863617cd3ec 100644
  // nor does the dynamic library shipped with z/OS.
  // XFAIL: target={{.+}}-zos{{.*}}
 diff --git a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align.replace.pass.cpp b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align.replace.pass.cpp
-index f9e339b22190..c3d18ac58e06 100644
+index f9e339b221906e728c17528ba0584057491d588c..c3d18ac58e06b32f554717ec8ef077b833b7b513 100644
 --- a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align.replace.pass.cpp
 +++ b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align.replace.pass.cpp
 @@ -10,6 +10,9 @@
@@ -105,7 +105,7 @@ index f9e339b22190..c3d18ac58e06 100644
  // UNSUPPORTED: sanitizer-new-delete
  
 diff --git a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align_nothrow.replace.indirect.pass.cpp b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align_nothrow.replace.indirect.pass.cpp
-index dedd3089f5ab..0877408bd826 100644
+index dedd3089f5abdccb2589751870e268f4358ae861..0877408bd826eef211c7782d91bb836779915e10 100644
 --- a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align_nothrow.replace.indirect.pass.cpp
 +++ b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align_nothrow.replace.indirect.pass.cpp
 @@ -19,6 +19,9 @@
@@ -119,7 +119,7 @@ index dedd3089f5ab..0877408bd826 100644
  // nor does the dynamic library shipped with z/OS.
  // XFAIL: target={{.+}}-zos{{.*}}
 diff --git a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align_nothrow.replace.pass.cpp b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align_nothrow.replace.pass.cpp
-index a25b67ea554b..d84e8f60c949 100644
+index a25b67ea554b39a7538363d28bab2049cd619a3c..d84e8f60c94935534227feda9ad7b5085382a05e 100644
 --- a/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align_nothrow.replace.pass.cpp
 +++ b/libcxx/test/std/language.support/support.dynamic/new.delete/new.delete.single/new.size_align_nothrow.replace.pass.cpp
 @@ -13,6 +13,9 @@
@@ -133,7 +133,7 @@ index a25b67ea554b..d84e8f60c949 100644
  // nor does the dynamic library shipped with z/OS.
  // XFAIL: target={{.+}}-zos{{.*}}
 diff --git a/libcxx/test/std/language.support/support.runtime/cstdlib.aligned_alloc.compile.pass.cpp b/libcxx/test/std/language.support/support.runtime/cstdlib.aligned_alloc.compile.pass.cpp
-index 67eef7da413b..746f21839a27 100644
+index 67eef7da413b7f9e86479df4680139d86c48f49d..746f21839a27b505bfccddfc5474ee7b2e602e0a 100644
 --- a/libcxx/test/std/language.support/support.runtime/cstdlib.aligned_alloc.compile.pass.cpp
 +++ b/libcxx/test/std/language.support/support.runtime/cstdlib.aligned_alloc.compile.pass.cpp
 @@ -16,7 +16,7 @@
@@ -146,7 +146,7 @@ index 67eef7da413b..746f21839a27 100644
  // ::aligned_alloc is available starting with Android P (API 28)
  // XFAIL: target={{.+}}-android{{(eabi)?(21|22|23|24|25|26|27)}}
 diff --git a/libcxx/test/std/utilities/memory/default.allocator/allocator.members/allocate.pass.cpp b/libcxx/test/std/utilities/memory/default.allocator/allocator.members/allocate.pass.cpp
-index 244e9800d0a1..1eeb2c34deab 100644
+index 244e9800d0a19a6413ea4b546620ab5b46bc79b8..1eeb2c34deab7ada3d4ded43e1cd25b501322335 100644
 --- a/libcxx/test/std/utilities/memory/default.allocator/allocator.members/allocate.pass.cpp
 +++ b/libcxx/test/std/utilities/memory/default.allocator/allocator.members/allocate.pass.cpp
 @@ -6,6 +6,9 @@
@@ -160,7 +160,7 @@ index 244e9800d0a1..1eeb2c34deab 100644
  
  // allocator:
 diff --git a/libcxx/test/std/utilities/memory/default.allocator/allocator.members/allocate_at_least.pass.cpp b/libcxx/test/std/utilities/memory/default.allocator/allocator.members/allocate_at_least.pass.cpp
-index 05c66b065ef1..46a324b20f80 100644
+index 05c66b065ef159f2868684196415e80da28e1da2..46a324b20f80ca0f71dea6703425990c0bfb2004 100644
 --- a/libcxx/test/std/utilities/memory/default.allocator/allocator.members/allocate_at_least.pass.cpp
 +++ b/libcxx/test/std/utilities/memory/default.allocator/allocator.members/allocate_at_least.pass.cpp
 @@ -8,6 +8,9 @@
@@ -174,7 +174,7 @@ index 05c66b065ef1..46a324b20f80 100644
  
  // allocation_result<T*> allocate_at_least(size_t n)
 diff --git a/libcxx/test/std/utilities/meta/meta.trans/meta.trans.other/aligned_storage.pass.cpp b/libcxx/test/std/utilities/meta/meta.trans/meta.trans.other/aligned_storage.pass.cpp
-index 79b9294b7418..b21c54d04ab0 100644
+index 79b9294b7418a7ab44b758b5053e9913fcf42a76..b21c54d04ab05326c110cf70b953b5bdd237464d 100644
 --- a/libcxx/test/std/utilities/meta/meta.trans/meta.trans.other/aligned_storage.pass.cpp
 +++ b/libcxx/test/std/utilities/meta/meta.trans/meta.trans.other/aligned_storage.pass.cpp
 @@ -343,7 +343,7 @@ int main(int, char**)
@@ -187,7 +187,7 @@ index 79b9294b7418..b21c54d04ab0 100644
    {
      const int Align = 65536;
 diff --git a/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp b/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp
-index 95c6b36b71f9..bde00209013d 100644
+index 95c6b36b71f98b733135c4b07b35645d41d7ffe5..bde00209013d89fc44270ae7e33016fc30bcf64b 100644
 --- a/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp
 +++ b/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp
 @@ -10,6 +10,9 @@
@@ -201,7 +201,7 @@ index 95c6b36b71f9..bde00209013d 100644
  
  // class monotonic_buffer_resource
 diff --git a/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/sync_allocate_overaligned_request.pass.cpp b/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/sync_allocate_overaligned_request.pass.cpp
-index ce39a4fc6a0e..e15ffbc9776b 100644
+index ce39a4fc6a0e1d7010e1ef0a34b822661b01ced2..e15ffbc9776b61113c6ce4b5b2c9007675ea052c 100644
 --- a/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/sync_allocate_overaligned_request.pass.cpp
 +++ b/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/sync_allocate_overaligned_request.pass.cpp
 @@ -10,6 +10,9 @@
@@ -215,7 +215,7 @@ index ce39a4fc6a0e..e15ffbc9776b 100644
  
  // class synchronized_pool_resource
 diff --git a/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/unsync_allocate_overaligned_request.pass.cpp b/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/unsync_allocate_overaligned_request.pass.cpp
-index 82f75fb44344..c5de8fd18e6a 100644
+index 82f75fb4434484287ac430b191d7c534f41a8c27..c5de8fd18e6ad93d5cad1962578fa39756250cc0 100644
 --- a/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/unsync_allocate_overaligned_request.pass.cpp
 +++ b/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/unsync_allocate_overaligned_request.pass.cpp
 @@ -10,6 +10,9 @@
@@ -229,5 +229,5 @@ index 82f75fb44344..c5de8fd18e6a 100644
  
  // class unsynchronized_pool_resource
 -- 
-2.51.2
+2.51.0
 

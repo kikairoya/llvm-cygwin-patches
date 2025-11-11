@@ -1,4 +1,4 @@
-From bdfc5ca751ad7a50b9d58b74d1abad0329052d44 Mon Sep 17 00:00:00 2001
+From 564424b5fa16258e6cc6f273d52f30446a4c79ff Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 19 Sep 2025 19:04:00 +0900
 Subject: [PATCH 08/18] [compiler-rt][orc] Add support for Cygwin target
@@ -10,7 +10,7 @@ Subject: [PATCH 08/18] [compiler-rt][orc] Add support for Cygwin target
  3 files changed, 21 insertions(+), 6 deletions(-)
 
 diff --git a/compiler-rt/lib/orc/CMakeLists.txt b/compiler-rt/lib/orc/CMakeLists.txt
-index b8d1b03b788c..50b7c7d6f935 100644
+index b8d1b03b788c9d475d4d5ef59f62c943d17547e2..50b7c7d6f9353e70f0971f386b526c75b9d43f9b 100644
 --- a/compiler-rt/lib/orc/CMakeLists.txt
 +++ b/compiler-rt/lib/orc/CMakeLists.txt
 @@ -84,7 +84,7 @@ if (APPLE)
@@ -23,7 +23,7 @@ index b8d1b03b788c..50b7c7d6f935 100644
  
      set(ORC_IMPL_HEADERS
 diff --git a/compiler-rt/lib/orc/coff_platform.cpp b/compiler-rt/lib/orc/coff_platform.cpp
-index 4cce20e1323f..d200ef9b5e5c 100644
+index 4cce20e1323f3a924a8728ba6eb5ba7d358108d8..d200ef9b5e5ced713eb6a681298c98671729d12c 100644
 --- a/compiler-rt/lib/orc/coff_platform.cpp
 +++ b/compiler-rt/lib/orc/coff_platform.cpp
 @@ -785,7 +785,7 @@ ORC_RT_INTERFACE void __stdcall __orc_rt_coff_cxx_throw_exception(
@@ -36,7 +36,7 @@ index 4cce20e1323f..d200ef9b5e5c 100644
  
  //------------------------------------------------------------------------------
 diff --git a/compiler-rt/lib/orc/elfnix_platform.cpp b/compiler-rt/lib/orc/elfnix_platform.cpp
-index 33b09b948b87..76c2526d46e4 100644
+index 33b09b948b87836e76b2c2265572e8d4ed943463..76c2526d46e40cf9bb4dd75728bdfe6e71bd475c 100644
 --- a/compiler-rt/lib/orc/elfnix_platform.cpp
 +++ b/compiler-rt/lib/orc/elfnix_platform.cpp
 @@ -47,7 +47,10 @@ __unw_remove_dynamic_eh_frame_section(const void *) ORC_RT_WEAK_IMPORT;
@@ -83,5 +83,5 @@ index 33b09b948b87..76c2526d46e4 100644
        .release();
  }
 -- 
-2.51.2
+2.51.0
 

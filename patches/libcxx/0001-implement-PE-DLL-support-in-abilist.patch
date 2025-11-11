@@ -1,4 +1,4 @@
-From a745800463f395512fbb602e37250093e021ff00 Mon Sep 17 00:00:00 2001
+From cc2f4bbf7bea014d4ca65bd58a216d783a8a6951 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 12:52:40 +0900
 Subject: [PATCH 01/18] implement PE DLL support in abilist
@@ -9,7 +9,7 @@ Subject: [PATCH 01/18] implement PE DLL support in abilist
  2 files changed, 51 insertions(+), 3 deletions(-)
 
 diff --git a/libcxx/utils/libcxx/sym_check/extract.py b/libcxx/utils/libcxx/sym_check/extract.py
-index abd4abaa0001..19006fbd1fee 100644
+index abd4abaa00018eab6197dc519fe6c32cdd16e2bd..19006fbd1fee514444de3913b2141ea83b4fd22f 100644
 --- a/libcxx/utils/libcxx/sym_check/extract.py
 +++ b/libcxx/utils/libcxx/sym_check/extract.py
 @@ -194,6 +194,40 @@ class ReadElfExtractor(object):
@@ -82,7 +82,7 @@ index abd4abaa0001..19006fbd1fee 100644
          extractor = ReadElfExtractor(static_lib=static_lib)
      else:
 diff --git a/libcxx/utils/libcxx/sym_check/util.py b/libcxx/utils/libcxx/sym_check/util.py
-index dbc886f29dde..65e9f0df9118 100644
+index dbc886f29ddea3c2caf870f67a523ca6728fd1cb..65e9f0df9118c996be2f01b99de6be7cc4b0cdfc 100644
 --- a/libcxx/utils/libcxx/sym_check/util.py
 +++ b/libcxx/utils/libcxx/sym_check/util.py
 @@ -78,6 +78,12 @@ def is_elf(filename):
@@ -108,5 +108,5 @@ index dbc886f29dde..65e9f0df9118 100644
  
  def extract_or_load(filename):
 -- 
-2.51.2
+2.51.0
 

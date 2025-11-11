@@ -1,4 +1,4 @@
-From 85c52dd2a4db6b995170232cccefd3cc9e9c143d Mon Sep 17 00:00:00 2001
+From 886676d4de671beb70b99d3657f4e14d17891c4f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 3 Nov 2025 17:43:10 +0900
 Subject: [PATCH 18/18] abilist
@@ -10,7 +10,7 @@ Subject: [PATCH 18/18] abilist
 
 diff --git a/libcxx/lib/abi/x86_64-unknown-windows-cygnus.libcxxabi.v1.stable.exceptions.nonew.abilist b/libcxx/lib/abi/x86_64-unknown-windows-cygnus.libcxxabi.v1.stable.exceptions.nonew.abilist
 new file mode 100644
-index 000000000000..492bb2464da7
+index 0000000000000000000000000000000000000000..492bb2464da7a31a74874808fddeb6889f27eccb
 --- /dev/null
 +++ b/libcxx/lib/abi/x86_64-unknown-windows-cygnus.libcxxabi.v1.stable.exceptions.nonew.abilist
 @@ -0,0 +1,2129 @@
@@ -2145,5 +2145,5 @@ index 000000000000..492bb2464da7
 +{'is_defined': True, 'name': '__cxa_vec_new3', 'type': ''}
 \ No newline at end of file
 -- 
-2.51.2
+2.51.0
 

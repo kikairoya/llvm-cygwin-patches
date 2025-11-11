@@ -1,4 +1,4 @@
-From f1e38779e341d5e6f749cc9dc97c5b11af726968 Mon Sep 17 00:00:00 2001
+From efab34c9037f5d5066e1bd7951dffccfefec1cd6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 09/18] [runtime][Test][Cygwin] Make test runnable for Cygwin
@@ -27,7 +27,7 @@ Subject: [PATCH 09/18] [runtime][Test][Cygwin] Make test runnable for Cygwin
  create mode 100644 libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 
 diff --git a/compiler-rt/test/CMakeLists.txt b/compiler-rt/test/CMakeLists.txt
-index a2e4c8cbf568..85e4c03a3bdb 100644
+index a2e4c8cbf56851dc67499b347a6941682a3728b2..85e4c03a3bdb0571c23cb6fa520a94f4257a14d6 100644
 --- a/compiler-rt/test/CMakeLists.txt
 +++ b/compiler-rt/test/CMakeLists.txt
 @@ -69,7 +69,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)
@@ -40,7 +40,7 @@ index a2e4c8cbf568..85e4c03a3bdb 100644
  
      compiler_rt_test_runtime(lsan)
 diff --git a/compiler-rt/test/builtins/Unit/lit.cfg.py b/compiler-rt/test/builtins/Unit/lit.cfg.py
-index 59da054848f3..820ddf2e6142 100644
+index 59da054848f3ca307629ad27516bdac288c7bc35..820ddf2e61426a59d53c7dab69213bbdef1f45d6 100644
 --- a/compiler-rt/test/builtins/Unit/lit.cfg.py
 +++ b/compiler-rt/test/builtins/Unit/lit.cfg.py
 @@ -97,6 +97,17 @@ elif config.target_os == "Windows":
@@ -62,7 +62,7 @@ index 59da054848f3..820ddf2e6142 100644
      base_lib = os.path.join(
          config.compiler_rt_libdir, "libclang_rt.builtins%s.a" % config.target_suffix
 diff --git a/compiler-rt/test/lit.common.cfg.py b/compiler-rt/test/lit.common.cfg.py
-index 9d2f02189b8b..4b330e4ec8c0 100644
+index 9d2f02189b8bdc30330cf238eb4b0ad7af073091..4b330e4ec8c0435b25812f311465f8acc74552a2 100644
 --- a/compiler-rt/test/lit.common.cfg.py
 +++ b/compiler-rt/test/lit.common.cfg.py
 @@ -78,7 +78,7 @@ def find_compiler_libdir():
@@ -75,7 +75,7 @@ index 9d2f02189b8b..4b330e4ec8c0 100644
      elif platform.system() == "Darwin":
          dynamic_library_lookup_var = "DYLD_LIBRARY_PATH"
 diff --git a/compiler-rt/test/profile/Windows/lit.local.cfg.py b/compiler-rt/test/profile/Windows/lit.local.cfg.py
-index b622e072bcbf..2b64b52bf7f1 100644
+index b622e072bcbfbc28554b5bd44c178de15b016823..2b64b52bf7f1ecb3187ef74ba228056eda52ebe3 100644
 --- a/compiler-rt/test/profile/Windows/lit.local.cfg.py
 +++ b/compiler-rt/test/profile/Windows/lit.local.cfg.py
 @@ -6,5 +6,5 @@ def getRoot(config):
@@ -86,7 +86,7 @@ index b622e072bcbf..2b64b52bf7f1 100644
 +if root.target_os not in ["Windows", "CYGWIN"]:
      config.unsupported = True
 diff --git a/compiler-rt/test/profile/lit.cfg.py b/compiler-rt/test/profile/lit.cfg.py
-index df7f11e2b286..9b128ed44b19 100644
+index df7f11e2b286b60c7c99ff88b267ffb4cb4d54a2..9b128ed44b19dc64dae41881c3829252d26c72b2 100644
 --- a/compiler-rt/test/profile/lit.cfg.py
 +++ b/compiler-rt/test/profile/lit.cfg.py
 @@ -163,6 +163,7 @@ if config.target_os not in [
@@ -98,7 +98,7 @@ index df7f11e2b286..9b128ed44b19 100644
      config.unsupported = True
  
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index 7a44d0630842..0e5b799051d7 100644
+index 7a44d06308421728aa801a6eb21b697bdf3966cf..0e5b799051d7ab87431156c82b1c7b4efd7e1021 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
 @@ -135,6 +135,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -121,7 +121,7 @@ index 7a44d0630842..0e5b799051d7 100644
    add_definitions(-D_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS)
 diff --git a/libcxx/test/configs/llvm-libc++-cygwin.cfg.in b/libcxx/test/configs/llvm-libc++-cygwin.cfg.in
 new file mode 100644
-index 000000000000..7e4953b3fd24
+index 0000000000000000000000000000000000000000..7e4953b3fd240ef18153dd508c680bd12afdbf52
 --- /dev/null
 +++ b/libcxx/test/configs/llvm-libc++-cygwin.cfg.in
 @@ -0,0 +1,25 @@
@@ -151,7 +151,7 @@ index 000000000000..7e4953b3fd24
 +    lit_config
 +)
 diff --git a/libcxx/test/extensions/clang/clang_modules_include.gen.py b/libcxx/test/extensions/clang/clang_modules_include.gen.py
-index 28661049d6e8..732de92f8b3b 100644
+index 28661049d6e85c25547d2c63a53d89d31592f679..732de92f8b3b24c5f7ca23ab168b0fbed3859e86 100644
 --- a/libcxx/test/extensions/clang/clang_modules_include.gen.py
 +++ b/libcxx/test/extensions/clang/clang_modules_include.gen.py
 @@ -20,6 +20,7 @@
@@ -163,7 +163,7 @@ index 28661049d6e8..732de92f8b3b 100644
  # The Android headers don't appear to be compatible with modules yet
  # UNSUPPORTED: LIBCXX-ANDROID-FIXME
 diff --git a/libcxx/test/libcxx/system_reserved_names.gen.py b/libcxx/test/libcxx/system_reserved_names.gen.py
-index d69182d68e0d..2d9190f06ccf 100644
+index d69182d68e0de7816c295e9f0a16685a8d3c4363..2d9190f06ccfa69b3ac0093c735605a41237b885 100644
 --- a/libcxx/test/libcxx/system_reserved_names.gen.py
 +++ b/libcxx/test/libcxx/system_reserved_names.gen.py
 @@ -122,7 +122,7 @@ for header in public_headers:
@@ -198,7 +198,7 @@ index d69182d68e0d..2d9190f06ccf 100644
  static_assert(__builtin_strcmp(STRINGIFY(erase), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
  static_assert(__builtin_strcmp(STRINGIFY(refresh), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
 diff --git a/libcxx/utils/libcxx/test/features.py b/libcxx/utils/libcxx/test/features.py
-index 5da1d9afee91..c2b30dee072f 100644
+index 5da1d9afee9115bd9c3f0e75b86b99fccf852eaa..c2b30dee072fa5f0b71e611db135f669abbd4fb4 100644
 --- a/libcxx/utils/libcxx/test/features.py
 +++ b/libcxx/utils/libcxx/test/features.py
 @@ -539,6 +539,7 @@ def _getLocaleFlagsAction(cfg, locale, alts, members):
@@ -210,7 +210,7 @@ index 5da1d9afee91..c2b30dee072f 100644
          name="windows-dll",
          when=lambda cfg: "_WIN32" in compilerMacros(cfg)
 diff --git a/libcxxabi/CMakeLists.txt b/libcxxabi/CMakeLists.txt
-index db426e5ad802..c60778abd4d4 100644
+index db426e5ad802e9ae47eb77d9a368cd20cd6935a1..c60778abd4d4864e348fa7424496827e6ebdd549 100644
 --- a/libcxxabi/CMakeLists.txt
 +++ b/libcxxabi/CMakeLists.txt
 @@ -145,6 +145,8 @@ option(LIBCXXABI_HERMETIC_STATIC_LIBRARY
@@ -224,7 +224,7 @@ index db426e5ad802..c60778abd4d4 100644
      set(LIBCXXABI_DEFAULT_TEST_CONFIG "llvm-libc++abi-shared-clangcl.cfg.in")
 diff --git a/libcxxabi/test/configs/llvm-libc++abi-cygwin.cfg.in b/libcxxabi/test/configs/llvm-libc++abi-cygwin.cfg.in
 new file mode 100644
-index 000000000000..938d627fa42d
+index 0000000000000000000000000000000000000000..938d627fa42d779ca01f5b62bc9a6dbe33b92a5b
 --- /dev/null
 +++ b/libcxxabi/test/configs/llvm-libc++abi-cygwin.cfg.in
 @@ -0,0 +1,25 @@
@@ -254,7 +254,7 @@ index 000000000000..938d627fa42d
 +    lit_config
 +)
 diff --git a/libunwind/CMakeLists.txt b/libunwind/CMakeLists.txt
-index 5f4b0902d522..ecc0842395ec 100644
+index 97edff0b87ea3451c575a938ae6bb807d9c78d3d..a71d7f149eb2d5f78fe7e2767f23b0e07a746dde 100644
 --- a/libunwind/CMakeLists.txt
 +++ b/libunwind/CMakeLists.txt
 @@ -78,6 +78,12 @@ if(MINGW)
@@ -290,7 +290,7 @@ index 5f4b0902d522..ecc0842395ec 100644
    # necessarily the ones that the callers will use anyway) with the
 diff --git a/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in b/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in
 new file mode 100644
-index 000000000000..b01784665582
+index 0000000000000000000000000000000000000000..b01784665582d377e88c2dca60420589d65074b0
 --- /dev/null
 +++ b/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in
 @@ -0,0 +1,25 @@
@@ -321,7 +321,7 @@ index 000000000000..b01784665582
 +)
 diff --git a/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in b/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 new file mode 100644
-index 000000000000..dc490a08ba1a
+index 0000000000000000000000000000000000000000..dc490a08ba1a63389ccdc01a036020a06e805c49
 --- /dev/null
 +++ b/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 @@ -0,0 +1,25 @@
@@ -351,5 +351,5 @@ index 000000000000..dc490a08ba1a
 +    lit_config
 +)
 -- 
-2.51.2
+2.51.0
 

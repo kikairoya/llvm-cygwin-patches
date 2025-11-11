@@ -1,0 +1,26 @@
+From e454226ed4f0347066a83663932a3c3a5f97e2b4 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 18 Oct 2025 10:04:11 +0900
+Subject: [PATCH 18/28] [LLVM][Support] Remove an unused function-local static
+ thread_local variable
+
+---
+ llvm/lib/Support/Parallel.cpp | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/llvm/lib/Support/Parallel.cpp b/llvm/lib/Support/Parallel.cpp
+index 8e0c724accb36eaa7ed6010b5ec59d501df30510..141441caaa18cc7a2aa862d038c8883dd842d7d8 100644
+--- a/llvm/lib/Support/Parallel.cpp
++++ b/llvm/lib/Support/Parallel.cpp
+@@ -129,8 +129,6 @@ private:
+     // first successful tryAcquire() in a process. This guarantees forward
+     // progress without requiring a dedicated "always-on" thread here.
+ 
+-    static thread_local std::unique_ptr<ExponentialBackoff> Backoff;
+-
+     while (true) {
+       if (TheJobserver) {
+         // Jobserver-mode scheduling:
+-- 
+2.51.0
+

@@ -1,4 +1,4 @@
-From 14b9220c5bc4719c46c2316e4776af5e3d523250 Mon Sep 17 00:00:00 2001
+From bebd7a42acb91f4471dbbda830aff843fe7a2f10 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:34:49 +0900
 Subject: [PATCH 17/18] [compiler-rt][Test][Cygwin] Diverge expected result for
@@ -16,7 +16,7 @@ Subject: [PATCH 17/18] [compiler-rt][Test][Cygwin] Diverge expected result for
  8 files changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c b/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c
-index 3ffdde6aed3f..31b494569eda 100644
+index 3ffdde6aed3f2002d09d3e3ab1e3987ae2919fc9..31b494569edaa5a35712f1f71c52cb737a5e8685 100644
 --- a/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c
 +++ b/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c
 @@ -9,7 +9,7 @@
@@ -29,7 +29,7 @@ index 3ffdde6aed3f..31b494569eda 100644
      return 0;
  #endif
 diff --git a/compiler-rt/test/profile/Posix/gcov-dlopen.c b/compiler-rt/test/profile/Posix/gcov-dlopen.c
-index 72f11186e084..085a3a333aff 100644
+index 72f11186e084cbb143e5a451bf0d9d620089e224..085a3a333aff8eeaf7fb9f99ea9d0f3a93f76fc7 100644
 --- a/compiler-rt/test/profile/Posix/gcov-dlopen.c
 +++ b/compiler-rt/test/profile/Posix/gcov-dlopen.c
 @@ -1,6 +1,7 @@
@@ -41,7 +41,7 @@ index 72f11186e084..085a3a333aff 100644
  // RUN: mkdir -p %t.d && cd %t.d
  
 diff --git a/compiler-rt/test/profile/Posix/gcov-shared-flush.c b/compiler-rt/test/profile/Posix/gcov-shared-flush.c
-index f1edbe2503c6..5df7554b63d7 100644
+index f1edbe2503c6cf3879bfc329923a368a7057f5ee..5df7554b63d77a62058335c9b8928e377142a832 100644
 --- a/compiler-rt/test/profile/Posix/gcov-shared-flush.c
 +++ b/compiler-rt/test/profile/Posix/gcov-shared-flush.c
 @@ -1,5 +1,6 @@
@@ -52,7 +52,7 @@ index f1edbe2503c6..5df7554b63d7 100644
  // RUN: mkdir -p %t.d && cd %t.d
  
 diff --git a/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test b/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test
-index 0a326a280962..f967c88fa143 100644
+index 0a326a2809621cd6ceeffcd5b72d9f8d9f44f156..f967c88fa143bc804204d4959ef1343b122e41ee 100644
 --- a/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test
 +++ b/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test
 @@ -1,4 +1,4 @@
@@ -62,7 +62,7 @@ index 0a326a280962..f967c88fa143 100644
  RUN: %clang_pgogen -fprofile-update=atomic -fPIC foo.c -c -Xclang -fprofile-instrument-path="default_foo_%m.profraw"
  RUN: %clang_pgogen -fprofile-update=atomic -fPIC foo2.c -c -Xclang -fprofile-instrument-path="default_foo2_%m.profraw"
 diff --git a/compiler-rt/test/profile/Posix/instrprof-fork.c b/compiler-rt/test/profile/Posix/instrprof-fork.c
-index a1b99b492aa4..afb05d5d63e4 100644
+index a1b99b492aa4fd881e3d63ba3eb871ce58d3c71c..afb05d5d63e4b646c9534cc0ea8fd2b19cbb6ab7 100644
 --- a/compiler-rt/test/profile/Posix/instrprof-fork.c
 +++ b/compiler-rt/test/profile/Posix/instrprof-fork.c
 @@ -1,4 +1,5 @@
@@ -72,7 +72,7 @@ index a1b99b492aa4..afb05d5d63e4 100644
  // RUN: %clang_pgogen=%t.profdir -o %t -O2 %s
  // RUN: %run %t
 diff --git a/compiler-rt/test/profile/instrprof-merge-entry-cover.c b/compiler-rt/test/profile/instrprof-merge-entry-cover.c
-index a99458898392..d5b6d23cec4d 100644
+index a99458898392f5a6e5dbc25d1d0930996dce6ff5..d5b6d23cec4d1e31d3265689d3db54f4b53ed099 100644
 --- a/compiler-rt/test/profile/instrprof-merge-entry-cover.c
 +++ b/compiler-rt/test/profile/instrprof-merge-entry-cover.c
 @@ -3,7 +3,7 @@
@@ -85,7 +85,7 @@ index a99458898392..d5b6d23cec4d 100644
  #include "profile_test.h"
  #include <stdint.h>
 diff --git a/compiler-rt/test/profile/instrprof-merge.c b/compiler-rt/test/profile/instrprof-merge.c
-index 8be1016da873..4d7d2e43f38a 100644
+index 8be1016da873e53a9abd8dbe3f8c6e9f25081d47..4d7d2e43f38a621ca959f91575627b055061e9b2 100644
 --- a/compiler-rt/test/profile/instrprof-merge.c
 +++ b/compiler-rt/test/profile/instrprof-merge.c
 @@ -3,7 +3,7 @@
@@ -98,7 +98,7 @@ index 8be1016da873..4d7d2e43f38a 100644
  #include <stdint.h>
  #include <stdio.h>
 diff --git a/compiler-rt/test/profile/instrprof-without-libc.c b/compiler-rt/test/profile/instrprof-without-libc.c
-index d0d213b07ba2..4a837812b401 100644
+index d0d213b07ba2dadf030bb4521468d76a8235f115..4a837812b401ace469a085a6d77bec2986b54ce8 100644
 --- a/compiler-rt/test/profile/instrprof-without-libc.c
 +++ b/compiler-rt/test/profile/instrprof-without-libc.c
 @@ -11,7 +11,7 @@
@@ -111,5 +111,5 @@ index d0d213b07ba2..4a837812b401 100644
  #include <stdint.h>
  #include <stdlib.h>
 -- 
-2.51.2
+2.51.0
 

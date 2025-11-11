@@ -1,4 +1,4 @@
-From d8791198c3f4403d6e740788b5ef104f3c4b89de Mon Sep 17 00:00:00 2001
+From abc7f561feb4f5778bdac6d5db982937807a1999 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:56:10 +0900
 Subject: [PATCH 14/18] [libc++][Test][Cygwin] Diverge expected result for the
@@ -23,7 +23,7 @@ Subject: [PATCH 14/18] [libc++][Test][Cygwin] Diverge expected result for the
  .../locale.ctype.byname/widen_1.pass.cpp      |  2 +-
  .../locale.ctype.byname/widen_many.pass.cpp   |  2 +-
  .../put_long_double_en_US.pass.cpp            | 67 +++++++++--------
- .../put_string_en_US.pass.cpp                 | 67 +++++++++--------
+ .../put_string_en_US.pass.cpp                 | 68 +++++++++--------
  .../curr_symbol.pass.cpp                      | 11 ++-
  .../neg_format.pass.cpp                       |  4 +-
  .../negative_sign.pass.cpp                    |  8 +-
@@ -69,10 +69,10 @@ Subject: [PATCH 14/18] [libc++][Test][Cygwin] Diverge expected result for the
  libcxx/test/support/locale_helpers.h          |  8 +-
  libcxx/test/support/platform_support.h        |  7 ++
  libcxx/utils/libcxx/test/features.py          |  4 +
- 64 files changed, 609 insertions(+), 474 deletions(-)
+ 64 files changed, 610 insertions(+), 474 deletions(-)
 
 diff --git a/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp b/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
-index 88672851f7b6..5530d62f8d73 100644
+index 88672851f7b6b2cc55e601bf72344ba8d4668fdd..5530d62f8d73d400fe52fc2764b39e4c32a907d2 100644
 --- a/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
 +++ b/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
 @@ -46,8 +46,8 @@ public:
@@ -147,7 +147,7 @@ index 88672851f7b6..5530d62f8d73 100644
  #endif
  
 diff --git a/libcxx/test/std/input.output/iostream.format/ext.manip/put_money.pass.cpp b/libcxx/test/std/input.output/iostream.format/ext.manip/put_money.pass.cpp
-index d0ff2c87689d..bbfa4c29fccc 100644
+index d0ff2c87689d144c0694d4ba01e699a6088395d3..bbfa4c29fcccaa40c2e48bfd7b4e52c706911a40 100644
 --- a/libcxx/test/std/input.output/iostream.format/ext.manip/put_money.pass.cpp
 +++ b/libcxx/test/std/input.output/iostream.format/ext.manip/put_money.pass.cpp
 @@ -13,6 +13,9 @@
@@ -197,7 +197,7 @@ index d0ff2c87689d..bbfa4c29fccc 100644
  #else
          assert(sb.str() == L"-USD 1,234,567.89");
 diff --git a/libcxx/test/std/input.output/iostream.format/std.manip/setfill_wchar_max.pass.cpp b/libcxx/test/std/input.output/iostream.format/std.manip/setfill_wchar_max.pass.cpp
-index b24c0b90d86f..9bf49b7bb5b8 100644
+index b24c0b90d86f16452861c0c8001a9499c16d3262..9bf49b7bb5b8c1dabcce818dbbb77d64364df6ca 100644
 --- a/libcxx/test/std/input.output/iostream.format/std.manip/setfill_wchar_max.pass.cpp
 +++ b/libcxx/test/std/input.output/iostream.format/std.manip/setfill_wchar_max.pass.cpp
 @@ -14,7 +14,7 @@
@@ -210,7 +210,7 @@ index b24c0b90d86f..9bf49b7bb5b8 100644
  // XFAIL: target=aarch64{{.*}}-linux-gnu && libcpp-abi-version=1
  // XFAIL: target=aarch64{{.*}}-amazon-linux && libcpp-abi-version=1
 diff --git a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcerr-wide-mode.sh.cpp b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcerr-wide-mode.sh.cpp
-index f23fbee92afd..249db368895e 100644
+index f23fbee92afd8e838db513f07bf8343ce3b2c31e..249db368895e5c9fcdd9b9299f469de2f1583777 100644
 --- a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcerr-wide-mode.sh.cpp
 +++ b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcerr-wide-mode.sh.cpp
 @@ -12,6 +12,7 @@
@@ -222,7 +222,7 @@ index f23fbee92afd..249db368895e 100644
  // FILE_DEPENDENCIES: test.dat
  // RUN: %{build}
 diff --git a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcin-wide-mode.sh.cpp b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcin-wide-mode.sh.cpp
-index e13d79605f11..4eed763bfecb 100644
+index e13d79605f118e0ec382d19933d262f656e2ae4c..4eed763bfecbcb5dbf74d29ef2ed59c6e0ba26d5 100644
 --- a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcin-wide-mode.sh.cpp
 +++ b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcin-wide-mode.sh.cpp
 @@ -12,6 +12,7 @@
@@ -234,7 +234,7 @@ index e13d79605f11..4eed763bfecb 100644
  // FILE_DEPENDENCIES: test.dat
  // RUN: %{build}
 diff --git a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcout-wide-mode.sh.cpp b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcout-wide-mode.sh.cpp
-index 9908ea0e64db..12acabd16c3f 100644
+index 9908ea0e64db1bb1e88ff827b1fcd85a14b70579..12acabd16c3f9bcc1ac8780413495687be4523ab 100644
 --- a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcout-wide-mode.sh.cpp
 +++ b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcout-wide-mode.sh.cpp
 @@ -12,6 +12,7 @@
@@ -246,7 +246,7 @@ index 9908ea0e64db..12acabd16c3f 100644
  // FILE_DEPENDENCIES: test.dat
  // RUN: %{build}
 diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/facet.ctype.special/facet.ctype.char.statics/classic_table.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/facet.ctype.special/facet.ctype.char.statics/classic_table.pass.cpp
-index 1bd9fc88c72d..0c53596d3cf9 100644
+index 1bd9fc88c72db9286ca32237087bc36ebbd73168..0c53596d3cf9e80ed55873be9f37fc25957c18ed 100644
 --- a/libcxx/test/std/localization/locale.categories/category.ctype/facet.ctype.special/facet.ctype.char.statics/classic_table.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.ctype/facet.ctype.special/facet.ctype.char.statics/classic_table.pass.cpp
 @@ -22,6 +22,7 @@
@@ -267,7 +267,7 @@ index 1bd9fc88c72d..0c53596d3cf9 100644
          bool expect_blank = (i == ' ');
  #else
 diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_1.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_1.pass.cpp
-index 5cebc079c470..30d1940d1de6 100644
+index 5cebc079c4703980545321f7618f58bc35253619..30d1940d1de6f0d9896a38cf330a1b7f6869ef31 100644
 --- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_1.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_1.pass.cpp
 @@ -109,7 +109,7 @@ int main(int, char**)
@@ -280,7 +280,7 @@ index 5cebc079c470..30d1940d1de6 100644
              // Unicode interpretation even in the "C" locale.
              assert(f.is(F::alpha, L'\x00DA'));
 diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_many.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_many.pass.cpp
-index 2869378b42b9..519785262823 100644
+index 2869378b42b92c50012a259b86dd0300ef9d5a85..519785262823951a066caa44eabaa8f9a9442932 100644
 --- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_many.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_many.pass.cpp
 @@ -157,7 +157,7 @@ int main(int, char**)
@@ -293,7 +293,7 @@ index 2869378b42b9..519785262823 100644
              // Unicode interpretation even in the "C" locale.
              assert( (m[0] & F::alpha));
 diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_is.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_is.pass.cpp
-index ea03f042f2d4..b3d9ce415652 100644
+index ea03f042f2d45c879ec8b91f6891831204735748..b3d9ce415652c821f42f9d1bcb589c7ec717546f 100644
 --- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_is.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_is.pass.cpp
 @@ -65,7 +65,7 @@ int main(int, char**)
@@ -306,7 +306,7 @@ index ea03f042f2d4..b3d9ce415652 100644
              // Unicode interpretation even in the "C" locale, where
              // the scan_is function returns the same as above for the
 diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_not.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_not.pass.cpp
-index 2f7acb843e59..9a002ef16034 100644
+index 2f7acb843e591678bd56ec5a8ea7a80e458bdc85..9a002ef16034651e4fadd6ff89b0070baaf3b70e 100644
 --- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_not.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_not.pass.cpp
 @@ -65,7 +65,7 @@ int main(int, char**)
@@ -319,7 +319,7 @@ index 2f7acb843e59..9a002ef16034 100644
              // Unicode interpretation even in the "C" locale, where
              // the scan_is function returns the same as above for the
 diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_1.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_1.pass.cpp
-index 447353de8af7..9bcc234ddc91 100644
+index 447353de8af72fd1d739f7c642e1562a21684b44..9bcc234ddc91bd19c0c01a6aae925e2466817864 100644
 --- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_1.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_1.pass.cpp
 @@ -12,6 +12,9 @@
@@ -333,7 +333,7 @@ index 447353de8af7..9bcc234ddc91 100644
  
  // template <class charT> class ctype_byname;
 diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_many.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_many.pass.cpp
-index 94ecc6c8fa85..8a55163f1bdb 100644
+index 94ecc6c8fa85b03aa8b2d10077122e28844225e1..8a55163f1bdb6785e6f2b09f1084626a3f3370cc 100644
 --- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_many.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_many.pass.cpp
 @@ -12,6 +12,9 @@
@@ -347,7 +347,7 @@ index 94ecc6c8fa85..8a55163f1bdb 100644
  
  // template <class charT> class ctype_byname;
 diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_1.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_1.pass.cpp
-index 2b37737a26bc..cb09a443de77 100644
+index 2b37737a26bc365c27ec3ebc54c5234fa0838ec6..cb09a443de77fd775c404decba9620199dbe0dd3 100644
 --- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_1.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_1.pass.cpp
 @@ -12,6 +12,9 @@
@@ -361,7 +361,7 @@ index 2b37737a26bc..cb09a443de77 100644
  
  // template <class charT> class ctype_byname;
 diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_many.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_many.pass.cpp
-index 016d8d736ad2..df85b1670074 100644
+index 016d8d736ad22a2adbd5c41b60dad38fedf7cc2b..df85b1670074bb81a9cff04c74e91bf2ecd2dff2 100644
 --- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_many.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_many.pass.cpp
 @@ -12,6 +12,9 @@
@@ -375,7 +375,7 @@ index 016d8d736ad2..df85b1670074 100644
  
  // template <class charT> class ctype_byname;
 diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_1.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_1.pass.cpp
-index 959a4be9e1de..085ae20d1a0f 100644
+index 959a4be9e1de9648904d9c9ea485214d26285145..085ae20d1a0f8eb696b8e5ee23cb9a8a4d17b9c2 100644
 --- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_1.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_1.pass.cpp
 @@ -56,7 +56,7 @@ int main(int, char**)
@@ -388,7 +388,7 @@ index 959a4be9e1de..085ae20d1a0f 100644
  #else
              assert(f.widen(char(-5)) == wchar_t(-1));
 diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_many.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_many.pass.cpp
-index 078b4a6fefb7..fd9eb59b9eb5 100644
+index 078b4a6fefb7e1789086f429c02d814bf5a724b2..fd9eb59b9eb55b1091f4a917337d32677fd81aa0 100644
 --- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_many.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_many.pass.cpp
 @@ -62,7 +62,7 @@ int main(int, char**)
@@ -401,12 +401,12 @@ index 078b4a6fefb7..fd9eb59b9eb5 100644
  #else
              assert(v[6] == wchar_t(-1));
 diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp
-index 4b767fae871f..645e7aaeb812 100644
+index 0f2c81a805282c150c660ab0b35c876f0e01da66..d62157b17261ea7f841784d00cca352a9080eb21 100644
 --- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp
-@@ -16,6 +16,9 @@
- // Bionic has minimal locale support, investigate this later.
+@@ -17,6 +17,9 @@
  // XFAIL: LIBCXX-ANDROID-FIXME
+ // XFAIL: FROZEN-CXX03-HEADERS-FIXME
  
 +// Cygwin's locale slightly differs from others
 +// XFAIL: LIBCXX-CYGWIN-FIXME
@@ -414,7 +414,7 @@ index 4b767fae871f..645e7aaeb812 100644
  // REQUIRES: locale.en_US.UTF-8
  
  #include <locale>
-@@ -78,7 +81,7 @@ int main(int, char**)
+@@ -79,7 +82,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, '*', v);
          std::string ex(str, base(iter));
@@ -423,7 +423,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "(0.01)");
  #else
          assert(ex == "-0.01");
-@@ -96,7 +99,7 @@ int main(int, char**)
+@@ -97,7 +100,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, '*', v);
          std::string ex(str, base(iter));
@@ -432,7 +432,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "(1,234,567.89)");
  #else
          assert(ex == "-1,234,567.89");
-@@ -116,7 +119,7 @@ int main(int, char**)
+@@ -117,7 +120,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, '*', v);
          std::string ex(str, base(iter));
@@ -441,7 +441,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "($0.01)");
  #else
          assert(ex == "-$0.01");
-@@ -136,7 +139,7 @@ int main(int, char**)
+@@ -137,7 +140,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, '*', v);
          std::string ex(str, base(iter));
@@ -450,7 +450,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "($1,234,567.89)");
  #else
          assert(ex == "-$1,234,567.89");
-@@ -150,7 +153,7 @@ int main(int, char**)
+@@ -151,7 +154,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -459,7 +459,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "($1,234,567.89)     ");
  #else
          assert(ex == "-$1,234,567.89      ");
-@@ -165,7 +168,7 @@ int main(int, char**)
+@@ -166,7 +169,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -468,7 +468,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "($     1,234,567.89)");
  #else
          assert(ex == "-$      1,234,567.89");
-@@ -180,7 +183,7 @@ int main(int, char**)
+@@ -181,7 +184,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -477,7 +477,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "     ($1,234,567.89)");
  #else
          assert(ex == "      -$1,234,567.89");
-@@ -203,7 +206,7 @@ int main(int, char**)
+@@ -204,7 +207,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -486,7 +486,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "(0.01)");
  #else
          assert(ex == "-0.01");
-@@ -221,7 +224,7 @@ int main(int, char**)
+@@ -222,7 +225,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -495,7 +495,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "(1,234,567.89)");
  #else
          assert(ex == "-1,234,567.89");
-@@ -233,7 +236,7 @@ int main(int, char**)
+@@ -234,7 +237,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -504,7 +504,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "USD0.00");
  #else
          assert(ex == "USD 0.00");
-@@ -245,7 +248,7 @@ int main(int, char**)
+@@ -246,7 +249,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -513,7 +513,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "(USD0.01)");
  #else
          assert(ex == "-USD 0.01");
-@@ -257,7 +260,7 @@ int main(int, char**)
+@@ -258,7 +261,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -522,7 +522,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "USD1,234,567.89");
  #else
          assert(ex == "USD 1,234,567.89");
-@@ -269,7 +272,7 @@ int main(int, char**)
+@@ -270,7 +273,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -531,7 +531,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "(USD1,234,567.89)");
  #else
          assert(ex == "-USD 1,234,567.89");
-@@ -283,7 +286,7 @@ int main(int, char**)
+@@ -284,7 +287,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -540,7 +540,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "(USD1,234,567.89)   ");
  #else
          assert(ex == "-USD 1,234,567.89   ");
-@@ -298,7 +301,7 @@ int main(int, char**)
+@@ -299,7 +302,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -549,7 +549,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "(USD   1,234,567.89)");
  #else
          assert(ex == "-USD    1,234,567.89");
-@@ -313,7 +316,7 @@ int main(int, char**)
+@@ -314,7 +317,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -558,7 +558,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == "   (USD1,234,567.89)");
  #else
          assert(ex == "   -USD 1,234,567.89");
-@@ -339,7 +342,7 @@ int main(int, char**)
+@@ -340,7 +343,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -567,7 +567,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"(0.01)");
  #else
          assert(ex == L"-0.01");
-@@ -357,7 +360,7 @@ int main(int, char**)
+@@ -358,7 +361,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -576,7 +576,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"(1,234,567.89)");
  #else
          assert(ex == L"-1,234,567.89");
-@@ -377,7 +380,7 @@ int main(int, char**)
+@@ -378,7 +381,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -585,7 +585,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"($0.01)");
  #else
          assert(ex == L"-$0.01");
-@@ -397,7 +400,7 @@ int main(int, char**)
+@@ -398,7 +401,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -594,7 +594,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"($1,234,567.89)");
  #else
          assert(ex == L"-$1,234,567.89");
-@@ -411,7 +414,7 @@ int main(int, char**)
+@@ -412,7 +415,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -603,7 +603,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"($1,234,567.89)     ");
  #else
          assert(ex == L"-$1,234,567.89      ");
-@@ -426,7 +429,7 @@ int main(int, char**)
+@@ -427,7 +430,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -612,7 +612,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"($     1,234,567.89)");
  #else
          assert(ex == L"-$      1,234,567.89");
-@@ -441,7 +444,7 @@ int main(int, char**)
+@@ -442,7 +445,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -621,7 +621,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"     ($1,234,567.89)");
  #else
          assert(ex == L"      -$1,234,567.89");
-@@ -464,7 +467,7 @@ int main(int, char**)
+@@ -465,7 +468,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -630,7 +630,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"(0.01)");
  #else
          assert(ex == L"-0.01");
-@@ -482,7 +485,7 @@ int main(int, char**)
+@@ -483,7 +486,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -639,7 +639,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"(1,234,567.89)");
  #else
          assert(ex == L"-1,234,567.89");
-@@ -494,7 +497,7 @@ int main(int, char**)
+@@ -495,7 +498,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -648,7 +648,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"USD0.00");
  #else
          assert(ex == L"USD 0.00");
-@@ -506,7 +509,7 @@ int main(int, char**)
+@@ -507,7 +510,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -657,7 +657,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"(USD0.01)");
  #else
          assert(ex == L"-USD 0.01");
-@@ -518,7 +521,7 @@ int main(int, char**)
+@@ -519,7 +522,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -666,7 +666,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"USD1,234,567.89");
  #else
          assert(ex == L"USD 1,234,567.89");
-@@ -530,7 +533,7 @@ int main(int, char**)
+@@ -531,7 +534,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -675,7 +675,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"(USD1,234,567.89)");
  #else
          assert(ex == L"-USD 1,234,567.89");
-@@ -544,7 +547,7 @@ int main(int, char**)
+@@ -545,7 +548,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -684,7 +684,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"(USD1,234,567.89)   ");
  #else
          assert(ex == L"-USD 1,234,567.89   ");
-@@ -559,7 +562,7 @@ int main(int, char**)
+@@ -560,7 +563,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -693,7 +693,7 @@ index 4b767fae871f..645e7aaeb812 100644
          assert(ex == L"(USD   1,234,567.89)");
  #else
          assert(ex == L"-USD    1,234,567.89");
-@@ -574,7 +577,7 @@ int main(int, char**)
+@@ -575,7 +578,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -703,12 +703,15 @@ index 4b767fae871f..645e7aaeb812 100644
  #else
          assert(ex == L"   -USD 1,234,567.89");
 diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp
-index 1c8710a008f2..c038f0dbebc0 100644
+index 9770912da9dcf54c080382e187325cd46b3eb494..fab437d239039ddfb7dd2cd1351c4ec821f16165 100644
 --- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp
-@@ -16,6 +16,9 @@
+@@ -16,8 +16,12 @@
  // Bionic has minimal locale support, investigate this later.
  // XFAIL: LIBCXX-ANDROID-FIXME
+ 
++
+ // XFAIL: FROZEN-CXX03-HEADERS-FIXME
  
 +// Cygwin's locale slightly differs from others
 +// XFAIL: LIBCXX-CYGWIN-FIXME
@@ -716,7 +719,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
  // REQUIRES: locale.en_US.UTF-8
  
  #include <locale>
-@@ -78,7 +81,7 @@ int main(int, char**)
+@@ -80,7 +84,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, '*', v);
          std::string ex(str, base(iter));
@@ -725,7 +728,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "(0.01)");
  #else
          assert(ex == "-0.01");
-@@ -96,7 +99,7 @@ int main(int, char**)
+@@ -98,7 +102,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, '*', v);
          std::string ex(str, base(iter));
@@ -734,7 +737,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "(1,234,567.89)");
  #else
          assert(ex == "-1,234,567.89");
-@@ -116,7 +119,7 @@ int main(int, char**)
+@@ -118,7 +122,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, '*', v);
          std::string ex(str, base(iter));
@@ -743,7 +746,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "($0.01)");
  #else
          assert(ex == "-$0.01");
-@@ -136,7 +139,7 @@ int main(int, char**)
+@@ -138,7 +142,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, '*', v);
          std::string ex(str, base(iter));
@@ -752,7 +755,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "($1,234,567.89)");
  #else
          assert(ex == "-$1,234,567.89");
-@@ -150,7 +153,7 @@ int main(int, char**)
+@@ -152,7 +156,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -761,7 +764,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "($1,234,567.89)     ");
  #else
          assert(ex == "-$1,234,567.89      ");
-@@ -165,7 +168,7 @@ int main(int, char**)
+@@ -167,7 +171,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -770,7 +773,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "($     1,234,567.89)");
  #else
          assert(ex == "-$      1,234,567.89");
-@@ -180,7 +183,7 @@ int main(int, char**)
+@@ -182,7 +186,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), false, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -779,7 +782,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "     ($1,234,567.89)");
  #else
          assert(ex == "      -$1,234,567.89");
-@@ -203,7 +206,7 @@ int main(int, char**)
+@@ -205,7 +209,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -788,7 +791,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "(0.01)");
  #else
          assert(ex == "-0.01");
-@@ -221,7 +224,7 @@ int main(int, char**)
+@@ -223,7 +227,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -797,7 +800,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "(1,234,567.89)");
  #else
          assert(ex == "-1,234,567.89");
-@@ -233,7 +236,7 @@ int main(int, char**)
+@@ -235,7 +239,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -806,7 +809,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "USD0.00");
  #else
          assert(ex == "USD 0.00");
-@@ -245,7 +248,7 @@ int main(int, char**)
+@@ -247,7 +251,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -815,7 +818,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "(USD0.01)");
  #else
          assert(ex == "-USD 0.01");
-@@ -257,7 +260,7 @@ int main(int, char**)
+@@ -259,7 +263,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -824,7 +827,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "USD1,234,567.89");
  #else
          assert(ex == "USD 1,234,567.89");
-@@ -269,7 +272,7 @@ int main(int, char**)
+@@ -271,7 +275,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, '*', v);
          std::string ex(str, base(iter));
@@ -833,7 +836,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "(USD1,234,567.89)");
  #else
          assert(ex == "-USD 1,234,567.89");
-@@ -283,7 +286,7 @@ int main(int, char**)
+@@ -285,7 +289,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -842,7 +845,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "(USD1,234,567.89)   ");
  #else
          assert(ex == "-USD 1,234,567.89   ");
-@@ -298,7 +301,7 @@ int main(int, char**)
+@@ -300,7 +304,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -851,7 +854,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "(USD   1,234,567.89)");
  #else
          assert(ex == "-USD    1,234,567.89");
-@@ -313,7 +316,7 @@ int main(int, char**)
+@@ -315,7 +319,7 @@ int main(int, char**)
          char str[100];
          cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), true, ios, ' ', v);
          std::string ex(str, base(iter));
@@ -860,7 +863,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == "   (USD1,234,567.89)");
  #else
          assert(ex == "   -USD 1,234,567.89");
-@@ -339,7 +342,7 @@ int main(int, char**)
+@@ -341,7 +345,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -869,7 +872,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"(0.01)");
  #else
          assert(ex == L"-0.01");
-@@ -357,7 +360,7 @@ int main(int, char**)
+@@ -359,7 +363,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -878,7 +881,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"(1,234,567.89)");
  #else
          assert(ex == L"-1,234,567.89");
-@@ -377,7 +380,7 @@ int main(int, char**)
+@@ -379,7 +383,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -887,7 +890,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"($0.01)");
  #else
          assert(ex == L"-$0.01");
-@@ -397,7 +400,7 @@ int main(int, char**)
+@@ -399,7 +403,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -896,7 +899,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"($1,234,567.89)");
  #else
          assert(ex == L"-$1,234,567.89");
-@@ -411,7 +414,7 @@ int main(int, char**)
+@@ -413,7 +417,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -905,7 +908,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"($1,234,567.89)     ");
  #else
          assert(ex == L"-$1,234,567.89      ");
-@@ -426,7 +429,7 @@ int main(int, char**)
+@@ -428,7 +432,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -914,7 +917,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"($     1,234,567.89)");
  #else
          assert(ex == L"-$      1,234,567.89");
-@@ -441,7 +444,7 @@ int main(int, char**)
+@@ -443,7 +447,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -923,7 +926,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"     ($1,234,567.89)");
  #else
          assert(ex == L"      -$1,234,567.89");
-@@ -464,7 +467,7 @@ int main(int, char**)
+@@ -466,7 +470,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -932,7 +935,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"(0.01)");
  #else
          assert(ex == L"-0.01");
-@@ -482,7 +485,7 @@ int main(int, char**)
+@@ -484,7 +488,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -941,7 +944,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"(1,234,567.89)");
  #else
          assert(ex == L"-1,234,567.89");
-@@ -494,7 +497,7 @@ int main(int, char**)
+@@ -496,7 +500,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -950,7 +953,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"USD0.00");
  #else
          assert(ex == L"USD 0.00");
-@@ -506,7 +509,7 @@ int main(int, char**)
+@@ -508,7 +512,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -959,7 +962,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"(USD0.01)");
  #else
          assert(ex == L"-USD 0.01");
-@@ -518,7 +521,7 @@ int main(int, char**)
+@@ -520,7 +524,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -968,7 +971,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"USD1,234,567.89");
  #else
          assert(ex == L"USD 1,234,567.89");
-@@ -530,7 +533,7 @@ int main(int, char**)
+@@ -532,7 +536,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
          std::wstring ex(str, base(iter));
@@ -977,7 +980,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"(USD1,234,567.89)");
  #else
          assert(ex == L"-USD 1,234,567.89");
-@@ -544,7 +547,7 @@ int main(int, char**)
+@@ -546,7 +550,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -986,7 +989,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"(USD1,234,567.89)   ");
  #else
          assert(ex == L"-USD 1,234,567.89   ");
-@@ -559,7 +562,7 @@ int main(int, char**)
+@@ -561,7 +565,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -995,7 +998,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
          assert(ex == L"(USD   1,234,567.89)");
  #else
          assert(ex == L"-USD    1,234,567.89");
-@@ -574,7 +577,7 @@ int main(int, char**)
+@@ -576,7 +580,7 @@ int main(int, char**)
          wchar_t str[100];
          cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, ' ', v);
          std::wstring ex(str, base(iter));
@@ -1005,7 +1008,7 @@ index 1c8710a008f2..c038f0dbebc0 100644
  #else
          assert(ex == L"   -USD 1,234,567.89");
 diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp
-index e7f0f29e8774..e3e849feff10 100644
+index e7f0f29e87742a5c15c78f4ae627eed1fe7a5030..e3e849feff102f6b77a37c935f3488a1662f5f4a 100644
 --- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp
 @@ -9,6 +9,9 @@
@@ -1055,7 +1058,7 @@ index e7f0f29e8774..e3e849feff10 100644
  #else
          assert(f.curr_symbol() == L"\uFFE5");
 diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp
-index e9528147dfe6..8e4928cb8f3c 100644
+index e9528147dfe62a63fd4ea97fd03a27e1ab372393..8e4928cb8f3cb80b06e21e737e6761e3f8ce169d 100644
 --- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp
 @@ -193,7 +193,7 @@ int main(int, char**)
@@ -1077,7 +1080,7 @@ index e9528147dfe6..8e4928cb8f3c 100644
  #else
          assert_sign_symbol_none_value(p);
 diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/negative_sign.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/negative_sign.pass.cpp
-index be2f5585d069..6c19bca92b10 100644
+index be2f5585d06977d40ae295e2bb8d75d29fb4af0e..6c19bca92b10e63180340dafc833572a22b12570 100644
 --- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/negative_sign.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/negative_sign.pass.cpp
 @@ -81,7 +81,7 @@ int main(int, char**)
@@ -1117,7 +1120,7 @@ index be2f5585d069..6c19bca92b10 100644
  #else
          assert(f.negative_sign() == L"-");
 diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp
-index 11832a7d8927..530c98ff111a 100644
+index 11832a7d89278818edf35181697a7f92473f230c..530c98ff111a98551bae03a890116ec425cee30a 100644
 --- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp
 @@ -193,7 +193,7 @@ int main(int, char**)
@@ -1139,7 +1142,7 @@ index 11832a7d8927..530c98ff111a 100644
  #else
          assert_sign_symbol_none_value(p);
 diff --git a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date.pass.cpp b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date.pass.cpp
-index 3f53490c1bae..c0052c9f8b98 100644
+index 3f53490c1baeed987cac4fcf1ff8e098951dd799..c0052c9f8b987c34ceb4db7bb48262c1ef642c0d 100644
 --- a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date.pass.cpp
 @@ -62,7 +62,7 @@ int main(int, char**)
@@ -1152,7 +1155,7 @@ index 3f53490c1bae..c0052c9f8b98 100644
  #else
          const char in[] = "10.06.2009";
 diff --git a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date_wide.pass.cpp b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date_wide.pass.cpp
-index 3e20193d4af0..90ec80239e49 100644
+index 3e20193d4af08862364dd334d8e9dc182bf38ef7..90ec80239e4976d3a21e01f11c85695696c59b88 100644
 --- a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date_wide.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date_wide.pass.cpp
 @@ -62,7 +62,7 @@ int main(int, char**)
@@ -1165,7 +1168,7 @@ index 3e20193d4af0..90ec80239e49 100644
  #else
          const wchar_t in[] = L"10.06.2009";
 diff --git a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one.pass.cpp b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one.pass.cpp
-index 513f92bc3faf..45164e4b7cd7 100644
+index 513f92bc3fafd8c0d6797ac9f498d7019436d059..45164e4b7cd72de9c48e651e227f6e4cc0eddbb6 100644
 --- a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one.pass.cpp
 @@ -11,6 +11,9 @@
@@ -1268,7 +1271,7 @@ index 513f92bc3faf..45164e4b7cd7 100644
  #elif defined(_AIX)
          const char in[] = "\xE4\xB8\x8B\xE5\x8D\x88" "11:55:59";
 diff --git a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one_wide.pass.cpp b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one_wide.pass.cpp
-index f3a09fe51373..0ce587fb0989 100644
+index f3a09fe51373113f46e7618037792a14f46a7d1c..0ce587fb0989ff891e1ae11b54b376054da5d8b4 100644
 --- a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one_wide.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one_wide.pass.cpp
 @@ -11,6 +11,9 @@
@@ -1335,7 +1338,7 @@ index f3a09fe51373..0ce587fb0989 100644
  #elif defined(_AIX)
          const wchar_t in[] = L"\x4E0B\x5348" L"11:55:59";
 diff --git a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp
-index 11ec75469c70..d2fe407393cf 100644
+index 11ec75469c70467c04c3d766849e87a630a7f30e..d2fe407393cf46941a246568dd90044f7ef6df52 100644
 --- a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp
 @@ -60,7 +60,7 @@ int main(int, char**)
@@ -1348,7 +1351,7 @@ index 11ec75469c70..d2fe407393cf 100644
  #else
          const char* const group = "\x7f";
 diff --git a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp
-index 53f2c8554f3d..90def3ffba5d 100644
+index 53f2c8554f3d7b2f60ba83412ff55040418a12b6..90def3ffba5d73d8dd1b6c9d503dc706a64829f8 100644
 --- a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp
 @@ -66,8 +66,8 @@ int main(int, char**)
@@ -1363,7 +1366,7 @@ index 53f2c8554f3d..90def3ffba5d 100644
              const char sep = ',';
  #endif
 diff --git a/libcxx/test/std/strings/string.conversions/stod.pass.cpp b/libcxx/test/std/strings/string.conversions/stod.pass.cpp
-index bbe992fbc565..cba2c0f1fbbd 100644
+index bbe992fbc565e71436f40c26e532496d569763ea..cba2c0f1fbbd92eb0bcd456b1072b0a10f03029d 100644
 --- a/libcxx/test/std/strings/string.conversions/stod.pass.cpp
 +++ b/libcxx/test/std/strings/string.conversions/stod.pass.cpp
 @@ -136,7 +136,10 @@ int main(int, char**) {
@@ -1378,7 +1381,7 @@ index bbe992fbc565..cba2c0f1fbbd 100644
          assert(idx == 0);
        }
 diff --git a/libcxx/test/std/strings/string.conversions/stof.pass.cpp b/libcxx/test/std/strings/string.conversions/stof.pass.cpp
-index 4ddeb8f95ede..cbb241d7bbfe 100644
+index 4ddeb8f95ede03813cbdd93444f68dce272687f5..cbb241d7bbfed0f801f7b5f71a7858a619dbafde 100644
 --- a/libcxx/test/std/strings/string.conversions/stof.pass.cpp
 +++ b/libcxx/test/std/strings/string.conversions/stof.pass.cpp
 @@ -138,7 +138,10 @@ int main(int, char**) {
@@ -1393,7 +1396,7 @@ index 4ddeb8f95ede..cbb241d7bbfe 100644
        assert(idx == 0);
      }
 diff --git a/libcxx/test/std/strings/string.conversions/stold.pass.cpp b/libcxx/test/std/strings/string.conversions/stold.pass.cpp
-index ef756982ee9a..6da72c9f6059 100644
+index ef756982ee9a03657cde0f12380af50b1ca5bf45..6da72c9f60595a4ab5a420f71913d85b1e786b95 100644
 --- a/libcxx/test/std/strings/string.conversions/stold.pass.cpp
 +++ b/libcxx/test/std/strings/string.conversions/stold.pass.cpp
 @@ -122,7 +122,10 @@ int main(int, char**) {
@@ -1408,7 +1411,7 @@ index ef756982ee9a..6da72c9f6059 100644
        assert(idx == 0);
      }
 diff --git a/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.functions.tests.h b/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.functions.tests.h
-index f55f0e2af8cb..4be955745083 100644
+index f55f0e2af8cb2c516e121ee2c4f3f19697128380..4be9557450835b77e5b294a84891ed08d5fa5395 100644
 --- a/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.functions.tests.h
 +++ b/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.functions.tests.h
 @@ -22,7 +22,7 @@ void format_tests(TestFunction check, ExceptionTest check_exception) {
@@ -1421,7 +1424,7 @@ index f55f0e2af8cb..4be955745083 100644
    check(SV("0^42"), SV("{}^42"), input);
    check(SV("0^42"), SV("{:}^42"), input);
 diff --git a/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.pass.cpp b/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.pass.cpp
-index 39a257592809..46161b545c16 100644
+index 39a257592809d4f467bff97cb5186f3d452c9ce4..46161b545c16d4ef76689f7f709d4bb16ea09949 100644
 --- a/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.pass.cpp
 +++ b/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.pass.cpp
 @@ -52,7 +52,7 @@ void test_format(StringViewT expected, std::thread::id arg) {
@@ -1434,7 +1437,7 @@ index 39a257592809..46161b545c16 100644
  #else
    test_format(SV("0x0"), std::thread::id());
 diff --git a/libcxx/test/std/time/time.cal/time.cal.md/time.cal.md.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.md/time.cal.md.nonmembers/ostream.pass.cpp
-index 681d97ee2695..129a017185b2 100644
+index 681d97ee2695a78d0da6b2e96569f509f2c93e3a..129a017185b224210578d275b7f3fe7da6bf7408 100644
 --- a/libcxx/test/std/time/time.cal/time.cal.md/time.cal.md.nonmembers/ostream.pass.cpp
 +++ b/libcxx/test/std/time/time.cal/time.cal.md/time.cal.md.nonmembers/ostream.pass.cpp
 @@ -13,6 +13,9 @@
@@ -1457,7 +1460,7 @@ index 681d97ee2695..129a017185b2 100644
               SV("1/255 is not a valid day"));
    TEST_EQUAL(stream_ja_JP_locale<CharT>(std::chrono::month_day{std::chrono::month{1}, 31d}), SV("1/31"));
 diff --git a/libcxx/test/std/time/time.cal/time.cal.mdlast/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.mdlast/ostream.pass.cpp
-index a4c9b1f79ee8..d35dba393ef2 100644
+index a4c9b1f79ee809f6a1060116ce39224109c0cc71..d35dba393ef2344d8714a211d5dc604c9d8117a0 100644
 --- a/libcxx/test/std/time/time.cal/time.cal.mdlast/ostream.pass.cpp
 +++ b/libcxx/test/std/time/time.cal/time.cal.mdlast/ostream.pass.cpp
 @@ -13,6 +13,9 @@
@@ -1507,7 +1510,7 @@ index a4c9b1f79ee8..d35dba393ef2 100644
               SV("13 is not a valid month/last"));
    TEST_EQUAL(stream_ja_JP_locale<CharT>(std::chrono::month_day_last{std::chrono::month{255}}),
 diff --git a/libcxx/test/std/time/time.cal/time.cal.month/time.cal.month.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.month/time.cal.month.nonmembers/ostream.pass.cpp
-index 8c94dad8d6df..9e50895e7b20 100644
+index 8c94dad8d6dff58aeef59f0cd3b4c68c7cf9e65b..9e50895e7b201f759fbccbc96ea9d1e1d55d38c9 100644
 --- a/libcxx/test/std/time/time.cal/time.cal.month/time.cal.month.nonmembers/ostream.pass.cpp
 +++ b/libcxx/test/std/time/time.cal/time.cal.month/time.cal.month.nonmembers/ostream.pass.cpp
 @@ -13,6 +13,9 @@
@@ -1557,7 +1560,7 @@ index 8c94dad8d6df..9e50895e7b20 100644
    TEST_EQUAL(stream_ja_JP_locale<CharT>(std::chrono::month{255}), SV("255 is not a valid month"));
  }
 diff --git a/libcxx/test/std/time/time.cal/time.cal.mwd/time.cal.mwd.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.mwd/time.cal.mwd.nonmembers/ostream.pass.cpp
-index 5559d377ffd1..5c2a4b03c723 100644
+index 5559d377ffd13ed9f6af0607ad75814feecf69e2..5c2a4b03c7232e9fa165e8353b5e6556a896ee58 100644
 --- a/libcxx/test/std/time/time.cal/time.cal.mwd/time.cal.mwd.nonmembers/ostream.pass.cpp
 +++ b/libcxx/test/std/time/time.cal/time.cal.mwd/time.cal.mwd.nonmembers/ostream.pass.cpp
 @@ -13,6 +13,9 @@
@@ -1607,7 +1610,7 @@ index 5559d377ffd1..5c2a4b03c723 100644
                   std::chrono::month{13}, std::chrono::weekday_indexed{std::chrono::weekday{0}, 1}}),
               SV("13 is not a valid month/日[1]"));
 diff --git a/libcxx/test/std/time/time.cal/time.cal.mwdlast/time.cal.mwdlast.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.mwdlast/time.cal.mwdlast.nonmembers/ostream.pass.cpp
-index 4834f2052448..71a0d1cfc3d8 100644
+index 4834f20524481a15a743e298bfa0a48e16310677..71a0d1cfc3d89716ccf58863b0c276df263a1c23 100644
 --- a/libcxx/test/std/time/time.cal/time.cal.mwdlast/time.cal.mwdlast.nonmembers/ostream.pass.cpp
 +++ b/libcxx/test/std/time/time.cal/time.cal.mwdlast/time.cal.mwdlast.nonmembers/ostream.pass.cpp
 @@ -13,6 +13,9 @@
@@ -1667,7 +1670,7 @@ index 4834f2052448..71a0d1cfc3d8 100644
                   std::chrono::month{13}, std::chrono::weekday_last{std::chrono::weekday{0}}}),
               SV("13 is not a valid month/日[last]"));
 diff --git a/libcxx/test/std/time/time.cal/time.cal.ym/time.cal.ym.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.ym/time.cal.ym.nonmembers/ostream.pass.cpp
-index b7dd71173cdb..dd5d6827d6bb 100644
+index b7dd71173cdbbb9e61ab8cdf1e61bb147e339ae7..dd5d6827d6bbaf6c7b516f75c51a04c72504e047 100644
 --- a/libcxx/test/std/time/time.cal/time.cal.ym/time.cal.ym.nonmembers/ostream.pass.cpp
 +++ b/libcxx/test/std/time/time.cal/time.cal.ym/time.cal.ym.nonmembers/ostream.pass.cpp
 @@ -13,6 +13,9 @@
@@ -1725,7 +1728,7 @@ index b7dd71173cdb..dd5d6827d6bb 100644
               SV("0000/13 is not a valid month"));
    TEST_EQUAL(stream_ja_JP_locale<CharT>(std::chrono::year_month{std::chrono::year{-32'768}, std::chrono::month{255}}),
 diff --git a/libcxx/test/std/time/time.cal/time.cal.ymdlast/time.cal.ymdlast.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.ymdlast/time.cal.ymdlast.nonmembers/ostream.pass.cpp
-index 2056b2a2416f..fab49553d6d2 100644
+index 2056b2a2416f9c68398f900d1b5d1fc9a922237f..fab49553d6d2994448e600c1db9ae36c8f0b7295 100644
 --- a/libcxx/test/std/time/time.cal/time.cal.ymdlast/time.cal.ymdlast.nonmembers/ostream.pass.cpp
 +++ b/libcxx/test/std/time/time.cal/time.cal.ymdlast/time.cal.ymdlast.nonmembers/ostream.pass.cpp
 @@ -13,6 +13,9 @@
@@ -1785,7 +1788,7 @@ index 2056b2a2416f..fab49553d6d2 100644
                   std::chrono::year{0}, std::chrono::month_day_last{std::chrono::month{13}}}),
               SV("0000/13 is not a valid month/last"));
 diff --git a/libcxx/test/std/time/time.cal/time.cal.ymwd/time.cal.ymwd.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.ymwd/time.cal.ymwd.nonmembers/ostream.pass.cpp
-index d8bab676ab94..3ba775e412d7 100644
+index d8bab676ab9480505cdb4e3520f91a8f30fd94b3..3ba775e412d7c2835d64ce4d22cf554a159e54c9 100644
 --- a/libcxx/test/std/time/time.cal/time.cal.ymwd/time.cal.ymwd.nonmembers/ostream.pass.cpp
 +++ b/libcxx/test/std/time/time.cal/time.cal.ymwd/time.cal.ymwd.nonmembers/ostream.pass.cpp
 @@ -13,6 +13,9 @@
@@ -1808,7 +1811,7 @@ index d8bab676ab94..3ba775e412d7 100644
        stream_ja_JP_locale<CharT>(std::chrono::year_month_weekday{
            std::chrono::year{-32'768}, std::chrono::month{1}, std::chrono::weekday_indexed{std::chrono::weekday(0), 1}}),
 diff --git a/libcxx/test/std/time/time.cal/time.cal.ymwdlast/time.cal.ymwdlast.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.ymwdlast/time.cal.ymwdlast.nonmembers/ostream.pass.cpp
-index 77161da6c407..39cbcd46e61f 100644
+index 77161da6c407dbe19bc194582876e69dba7bed82..39cbcd46e61f9e3be4d0810a9e1e6e527a7b29d5 100644
 --- a/libcxx/test/std/time/time.cal/time.cal.ymwdlast/time.cal.ymwdlast.nonmembers/ostream.pass.cpp
 +++ b/libcxx/test/std/time/time.cal/time.cal.ymwdlast/time.cal.ymwdlast.nonmembers/ostream.pass.cpp
 @@ -13,6 +13,9 @@
@@ -1831,7 +1834,7 @@ index 77161da6c407..39cbcd46e61f 100644
        stream_ja_JP_locale<CharT>(std::chrono::year_month_weekday_last{
            std::chrono::year{-32'768}, std::chrono::month{1}, std::chrono::weekday_last{std::chrono::weekday{0}}}),
 diff --git a/libcxx/test/std/time/time.syn/formatter.day.pass.cpp b/libcxx/test/std/time/time.syn/formatter.day.pass.cpp
-index 02dc215d35c5..6285ffb6b0c5 100644
+index 02dc215d35c5325bf78c5e8966befaca8714e215..6285ffb6b0c562127d0045a0652215bb9871cdfe 100644
 --- a/libcxx/test/std/time/time.syn/formatter.day.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.day.pass.cpp
 @@ -16,6 +16,9 @@
@@ -1912,7 +1915,7 @@ index 02dc215d35c5..6285ffb6b0c5 100644
    std::locale::global(std::locale::classic());
  }
 diff --git a/libcxx/test/std/time/time.syn/formatter.duration.pass.cpp b/libcxx/test/std/time/time.syn/formatter.duration.pass.cpp
-index f1f7debed246..f09916119e67 100644
+index f1f7debed24646f251faef6aab4c8f711e1f68b4..f09916119e67fcc32a27ef8ab67149368279894c 100644
 --- a/libcxx/test/std/time/time.syn/formatter.duration.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.duration.pass.cpp
 @@ -12,6 +12,9 @@
@@ -2122,7 +2125,7 @@ index f1f7debed246..f09916119e67 100644
    check(loc, SV("01:05:06.000000001"), SV("{:L%T}"), 1h + 5min + 6s + 1ns);
    check(loc, SV("01:05:06.000000501"), SV("{:L%T}"), 1h + 5min + 6s + 501ns);
 diff --git a/libcxx/test/std/time/time.syn/formatter.file_time.pass.cpp b/libcxx/test/std/time/time.syn/formatter.file_time.pass.cpp
-index e258c4161eda..33e42485f9e2 100644
+index e258c4161eda4103437cdc7572245fbad96b9407..33e42485f9e20f8cdc9c4eea628b7ce5dc615558 100644
 --- a/libcxx/test/std/time/time.syn/formatter.file_time.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.file_time.pass.cpp
 @@ -13,6 +13,9 @@
@@ -2449,7 +2452,7 @@ index e258c4161eda..33e42485f9e2 100644
          SV("%c='1970/01/01 0:00:00'\t%Ec='1970/01/01 0:00:00'\n"),
          lfmt,
 diff --git a/libcxx/test/std/time/time.syn/formatter.hh_mm_ss.pass.cpp b/libcxx/test/std/time/time.syn/formatter.hh_mm_ss.pass.cpp
-index bbd9c074bef2..0d296510e2d9 100644
+index bbd9c074bef24cfe07036179d1cfe7d902cc3d3e..0d296510e2d98e978f18ee5bef4732b071b586e9 100644
 --- a/libcxx/test/std/time/time.syn/formatter.hh_mm_ss.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.hh_mm_ss.pass.cpp
 @@ -12,6 +12,9 @@
@@ -2562,7 +2565,7 @@ index bbd9c074bef2..0d296510e2d9 100644
    std::locale::global(std::locale::classic());
  }
 diff --git a/libcxx/test/std/time/time.syn/formatter.local_time.pass.cpp b/libcxx/test/std/time/time.syn/formatter.local_time.pass.cpp
-index ce3af8ec199a..6bc3c6b578c6 100644
+index ce3af8ec199ae1518ea7cbcd07432d0a3e4f10ee..6bc3c6b578c6ce228d8853bde677bd668c569ec1 100644
 --- a/libcxx/test/std/time/time.syn/formatter.local_time.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.local_time.pass.cpp
 @@ -13,6 +13,9 @@
@@ -2882,7 +2885,7 @@ index ce3af8ec199a..6bc3c6b578c6 100644
          SV("%c='1970/01/01 0:00:00'\t%Ec='1970/01/01 0:00:00'\n"),
          lfmt,
 diff --git a/libcxx/test/std/time/time.syn/formatter.month.pass.cpp b/libcxx/test/std/time/time.syn/formatter.month.pass.cpp
-index 09c0fadbe0ea..b218f11fd9b6 100644
+index 09c0fadbe0ea4dbe054e21404e4417a65e6e5aff..b218f11fd9b6f9c086c00304370efb202665aa9b 100644
 --- a/libcxx/test/std/time/time.syn/formatter.month.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.month.pass.cpp
 @@ -13,6 +13,9 @@
@@ -2959,7 +2962,7 @@ index 09c0fadbe0ea..b218f11fd9b6 100644
    std::locale::global(std::locale::classic());
  }
 diff --git a/libcxx/test/std/time/time.syn/formatter.month_day.pass.cpp b/libcxx/test/std/time/time.syn/formatter.month_day.pass.cpp
-index 63ead5c152d5..2a4788a8ceea 100644
+index 63ead5c152d5d63ac0380deb5ea53f03eb39c2a0..2a4788a8ceea00b0e2ce45ca4d01467c05a7881f 100644
 --- a/libcxx/test/std/time/time.syn/formatter.month_day.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.month_day.pass.cpp
 @@ -16,6 +16,9 @@
@@ -3110,7 +3113,7 @@ index 63ead5c152d5..2a4788a8ceea 100644
    std::locale::global(std::locale::classic());
  }
 diff --git a/libcxx/test/std/time/time.syn/formatter.month_day_last.pass.cpp b/libcxx/test/std/time/time.syn/formatter.month_day_last.pass.cpp
-index 6f9bfd834ff6..23a766f5150b 100644
+index 6f9bfd834ff647b63c99aca5799a74b7614d212c..23a766f5150b7995cf7ebc0a560a00810c655b37 100644
 --- a/libcxx/test/std/time/time.syn/formatter.month_day_last.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.month_day_last.pass.cpp
 @@ -13,6 +13,9 @@
@@ -3193,7 +3196,7 @@ index 6f9bfd834ff6..23a766f5150b 100644
    std::locale::global(std::locale::classic());
  }
 diff --git a/libcxx/test/std/time/time.syn/formatter.month_weekday.pass.cpp b/libcxx/test/std/time/time.syn/formatter.month_weekday.pass.cpp
-index 3d3430f653ff..5fb9872a01b5 100644
+index 3d3430f653ff01a94d07eafbe9fbe9438f3dd38d..5fb9872a01b5acd336225bed057881900f663fcc 100644
 --- a/libcxx/test/std/time/time.syn/formatter.month_weekday.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.month_weekday.pass.cpp
 @@ -13,6 +13,9 @@
@@ -3303,7 +3306,7 @@ index 3d3430f653ff..5fb9872a01b5 100644
    std::locale::global(std::locale::classic());
  }
 diff --git a/libcxx/test/std/time/time.syn/formatter.sys_time.pass.cpp b/libcxx/test/std/time/time.syn/formatter.sys_time.pass.cpp
-index 9238f3daf1f8..0dd413e541b8 100644
+index 9238f3daf1f81b0256e59b93898c74194e826af3..0dd413e541b86eea4e873d3c6d22861acb71844a 100644
 --- a/libcxx/test/std/time/time.syn/formatter.sys_time.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.sys_time.pass.cpp
 @@ -13,6 +13,9 @@
@@ -3623,7 +3626,7 @@ index 9238f3daf1f8..0dd413e541b8 100644
          SV("%c='1970/01/01 0:00:00'\t%Ec='1970/01/01 0:00:00'\n"),
          lfmt,
 diff --git a/libcxx/test/std/time/time.syn/formatter.weekday.pass.cpp b/libcxx/test/std/time/time.syn/formatter.weekday.pass.cpp
-index 4f232ee481a2..26524a6e82bd 100644
+index 4f232ee481a25a43ddd299b949496c0294533cee..26524a6e82bdbd230e15f26a5ac22c75ec59c084 100644
 --- a/libcxx/test/std/time/time.syn/formatter.weekday.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.weekday.pass.cpp
 @@ -16,6 +16,9 @@
@@ -3655,7 +3658,7 @@ index 4f232ee481a2..26524a6e82bd 100644
    check(SV("%u=''\t%Ou=''\t%w=''\t%Ow=''\n"), fmt, std::chrono::weekday(8));
    check(SV("%u=''\t%Ou=''\t%w=''\t%Ow=''\n"), fmt, std::chrono::weekday(255));
 diff --git a/libcxx/test/std/time/time.syn/formatter.weekday_index.pass.cpp b/libcxx/test/std/time/time.syn/formatter.weekday_index.pass.cpp
-index 3ebc2671be3f..3062fd5df764 100644
+index 3ebc2671be3f92e2345b64d8047a2735def54bc2..3062fd5df764c7d0f2773bdfec15334b25b398fd 100644
 --- a/libcxx/test/std/time/time.syn/formatter.weekday_index.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.weekday_index.pass.cpp
 @@ -16,6 +16,9 @@
@@ -3705,7 +3708,7 @@ index 3ebc2671be3f..3062fd5df764 100644
      check(SV("%u=''\t%Ou=''\t%w=''\t%Ow=''\n"), fmt, std::chrono::weekday_indexed{std::chrono::weekday(8), 0});
      check(SV("%u=''\t%Ou=''\t%w=''\t%Ow=''\n"), fmt, std::chrono::weekday_indexed{std::chrono::weekday(8), 1});
 diff --git a/libcxx/test/std/time/time.syn/formatter.weekday_last.pass.cpp b/libcxx/test/std/time/time.syn/formatter.weekday_last.pass.cpp
-index c8f68aa925aa..e95a4419032d 100644
+index c8f68aa925aa82e8bd974c7122c4bff2319d52d0..e95a4419032d7a5d02017b57ea996123fd45c2c7 100644
 --- a/libcxx/test/std/time/time.syn/formatter.weekday_last.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.weekday_last.pass.cpp
 @@ -16,6 +16,9 @@
@@ -3755,7 +3758,7 @@ index c8f68aa925aa..e95a4419032d 100644
    check(SV("%u=''\t%Ou=''\t%w=''\t%Ow=''\n"), fmt, std::chrono::weekday_last{std::chrono::weekday(8)});
    check(SV("%u=''\t%Ou=''\t%w=''\t%Ow=''\n"), fmt, std::chrono::weekday_last{std::chrono::weekday(255)});
 diff --git a/libcxx/test/std/time/time.syn/formatter.year.pass.cpp b/libcxx/test/std/time/time.syn/formatter.year.pass.cpp
-index e1a7d788f9db..8b442618673c 100644
+index e1a7d788f9db11c46668a377dac96c396caec8af..8b442618673c346e5f91bb0346dbfa9c85272bab 100644
 --- a/libcxx/test/std/time/time.syn/formatter.year.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.year.pass.cpp
 @@ -13,6 +13,9 @@
@@ -3836,7 +3839,7 @@ index e1a7d788f9db..8b442618673c 100644
    std::locale::global(std::locale::classic());
  }
 diff --git a/libcxx/test/std/time/time.syn/formatter.year_month.pass.cpp b/libcxx/test/std/time/time.syn/formatter.year_month.pass.cpp
-index 96b654d828b4..ab094733aa9c 100644
+index 96b654d828b48bf3a1a249d7b9b53402249623dd..ab094733aa9c9baf7fffc8eabbe17473a869279c 100644
 --- a/libcxx/test/std/time/time.syn/formatter.year_month.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.year_month.pass.cpp
 @@ -13,6 +13,9 @@
@@ -3956,7 +3959,7 @@ index 96b654d828b4..ab094733aa9c 100644
          lfmt,
          std::chrono::year_month{std::chrono::year{2004}, std::chrono::May});
 diff --git a/libcxx/test/std/time/time.syn/formatter.year_month_day.pass.cpp b/libcxx/test/std/time/time.syn/formatter.year_month_day.pass.cpp
-index 95e1795b573b..1834a5870eed 100644
+index 95e1795b573b621b84f18ea02ec6fed2de57285b..1834a5870eedbc8a8ac563e2678f923d7bce5c48 100644
 --- a/libcxx/test/std/time/time.syn/formatter.year_month_day.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.year_month_day.pass.cpp
 @@ -16,6 +16,9 @@
@@ -4181,7 +4184,7 @@ index 95e1795b573b..1834a5870eed 100644
        lfmt,
        std::chrono::year_month_day{std::chrono::year{2004}, std::chrono::May, std::chrono::day{29}});
 diff --git a/libcxx/test/std/time/time.syn/formatter.year_month_day_last.pass.cpp b/libcxx/test/std/time/time.syn/formatter.year_month_day_last.pass.cpp
-index e31ed5271cd2..6ad7b57d1c67 100644
+index e31ed5271cd26ced8c62714222c41fb2c8cbb191..6ad7b57d1c67326dd144c5c5789911d808b693ea 100644
 --- a/libcxx/test/std/time/time.syn/formatter.year_month_day_last.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.year_month_day_last.pass.cpp
 @@ -13,6 +13,9 @@
@@ -4338,7 +4341,7 @@ index e31ed5271cd2..6ad7b57d1c67 100644
        lfmt,
        std::chrono::year_month_day_last{std::chrono::year{2004}, std::chrono::month_day_last{std::chrono::May}});
 diff --git a/libcxx/test/std/time/time.syn/formatter.year_month_weekday.pass.cpp b/libcxx/test/std/time/time.syn/formatter.year_month_weekday.pass.cpp
-index 38a9538bbd76..dfac59d301f6 100644
+index 38a9538bbd76a90ae5fdda240274781980d1e6da..dfac59d301f6db9e8ae271e49bf443537822e4d2 100644
 --- a/libcxx/test/std/time/time.syn/formatter.year_month_weekday.pass.cpp
 +++ b/libcxx/test/std/time/time.syn/formatter.year_month_weekday.pass.cpp
 @@ -13,6 +13,9 @@
@@ -4480,7 +4483,7 @@ index 38a9538bbd76..dfac59d301f6 100644
        lfmt,
        std::chrono::year_month_weekday{
 diff --git a/libcxx/test/support/locale_helpers.h b/libcxx/test/support/locale_helpers.h
-index 3cec7397e3d7..32190076e4d2 100644
+index 3cec7397e3d7e547becaddbf834ea346788567c9..32190076e4d2685a1425569e948d8925794ffa40 100644
 --- a/libcxx/test/support/locale_helpers.h
 +++ b/libcxx/test/support/locale_helpers.h
 @@ -42,7 +42,7 @@ std::wstring convert_thousands_sep(std::wstring const& in, wchar_t sep) {
@@ -4520,7 +4523,7 @@ index 3cec7397e3d7..32190076e4d2 100644
  #elif defined(__APPLE__)
    if (__builtin_available(macOS 15.4, *)) {
 diff --git a/libcxx/test/support/platform_support.h b/libcxx/test/support/platform_support.h
-index 99e60f60c599..405dfb1755c4 100644
+index 99e60f60c5998f63eebaf5a681711d7543e78020..405dfb1755c4a964e1c3cd595394db6db8db2808 100644
 --- a/libcxx/test/support/platform_support.h
 +++ b/libcxx/test/support/platform_support.h
 @@ -25,6 +25,9 @@
@@ -4545,7 +4548,7 @@ index 99e60f60c599..405dfb1755c4 100644
  #include <stdlib.h>
  #include <string>
 diff --git a/libcxx/utils/libcxx/test/features.py b/libcxx/utils/libcxx/test/features.py
-index 34344eebb6a0..bf794ad07546 100644
+index 34344eebb6a0c9ebf1d37f4c79b815f0051a4271..bf794ad075469fd78d196faa8b5b288898957802 100644
 --- a/libcxx/utils/libcxx/test/features.py
 +++ b/libcxx/utils/libcxx/test/features.py
 @@ -218,6 +218,10 @@ DEFAULT_FEATURES = [
@@ -4560,5 +4563,5 @@ index 34344eebb6a0..bf794ad07546 100644
      # https://developercommunity.visualstudio.com/t/utf-8-locales-break-ctype-functions-for-wchar-type/1653678
      Feature(
 -- 
-2.51.2
+2.51.0
 

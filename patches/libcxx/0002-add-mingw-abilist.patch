@@ -1,4 +1,4 @@
-From f57c9f5151317f9fa962d703533b69b7c0995e92 Mon Sep 17 00:00:00 2001
+From 1fe1c3aa9a46e6e176a4ba74c1bae002c2e9aca3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 12:52:48 +0900
 Subject: [PATCH 02/18] add mingw abilist
@@ -10,7 +10,7 @@ Subject: [PATCH 02/18] add mingw abilist
 
 diff --git a/libcxx/lib/abi/x86_64-w64-windows-gnu.libcxxabi.v1.stable.exceptions.nonew.abilist b/libcxx/lib/abi/x86_64-w64-windows-gnu.libcxxabi.v1.stable.exceptions.nonew.abilist
 new file mode 100644
-index 000000000000..f34ce55dcb76
+index 0000000000000000000000000000000000000000..f34ce55dcb76ba94380dad9084049a668c9323ab
 --- /dev/null
 +++ b/libcxx/lib/abi/x86_64-w64-windows-gnu.libcxxabi.v1.stable.exceptions.nonew.abilist
 @@ -0,0 +1,2089 @@
@@ -2105,5 +2105,5 @@ index 000000000000..f34ce55dcb76
 +{'is_defined': True, 'name': '__cxa_vec_new3', 'type': ''}
 \ No newline at end of file
 -- 
-2.51.2
+2.51.0
 

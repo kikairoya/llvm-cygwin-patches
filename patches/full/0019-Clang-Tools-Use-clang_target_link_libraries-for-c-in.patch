@@ -1,4 +1,4 @@
-From 3d46c92b2ffbbc206c0467ccc287465cb2b1efb1 Mon Sep 17 00:00:00 2001
+From e0c90d47047e77533b851ae93e8e09f7cfce3bba Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 16 May 2025 18:24:46 +0900
 Subject: [PATCH 19/40] [Clang-Tools] Use `clang_target_link_libraries` for
@@ -84,5 +84,5 @@ index e0ff7605b68b8e3a1fe04b2cdcd1a01f7dd82b41..9571598f9987a796e1eda2417925ca46
    foreach(name libclang obj.libclang libclang_static)
      if (TARGET ${name})
 -- 
-2.51.0
+2.51.2
 

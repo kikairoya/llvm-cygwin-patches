@@ -1,4 +1,4 @@
-From efab34c9037f5d5066e1bd7951dffccfefec1cd6 Mon Sep 17 00:00:00 2001
+From 54e097b49cc5560ae3a205985f97d8aa7b3d8d31 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 09/18] [runtime][Test][Cygwin] Make test runnable for Cygwin
@@ -14,7 +14,7 @@ Subject: [PATCH 09/18] [runtime][Test][Cygwin] Make test runnable for Cygwin
  libcxx/test/configs/llvm-libc++-cygwin.cfg.in | 25 +++++++++++++++++++
  .../clang/clang_modules_include.gen.py        |  1 +
  .../test/libcxx/system_reserved_names.gen.py  |  6 ++++-
- libcxx/utils/libcxx/test/features.py          |  1 +
+ libcxx/utils/libcxx/test/features/platform.py |  1 +
  libcxxabi/CMakeLists.txt                      |  2 ++
  .../test/configs/llvm-libc++abi-cygwin.cfg.in | 25 +++++++++++++++++++
  libunwind/CMakeLists.txt                      | 10 ++++++--
@@ -197,12 +197,12 @@ index d69182d68e0de7816c295e9f0a16685a8d3c4363..2d9190f06ccfa69b3ac0093c735605a4
  static_assert(__builtin_strcmp(STRINGIFY(move), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
  static_assert(__builtin_strcmp(STRINGIFY(erase), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
  static_assert(__builtin_strcmp(STRINGIFY(refresh), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
-diff --git a/libcxx/utils/libcxx/test/features.py b/libcxx/utils/libcxx/test/features.py
-index 5da1d9afee9115bd9c3f0e75b86b99fccf852eaa..c2b30dee072fa5f0b71e611db135f669abbd4fb4 100644
---- a/libcxx/utils/libcxx/test/features.py
-+++ b/libcxx/utils/libcxx/test/features.py
-@@ -539,6 +539,7 @@ def _getLocaleFlagsAction(cfg, locale, alts, members):
- DEFAULT_FEATURES += [
+diff --git a/libcxx/utils/libcxx/test/features/platform.py b/libcxx/utils/libcxx/test/features/platform.py
+index db9d3931da7fff16631984eb63cbc592889049b6..820dd75ae21e860551d4b89086878e8c6ae6f9ff 100644
+--- a/libcxx/utils/libcxx/test/features/platform.py
++++ b/libcxx/utils/libcxx/test/features/platform.py
+@@ -29,6 +29,7 @@ def _getAndroidDeviceApi(cfg):
+ features = [
      Feature(name="darwin", when=lambda cfg: "__APPLE__" in compilerMacros(cfg)),
      Feature(name="windows", when=lambda cfg: "_WIN32" in compilerMacros(cfg)),
 +    Feature(name="cygwin", when=lambda cfg: "__CYGWIN__" in compilerMacros(cfg)),
@@ -351,5 +351,5 @@ index 0000000000000000000000000000000000000000..dc490a08ba1a63389ccdc01a036020a0
 +    lit_config
 +)
 -- 
-2.51.0
+2.51.2
 

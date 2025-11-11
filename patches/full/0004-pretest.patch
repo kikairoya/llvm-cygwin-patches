@@ -1,4 +1,4 @@
-From ed082d4a2e26bbd384695e9b978bafb42aa0db2a Mon Sep 17 00:00:00 2001
+From 30a4cdc98458d320a972394a07cf41ffd5dbdf35 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 20:44:33 +0900
 Subject: [PATCH 04/40] pretest
@@ -36,5 +36,5 @@ index de112d6da53dbca7a7e20d942d05c2e582103f2d..1e2759fbb5cc7f7ed9f62ca28b84063a
  
  extern template class __declspec(dllexport) c<char>;
 -- 
-2.51.0
+2.51.2
 

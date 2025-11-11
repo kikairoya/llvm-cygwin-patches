@@ -1,4 +1,4 @@
-From 13427d04f8c178cbfddad23e0bcc3963736b26d4 Mon Sep 17 00:00:00 2001
+From eb0f0596eb47f75a522018134393455b9102cf8d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 9 Jul 2025 21:23:51 +0900
 Subject: [PATCH 20/28] [Clang-Python][Test][Cygwin] Make check-clang-python
@@ -62,5 +62,5 @@ index 9571598f9987a796e1eda2417925ca46b58314c5..6f6e5d7b2fc8fc7abed43b0e21b51044
      set(LIBCLANG_LINK_FLAGS " -Wl,-compatibility_version -Wl,1")
      set(LIBCLANG_LINK_FLAGS "${LIBCLANG_LINK_FLAGS} -Wl,-current_version -Wl,${LLVM_VERSION_MAJOR}.${LLVM_VERSION_MINOR}.${LLVM_VERSION_PATCH}")
 -- 
-2.51.0
+2.51.2
 

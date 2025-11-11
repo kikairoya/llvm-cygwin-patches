@@ -1,4 +1,4 @@
-From dc87acf3de4b4cc80e4900a8a4640a965a77594f Mon Sep 17 00:00:00 2001
+From d7da5696064f12be01ff70a09dce66dbc7ee6e84 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 21:46:04 +0900
 Subject: [PATCH 11/28] pretest
@@ -281,5 +281,5 @@ index 15969d2415ccae048533677a9cf884233f401cbc..a0a411d09f659c5de0635eefc43496e0
 +  return oc1.u + oc1.v + ic1.u + ic1.v;
 +}
 -- 
-2.51.0
+2.51.2
 

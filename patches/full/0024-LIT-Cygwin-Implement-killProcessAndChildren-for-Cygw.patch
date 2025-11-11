@@ -1,4 +1,4 @@
-From 203f1f1f0791dcd23bc8ec22a974e2c06daee94a Mon Sep 17 00:00:00 2001
+From e0206f0f1715608be96cd8e10d7f238d822321e9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 14:11:39 +0900
 Subject: [PATCH 24/40] [LIT][Cygwin] Implement killProcessAndChildren for
@@ -65,5 +65,5 @@ index e4e031b3e0898426bf0fba842922b2d02aac35b1..683d2451f02f5ebcf0f99dc8e08065a1
          import psutil
  
 -- 
-2.51.0
+2.51.2
 

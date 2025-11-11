@@ -1,4 +1,4 @@
-From df2908eecbdfc1fb2d07cfa0e4e86f2ece98bf33 Mon Sep 17 00:00:00 2001
+From ad6c08b408ca021bdc59634af2593265593781fd Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 22:39:48 +0900
 Subject: [PATCH 15/28] update test
@@ -82,5 +82,5 @@ index ee90b6d81dc6371a7b8afdfe001c80a6dc2091c1..2c06aaed6a527f354e67fd33089b13d5
  extern template struct __declspec(dllimport) outer<char>;
  
 -- 
-2.51.0
+2.51.2
 

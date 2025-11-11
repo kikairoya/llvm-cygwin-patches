@@ -1,4 +1,4 @@
-From aee4b6ae1495d4ba3f02d043fb4fdb117f19e649 Mon Sep 17 00:00:00 2001
+From 3df028ba8486d6412f19574484db3bfc01cddc06 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 19 May 2025 20:49:59 +0900
 Subject: [PATCH 38/40] [Preprocessor][Cygwin] Unix-style path should be used
@@ -23,5 +23,5 @@ index 5efa4b5b3f872a12dc167002db6621317bdc54f3..a4c6f4db038e567c53809c0fcd8d207c
                                     llvm::sys::path::Style::windows_backslash);
      else
 -- 
-2.51.0
+2.51.2
 

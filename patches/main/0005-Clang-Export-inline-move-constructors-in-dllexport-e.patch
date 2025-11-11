@@ -1,4 +1,4 @@
-From 6358fc59512a7e22e5b6cd57ac2d2a221cb577ce Mon Sep 17 00:00:00 2001
+From 6ecd45a196372e73ee9669e0c57ba8e0a34521d0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 18:51:49 +0900
 Subject: [PATCH 05/28] [Clang] Export inline move constructors in dllexport-ed
@@ -23,5 +23,5 @@ index d41ab126c426fbfb955dbf4bc984e66b7825bb30..76fcc1688c988912a90bf36eaf8105ea
            continue;
  
 -- 
-2.51.0
+2.51.2
 

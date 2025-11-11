@@ -1,13 +1,13 @@
-From 5189570bb9482828e28b2200e7d0e5c7d6ee4996 Mon Sep 17 00:00:00 2001
+From 1767c39ba7b4454cd82ab7f81a24e651cf3565f9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 10/18] [libc++][Test][Cygwin] Diverge expected result for the
  Cygwin target (part 1/5 - test setup)
 
 ---
- libcxx/CMakeLists.txt                | 4 +++-
- libcxx/include/__config              | 2 ++
- libcxx/utils/libcxx/test/features.py | 4 ++--
+ libcxx/CMakeLists.txt                     | 4 +++-
+ libcxx/include/__config                   | 2 ++
+ libcxx/utils/libcxx/test/features/misc.py | 4 ++--
  3 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
@@ -38,11 +38,11 @@ index 36c71f039ae6480176da58cba421512c42f0d642..740e487295f5d80318324b5719b49edf
  #  else
  #    define _LIBCPP_HAS_C8RTOMB_MBRTOC8 0
  #  endif
-diff --git a/libcxx/utils/libcxx/test/features.py b/libcxx/utils/libcxx/test/features.py
-index c2b30dee072fa5f0b71e611db135f669abbd4fb4..34344eebb6a0c9ebf1d37f4c79b815f0051a4271 100644
---- a/libcxx/utils/libcxx/test/features.py
-+++ b/libcxx/utils/libcxx/test/features.py
-@@ -224,7 +224,7 @@ DEFAULT_FEATURES = [
+diff --git a/libcxx/utils/libcxx/test/features/misc.py b/libcxx/utils/libcxx/test/features/misc.py
+index 738e3d8bb207cc641e8f890cddbc4bbc7cf68c71..b079013d0d9c2b4bb9b47cf6f9261baef0c703eb 100644
+--- a/libcxx/utils/libcxx/test/features/misc.py
++++ b/libcxx/utils/libcxx/test/features/misc.py
+@@ -133,7 +133,7 @@ features = [
          name="win32-broken-utf8-wchar-ctype",
          when=lambda cfg: not "_LIBCPP_HAS_LOCALIZATION" in compilerMacros(cfg)
          or compilerMacros(cfg)["_LIBCPP_HAS_LOCALIZATION"] == "1"
@@ -51,7 +51,7 @@ index c2b30dee072fa5f0b71e611db135f669abbd4fb4..34344eebb6a0c9ebf1d37f4c79b815f0
          and not programSucceeds(
              cfg,
              """
-@@ -241,7 +241,7 @@ DEFAULT_FEATURES = [
+@@ -150,7 +150,7 @@ features = [
      # https://developercommunity.visualstudio.com/t/printf-formatting-with-g-outputs-too/1660837
      Feature(
          name="win32-broken-printf-g-precision",
@@ -61,5 +61,5 @@ index c2b30dee072fa5f0b71e611db135f669abbd4fb4..34344eebb6a0c9ebf1d37f4c79b815f0
              cfg,
              """
 -- 
-2.51.0
+2.51.2
 

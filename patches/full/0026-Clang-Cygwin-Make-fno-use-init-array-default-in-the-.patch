@@ -1,4 +1,4 @@
-From b9cc169eeeabc55d2fd36ab0ab090b9135e215f9 Mon Sep 17 00:00:00 2001
+From a68fb9975ef5331a74699380a15b15f9f111ce9d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Oct 2025 13:01:49 +0900
 Subject: [PATCH 26/40] [Clang][Cygwin] Make -fno-use-init-array default in the
@@ -58,5 +58,5 @@ index fd1b6249c6c3db05c39ce1eb94a1ca992985e139..c2947c12283a335bce104f5b0874d5fc
  // CHECK-SAME: "-isysroot" "[[SYSROOT:[^"]+]]"
  // CHECK-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/i686-pc-cygwin/10/../../../../include/c++/10"
 -- 
-2.51.0
+2.51.2
 

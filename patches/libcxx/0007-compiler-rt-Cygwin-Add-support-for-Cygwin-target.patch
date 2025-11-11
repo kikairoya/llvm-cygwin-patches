@@ -1,4 +1,4 @@
-From 9b7612f40ac5515c2185995cbd311c8d23a433b3 Mon Sep 17 00:00:00 2001
+From 97d6e85ccf4da5031a3d0a42e718b75ae93c9d4e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 07/18] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -173,5 +173,5 @@ index 633fdb966116275eca4949fdf0fb4cf15ef19ff1..4762c8e3d4a8f83d94685c554233824a
    Header.BitmapDelta = (uint32_t)Header.BitmapDelta;
  #endif
 -- 
-2.51.0
+2.51.2
 

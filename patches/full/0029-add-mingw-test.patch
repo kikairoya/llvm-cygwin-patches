@@ -1,4 +1,4 @@
-From e6919055d43814e136fc03654e6881930d35643a Mon Sep 17 00:00:00 2001
+From 0456abf9f694f86feea472d147cc5946d34fc9eb Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 13:18:31 +0900
 Subject: [PATCH 29/40] add mingw test
@@ -149,5 +149,5 @@ index a7871560c411614324edcba0e989e3a1af48fd0b..a74d84b3d2d0b9d041a207d898a46177
      ++static_variable;
      return static_variable;
 -- 
-2.51.0
+2.51.2
 

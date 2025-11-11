@@ -1,4 +1,4 @@
-From 603924b9000ef1edb6d417e77d36468f75512728 Mon Sep 17 00:00:00 2001
+From d9025424094dc813425d99d87b28df5b23381d67 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 14 Jul 2025 22:03:29 +0900
 Subject: [PATCH 09/40] update test
@@ -95,5 +95,5 @@ index adc420f37bbc6ca7877de4ae0a0d095887deecb2..b070259c2f048c61180efccfa8e45299
 +// MSC: define linkonce_odr dso_local void @"?not_to_be_imported@?$C@H@@QEAAXXZ"
 +// GNU: define linkonce_odr dso_local void @_ZN1CIiE18not_to_be_importedEv
 -- 
-2.51.0
+2.51.2
 

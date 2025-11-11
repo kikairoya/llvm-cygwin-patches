@@ -1,4 +1,4 @@
-From 6cf7bfd784d9e808dcf70864bd6c3800b8dbf4a1 Mon Sep 17 00:00:00 2001
+From a8495fb06a1b4101edf100649365377ad22e6106 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 9 Nov 2025 21:00:27 +0900
 Subject: [PATCH 28/40] always specify `.exe.a` for the suffix of import
@@ -43,5 +43,5 @@ index 7d40d309d538e42cde0585e91fcaa280321c12df..6a4dc0bec57caeaeeccc67a6d5f198ea
      # On Windows auto-exporting everything doesn't work because of the limit on
      # the size of the exported symbol table, but on other platforms we can do
 -- 
-2.51.0
+2.51.2
 

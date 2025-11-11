@@ -1,4 +1,4 @@
-From c493af9ae218fb1c0d1c6321d7a5dbad574a3d2b Mon Sep 17 00:00:00 2001
+From 676bcf672c1297c2d5e49a2a155bc6fd6ba34df9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 5 May 2025 08:28:22 +0900
 Subject: [PATCH 22/28] (Draft)[Clang-Tidy][Test][Cygwin] Make plugin tests
@@ -72,5 +72,5 @@ index 78447e7a00db872342fb46a55caf213fa01cce6b..d02ad97d15a38dbb3d0bbe9ebd76767f
  
  add_lit_testsuite(check-clang-extra "Running clang-tools-extra/test"
 -- 
-2.51.0
+2.51.2
 

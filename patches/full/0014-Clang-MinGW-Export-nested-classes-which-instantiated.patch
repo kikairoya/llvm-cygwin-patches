@@ -1,4 +1,4 @@
-From 1bbcad2789b4bcb3476cc45b3c726012fb8ff8f3 Mon Sep 17 00:00:00 2001
+From 3bf51b70ea4a8d44d7c66a36436b93577f24baa9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 22:31:20 +0900
 Subject: [PATCH 14/40] [Clang][MinGW] Export nested classes which instantiated
@@ -58,5 +58,5 @@ index ade6ba6ada237fff3dacf933f3de7705ee20c94c..976b583625ccd6c146b791820ffee7af
              TSK != TSK_ExplicitInstantiationDefinition)
            continue;
 -- 
-2.51.0
+2.51.2
 

@@ -1,4 +1,4 @@
-From 238b752bd0edf708d29f493383ea5798e4fb9991 Mon Sep 17 00:00:00 2001
+From 17c875206333407b4e879f85690ede644b0a7046 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 14 Jul 2025 22:28:04 +0900
 Subject: [PATCH 07/28] pretest
@@ -137,5 +137,5 @@ index 0000000000000000000000000000000000000000..adc420f37bbc6ca7877de4ae0a0d0958
 +// MSC: declare dllimport void @"?not_to_be_imported@?$C@H@@QEAAXXZ"
 +// GNU: declare dllimport void @_ZN1CIiE18not_to_be_importedEv
 -- 
-2.51.0
+2.51.2
 

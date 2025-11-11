@@ -1,4 +1,4 @@
-From 8fc489b52d3e18292bf2b93e484cfb8e52b9c448 Mon Sep 17 00:00:00 2001
+From cbdd36e316b03d5440a3a3e3cb284b74d69e69d1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 30 May 2025 20:20:47 +0900
 Subject: [PATCH 08/40] [Clang] Apply exclude_from_explicit_instantiation to
@@ -60,5 +60,5 @@ index d41ab126c426fbfb955dbf4bc984e66b7825bb30..f1b27d741c24f3f80f7f9ac727516e7d
      CXXMethodDecl *MD = dyn_cast<CXXMethodDecl>(Member);
  
 -- 
-2.51.0
+2.51.2
 

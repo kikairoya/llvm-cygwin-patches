@@ -1,4 +1,4 @@
-From 6334044653824b3c9066fe0247aa940fdbcacfe7 Mon Sep 17 00:00:00 2001
+From 829f42d088864d1a55df9502d1decb97a4f44350 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 06/18] [libunwind][Cygwin] Add support for Cygwin target
@@ -126,10 +126,10 @@ index 514c2fcd5bf4e7789fbe2d206b9abeaeff036bb0..555eb7213f5f5611eee287f23d2d9c11
      NOT (CXX_SUPPORTS_FNO_EXCEPTIONS_FLAG AND
           CXX_SUPPORTS_FUNWIND_TABLES_FLAG))
 diff --git a/libunwind/src/Registers.hpp b/libunwind/src/Registers.hpp
-index 5a5b57835379a059e5af38f64eb10c05aeef2327..34e4b6c5cc0cd7d7c26963d14f7fa5c620cae3d1 100644
+index 9d4c8344150f6e562e1a5a0cf0bfa74d87b2da86..c1696391ada600f6484fab14e5f510f9b86706a1 100644
 --- a/libunwind/src/Registers.hpp
 +++ b/libunwind/src/Registers.hpp
-@@ -341,12 +341,12 @@ private:
+@@ -346,12 +346,12 @@ private:
      uint64_t __cs;
      uint64_t __fs;
      uint64_t __gs;
@@ -144,7 +144,7 @@ index 5a5b57835379a059e5af38f64eb10c05aeef2327..34e4b6c5cc0cd7d7c26963d14f7fa5c6
    v128 _xmm[16];
  #endif
  };
-@@ -562,7 +562,7 @@ inline void Registers_x86_64::setFloatRegister(int, double) {
+@@ -567,7 +567,7 @@ inline void Registers_x86_64::setFloatRegister(int, double) {
  }
  
  inline bool Registers_x86_64::validVectorRegister(int regNum) const {
@@ -153,7 +153,7 @@ index 5a5b57835379a059e5af38f64eb10c05aeef2327..34e4b6c5cc0cd7d7c26963d14f7fa5c6
    if (regNum < UNW_X86_64_XMM0)
      return false;
    if (regNum > UNW_X86_64_XMM15)
-@@ -575,7 +575,7 @@ inline bool Registers_x86_64::validVectorRegister(int regNum) const {
+@@ -580,7 +580,7 @@ inline bool Registers_x86_64::validVectorRegister(int regNum) const {
  }
  
  inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
@@ -162,7 +162,7 @@ index 5a5b57835379a059e5af38f64eb10c05aeef2327..34e4b6c5cc0cd7d7c26963d14f7fa5c6
    assert(validVectorRegister(regNum));
    return _xmm[regNum - UNW_X86_64_XMM0];
  #else
-@@ -585,7 +585,7 @@ inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
+@@ -590,7 +590,7 @@ inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
  }
  
  inline void Registers_x86_64::setVectorRegister(int regNum, v128 value) {
@@ -262,7 +262,7 @@ index fd306ed8c5230f13ccbb0e6f5e2a8670d38b3a82..0b9635da697ce2ee07c7a623cf10d79f
    movdqu 192(%rdi),%xmm1
    movdqu 208(%rdi),%xmm2
 diff --git a/libunwind/src/UnwindRegistersSave.S b/libunwind/src/UnwindRegistersSave.S
-index b7ddd0a621d183c0d7470fd55ed2478b96d0a6bc..54849cc71ad4f4ad93bbba93d00b25df42a5bc62 100644
+index f988fd461def170a20b8cb2828533fb32191e84d..956c79fc509978040ec1a989f90989b64b55224a 100644
 --- a/libunwind/src/UnwindRegistersSave.S
 +++ b/libunwind/src/UnwindRegistersSave.S
 @@ -121,7 +121,7 @@ DEFINE_LIBUNWIND_FUNCTION("#__unw_getcontext")
@@ -390,5 +390,5 @@ index 004029cfe1e90b27d3672ca5403fa23f2b24c115..0bc9dfacb5364bbdbc770c2f1922fed0
  #undef NDEBUG
  #include <assert.h>
 -- 
-2.51.0
+2.51.2
 

@@ -1,4 +1,4 @@
-From bebd7a42acb91f4471dbbda830aff843fe7a2f10 Mon Sep 17 00:00:00 2001
+From 7cb47150c242c3cef5f8043985301361e340271e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:34:49 +0900
 Subject: [PATCH 17/18] [compiler-rt][Test][Cygwin] Diverge expected result for
@@ -111,5 +111,5 @@ index d0d213b07ba2dadf030bb4521468d76a8235f115..4a837812b401ace469a085a6d77bec29
  #include <stdint.h>
  #include <stdlib.h>
 -- 
-2.51.0
+2.51.2
 

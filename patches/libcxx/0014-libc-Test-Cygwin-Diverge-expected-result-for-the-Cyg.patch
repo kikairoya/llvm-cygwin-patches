@@ -1,4 +1,4 @@
-From abc7f561feb4f5778bdac6d5db982937807a1999 Mon Sep 17 00:00:00 2001
+From ceb0eb9f3e42ef91f10a36bc2fde9bb76792238c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:56:10 +0900
 Subject: [PATCH 14/18] [libc++][Test][Cygwin] Diverge expected result for the
@@ -68,7 +68,7 @@ Subject: [PATCH 14/18] [libc++][Test][Cygwin] Diverge expected result for the
  .../formatter.year_month_weekday.pass.cpp     | 39 +++++-----
  libcxx/test/support/locale_helpers.h          |  8 +-
  libcxx/test/support/platform_support.h        |  7 ++
- libcxx/utils/libcxx/test/features.py          |  4 +
+ libcxx/utils/libcxx/test/features/platform.py |  4 +
  64 files changed, 610 insertions(+), 474 deletions(-)
 
 diff --git a/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp b/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
@@ -4547,21 +4547,21 @@ index 99e60f60c5998f63eebaf5a681711d7543e78020..405dfb1755c4a964e1c3cd595394db6d
  #include <stdio.h>
  #include <stdlib.h>
  #include <string>
-diff --git a/libcxx/utils/libcxx/test/features.py b/libcxx/utils/libcxx/test/features.py
-index 34344eebb6a0c9ebf1d37f4c79b815f0051a4271..bf794ad075469fd78d196faa8b5b288898957802 100644
---- a/libcxx/utils/libcxx/test/features.py
-+++ b/libcxx/utils/libcxx/test/features.py
-@@ -218,6 +218,10 @@ DEFAULT_FEATURES = [
-           """,
-         ),
+diff --git a/libcxx/utils/libcxx/test/features/platform.py b/libcxx/utils/libcxx/test/features/platform.py
+index 820dd75ae21e860551d4b89086878e8c6ae6f9ff..6887466ff491b0fe24ad629eb4b49d31f352a753 100644
+--- a/libcxx/utils/libcxx/test/features/platform.py
++++ b/libcxx/utils/libcxx/test/features/platform.py
+@@ -110,6 +110,10 @@ features = [
+         name="LIBCXX-NVPTX-FIXME",
+         when=lambda cfg: "__NVPTX__" in compilerMacros(cfg),
      ),
 +    Feature(
 +        name="LIBCXX-CYGWIN-FIXME",
 +        when=lambda cfg: "__CYGWIN__" in compilerMacros(cfg),
 +    ),
-     # Check for a Windows UCRT bug (fixed in UCRT/Windows 10.0.20348.0):
-     # https://developercommunity.visualstudio.com/t/utf-8-locales-break-ctype-functions-for-wchar-type/1653678
-     Feature(
+ ]
+ 
+ # Add features representing the build host platform name.
 -- 
-2.51.0
+2.51.2
 

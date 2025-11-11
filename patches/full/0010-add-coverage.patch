@@ -1,4 +1,4 @@
-From b3e86a0d28d9884ffe4bd3229c08dcea803339a9 Mon Sep 17 00:00:00 2001
+From 718d202b7f0d308194223a69e6a9d9ca3cb984e4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 23:32:47 +0900
 Subject: [PATCH 10/40] add coverage
@@ -104,5 +104,5 @@ index b070259c2f048c61180efccfa8e4529970c51b4e..f84494e4b7a6102b9f342a889894eecc
 +// MSC: define linkonce_odr dso_local void @"?inner_not_to_be_imported@inner@?$C@H@@SAXXZ"
 +// GNU: define linkonce_odr dso_local void @_ZN1CIiE5inner24inner_not_to_be_importedEv
 -- 
-2.51.0
+2.51.2
 

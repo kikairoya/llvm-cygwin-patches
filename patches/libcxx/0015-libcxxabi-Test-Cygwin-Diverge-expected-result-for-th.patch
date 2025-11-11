@@ -1,4 +1,4 @@
-From e5f441975a0a8eee08491ee96ed0c08a21817671 Mon Sep 17 00:00:00 2001
+From 0fdcd1b50057abab8ec182ec096b8d1b2356d2ef Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:37:04 +0900
 Subject: [PATCH 15/18] [libcxxabi][Test][Cygwin] Diverge expected result for
@@ -23,5 +23,5 @@ index e852ab592292f44c2a18f0e4effb20a3314d8dad..f4de509fa117722458ef144e5272567a
  #include <exception>
  #include <stdlib.h>
 -- 
-2.51.0
+2.51.2
 

@@ -1,4 +1,4 @@
-From 5fe6e737138823fcc230d19b61cc9ace1f766a7a Mon Sep 17 00:00:00 2001
+From 6cd02ffcaf044597ec16aac3fecec74e40129bd9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 03/18] [libc++][Cygwin] Add support for Cygwin target
@@ -171,5 +171,5 @@ index ddd99d8aaf206fd8e87190a0205add560983f63f..27a22379c05f9da87ea895ef35c1524e
  using StatVFS = struct statvfs;
  using ModeT   = ::mode_t;
 -- 
-2.51.0
+2.51.2
 

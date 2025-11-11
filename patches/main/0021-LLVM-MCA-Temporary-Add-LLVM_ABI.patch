@@ -1,4 +1,4 @@
-From 5515aa4e8da5ebd0c67ccc3e52d02442ece67658 Mon Sep 17 00:00:00 2001
+From b83dbd660884a5f5e28b0ecf94402b2c9144c26b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 14 Jun 2025 08:14:26 +0900
 Subject: [PATCH 21/28] [LLVM][MCA](Temporary) Add LLVM_ABI
@@ -52,5 +52,5 @@ index f8b8a2d129c1cefdb342b16d5bf7a9bdb5c56768..2e39e44f41eb6d3ff1cb2942d6c595ad
  } // namespace mca
  } // namespace llvm
 -- 
-2.51.0
+2.51.2
 

@@ -1,4 +1,4 @@
-From c2c18fa42fc5f3bc358a47eaf0110472221dda94 Mon Sep 17 00:00:00 2001
+From 9d5f613f2ce082fe031c30786682e9339bf7db88 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 20:46:38 +0900
 Subject: [PATCH 06/40] update test
@@ -34,5 +34,5 @@ index 1e2759fbb5cc7f7ed9f62ca28b84063a6974df7e..15969d2415ccae048533677a9cf88423
  
  extern template class __declspec(dllexport) c<char>;
 -- 
-2.51.0
+2.51.2
 

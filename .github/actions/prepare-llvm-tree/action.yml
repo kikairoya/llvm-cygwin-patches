@@ -59,6 +59,7 @@ runs:
         fetch-tags: true
         ref: ${{ inputs.remote-ref }}
         path: ${{ inputs.llvm-path }}
+        filter: 'tree:0'
 
     - name: apply patches to ${{ inputs.remote-ref }}
       id: apply-patch
@@ -85,7 +86,7 @@ runs:
           git config status.showuntrackedfiles no
           for p in ${INPUTS_PATCH_SERIES/,// }; do
             if [ -d "$PATCH_PATH/patches/$p" ]; then
-              git am --empty=drop $PATCH_PATH/patches/$p/*
+              git am -3 --empty=drop $PATCH_PATH/patches/$p/*
             fi
           done
         popd > /dev/null

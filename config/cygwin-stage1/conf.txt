@@ -1,7 +1,7 @@
 upstream-branch=main
-patch-series=full,libcxx
+patch-series=cygwin-test-fixes
 build-host=windows-latest
 enable-llvm=true
 enable-clang=true
 enable-lld=true
-enable-runtimes=true
+save-cache-name=llvm-cygwin-weekly

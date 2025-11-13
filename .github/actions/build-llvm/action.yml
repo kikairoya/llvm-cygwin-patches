@@ -123,7 +123,7 @@ runs:
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
       run: |
         . '${{ github.action_path }}/source_cygpath'
-        tar -cf build-$BUILD_PROJECT-$BUILD_NAME.tar build-$BUILD_PROJECT-$BUILD_NAME
+        tar -cf build-$BUILD_PROJECT-$BUILD_NAME.tar --ignore-failed-read build-$BUILD_PROJECT-$BUILD_NAME
       shell: bash
 
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

@@ -49,7 +49,7 @@ runs:
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         path: ${{ inputs.patch-path }}
-        ref: ${{ inputs.patch-ref }}
+        ref: ${{ inputs.patch-ref || github.ref_name }}
 
     - name: checkout llvm tree
       id: checkout-llvm
@@ -85,16 +85,15 @@ runs:
           git config user.email github@github.com
           git config status.showuntrackedfiles no
           for p in ${INPUTS_PATCH_SERIES/,// }; do
-            if [ -d "$PATCH_PATH/patches/$p" ]; then
-              git am -3 --empty=drop $PATCH_PATH/patches/$p/*
-            fi
+            test -d "$PATCH_PATH/patches/$p"
+            git am -3 --empty=drop $PATCH_PATH/patches/$p/*
           done
         popd > /dev/null
 
-        tar -caf llvm-source-$BUILD_NAME.tar --exclude=.git $INPUTS_LLVM_PATH
+        tar -cf llvm-source-$BUILD_NAME.tar --exclude=.git $INPUTS_LLVM_PATH
 
         mkdir -p llvm-patches
-        git -C $LLVM_PATH format-patch -o $PWD/llvm-patches $UPSTREAM_REV..HEAD
+        git -C $LLVM_PATH format-patch --full-index -o $PWD/llvm-patches $UPSTREAM_REV..HEAD
 
         if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
           set +h

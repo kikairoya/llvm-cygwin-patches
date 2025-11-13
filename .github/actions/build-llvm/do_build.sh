@@ -4,7 +4,11 @@ if [ -n "$RUNNER_DEBUG" ]; then
   set -x
 fi
 
-if [ "$(uname -o)" = "Msys" ] && [ -n "$CYGWIN_ROOT" ]; then
+ostype="$(uname -o)"
+if [ "${ostype^^}" = "MSYS" ]; then
+  test -n "$CYGWIN_ROOT"
+  test -n "$ACTION_PATH"
+  set +x
   set +h
   MSYS_NO_PATHCONV=1 unsudo_path="$ACTION_PATH/unsudo"
   clang --target=x86_64-w64-mingw32 "$unsudo_path.cc" -o "$unsudo_path.exe" -O -Wl,-s \
@@ -15,6 +19,20 @@ if [ "$(uname -o)" = "Msys" ] && [ -n "$CYGWIN_ROOT" ]; then
   MSYS_NO_PATHCONV=1 exec "$unsudo_path.exe" "$CYGWIN_ROOT\\bin\\bash.exe" -e -o pipefail -o igncr "$(cygpath -ua "$(/bin/cygpath -wa "$0")")" "$@"
   exit 1
 fi
+
+test -n $BUILD_PROJECT
+test -n $BUILD_NAME
+
+if [[ $ostype != *Linux ]]; then
+  sudo() {
+    env "$@"
+  }
+fi
+
+sudo mkdir -p /opt/w
+sudo mount -obind "$(realpath .)" /opt/w
+cd /opt/w
+trap 'cd; sudo umount /opt/w || true' EXIT
 
 for b in build-*-$BUILD_NAME/bin; do
   if [ "$b" != "build-$BUILD_PROJECT-$BUILD_NAME/bin" ] && [ -d "$b" ]; then
@@ -28,6 +46,13 @@ if [ -n "$STAGE1_BINDIR" ] && [ -d "$STAGE1_BINDIR" ]; then
 fi
 
 if [[ $BUILD_TARGET = check* ]]; then
+  if [[ $ostype = *Linux* ]]; then
+    python -m pip install "psutil==7.1.3"
+  fi
+
+  test -n $PATCH_PATH
+  test -n $CONFIG_NAME
+
   pushd "$PATCH_PATH/config/$CONFIG_NAME" > /dev/null
   if [ -f xfail.txt ]; then
     export LIT_XFAIL="$(sed -e '2,$s#^#;#' xfail.txt | tr -d '\n')"

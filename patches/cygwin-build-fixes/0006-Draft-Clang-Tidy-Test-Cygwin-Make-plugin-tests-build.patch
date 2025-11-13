@@ -1,0 +1,76 @@
+From fe60e022fb56428423249924fdb490044394704e Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 5 May 2025 08:28:22 +0900
+Subject: [PATCH 6/9] (Draft)[Clang-Tidy][Test][Cygwin] Make plugin tests
+ buildable and pass
+
+---
+ clang-tools-extra/clang-tidy/CMakeLists.txt |  7 ++++-
+ clang-tools-extra/test/CMakeLists.txt       | 31 ++++++++++++---------
+ 2 files changed, 24 insertions(+), 14 deletions(-)
+
+diff --git a/clang-tools-extra/clang-tidy/CMakeLists.txt b/clang-tools-extra/clang-tidy/CMakeLists.txt
+index 153356245cfd12c01a8f145e7b912873ad9b5b7c..d932e632edc9ce916ce0eb840a45ad12d7a97117 100644
+--- a/clang-tools-extra/clang-tidy/CMakeLists.txt
++++ b/clang-tools-extra/clang-tidy/CMakeLists.txt
+@@ -8,7 +8,12 @@ configure_file(
+   ${CMAKE_CURRENT_BINARY_DIR}/clang-tidy-config.h)
+ include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
+ 
+-add_clang_library(clangTidy STATIC
++set(linktype STATIC)
++if ((WIN32 OR CYGWIN) AND CLANG_LINK_CLANG_DYLIB)
++  set(linktype SHARED;INSTALL_WITH_TOOLCHAIN)
++endif()
++
++add_clang_library(clangTidy ${linktype}
+   ClangTidy.cpp
+   ClangTidyCheck.cpp
+   ClangTidyModule.cpp
+diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
+index 78447e7a00db872342fb46a55caf213fa01cce6b..d02ad97d15a38dbb3d0bbe9ebd76767f6de1d0c1 100644
+--- a/clang-tools-extra/test/CMakeLists.txt
++++ b/clang-tools-extra/test/CMakeLists.txt
+@@ -63,21 +63,26 @@ foreach(dep ${LLVM_UTILS_DEPS})
+   endif()
+ endforeach()
+ 
+-if (NOT WIN32 OR NOT LLVM_LINK_LLVM_DYLIB)
++if (NOT (WIN32 OR CYGWIN) OR CLANG_PLUGIN_SUPPORT)
+   llvm_add_library(
+-      CTTestTidyModule
+-      MODULE clang-tidy/CTTestTidyModule.cpp
+-      PLUGIN_TOOL clang-tidy)
+-endif()
++    CTTestTidyModule
++    MODULE clang-tidy/CTTestTidyModule.cpp
++    PLUGIN_TOOL clang-tidy)
++
++  list(APPEND CLANG_TOOLS_TEST_DEPS CTTestTidyModule)
++  target_include_directories(CTTestTidyModule PUBLIC BEFORE "${CLANG_TOOLS_SOURCE_DIR}")
+ 
+-if(TARGET CTTestTidyModule)
+-    list(APPEND CLANG_TOOLS_TEST_DEPS CTTestTidyModule)
+-    target_include_directories(CTTestTidyModule PUBLIC BEFORE "${CLANG_TOOLS_SOURCE_DIR}")
+-    if(CLANG_PLUGIN_SUPPORT AND (WIN32 OR CYGWIN))
+-      set(LLVM_LINK_COMPONENTS
+-        Support
+-      )
+-    endif()
++  if ((WIN32 OR CYGWIN) AND NOT LLVM_EXPORT_SYMBOLS_FOR_PLUGINS)
++    target_link_libraries(CTTestTidyModule PRIVATE clangTidy)
++    clang_target_link_libraries(CTTestTidyModule
++      PRIVATE
++      clangAST
++      clangASTMatchers
++      clangBasic
++      clangTooling
++      clangToolingCore
++    )
++  endif()
+ endif()
+ 
+ add_lit_testsuite(check-clang-extra "Running clang-tools-extra/test"
+-- 
+2.51.2
+

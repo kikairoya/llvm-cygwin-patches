@@ -1,0 +1,175 @@
+From 255361909bf58d1037cdc9854d459ad2cc2b426b Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 8 Jun 2025 22:25:26 +0900
+Subject: [PATCH 19/33] [libc++][Cygwin] Add support for Cygwin target
+
+---
+ libcxx/CMakeLists.txt                     | 24 +++++++++++++++++++++--
+ libcxx/cmake/config-ix.cmake              | 11 +++++++++++
+ libcxx/include/__config                   |  9 +++++++--
+ libcxx/include/__configuration/platform.h |  2 +-
+ libcxx/include/__fwd/ios.h                |  2 +-
+ libcxx/src/filesystem/posix_compat.h      |  4 +++-
+ 6 files changed, 45 insertions(+), 7 deletions(-)
+
+diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
+index a119850cd808e3706b829c00aa11d6f950d32fce..7a44d06308421728aa801a6eb21b697bdf3966cf 100644
+--- a/libcxx/CMakeLists.txt
++++ b/libcxx/CMakeLists.txt
+@@ -259,7 +259,7 @@ if (LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY
+     OR NOT LIBCXX_ENABLE_SHARED
+     OR LIBCXX_CXX_ABI STREQUAL "none")
+   set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE OFF)
+-elseif((UNIX OR FUCHSIA) AND NOT APPLE)
++elseif((UNIX OR FUCHSIA) AND NOT APPLE AND NOT CYGWIN)
+   set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE ON)
+ else()
+   set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE OFF)
+@@ -304,7 +304,7 @@ option(LIBCXX_ENABLE_PEDANTIC "Compile with pedantic enabled." OFF)
+ option(LIBCXX_ENABLE_WERROR "Fail and stop if a warning is triggered." OFF)
+ 
+ set(LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT OFF)
+-if (WIN32)
++if (WIN32 OR CYGWIN)
+   set(LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT ON)
+ endif()
+ option(LIBCXX_HERMETIC_STATIC_LIBRARY
+@@ -493,6 +493,10 @@ function(cxx_add_basic_build_flags target)
+     CXX_STANDARD 23
+     CXX_STANDARD_REQUIRED OFF # TODO: Make this REQUIRED once we don't need to accommodate the LLVM documentation builders using an ancient CMake
+     CXX_EXTENSIONS NO)
++  if (CYGWIN)
++    set_target_properties(${target} PROPERTIES
++      CXX_EXTENSIONS YES)
++  endif()
+ 
+   # When building the dylib, don't warn for unavailable aligned allocation
+   # functions based on the deployment target -- they are always available
+@@ -671,6 +675,22 @@ function(cxx_link_system_libraries target)
+   if (MINGW)
+     target_link_libraries(${target} PRIVATE "${MINGW_LIBRARIES}")
+   endif()
++  if (CYGWIN)
++    # Cygwin requires gcc_s or compiler-rt explicitly, which are dropped by the effect
++    # of "--unwindlib=none", for Emulated-TLS functionallity
++    if (CXX_SUPPORTS_UNWINDLIB_EQ_NONE_FLAG AND LIBCXXABI_USE_LLVM_UNWINDER AND NOT CYGWIN_LIBRARIES)
++      if (LIBCXX_USE_COMPILER_RT)
++        include(HandleCompilerRT)
++        find_compiler_rt_library(builtins LIBCXX_BUILTINS_LIBRARY
++          FLAGS ${LIBCXX_COMPILE_FLAGS})
++        target_link_libraries(${target} PRIVATE ${LIBCXX_BUILTINS_LIBRARY})
++      else()
++        target_link_libraries(${target} PRIVATE gcc_s)
++      endif()
++    else()
++      target_link_libraries(${target} PRIVATE "${CYGWIN_LIBRARIES}")
++    endif()
++  endif()
+ 
+   if (MSVC)
+     if ((NOT CMAKE_MSVC_RUNTIME_LIBRARY AND uppercase_CMAKE_BUILD_TYPE STREQUAL "DEBUG")
+diff --git a/libcxx/cmake/config-ix.cmake b/libcxx/cmake/config-ix.cmake
+index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66d7cc2044 100644
+--- a/libcxx/cmake/config-ix.cmake
++++ b/libcxx/cmake/config-ix.cmake
+@@ -79,6 +79,17 @@ if (NOT CXX_SUPPORTS_NOSTDLIBXX_FLAG AND C_SUPPORTS_NODEFAULTLIBS_FLAG)
+                         moldname mingwex msvcrt)
+     list(APPEND CMAKE_REQUIRED_LIBRARIES ${MINGW_LIBRARIES})
+   endif()
++  if (CYGWIN)
++    if (LIBCXX_USE_COMPILER_RT)
++      set(CYGWIN_RUNTIME ${LIBCXX_BUILTINS_LIBRARY})
++    else ()
++      set(CYGWIN_RUNTIME gcc_s gcc)
++    endif()
++    set(CYGWIN_LIBRARIES cygwin ${CYGWIN_RUNTIME} advapi32
++                         shell32 user32 kernel32 ${CYGWIN_RUNTIME}
++                         cygwin)
++    list(APPEND CMAKE_REQUIRED_LIBRARIES ${CYGWIN_LIBRARIES})
++  endif()
+ endif()
+ 
+ if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
+diff --git a/libcxx/include/__config b/libcxx/include/__config
+index e90796144620159a889232a9462e763d0f8023c7..36c71f039ae6480176da58cba421512c42f0d642 100644
+--- a/libcxx/include/__config
++++ b/libcxx/include/__config
+@@ -96,6 +96,10 @@
+ #      define _LIBCPP_HAS_BITSCAN64 0
+ #    endif
+ #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 1
++#  elif defined(__CYGWIN__)
++#    define _LIBCPP_SHORT_WCHAR 1
++#    define _LIBCPP_HAS_OPEN_WITH_WCHAR 0
++#    define _LIBCPP_HAS_BITSCAN64 1
+ #  else
+ #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 0
+ #    define _LIBCPP_HAS_BITSCAN64 0
+@@ -194,13 +198,13 @@ typedef __char32_t char32_t;
+ #      define _LIBCPP_CRT_FUNC
+ #    endif
+ 
+-#    if defined(_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS) || (defined(__MINGW32__) && !defined(_LIBCPP_BUILDING_LIBRARY))
++#    if defined(_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS) || ((defined(__MINGW32__) || defined(__CYGWIN__)) && !defined(_LIBCPP_BUILDING_LIBRARY))
+ #      define _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS
+ #      define _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS
+ #      define _LIBCPP_OVERRIDABLE_FUNC_VIS
+ #      define _LIBCPP_EXPORTED_FROM_ABI
+ #    elif defined(_LIBCPP_BUILDING_LIBRARY)
+-#      if defined(__MINGW32__)
++#      if defined(__MINGW32__) || defined(__CYGWIN__)
+ #        define _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS __declspec(dllexport)
+ #        define _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS
+ #      else
+@@ -641,6 +645,7 @@ typedef __char32_t char32_t;
+         defined(__APPLE__) ||                                                                                          \
+         defined(__MVS__) ||                                                                                            \
+         defined(_AIX) ||                                                                                               \
++        defined(__CYGWIN__) ||                                                                                         \
+         defined(__EMSCRIPTEN__)
+ // clang-format on
+ #      undef _LIBCPP_HAS_THREAD_API_PTHREAD
+diff --git a/libcxx/include/__configuration/platform.h b/libcxx/include/__configuration/platform.h
+index f3c199dee172b8cf8bc87b37aa60f50fbc418d47..87ba2cdd09d7bded8f6dfa114067c0f163913452 100644
+--- a/libcxx/include/__configuration/platform.h
++++ b/libcxx/include/__configuration/platform.h
+@@ -20,7 +20,7 @@
+ #  define _LIBCPP_OBJECT_FORMAT_ELF 1
+ #elif defined(__MACH__)
+ #  define _LIBCPP_OBJECT_FORMAT_MACHO 1
+-#elif defined(_WIN32)
++#elif defined(_WIN32) || defined(__CYGWIN__)
+ #  define _LIBCPP_OBJECT_FORMAT_COFF 1
+ #elif defined(__wasm__)
+ #  define _LIBCPP_OBJECT_FORMAT_WASM 1
+diff --git a/libcxx/include/__fwd/ios.h b/libcxx/include/__fwd/ios.h
+index 831624f4b1c572a2f5af5ba00977315955644719..32198360428ba8d8d6f2dd433a8642ab91d21306 100644
+--- a/libcxx/include/__fwd/ios.h
++++ b/libcxx/include/__fwd/ios.h
+@@ -31,7 +31,7 @@ using wios = basic_ios<wchar_t>;
+ template <class _CharT, class _Traits>
+ class _LIBCPP_PREFERRED_NAME(ios) _LIBCPP_IF_WIDE_CHARACTERS(_LIBCPP_PREFERRED_NAME(wios)) basic_ios;
+ 
+-#if defined(_NEWLIB_VERSION)
++#if defined(_NEWLIB_VERSION) || defined(__CYGWIN__)
+ // On newlib, off_t is 'long int'
+ using streamoff = long int; // for char_traits in <string>
+ #else
+diff --git a/libcxx/src/filesystem/posix_compat.h b/libcxx/src/filesystem/posix_compat.h
+index ddd99d8aaf206fd8e87190a0205add560983f63f..27a22379c05f9da87ea895ef35c1524eac58eac8 100644
+--- a/libcxx/src/filesystem/posix_compat.h
++++ b/libcxx/src/filesystem/posix_compat.h
+@@ -475,7 +475,9 @@ using ::stat;
+ using ::statvfs;
+ using ::truncate;
+ 
+-#  define O_BINARY 0
++#  ifndef __CYGWIN__
++#    define O_BINARY 0
++#  endif
+ 
+ using StatVFS = struct statvfs;
+ using ModeT   = ::mode_t;
+-- 
+2.51.2
+

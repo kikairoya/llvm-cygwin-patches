@@ -6,10 +6,14 @@ fi
 
 if [ "$(uname -o)" = "Msys" ] && [ -n "$CYGWIN_ROOT" ]; then
   set +h
+  MSYS_NO_PATHCONV=1 unsudo_path="$ACTION_PATH/unsudo"
+  clang --target=x86_64-w64-mingw32 "$unsudo_path.cc" -o "$unsudo_path.exe" -O -Wl,-s \
+        -nodefaultlibs -nostartfiles -ladvapi32 -lkernel32 -fuse-ld=lld -e main
   . "$ACTION_PATH/pathenv" ACTION_PATH LLVM_PATH PATCH_PATH STAGE1_BINDIR
   PATH="$(/bin/cygpath -ua "$CYGWIN_ROOT")/bin:$PATH"
-  MSYS_NO_PATHCONV=1 exec /usr/bin/env env bash -e -o pipefail -o igncr "$(cygpath -ua "$(/bin/cygpath -wa "$0")")" "$@"
-  exit
+  unset TMP TEMP
+  MSYS_NO_PATHCONV=1 exec "$unsudo_path.exe" "$CYGWIN_ROOT\\bin\\bash.exe" -e -o pipefail -o igncr "$(cygpath -ua "$(/bin/cygpath -wa "$0")")" "$@"
+  exit 1
 fi
 
 for b in build-*-$BUILD_NAME/bin; do

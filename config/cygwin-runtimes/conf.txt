@@ -1,0 +1,5 @@
+upstream-branch=main
+patch-series=cygwin-runtime-fixes
+build-host=windows-latest
+enable-runtimes=true
+use-cache-name=llvm-cygwin-weekly

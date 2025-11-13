@@ -89,3 +89,9 @@ for t in ${BUILD_TARGET//,/ }; do
     tee buildlog-$t-$BUILD_PROJECT-$BUILD_NAME.txt | \
     sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed
 done
+
+if [ -n "$INSTALL_PREFIX" ]; then
+  echo "::group::Install"
+  cmake --install build-$BUILD_PROJECT-$BUILD_NAME --prefix install/$INSTALL_PREFIX
+  echo "::endgroup::"
+fi

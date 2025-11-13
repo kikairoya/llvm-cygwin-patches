@@ -17,6 +17,9 @@ inputs:
   artifact-ids:
     description: IDs to restore artifact, comma-separated
     required: true
+  use-cache-name:
+    description: Stage1 cache name
+    required: false
 
 runs:
   using: "composite"
@@ -32,6 +35,16 @@ runs:
       with:
         artifact-ids: ${{ inputs.artifact-ids }}
         merge-multiple: true
+
+    - id: cache-restore
+      if: ${{ inputs.use-cache-name != '' }}
+      uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        fail-on-cache-miss: true
+        enableCrossOsArchive: true
+        key: ${{ inputs.use-cache-name }}
+        restore-keys: ${{ inputs.use-cache-name }}
+        path: 'package-*.tar'
 
     - name: unpack artifacts
       env:

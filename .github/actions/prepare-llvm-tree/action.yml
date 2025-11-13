@@ -23,6 +23,9 @@ inputs:
   source-retention-days:
     required: false
     default: 0
+  name-suffix:
+    description: Suffix to source and patch artifacts
+    required: false
 
 outputs:
   upstream-commit:
@@ -110,7 +113,7 @@ runs:
       id: upload-source
       if: ${{ inputs.source-retention-days >= 0 }}
       with:
-        name: llvm-source
+        name: llvm-source${{ inputs.name-suffix }}
         path: llvm-source-${{ steps.apply-patch.outputs.build-name }}.tar
         retention-days: ${{ inputs.source-retention-days }}
 
@@ -118,6 +121,6 @@ runs:
       id: upload-patch
       if: ${{ inputs.source-retention-days >= 0 }}
       with:
-        name: llvm-patches
+        name: llvm-patches${{ inputs.name-suffix }}
         path: llvm-patches-${{ steps.apply-patch.outputs.build-name }}.tar
         retention-days: ${{ inputs.source-retention-days }}

@@ -24,12 +24,6 @@ inputs:
   build-name:
     description: Build name suffix
     required: true
-  parallel-compile-jobs:
-    description: LLVM_PARALLEL_COMPILE_JOBS
-    required: false
-  parallel-link-jobs:
-    description: LLVM_PARALLEL_LINK_JOBS
-    required: false
   extra-lit-opts:
     description: LIT_OPTS
     required: false
@@ -77,8 +71,6 @@ runs:
         CONFIG_NAME: ${{ inputs.config-name }}
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
         BUILD_PROJECT: ${{ inputs.build-project }}
-        PARALLEL_COMPILE_JOBS: ${{ inputs.parallel-compile-jobs }}
-        PARALLEL_LINK_JOBS: ${{ inputs.parallel-link-jobs }}
         LLVM_PATH: ${{ inputs.llvm-path }}
         PATCH_PATH: ${{ inputs.patch-path }}
         EXTRA_LIT_OPTS: ${{ inputs.extra-lit-opts }}

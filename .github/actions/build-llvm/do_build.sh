@@ -71,6 +71,8 @@ if [[ $BUILD_TARGET = check* ]]; then
   export LIT_OPTS="$EXTRA_LIT_OPTS"
   env | grep ^LIT_ > env-$BUILD_NAME.txt || true
   env | grep ^GTEST_ >> env-$BUILD_NAME.txt || true
+else
+  export LIT_OPTS=--version
 fi
 
 if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
@@ -85,9 +87,13 @@ if [ -n "$RUNNER_DEBUG" ] && command -v free > /dev/null; then
 fi
 
 for t in ${BUILD_TARGET//,/ }; do
-  cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $t | \
-    tee buildlog-$t-$BUILD_PROJECT-$BUILD_NAME.txt | \
-    sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed
+  if cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- -t query ${t#-} > /dev/null 2>&1; then
+    cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- ${t#-} | \
+      tee buildlog-${t#-}-$BUILD_PROJECT-$BUILD_NAME.txt | \
+      sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed
+  else
+    [[ $t = -* ]]
+  fi
 done
 
 if [ -n "$INSTALL_PREFIX" ]; then

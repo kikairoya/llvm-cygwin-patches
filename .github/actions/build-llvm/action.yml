@@ -21,6 +21,10 @@ inputs:
     description: Target name to build, which is passed to ninja
     required: false
     default: ''
+  check-target:
+    description: Name to existence check for running testsuite, returned in check-target
+    required: false
+    default: ''
   build-name:
     description: Build name suffix
     required: true
@@ -59,6 +63,9 @@ outputs:
   install-artifact:
     description: ID of the uploaded install artifact
     value: ${{ steps.upload-install.outputs.artifact-id }}
+  check-target:
+    description: Target name to run tests
+    value: ${{ steps.check-check.outputs.target-name }}
 
 runs:
   using: "composite"
@@ -79,6 +86,22 @@ runs:
       run: |
         ## Config, Build, Test
         . "$ACTION_PATH/do_build.sh"
+      shell: bash
+
+    - id: check-check
+      env:
+        BUILD_NAME: ${{ inputs.build-name }}
+        BUILD_TARGET: ${{ inputs.build-target || 'all' }}
+        BUILD_PROJECT: ${{ inputs.build-project }}
+        CHECK_TARGET: ${{ inputs.check-target }}
+      run: |
+        . '${{ github.action_path }}/source_cygpath'
+        b="build-$BUILD_PROJECT-$BUILD_NAME"
+        t="${CHECK_TARGET:-check-${BUILD_TARGET%%,*}}"
+        if ninja -C "$b" -t query "$t" > /dev/null 2>&1 && grep -qv '^LLVM_LIT_ARGS:STRING=.*--version' "$b/CMakeCache.txt"
+        then
+          echo "target-name=$t" >> "$GITHUB_OUTPUT"
+        fi
       shell: bash
 
     - id: archive-builds

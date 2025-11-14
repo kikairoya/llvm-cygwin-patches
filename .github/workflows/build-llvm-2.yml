@@ -232,6 +232,7 @@ jobs:
       artifacts: ${{ needs.select.outputs.prereq-artifacts }},${{ steps.build.outputs.build-artifact }}
       build-artifact: ${{ steps.build.outputs.build-artifact }}
       install-artifact: ${{ steps.build.outputs.install-artifact }}
+      check-target: ${{ steps.build.outputs.check-target }}
 
     steps:
       - name: Maximize build disk space
@@ -277,6 +278,8 @@ jobs:
           config-name: ${{ needs.select.outputs.config-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-project: llvm
+          build-target: 'all,-check'
+          check-target: check
           build-name: ${{ needs.select.outputs.build-name }}
           install-prefix: ${{ needs.select.outputs.install-prefix }}
           stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
@@ -286,7 +289,7 @@ jobs:
   check-llvm:
     needs: [select, build-llvm]
     runs-on: ${{ needs.select.outputs.build-host }}
-    if: ${{ ! needs.select.outputs.disable-llvm-test }}
+    if: ${{ needs.build-llvm.outputs.check-target }}
     name: Check LLVM
 
     steps:
@@ -333,7 +336,7 @@ jobs:
           config-name: ${{ needs.select.outputs.config-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-project: llvm
-          build-target: check
+          build-target: ${{ needs.build-llvm.outputs.check-target }}
           build-name: ${{ needs.select.outputs.build-name }}
           stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
 
@@ -347,6 +350,7 @@ jobs:
   #     artifacts: ${{ needs.build-llvm.outputs.artifacts }},${{ steps.build.outputs.build-artifact }}
   #     build-artifact: ${{ steps.build.outputs.build-artifact }}
   #     install-artifact: ${{ steps.build.outputs.install-artifact }}
+  #     check-target: ${{ steps.build.outputs.check-target }}
 
   #   steps:
   #     - name: Maximize build disk space
@@ -392,6 +396,8 @@ jobs:
   #         config-name: ${{ needs.select.outputs.config-name }}
   #         cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
   #         build-project: clang
+  #         build-target: 'all,-check-all'
+  #         check-target: check-all
   #         build-name: ${{ needs.select.outputs.build-name }}
   #         install-prefix: ${{ needs.select.outputs.install-prefix }}
   #         stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
@@ -399,7 +405,7 @@ jobs:
   # check-clang:
   #   needs: [select, build-clang]
   #   runs-on: ${{ needs.select.outputs.build-host }}
-  #   if: ${{ ! needs.select.outputs.disable-clang-test }}
+  #   if: ${{ needs.build-clang.outputs.check-target }}
   #   name: Check Clang
 
   #   steps:
@@ -439,7 +445,7 @@ jobs:
   #         config-name: ${{ needs.select.outputs.config-name }}
   #         cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
   #         build-project: clang
-  #         build-target: check-all
+  #         build-target: ${{ steps.build-clang.outputs.check-target }}
   #         build-name: ${{ needs.select.outputs.build-name }}
   #         stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
 
@@ -453,6 +459,7 @@ jobs:
   #     artifacts: ${{ needs.build-llvm.outputs.artifacts }},${{ steps.build.outputs.build-artifact }}
   #     build-artifact: ${{ steps.build.outputs.build-artifact }}
   #     install-artifact: ${{ steps.build.outputs.install-artifact }}
+  #     check-target: ${{ steps.build.outputs.check-target }}
 
   #   steps:
   #     - name: Maximize build disk space
@@ -491,6 +498,8 @@ jobs:
   #         config-name: ${{ needs.select.outputs.config-name }}
   #         cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
   #         build-project: lld
+  #         build-target: 'lld,-check-lld'
+  #         check-target: check-lld
   #         build-name: ${{ needs.select.outputs.build-name }}
   #         install-prefix: ${{ needs.select.outputs.install-prefix }}
   #         stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
@@ -498,7 +507,7 @@ jobs:
   # check-lld:
   #   needs: [select, build-lld]
   #   runs-on: ${{ needs.select.outputs.build-host }}
-  #   if: ${{ ! needs.select.outputs.disable-lld-test }}
+  #   if: ${{ needs.build-lld.outputs.check-target  }}
   #   name: Check LLD
 
   #   steps:
@@ -538,7 +547,7 @@ jobs:
   #         config-name: ${{ needs.select.outputs.config-name }}
   #         cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
   #         build-project: lld
-  #         build-target: check-lld
+  #         build-target: ${{ needs.build-lld.outputs.check-target }}
   #         build-name: ${{ needs.select.outputs.build-name }}
   #         stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
 
@@ -552,6 +561,7 @@ jobs:
       artifacts: ${{ needs.select.outputs.prereq-artifacts }},${{ steps.build.outputs.build-artifact }}
       build-artifact: ${{ steps.build.outputs.build-artifact }}
       install-artifact: ${{ steps.build.outputs.install-artifact }}
+      check-target: ${{ steps.build.outputs.check-target }}
 
     steps:
       - name: Maximize build disk space
@@ -590,6 +600,7 @@ jobs:
           config-name: ${{ needs.select.outputs.config-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-project: runtimes
+          check-target: check-runtimes
           build-name: ${{ needs.select.outputs.build-name }}
           install-prefix: ${{ needs.select.outputs.install-prefix }}
           stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
@@ -597,7 +608,7 @@ jobs:
   check-runtimes:
     needs: [select, build-runtimes]
     runs-on: ${{ needs.select.outputs.build-host }}
-    if: ${{ ! needs.select.outputs.disable-runtimes-test }}
+    if: ${{ needs.build-runtimes.outputs.check-target }}
     name: Check Runtimes
 
     steps:
@@ -637,7 +648,7 @@ jobs:
           config-name: ${{ needs.select.outputs.config-name }}
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           build-project: runtimes
-          build-target: check-runtimes
+          build-target: ${{ needs.build-runtimes.outputs.check-target }}
           build-name: ${{ needs.select.outputs.build-name }}
           stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
 

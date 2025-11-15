@@ -170,7 +170,7 @@ jobs:
           if [ -n "$PREREQ_ARTIFACTS" ]; then
             echo "prereq-artifacts=,$PREREQ_ARTIFACTS" >> "$GITHUB_OUTPUT"
           fi
-          [ "$CONFIG_NAME" ]
+          [ "$GITHUB_EVENT_SCHEDULE$CONFIG_NAME" ]
           map=(
             [18]=cygwin-dylib
             [19]=cygwin-runtimes

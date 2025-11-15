@@ -214,13 +214,19 @@ jobs:
           name-suffix: ${{ inputs.source-artifact-suffix }}
 
       - name: check patchset
-        if: ${{ inputs.source-artifact }}
         run: |
-          test "$ASSUME_PATCHSET" = "$PATCH_SERIES"
+          if [ -n "$SOURCE_ARTIFACT" ]; then
+            test "$ASSUME_PATCHSET" = "$PATCH_SERIES"
+          else
+            echo -n "::notice title=$(git -C llvm-project show --format='format:%H (%ci) %s' -s "${UPSTREAM_COMMIT}" | sed 's/::/%3A%3A/g')::"
+            git -C llvm-project show -s "${UPSTREAM_COMMIT}" | sed 's/$/%0A/g' | tr -d '\n'
+          fi
         shell: bash
         env:
+          SOURCE_ARTIFACT: ${{ inputs.source-artifact }}
           ASSUME_PATCHSET: ${{ inputs.assume-patchset }}
           PATCH_SERIES: ${{ steps.config.outputs.patch-series }}
+          UPSTREAM_COMMIT: ${{ steps.prepare-tree.outputs.upstream-commit }}
 
   build-llvm:
     needs: select

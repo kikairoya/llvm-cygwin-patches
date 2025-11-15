@@ -88,6 +88,7 @@ fi
 
 for t in ${BUILD_TARGET//,/ }; do
   if cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- -t query ${t#-} > /dev/null 2>&1; then
+    echo "cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- ${t#-}"
     cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- ${t#-} | \
       tee buildlog-${t#-}-$BUILD_PROJECT-$BUILD_NAME.txt | \
       sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed

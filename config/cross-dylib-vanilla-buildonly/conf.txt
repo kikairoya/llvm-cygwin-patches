@@ -1,0 +1,5 @@
+upstream-branch=main
+patch-series=cygwin-build-fixes
+build-host=ubuntu-latest
+enable-llvm=true
+use-cache-name=llvm-linux-weekly

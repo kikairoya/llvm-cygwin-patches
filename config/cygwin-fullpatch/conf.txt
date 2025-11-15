@@ -1,7 +1,0 @@
-upstream-branch=main
-patch-series=full,libcxx
-build-host=windows-latest
-enable-llvm=true
-enable-clang=true
-enable-lld=true
-enable-runtimes=true

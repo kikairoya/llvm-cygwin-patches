@@ -10,10 +10,14 @@ if [ "${ostype^^}" = "MSYS" ]; then
   test -n "$ACTION_PATH"
   set +x
   set +h
+  MSYS_NO_PATHCONV=1 unsudo_path="$ACTION_PATH/unsudo"
+  clang --target=x86_64-w64-mingw32 "$unsudo_path.cc" -o "$unsudo_path.exe" -O -Wl,-s \
+        -nodefaultlibs -nostartfiles -ladvapi32 -lkernel32 -fuse-ld=lld -e main
   . "$ACTION_PATH/pathenv" ACTION_PATH LLVM_PATH PATCH_PATH STAGE1_BINDIR
   PATH="$(/bin/cygpath -ua "$CYGWIN_ROOT")/bin:$PATH"
-  MSYS_NO_PATHCONV=1 exec /usr/bin/env env bash -e -o pipefail -o igncr "$(cygpath -ua "$(/bin/cygpath -wa "$0")")" "$@"
-  exit
+  unset TMP TEMP
+  MSYS_NO_PATHCONV=1 exec "$unsudo_path.exe" "$CYGWIN_ROOT\\bin\\bash.exe" -e -o pipefail -o igncr "$(cygpath -ua "$(/bin/cygpath -wa "$0")")" "$@"
+  exit 1
 fi
 
 test -n $BUILD_PROJECT
@@ -67,6 +71,8 @@ if [[ $BUILD_TARGET = check* ]]; then
   export LIT_OPTS="$EXTRA_LIT_OPTS"
   env | grep ^LIT_ > env-$BUILD_NAME.txt || true
   env | grep ^GTEST_ >> env-$BUILD_NAME.txt || true
+else
+  export LIT_OPTS=--version
 fi
 
 if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
@@ -81,7 +87,18 @@ if [ -n "$RUNNER_DEBUG" ] && command -v free > /dev/null; then
 fi
 
 for t in ${BUILD_TARGET//,/ }; do
-  cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- $t | \
-    tee buildlog-$t-$BUILD_PROJECT-$BUILD_NAME.txt | \
-    sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed
+  if cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- -t query ${t#-} > /dev/null 2>&1; then
+    echo "cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- ${t#-}"
+    cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- ${t#-} | \
+      tee buildlog-${t#-}-$BUILD_PROJECT-$BUILD_NAME.txt | \
+      sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed
+  else
+    [[ $t = -* ]]
+  fi
 done
+
+if [ -n "$INSTALL_PREFIX" ]; then
+  echo "::group::Install"
+  cmake --install build-$BUILD_PROJECT-$BUILD_NAME --prefix install/$INSTALL_PREFIX
+  echo "::endgroup::"
+fi

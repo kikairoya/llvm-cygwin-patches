@@ -21,19 +21,13 @@ inputs:
     description: Target name to build, which is passed to ninja
     required: false
     default: ''
-  build-prepare-targets:
-    description: Target names to build prior to build build-target
+  check-target:
+    description: Name to existence check for running testsuite, returned in check-target
     required: false
     default: ''
   build-name:
     description: Build name suffix
     required: true
-  parallel-compile-jobs:
-    description: LLVM_PARALLEL_COMPILE_JOBS
-    required: false
-  parallel-link-jobs:
-    description: LLVM_PARALLEL_LINK_JOBS
-    required: false
   extra-lit-opts:
     description: LIT_OPTS
     required: false
@@ -69,41 +63,21 @@ outputs:
   install-artifact:
     description: ID of the uploaded install artifact
     value: ${{ steps.upload-install.outputs.artifact-id }}
+  check-target:
+    description: Target name to run tests
+    value: ${{ steps.check-check.outputs.target-name }}
 
 runs:
   using: "composite"
   steps:
-    - id: prebuild
-      if: ${{ inputs.build-prepare-targets != '' }}
-      name: prebuild ${{ inputs.build-project }} ${{ inputs.config-name }}
-      env:
-        BUILD_NAME: ${{ inputs.build-name }}
-        BUILD_TARGET: ${{ inputs.build-prepare-targets }}
-        CONFIG_NAME: ${{ inputs.config-name }}
-        CYGWIN_ROOT: ${{ inputs.cygwin-root }}
-        BUILD_PROJECT: ${{ inputs.build-project }}
-        PARALLEL_COMPILE_JOBS: ${{ inputs.parallel-compile-jobs }}
-        PARALLEL_LINK_JOBS: ${{ inputs.parallel-link-jobs }}
-        LLVM_PATH: ${{ inputs.llvm-path }}
-        PATCH_PATH: ${{ inputs.patch-path }}
-        EXTRA_LIT_OPTS: ${{ inputs.extra-lit-opts }}
-        STAGE1_BINDIR: ${{ inputs.stage1-bindir }}
-        ACTION_PATH: ${{ github.action_path }}
-      run: |
-        ## Config, Build, Test
-        . "$ACTION_PATH/do_build.sh"
-      shell: bash
-
     - id: build
       name: build ${{ inputs.build-project }} ${{ inputs.config-name }}
       env:
         BUILD_NAME: ${{ inputs.build-name }}
-        BUILD_TARGET: ${{ inputs.build-target }}
+        BUILD_TARGET: ${{ inputs.build-target || 'all' }}
         CONFIG_NAME: ${{ inputs.config-name }}
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
         BUILD_PROJECT: ${{ inputs.build-project }}
-        PARALLEL_COMPILE_JOBS: ${{ inputs.parallel-compile-jobs }}
-        PARALLEL_LINK_JOBS: ${{ inputs.parallel-link-jobs }}
         LLVM_PATH: ${{ inputs.llvm-path }}
         PATCH_PATH: ${{ inputs.patch-path }}
         EXTRA_LIT_OPTS: ${{ inputs.extra-lit-opts }}
@@ -114,9 +88,25 @@ runs:
         . "$ACTION_PATH/do_build.sh"
       shell: bash
 
-    - id: archive
-      if: ${{ always() }}
-      name: archive ${{ inputs.build-project }} ${{ inputs.config-name }}
+    - id: check-check
+      env:
+        BUILD_NAME: ${{ inputs.build-name }}
+        BUILD_TARGET: ${{ inputs.build-target || 'all' }}
+        BUILD_PROJECT: ${{ inputs.build-project }}
+        CHECK_TARGET: ${{ inputs.check-target }}
+      run: |
+        . '${{ github.action_path }}/source_cygpath'
+        b="build-$BUILD_PROJECT-$BUILD_NAME"
+        t="${CHECK_TARGET:-check-${BUILD_TARGET%%,*}}"
+        if ninja -C "$b" -t query "$t" > /dev/null 2>&1 && ! grep -q '^LLVM_LIT_ARGS:STRING=.*--version' "$b/CMakeCache.txt"
+        then
+          echo "target-name=$t" >> "$GITHUB_OUTPUT"
+        fi
+      shell: bash
+
+    - id: archive-builds
+      if: ${{ always() && inputs.build-retention-days >= 0 }}
+      name: archive builds ${{ inputs.build-project }} ${{ inputs.config-name }}
       env:
         BUILD_NAME: ${{ inputs.build-name }}
         BUILD_PROJECT: ${{ inputs.build-project }}
@@ -154,18 +144,25 @@ runs:
         BUILD_PROJECT: ${{ inputs.build-project }}
         INSTALL_PREFIX: ${{ inputs.install-prefix }}
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        ## Install
+        . "$ACTION_PATH/do_build.sh"
+      shell: bash
+
+    - id: archive-installs
+      if: ${{ always() && inputs.install-prefix != '/' && inputs.install-retention-days >= 0 }}
+      name: archive installs ${{ inputs.build-project }} ${{ inputs.config-name }}
+      env:
+        BUILD_NAME: ${{ inputs.build-name }}
+        BUILD_PROJECT: ${{ inputs.build-project }}
+        CYGWIN_ROOT: ${{ inputs.cygwin-root }}
       run: |
         . '${{ github.action_path }}/source_cygpath'
-        rm -f build-$BUILD_PROJECT-$BUILD_NAME.tar
-
-        echo "::group::Install"
-        cmake --install build-$BUILD_PROJECT-$BUILD_NAME --prefix install/$INSTALL_PREFIX
-        echo "::endgroup::"
-
         cd install
         find . -name '*.dll' | xargs -r chmod +x
-        tar -cf package-$BUILD_PROJECT-$BUILD_NAME.tar *
-        mv package-$BUILD_PROJECT-$BUILD_NAME.tar ..
+        tar -cf ../package-$BUILD_PROJECT-$BUILD_NAME.tar *
+        cd ..
       shell: bash
 
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

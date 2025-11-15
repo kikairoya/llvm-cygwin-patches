@@ -1,0 +1,177 @@
+From 0bada1b75829b9415d9e4cf24a53bea8bce98c12 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 13 Sep 2025 19:32:51 +0900
+Subject: [PATCH 23/33] [compiler-rt][Cygwin] Add support for Cygwin target
+
+---
+ compiler-rt/cmake/config-ix.cmake               | 15 ++++++++++++++-
+ compiler-rt/lib/builtins/CMakeLists.txt         | 17 +++++++++++------
+ compiler-rt/lib/profile/InstrProfilingMerge.c   |  2 +-
+ .../lib/profile/InstrProfilingPlatformOther.c   |  2 +-
+ .../lib/profile/InstrProfilingPlatformWindows.c |  3 ++-
+ compiler-rt/lib/profile/InstrProfilingWriter.c  |  2 +-
+ 6 files changed, 30 insertions(+), 11 deletions(-)
+
+diff --git a/compiler-rt/cmake/config-ix.cmake b/compiler-rt/cmake/config-ix.cmake
+index 8dfbdecbd6b97df3310b484e7f33e216093e4138..967c282a8b38735c52aa4f47d47dd7f7a013542e 100644
+--- a/compiler-rt/cmake/config-ix.cmake
++++ b/compiler-rt/cmake/config-ix.cmake
+@@ -66,6 +66,19 @@ if (C_SUPPORTS_NODEFAULTLIBS_FLAG)
+                         moldname mingwex msvcrt)
+     list(APPEND CMAKE_REQUIRED_LIBRARIES ${MINGW_LIBRARIES})
+   endif()
++  if (CYGWIN)
++    # Cygwin requires quite a few "C" runtime libraries in order for basic
++    # programs to link successfully with -nodefaultlibs.
++    if (COMPILER_RT_USE_BUILTINS_LIBRARY)
++      set(CYGWIN_RUNTIME ${COMPILER_RT_BUILTINS_LIBRARY})
++    else ()
++      set(CYGWIN_RUNTIME gcc_s gcc)
++    endif()
++    set(CYGWIN_LIBRARIES cygwin ${CYGWIN_RUNTIME} advapi32
++                         shell32 user32 kernel32 ${CYGWIN_RUNTIME}
++                         cygwin)
++    list(APPEND CMAKE_REQUIRED_LIBRARIES ${CYGWIN_LIBRARIES})
++  endif()
+   if (NOT TARGET unwind)
+     # Don't check for a library named unwind, if there's a target with that name within
+     # the same build.
+@@ -842,7 +855,7 @@ else()
+ endif()
+ 
+ if (PROFILE_SUPPORTED_ARCH AND NOT LLVM_USE_SANITIZER AND
+-    OS_NAME MATCHES "Darwin|Linux|FreeBSD|Windows|Android|Fuchsia|SunOS|NetBSD|AIX|WASI|Haiku")
++    OS_NAME MATCHES "Darwin|Linux|FreeBSD|Windows|Android|Fuchsia|SunOS|NetBSD|AIX|WASI|Haiku|CYGWIN")
+   set(COMPILER_RT_HAS_PROFILE TRUE)
+ else()
+   set(COMPILER_RT_HAS_PROFILE FALSE)
+diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
+index 6c226aa7d2d48f89ad38dbf43ffa6b1887da7868..03649b20ab3a5492c638c267ee977d863a6e47d5 100644
+--- a/compiler-rt/lib/builtins/CMakeLists.txt
++++ b/compiler-rt/lib/builtins/CMakeLists.txt
+@@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+     set(MINGW_LIBRARIES mingw32 moldname mingwex msvcrt advapi32 shell32
+                         user32 kernel32 mingw32 moldname mingwex msvcrt)
+    endif()
++  if(CYGWIN)
++    # Simplified version of what's set in cmake/config-ix.cmake; not including
++    # builtins, which are linked separately.
++    set(CYGWIN_LIBRARIES cygwin advapi32 shell32 user32 kernel32 cygwin)
++   endif()
+ endif()
+ 
+ if (COMPILER_RT_STANDALONE_BUILD)
+@@ -327,7 +332,7 @@ if (NOT MSVC)
+     x86_64/floatdidf.c
+     x86_64/floatdisf.c
+   )
+-  if (NOT WIN32)
++  if (NOT WIN32 AND NOT CYGWIN)
+     set(x86_64_SOURCES
+       ${x86_64_SOURCES}
+       x86_64/floatundidf.S
+@@ -341,7 +346,7 @@ if (NOT MSVC)
+       ${x86_80_BIT_SOURCES}
+       x86_64/floatdixf.c
+     )
+-    if (NOT WIN32)
++    if (NOT WIN32 AND NOT CYGWIN)
+       set(x86_64_SOURCES
+         ${x86_64_SOURCES}
+         x86_64/floatundixf.S
+@@ -352,7 +357,7 @@ if (NOT MSVC)
+   # Darwin x86_64 Haswell
+   set(x86_64h_SOURCES ${x86_64_SOURCES})
+ 
+-  if (WIN32)
++  if (WIN32 OR CYGWIN)
+     set(x86_64_SOURCES
+       ${x86_64_SOURCES}
+       x86_64/chkstk.S
+@@ -385,7 +390,7 @@ if (NOT MSVC)
+     )
+   endif()
+ 
+-  if (WIN32)
++  if (WIN32 OR CYGWIN)
+     set(i386_SOURCES
+       ${i386_SOURCES}
+       i386/chkstk.S
+@@ -558,7 +563,7 @@ set(arm_min_SOURCES
+   ${arm_EABI_SOURCES}
+ )
+ 
+-if(MINGW)
++if(MINGW OR CYGWIN)
+   set(arm_SOURCES
+     arm/aeabi_idivmod.S
+     arm/aeabi_ldivmod.S
+@@ -667,7 +672,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
+   endforeach(size)
+ endforeach(pat)
+ 
+-if (MINGW)
++if (MINGW OR CYGWIN)
+   set(aarch64_SOURCES
+     ${aarch64_SOURCES}
+     aarch64/chkstk.S
+diff --git a/compiler-rt/lib/profile/InstrProfilingMerge.c b/compiler-rt/lib/profile/InstrProfilingMerge.c
+index 92721c4fd55ea2bc381a380e4dd89f8aeb594847..37b6b43792bf53a96dbce9b4188cc3dccb37a947 100644
+--- a/compiler-rt/lib/profile/InstrProfilingMerge.c
++++ b/compiler-rt/lib/profile/InstrProfilingMerge.c
+@@ -100,7 +100,7 @@ int __llvm_profile_check_compatibility(const char *ProfileData,
+ }
+ 
+ static uintptr_t signextIfWin64(void *V) {
+-#ifdef _WIN64
++#if defined(_WIN64) || defined(__CYGWIN64__)
+   return (uintptr_t)(int32_t)(uintptr_t)V;
+ #else
+   return (uintptr_t)V;
+diff --git a/compiler-rt/lib/profile/InstrProfilingPlatformOther.c b/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
+index 19414ab78b3bea97b746660d8c8c9e3837b31218..b99be2e14de123b57649f3c0d34448bdb08b958d 100644
+--- a/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
++++ b/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
+@@ -9,7 +9,7 @@
+ #if !defined(__APPLE__) && !defined(__linux__) && !defined(__FreeBSD__) &&     \
+     !defined(__Fuchsia__) && !(defined(__sun__) && defined(__svr4__)) &&       \
+     !defined(__NetBSD__) && !defined(_WIN32) && !defined(_AIX) &&              \
+-    !defined(__wasm__) && !defined(__HAIKU__)
++    !defined(__wasm__) && !defined(__HAIKU__) && !defined(__CYGWIN__)
+ 
+ #include <stdlib.h>
+ #include <stdio.h>
+diff --git a/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c b/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c
+index d1b347e861411872b6d48a2dfdd082e0c1df0b7f..3dde4a25e68f55282b557dfe422909144b689731 100644
+--- a/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c
++++ b/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c
+@@ -7,11 +7,12 @@
+ \*===----------------------------------------------------------------------===*/
+ 
+ #include <stddef.h>
++#include <string.h>
+ 
+ #include "InstrProfiling.h"
+ #include "InstrProfilingInternal.h"
+ 
+-#if defined(_WIN32)
++#if defined(_WIN32) || defined(__CYGWIN__)
+ 
+ #if defined(_MSC_VER)
+ /* Merge read-write sections into .data. */
+diff --git a/compiler-rt/lib/profile/InstrProfilingWriter.c b/compiler-rt/lib/profile/InstrProfilingWriter.c
+index 633fdb966116275eca4949fdf0fb4cf15ef19ff1..4762c8e3d4a8f83d94685c554233824a3124729f 100644
+--- a/compiler-rt/lib/profile/InstrProfilingWriter.c
++++ b/compiler-rt/lib/profile/InstrProfilingWriter.c
+@@ -312,7 +312,7 @@ COMPILER_RT_VISIBILITY int lprofWriteDataImpl(
+ 
+   /* On WIN64, label differences are truncated 32-bit values. Truncate
+    * CountersDelta to match. */
+-#ifdef _WIN64
++#if defined(_WIN64) || defined(__CYGWIN64__)
+   Header.CountersDelta = (uint32_t)Header.CountersDelta;
+   Header.BitmapDelta = (uint32_t)Header.BitmapDelta;
+ #endif
+-- 
+2.51.2
+

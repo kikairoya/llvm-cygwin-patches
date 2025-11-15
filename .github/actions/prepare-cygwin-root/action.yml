@@ -204,6 +204,14 @@ runs:
         chmod +x cygwin-bash.cmd
         cd -
 
+        getfacl .
+        setfacl -k -b .
+        setfacl -m default:user::rwx,default:group::r-x,default:other::r-x .
+        chmod 0777 .
+        setfacl -k /tmp
+        setfacl -m default:user::rwx,default:group::r-x,default:other::r-x /tmp
+        chmod 777 /tmp
+
         echo ::group::installed packages
         cat /etc/setup/installed.db
         echo ::endgroup::

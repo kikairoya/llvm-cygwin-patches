@@ -1,0 +1,33 @@
+From b496d1537894b56a1ed3338c90ec3156cc9e65f5 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 9 Nov 2025 17:56:04 +0900
+Subject: [PATCH 49/49] use abs path when subprocess.run
+
+https://github.com/python/cpython/issues/105889#issuecomment-1595930855
+---
+ clang-tools-extra/test/clang-tidy/check_clang_tidy.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/clang-tools-extra/test/clang-tidy/check_clang_tidy.py b/clang-tools-extra/test/clang-tidy/check_clang_tidy.py
+index 183b33f135be8ba8ce62277a94d31aaa3e3232ce..15089fdcc52233514c338cb70ceda84b2128ac47 100755
+--- a/clang-tools-extra/test/clang-tidy/check_clang_tidy.py
++++ b/clang-tools-extra/test/clang-tidy/check_clang_tidy.py
+@@ -47,6 +47,7 @@ import os
+ import pathlib
+ import platform
+ import re
++import shutil
+ import subprocess
+ import sys
+ from typing import List, Tuple
+@@ -60,6 +61,7 @@ def write_file(file_name: str, text: str) -> None:
+ 
+ def try_run(args: List[str], raise_error: bool = True) -> str:
+     try:
++        args[0] = shutil.which(args[0])
+         process_output = subprocess.check_output(args, stderr=subprocess.STDOUT).decode(
+             errors="ignore"
+         )
+-- 
+2.51.2
+

@@ -98,7 +98,7 @@ runs:
         . '${{ github.action_path }}/source_cygpath'
         b="build-$BUILD_PROJECT-$BUILD_NAME"
         t="${CHECK_TARGET:-check-${BUILD_TARGET%%,*}}"
-        if ninja -C "$b" -t query "$t" > /dev/null 2>&1 && grep -qv '^LLVM_LIT_ARGS:STRING=.*--version' "$b/CMakeCache.txt"
+        if ninja -C "$b" -t query "$t" > /dev/null 2>&1 && ! grep -q '^LLVM_LIT_ARGS:STRING=.*--version' "$b/CMakeCache.txt"
         then
           echo "target-name=$t" >> "$GITHUB_OUTPUT"
         fi

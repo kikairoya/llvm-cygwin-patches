@@ -151,7 +151,7 @@ jobs:
       prereq-artifacts: ${{ inputs.source-artifact || steps.prepare-tree.outputs.source-artifact }}${{ steps.config.outputs.prereq-artifacts }}
       save-cache-name: ${{ inputs.save-cache-name || steps.config.outputs.save-cache-name }}
       use-cache-name: ${{ inputs.use-cache-name || steps.config.outputs.use-cache-name }}
-      install-prefix: ${{ inputs.install-prefix == '/' && (inputs.save-cache-name || steps.config.outputs.save-cache-name) || inputs.install-prefix }}
+      install-prefix: ${{ steps.config.outputs.install-prefix || steps.config.outputs.save-cache-name }}
       stage1-bindir: ${{ inputs.stage1-bindir || ((inputs.use-cache-name || steps.config.outputs.use-cache-name) && format('{0}/bin', inputs.use-cache-name || steps.config.outputs.use-cache-name)) }}
 
     steps:
@@ -171,6 +171,11 @@ jobs:
             echo "prereq-artifacts=,$PREREQ_ARTIFACTS" >> "$GITHUB_OUTPUT"
           fi
           [ "$GITHUB_EVENT_SCHEDULE$CONFIG_NAME" ]
+          if [ -z "$GITHUB_EVENT_SCHEDULE" ] && [ "$INSTALL_PREFIX" != "/" ]; then
+            echo "install-prefix=$SAVE_CACHE_NAME" >> "$GITHUB_OUTPUT"
+          else
+            echo install-prefix= >> "$GITHUB_OUTPUT"
+          fi
           map=(
             [18]=cygwin-dylib
             [19]=cygwin-runtimes
@@ -197,6 +202,8 @@ jobs:
           PATCH_COMMIT: ${{ inputs.patch-commit }}
           ALL_INPUTS: ${{ toJson(inputs) }}
           GITHUB_EVENT: ${{ toJson(github.event) }}
+          INSTALL_PREFIX: ${{ inputs.install-prefix }}
+          SAVE_CACHE_NAME: ${{ inputs.save-cache-name }}
         id: config
 
       - name: prepare build tree

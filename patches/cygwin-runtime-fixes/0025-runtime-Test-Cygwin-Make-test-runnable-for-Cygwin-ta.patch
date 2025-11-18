@@ -1,4 +1,4 @@
-From da2ffc3d5ad04e8465899e7e2a44d29e220ece6f Mon Sep 17 00:00:00 2001
+From 5a89b891d26ffd11d33190f4b382c70eeed28581 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 25/33] [runtime][Test][Cygwin] Make test runnable for Cygwin
@@ -62,7 +62,7 @@ index 59da054848f3ca307629ad27516bdac288c7bc35..820ddf2e61426a59d53c7dab69213bbd
      base_lib = os.path.join(
          config.compiler_rt_libdir, "libclang_rt.builtins%s.a" % config.target_suffix
 diff --git a/compiler-rt/test/lit.common.cfg.py b/compiler-rt/test/lit.common.cfg.py
-index 9d2f02189b8bdc30330cf238eb4b0ad7af073091..4b330e4ec8c0435b25812f311465f8acc74552a2 100644
+index 3f7dd8e402b78b1e790d1f0cd97ac706d11b4ff3..6eecda54e3eeb8217aa96a9031598d4b00d86103 100644
 --- a/compiler-rt/test/lit.common.cfg.py
 +++ b/compiler-rt/test/lit.common.cfg.py
 @@ -78,7 +78,7 @@ def find_compiler_libdir():
@@ -98,10 +98,10 @@ index df7f11e2b286b60c7c99ff88b267ffb4cb4d54a2..9b128ed44b19dc64dae41881c3829252
      config.unsupported = True
  
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index 7a44d06308421728aa801a6eb21b697bdf3966cf..0e5b799051d7ab87431156c82b1c7b4efd7e1021 100644
+index 29ef646cab4c4c0a1e2df0282b7235ce4bffe4eb..80ad1badf0a6bc4e2ca40bbb398a026b5b9c77b5 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
-@@ -135,6 +135,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+@@ -148,6 +148,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
    set(LIBCXX_DEFAULT_TEST_CONFIG "llvm-libc++-shared-gcc.cfg.in")
  elseif(MINGW)
    set(LIBCXX_DEFAULT_TEST_CONFIG "llvm-libc++-mingw.cfg.in")
@@ -110,7 +110,7 @@ index 7a44d06308421728aa801a6eb21b697bdf3966cf..0e5b799051d7ab87431156c82b1c7b4e
  elseif(WIN32) # clang-cl
    if (LIBCXX_ENABLE_SHARED)
      set(LIBCXX_DEFAULT_TEST_CONFIG "llvm-libc++-shared-clangcl.cfg.in")
-@@ -826,7 +828,7 @@ if (DEFINED WIN32 AND LIBCXX_ENABLE_STATIC AND NOT LIBCXX_ENABLE_SHARED)
+@@ -850,7 +852,7 @@ if (DEFINED WIN32 AND LIBCXX_ENABLE_STATIC AND NOT LIBCXX_ENABLE_SHARED)
    config_define(ON _LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS)
  endif()
  

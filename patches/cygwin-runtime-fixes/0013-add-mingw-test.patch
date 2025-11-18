@@ -1,4 +1,4 @@
-From a9f034f45a33a9d0afe863ddbdf608feab551db7 Mon Sep 17 00:00:00 2001
+From 9cecc77a2195e43c33210f669d7bcf8e6aaebac3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 13:18:31 +0900
 Subject: [PATCH 13/33] add mingw test

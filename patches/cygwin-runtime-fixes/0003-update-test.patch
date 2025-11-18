@@ -1,6 +1,6 @@
-From 5cdd2dda5d51ae4185574e2fef4c5c4cfbdb6ae1 Mon Sep 17 00:00:00 2001
+From 0291a3477865d23734de369fe06d291393cf7a64 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sun, 7 Sep 2025 20:46:38 +0900
+Date: Sat, 15 Nov 2025 11:19:06 +0900
 Subject: [PATCH 03/33] update test
 
 ---
@@ -9,10 +9,10 @@ Subject: [PATCH 03/33] update test
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/clang/test/CodeGenCXX/dllexport.cpp b/clang/test/CodeGenCXX/dllexport.cpp
-index 894aea79af9fd5b7be8a464ab58f24f52bdebdab..2c9e7d36d2cbe59045f6572d33e5d1cb6e817aa8 100644
+index 0c8ddc2803c8937710dde853a0d06b727beff3ce..a34a87c5b9f2146e71dc1ff7ab9b0024185c4faa 100644
 --- a/clang/test/CodeGenCXX/dllexport.cpp
 +++ b/clang/test/CodeGenCXX/dllexport.cpp
-@@ -1130,6 +1130,6 @@ public:
+@@ -1131,6 +1131,6 @@ public:
  class __declspec(dllexport) ACE_Service_Object : public ACE_Shared_Object {};
  // Implicit move constructor declaration.
  // MSVC2015-DAG: define weak_odr dso_local dllexport {{.+}}ACE_Service_Object@@Q{{.+}}@$$Q

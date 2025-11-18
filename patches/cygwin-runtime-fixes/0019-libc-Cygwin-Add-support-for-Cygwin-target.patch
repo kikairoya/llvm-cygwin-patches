@@ -1,4 +1,4 @@
-From 255361909bf58d1037cdc9854d459ad2cc2b426b Mon Sep 17 00:00:00 2001
+From 79b77a3fa6b26ec7df86782ac44628ab0d3b103b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 19/33] [libc++][Cygwin] Add support for Cygwin target
@@ -13,10 +13,10 @@ Subject: [PATCH 19/33] [libc++][Cygwin] Add support for Cygwin target
  6 files changed, 45 insertions(+), 7 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index a119850cd808e3706b829c00aa11d6f950d32fce..7a44d06308421728aa801a6eb21b697bdf3966cf 100644
+index 1423b6713fd35854f9d16e9be2f420f39bc21566..29ef646cab4c4c0a1e2df0282b7235ce4bffe4eb 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
-@@ -259,7 +259,7 @@ if (LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY
+@@ -272,7 +272,7 @@ if (LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY
      OR NOT LIBCXX_ENABLE_SHARED
      OR LIBCXX_CXX_ABI STREQUAL "none")
    set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE OFF)
@@ -25,7 +25,7 @@ index a119850cd808e3706b829c00aa11d6f950d32fce..7a44d06308421728aa801a6eb21b697b
    set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE ON)
  else()
    set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE OFF)
-@@ -304,7 +304,7 @@ option(LIBCXX_ENABLE_PEDANTIC "Compile with pedantic enabled." OFF)
+@@ -317,7 +317,7 @@ option(LIBCXX_ENABLE_PEDANTIC "Compile with pedantic enabled." OFF)
  option(LIBCXX_ENABLE_WERROR "Fail and stop if a warning is triggered." OFF)
  
  set(LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT OFF)
@@ -34,7 +34,7 @@ index a119850cd808e3706b829c00aa11d6f950d32fce..7a44d06308421728aa801a6eb21b697b
    set(LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT ON)
  endif()
  option(LIBCXX_HERMETIC_STATIC_LIBRARY
-@@ -493,6 +493,10 @@ function(cxx_add_basic_build_flags target)
+@@ -506,6 +506,10 @@ function(cxx_add_basic_build_flags target)
      CXX_STANDARD 23
      CXX_STANDARD_REQUIRED OFF # TODO: Make this REQUIRED once we don't need to accommodate the LLVM documentation builders using an ancient CMake
      CXX_EXTENSIONS NO)
@@ -45,7 +45,7 @@ index a119850cd808e3706b829c00aa11d6f950d32fce..7a44d06308421728aa801a6eb21b697b
  
    # When building the dylib, don't warn for unavailable aligned allocation
    # functions based on the deployment target -- they are always available
-@@ -671,6 +675,22 @@ function(cxx_link_system_libraries target)
+@@ -684,6 +688,22 @@ function(cxx_link_system_libraries target)
    if (MINGW)
      target_link_libraries(${target} PRIVATE "${MINGW_LIBRARIES}")
    endif()
@@ -91,7 +91,7 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index e90796144620159a889232a9462e763d0f8023c7..36c71f039ae6480176da58cba421512c42f0d642 100644
+index 8f461599ffd5b3a91e059fc1c1beb483d5fdc945..748f297e3e23ab18afd481d374374ae58def58c7 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
 @@ -96,6 +96,10 @@
@@ -121,7 +121,7 @@ index e90796144620159a889232a9462e763d0f8023c7..36c71f039ae6480176da58cba421512c
  #        define _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS __declspec(dllexport)
  #        define _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS
  #      else
-@@ -641,6 +645,7 @@ typedef __char32_t char32_t;
+@@ -653,6 +657,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \

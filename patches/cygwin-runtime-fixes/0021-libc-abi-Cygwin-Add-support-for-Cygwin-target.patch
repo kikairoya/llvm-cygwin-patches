@@ -1,4 +1,4 @@
-From dcb8c6af178128902a667aedc1bae495681073da Mon Sep 17 00:00:00 2001
+From 99486a14c61f859d07cafaac592a158bdd07733e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 21/33] [libc++abi][Cygwin] Add support for Cygwin target

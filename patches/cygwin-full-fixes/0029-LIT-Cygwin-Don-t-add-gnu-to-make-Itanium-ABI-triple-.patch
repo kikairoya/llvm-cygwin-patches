@@ -1,4 +1,4 @@
-From 79ebd32a6d9fb4a97e9b6fc35f71493cd7e77c3b Mon Sep 17 00:00:00 2001
+From a7c052386e0efafb86ec3082ac737dfc1a85e14f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 10 Jun 2025 21:42:25 +0900
 Subject: [PATCH 29/39] [LIT][Cygwin] Don't add `-gnu` to make Itanium ABI
@@ -10,10 +10,10 @@ It is already Itanium ABI one.
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/llvm/utils/lit/lit/llvm/config.py b/llvm/utils/lit/lit/llvm/config.py
-index 913ba69d633288e9f195a5b798947beb2e9ba270..280fc7701c336330b92b74f3bc05a985a05df23c 100644
+index 59982c94b787ce3616d6975113f31c30e0d4e463..285402fbdc91d4b4f0b11d44f5090d03ae97ab92 100644
 --- a/llvm/utils/lit/lit/llvm/config.py
 +++ b/llvm/utils/lit/lit/llvm/config.py
-@@ -380,8 +380,8 @@ class LLVMConfig(object):
+@@ -383,8 +383,8 @@ class LLVMConfig(object):
              self.lit_config.fatal(
                  "Could not turn '%s' into Itanium ABI triple" % triple
              )

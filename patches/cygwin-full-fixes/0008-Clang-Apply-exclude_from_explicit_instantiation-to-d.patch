@@ -1,6 +1,6 @@
-From aa431aed184bf26a813d0bbd3c0da74719afa144 Mon Sep 17 00:00:00 2001
+From 1e558daf82c6750b14b6ea273175d29279cce450 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Fri, 30 May 2025 20:20:47 +0900
+Date: Sat, 15 Nov 2025 11:25:24 +0900
 Subject: [PATCH 08/39] [Clang] Apply exclude_from_explicit_instantiation to
  dllimport/dllexport
 
@@ -14,7 +14,7 @@ symbol leakage or duplication.
  1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index d41ab126c426fbfb955dbf4bc984e66b7825bb30..f1b27d741c24f3f80f7f9ac727516e7d1e48944d 100644
+index aa36a79142e525445a4ff011bbad3af301f9510f..fe732a1328fab814cc3ce99c0f84ad0419ac2c28 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6551,6 +6551,8 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {

@@ -1,6 +1,6 @@
-From bf03bea1b0782414d7d65085f0490da5da147ce0 Mon Sep 17 00:00:00 2001
+From 5dd04f3a507caf64fec85af028deb052b2c80a7a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sun, 25 May 2025 18:51:49 +0900
+Date: Sat, 15 Nov 2025 11:19:06 +0900
 Subject: [PATCH 02/33] [Clang] Export inline move constructors in dllexport-ed
  template instantiations on non-MSVC targets
 
@@ -11,7 +11,7 @@ On non-MSVC targets (MinGW, Cygwin, and PS), such move constructors should be ex
  1 file changed, 1 insertion(+)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index d41ab126c426fbfb955dbf4bc984e66b7825bb30..76fcc1688c988912a90bf36eaf8105eaf740cbef 100644
+index aa36a79142e525445a4ff011bbad3af301f9510f..5f741166d0e29e525d95861ee4b9817d3a465334 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6627,6 +6627,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {

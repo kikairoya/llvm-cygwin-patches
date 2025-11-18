@@ -1,4 +1,4 @@
-From bc7168444818d8ee29b3f06a8da18ac33088668f Mon Sep 17 00:00:00 2001
+From 13654580c5c7dd640d2e48248039e78b966ceef1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 22/33] [libunwind][Cygwin] Add support for Cygwin target
@@ -126,7 +126,7 @@ index 514c2fcd5bf4e7789fbe2d206b9abeaeff036bb0..555eb7213f5f5611eee287f23d2d9c11
      NOT (CXX_SUPPORTS_FNO_EXCEPTIONS_FLAG AND
           CXX_SUPPORTS_FUNWIND_TABLES_FLAG))
 diff --git a/libunwind/src/Registers.hpp b/libunwind/src/Registers.hpp
-index 28649fafb23d5728cf9d7eeac9df793026b31448..402396bd6b54860fd41e6beb1d5f0324f0c9d228 100644
+index 45a2b0921ea3b4c538440c6ee59f6389fdb54313..1b6467af3b6e579cf1ec161fd83257f05d19e68a 100644
 --- a/libunwind/src/Registers.hpp
 +++ b/libunwind/src/Registers.hpp
 @@ -346,12 +346,12 @@ private:
@@ -194,7 +194,7 @@ index 110c5987c3f1ab4cb555deb0dcd3cf5c1483156c..6783bdccd33a1fe29dc181d92f8ac75c
    urc = pers(1, action, exc->exception_class, exc, ctx);
    _LIBUNWIND_TRACE_UNWINDING("_GCC_specific_handler() personality returned %d", urc);
 diff --git a/libunwind/src/UnwindCursor.hpp b/libunwind/src/UnwindCursor.hpp
-index d7348254af07ba81aad6713aed276b59621add74..f4746594efa9bd98d1a2e2f1486ff716ec8e7b73 100644
+index 33fcd841b2ab02643aa9ae9dcd9219d4da52235b..0c67ed2adeac958461c7222aa1780376af3e5abf 100644
 --- a/libunwind/src/UnwindCursor.hpp
 +++ b/libunwind/src/UnwindCursor.hpp
 @@ -17,9 +17,9 @@

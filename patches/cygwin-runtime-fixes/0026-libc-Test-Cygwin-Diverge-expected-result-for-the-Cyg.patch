@@ -1,4 +1,4 @@
-From 818d732508df76fd12dbd3f4eaccff54dbcd2138 Mon Sep 17 00:00:00 2001
+From 733a6685ef9ec13c48601bb6f562d5fc66cd8133 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 26/33] [libc++][Test][Cygwin] Diverge expected result for the
@@ -11,10 +11,10 @@ Subject: [PATCH 26/33] [libc++][Test][Cygwin] Diverge expected result for the
  3 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index 0e5b799051d7ab87431156c82b1c7b4efd7e1021..5755dd2a81e603bae91ab732c068f04dea9d395b 100644
+index 80ad1badf0a6bc4e2ca40bbb398a026b5b9c77b5..408254957b7e5ed8426d7b96d1eac6e0c3e9aa06 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
-@@ -524,7 +524,9 @@ function(cxx_add_basic_build_flags target)
+@@ -537,7 +537,9 @@ function(cxx_add_basic_build_flags target)
  
    # Build with -fsized-deallocation, which is default in recent versions of Clang.
    # TODO(LLVM 21): This can be dropped once we only support Clang >= 19.
@@ -26,10 +26,10 @@ index 0e5b799051d7ab87431156c82b1c7b4efd7e1021..5755dd2a81e603bae91ab732c068f04d
    # Let the library headers know they are currently being used to build the
    # library.
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 36c71f039ae6480176da58cba421512c42f0d642..740e487295f5d80318324b5719b49edfeb0206f8 100644
+index 748f297e3e23ab18afd481d374374ae58def58c7..7e95b07a4a1af8c405e31459a738cc4f7894fc95 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -845,6 +845,8 @@ typedef __char32_t char32_t;
+@@ -857,6 +857,8 @@ typedef __char32_t char32_t;
  #    else
  #      define _LIBCPP_HAS_C8RTOMB_MBRTOC8 0
  #    endif

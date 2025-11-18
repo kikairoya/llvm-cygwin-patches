@@ -686,7 +686,7 @@ jobs:
           echo build-artifacts=$(echo $LLVM_BUILD $CLANG_BUILD $LLD_BUILD $RUNTIMES_BUILD | sed 's/  */,/g;s/ //g') >> "$GITHUB_OUTPUT"
           ia="$(echo $LLVM_INSTALL $CLANG_INSTALL $LLD_INSTALL $RUNTIMES_INSTALL | sed 's/  */,/g;s/ //g')"
           echo "install-artifacts=$ia" >> "$GITHUB_OUTPUT"
-          if [ -n "$SAVE_NAME$ia" ]; then
+          if [ -n "$SAVE_NAME" ] && [ -n "$ia" ]; then
             echo cache-key=$SAVE_NAME-${ia//,/_} >> "$GITHUB_OUTPUT"
           fi
         shell: bash

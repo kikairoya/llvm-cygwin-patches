@@ -89,7 +89,16 @@ runs:
           git config status.showuntrackedfiles no
           for p in ${INPUTS_PATCH_SERIES/,// }; do
             test -d "$PATCH_PATH/patches/$p"
-            git am -3 --empty=drop $PATCH_PATH/patches/$p/*
+            if git am -3 --empty=drop $PATCH_PATH/patches/$p/* > am.log 2>&1; then
+              cat am.log
+              rm am.log
+            else
+              cat am.log
+              echo -n "::error ::"
+              sed 's/$/%0A/' < am.log | tr -d '\n'
+              rm am.log
+              exit 1
+            fi
           done
         popd > /dev/null
 

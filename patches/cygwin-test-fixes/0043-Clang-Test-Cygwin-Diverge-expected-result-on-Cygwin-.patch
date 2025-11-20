@@ -13,7 +13,6 @@ Subject: [PATCH 43/49] [Clang][Test][Cygwin] Diverge expected result on Cygwin
  clang/test/Driver/dxc_dxv_path.hlsl             |  3 +++
  clang/test/Driver/env.c                         |  4 ++--
  clang/test/Driver/hip-version.hip               |  1 +
- clang/test/Driver/linker-wrapper-hip-no-rdc.c   |  2 +-
  clang/test/Driver/linux-ld.c                    |  2 +-
  clang/test/Driver/loongarch-toolchain.c         |  2 +-
  clang/test/Driver/mingw-sysroot.cpp             |  2 +-
@@ -21,7 +20,7 @@ Subject: [PATCH 43/49] [Clang][Test][Cygwin] Diverge expected result on Cygwin
  clang/test/Driver/riscv64-toolchain.c           |  2 +-
  clang/test/Modules/inferred-framework-case.m    |  2 +-
  clang/test/lit.cfg.py                           |  5 +++--
- 16 files changed, 39 insertions(+), 26 deletions(-)
+ 15 files changed, 38 insertions(+), 25 deletions(-)
 
 diff --git a/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c b/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c
 index ccfdc1a1c6cfa9417c28e6abccafb08d9fe42d0e..5567ec1ab0e43c83ec6f5da8bea7d8b1d7da07d6 100644
@@ -179,16 +178,6 @@ index ccefedf816d457452717e9418ce9723046e2e674..76dfa4078c4b1fcbd09cf1012bc19bcc
  
  // RUN: %clang -v --rocm-path=%S/Inputs/rocm 2>&1 \
  // RUN:   | FileCheck -check-prefixes=FOUND %s
-diff --git a/clang/test/Driver/linker-wrapper-hip-no-rdc.c b/clang/test/Driver/linker-wrapper-hip-no-rdc.c
-index 7545205f22ea0649914e0be9da0f00846e90b599..ae2a17ce93ad7c104a276c5707f7785959b82fac 100644
---- a/clang/test/Driver/linker-wrapper-hip-no-rdc.c
-+++ b/clang/test/Driver/linker-wrapper-hip-no-rdc.c
-@@ -1,4 +1,4 @@
--// UNSUPPORTED: system-windows
-+// UNSUPPORTED: system-windows, system-cygwin
- // REQUIRES: amdgpu-registered-target
- // REQUIRES: lld
- 
 diff --git a/clang/test/Driver/linux-ld.c b/clang/test/Driver/linux-ld.c
 index be3293cdc253e4b8c3a725df714525eb4195e1ba..835c9d12ce74523f9be51136094faee6900f1b11 100644
 --- a/clang/test/Driver/linux-ld.c

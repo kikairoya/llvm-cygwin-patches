@@ -1,4 +1,4 @@
-From 733a6685ef9ec13c48601bb6f562d5fc66cd8133 Mon Sep 17 00:00:00 2001
+From 70f636a10ab2c850580ad27d5de3f99bd33d49f1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 26/33] [libc++][Test][Cygwin] Diverge expected result for the
@@ -26,10 +26,10 @@ index 80ad1badf0a6bc4e2ca40bbb398a026b5b9c77b5..408254957b7e5ed8426d7b96d1eac6e0
    # Let the library headers know they are currently being used to build the
    # library.
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 748f297e3e23ab18afd481d374374ae58def58c7..7e95b07a4a1af8c405e31459a738cc4f7894fc95 100644
+index 6ad6e155159f6d0e51ccac42127023c5b1178d00..7b3a22bec128aec80d2846a602b9527e71fb275f 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -857,6 +857,8 @@ typedef __char32_t char32_t;
+@@ -863,6 +863,8 @@ typedef __char32_t char32_t;
  #    else
  #      define _LIBCPP_HAS_C8RTOMB_MBRTOC8 0
  #    endif

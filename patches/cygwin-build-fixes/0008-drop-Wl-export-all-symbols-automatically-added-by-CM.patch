@@ -1,4 +1,4 @@
-From 4c908de19d49a169e054d5d258be754bf6232f80 Mon Sep 17 00:00:00 2001
+From a3f329dc794d91bebed7ea011384ada5db3306b1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 3 Nov 2025 17:11:21 +0900
 Subject: [PATCH 8/9] drop -Wl,--export-all-symbols automatically added by
@@ -9,10 +9,10 @@ Subject: [PATCH 8/9] drop -Wl,--export-all-symbols automatically added by
  1 file changed, 9 insertions(+)
 
 diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
-index c02c75f10b12f02b4133fc503cb0c23a586b394a..02666a7d05acb6b1f9afe9495e80168c6cedcdf0 100644
+index 908580f791f361addcd23eb4e4af03a09bf91765..f63a6909e77550b1ebc7dc445b5e15017649a38a 100644
 --- a/llvm/CMakeLists.txt
 +++ b/llvm/CMakeLists.txt
-@@ -1303,6 +1303,15 @@ endif( "${CMAKE_SYSTEM_NAME}" MATCHES SunOS )
+@@ -1308,6 +1308,15 @@ endif( "${CMAKE_SYSTEM_NAME}" MATCHES SunOS )
  # use EXPORT_SYMBOLS argument.
  set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
  

@@ -1,4 +1,4 @@
-From c6fe0bdec44e793611b7a1acb9f37d19d112e719 Mon Sep 17 00:00:00 2001
+From a762a5bb14cdaebbb0f85385234f7888076b2511 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Oct 2025 10:04:11 +0900
 Subject: [PATCH 30/49] [LLVM][Support] Remove an unused function-local static
@@ -9,7 +9,7 @@ Subject: [PATCH 30/49] [LLVM][Support] Remove an unused function-local static
  1 file changed, 2 deletions(-)
 
 diff --git a/llvm/lib/Support/Parallel.cpp b/llvm/lib/Support/Parallel.cpp
-index 8e0c724accb36eaa7ed6010b5ec59d501df30510..141441caaa18cc7a2aa862d038c8883dd842d7d8 100644
+index ab220b8f2cebad228c14174c0c279f0052ca19ca..97c16b0eb333a71d62c7cfcb044bc0729ad6e5f0 100644
 --- a/llvm/lib/Support/Parallel.cpp
 +++ b/llvm/lib/Support/Parallel.cpp
 @@ -129,8 +129,6 @@ private:

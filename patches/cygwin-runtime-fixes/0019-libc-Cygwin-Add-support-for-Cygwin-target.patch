@@ -1,4 +1,4 @@
-From 79b77a3fa6b26ec7df86782ac44628ab0d3b103b Mon Sep 17 00:00:00 2001
+From 7dc0e73b083c00e305005f04498f35fdc876284d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 19/33] [libc++][Cygwin] Add support for Cygwin target
@@ -91,7 +91,7 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 8f461599ffd5b3a91e059fc1c1beb483d5fdc945..748f297e3e23ab18afd481d374374ae58def58c7 100644
+index d79ace0cbb896a1dcb4b6d1ebbb7a3705f2af629..6ad6e155159f6d0e51ccac42127023c5b1178d00 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
 @@ -96,6 +96,10 @@
@@ -121,7 +121,7 @@ index 8f461599ffd5b3a91e059fc1c1beb483d5fdc945..748f297e3e23ab18afd481d374374ae5
  #        define _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS __declspec(dllexport)
  #        define _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS
  #      else
-@@ -653,6 +657,7 @@ typedef __char32_t char32_t;
+@@ -659,6 +663,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \

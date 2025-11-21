@@ -1,4 +1,4 @@
-From 43d2da10e50ce5bff770ba53de1ea151c503808a Mon Sep 17 00:00:00 2001
+From 6dd3802ef9b7dd39233e067e6ee872b43166ccf0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 9 Nov 2025 17:56:04 +0900
 Subject: [PATCH 49/49] use abs path when subprocess.run

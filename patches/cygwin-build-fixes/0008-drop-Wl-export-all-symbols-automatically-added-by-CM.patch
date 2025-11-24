@@ -1,4 +1,4 @@
-From fb150ee07d05993d0698b226098cd7f5b5ac175c Mon Sep 17 00:00:00 2001
+From a3f329dc794d91bebed7ea011384ada5db3306b1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 3 Nov 2025 17:11:21 +0900
 Subject: [PATCH 8/9] drop -Wl,--export-all-symbols automatically added by

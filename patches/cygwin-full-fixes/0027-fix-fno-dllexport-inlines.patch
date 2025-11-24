@@ -1,4 +1,4 @@
-From 7237acf5c0fbf1d053aec729bd39766c7b862d9e Mon Sep 17 00:00:00 2001
+From 2446f8c4ecc76fcc66667730820013fb3ad00789 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 12:42:37 +0900
 Subject: [PATCH 27/39] fix -fno-dllexport-inlines

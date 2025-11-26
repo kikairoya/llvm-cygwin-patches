@@ -1,4 +1,4 @@
-From 70f636a10ab2c850580ad27d5de3f99bd33d49f1 Mon Sep 17 00:00:00 2001
+From 9f6c08dab169b60ce3f3e0437f71f744411433ba Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 26/33] [libc++][Test][Cygwin] Diverge expected result for the
@@ -6,9 +6,9 @@ Subject: [PATCH 26/33] [libc++][Test][Cygwin] Diverge expected result for the
 
 ---
  libcxx/CMakeLists.txt                     | 4 +++-
- libcxx/include/__config                   | 2 ++
+ libcxx/include/__config                   | 2 +-
  libcxx/utils/libcxx/test/features/misc.py | 4 ++--
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ 3 files changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
 index 80ad1badf0a6bc4e2ca40bbb398a026b5b9c77b5..408254957b7e5ed8426d7b96d1eac6e0c3e9aa06 100644
@@ -26,18 +26,18 @@ index 80ad1badf0a6bc4e2ca40bbb398a026b5b9c77b5..408254957b7e5ed8426d7b96d1eac6e0
    # Let the library headers know they are currently being used to build the
    # library.
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 6ad6e155159f6d0e51ccac42127023c5b1178d00..7b3a22bec128aec80d2846a602b9527e71fb275f 100644
+index 456485928008e12c54e36a3c7a3dcd2773cab902..54b66663cbff9dabb3dfbe1e8727967a703a4fea 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -863,6 +863,8 @@ typedef __char32_t char32_t;
- #    else
- #      define _LIBCPP_HAS_C8RTOMB_MBRTOC8 0
- #    endif
-+#  elif defined(__CYGWIN__) && defined(__cpp_char8_t)
-+#    define _LIBCPP_HAS_C8RTOMB_MBRTOC8 1
+@@ -831,7 +831,7 @@ typedef __char32_t char32_t;
+ // the latter depends on internal GNU libc details that are not appropriate
+ // to depend on here, so any declarations present when __cpp_char8_t is not
+ // defined are ignored.
+-#  if _LIBCPP_GLIBC_PREREQ(2, 36) && defined(__cpp_char8_t)
++#  if (_LIBCPP_GLIBC_PREREQ(2, 36) || defined(__CYGWIN__)) && defined(__cpp_char8_t)
+ #    define _LIBCPP_HAS_C8RTOMB_MBRTOC8 1
  #  else
  #    define _LIBCPP_HAS_C8RTOMB_MBRTOC8 0
- #  endif
 diff --git a/libcxx/utils/libcxx/test/features/misc.py b/libcxx/utils/libcxx/test/features/misc.py
 index 738e3d8bb207cc641e8f890cddbc4bbc7cf68c71..b079013d0d9c2b4bb9b47cf6f9261baef0c703eb 100644
 --- a/libcxx/utils/libcxx/test/features/misc.py

@@ -1,4 +1,4 @@
-From 6c2c91d572d84946f79e33cee7aa00e5da2c2080 Mon Sep 17 00:00:00 2001
+From a1cae66a235dc2845fad8ec5de48df6ef49c3d13 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 21/33] [libc++abi][Cygwin] Add support for Cygwin target
@@ -149,7 +149,7 @@ index 38a54b16278a789bbe76b230160570a93edd53a0..70170075f4817334b96b2b8e8bcc4c36
    list(APPEND LIBCXXABI_LIBRARIES android_support)
  endif()
 diff --git a/libcxxabi/src/fallback_malloc.cpp b/libcxxabi/src/fallback_malloc.cpp
-index 75788fe9be8d9e7135ebce1adc58983acd43b932..90a256b22429cebb75722fd6d7fae4575bb5ac4a 100644
+index 6a261e6f009fee3394a11b01dc938966b3160590..cece3f4e6f191ae60fa9035b7842a774d7e5b40f 100644
 --- a/libcxxabi/src/fallback_malloc.cpp
 +++ b/libcxxabi/src/fallback_malloc.cpp
 @@ -256,7 +256,7 @@ namespace __cxxabiv1 {

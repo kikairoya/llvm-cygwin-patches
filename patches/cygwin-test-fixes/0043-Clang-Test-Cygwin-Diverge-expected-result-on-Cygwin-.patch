@@ -1,27 +1,27 @@
-From ef6692ce5f37b5ac479b28af82e1bc338ef6fa37 Mon Sep 17 00:00:00 2001
+From 2577d5ab8f9c023dde8ab20f4f11a960f7549209 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 11 Oct 2025 17:38:33 +0900
 Subject: [PATCH 43/49] [Clang][Test][Cygwin] Diverge expected result on Cygwin
  host
 
 ---
- .../test/CodeGen/2007-06-18-SextAttrAggregate.c |  2 +-
- clang/test/Driver/DTLTO/dtlto.c                 | 14 ++++++++------
- clang/test/Driver/DTLTO/ps5-dtlto.c             | 17 ++++++++++-------
- clang/test/Driver/HLSL/metal-converter.hlsl     |  3 +++
- clang/test/Driver/clang-offload-bundler.c       |  2 +-
- clang/test/Driver/dxc_dxv_path.hlsl             |  3 +++
- clang/test/Driver/env.c                         |  4 ++--
- clang/test/Driver/hip-version.hip               |  1 +
- clang/test/Driver/linker-wrapper-hip-no-rdc.c   |  3 +++
- clang/test/Driver/linux-ld.c                    |  2 +-
- clang/test/Driver/loongarch-toolchain.c         |  2 +-
- clang/test/Driver/mingw-sysroot.cpp             |  2 +-
- clang/test/Driver/riscv32-toolchain.c           |  2 +-
- clang/test/Driver/riscv64-toolchain.c           |  2 +-
- clang/test/Modules/inferred-framework-case.m    |  2 +-
- clang/test/lit.cfg.py                           |  5 +++--
- 16 files changed, 41 insertions(+), 25 deletions(-)
+ clang/test/CodeGen/2007-06-18-SextAttrAggregate.c |  2 +-
+ clang/test/Driver/DTLTO/dtlto.c                   | 10 ++++++----
+ clang/test/Driver/DTLTO/ps5-dtlto.c               | 13 ++++++++-----
+ clang/test/Driver/HLSL/metal-converter.hlsl       |  3 +++
+ clang/test/Driver/clang-offload-bundler.c         |  2 +-
+ clang/test/Driver/dxc_dxv_path.hlsl               |  3 +++
+ clang/test/Driver/env.c                           |  4 ++--
+ clang/test/Driver/hip-version.hip                 |  1 +
+ clang/test/Driver/linker-wrapper-hip-no-rdc.c     |  3 +++
+ clang/test/Driver/linux-ld.c                      |  2 +-
+ clang/test/Driver/loongarch-toolchain.c           |  2 +-
+ clang/test/Driver/mingw-sysroot.cpp               |  2 +-
+ clang/test/Driver/riscv32-toolchain.c             |  2 +-
+ clang/test/Driver/riscv64-toolchain.c             |  2 +-
+ clang/test/Modules/inferred-framework-case.m      |  2 +-
+ clang/test/lit.cfg.py                             |  5 +++--
+ 16 files changed, 37 insertions(+), 21 deletions(-)
 
 diff --git a/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c b/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c
 index ccfdc1a1c6cfa9417c28e6abccafb08d9fe42d0e..5567ec1ab0e43c83ec6f5da8bea7d8b1d7da07d6 100644
@@ -35,92 +35,72 @@ index ccfdc1a1c6cfa9417c28e6abccafb08d9fe42d0e..5567ec1ab0e43c83ec6f5da8bea7d8b1
  // PR1513
  
 diff --git a/clang/test/Driver/DTLTO/dtlto.c b/clang/test/Driver/DTLTO/dtlto.c
-index 5fbf7889e790b86d02addc7c564c69b0c70d2aa9..ea8d81c9da2391adcd8db4bd42236b63280ba495 100644
+index 5fbf7889e790b86d02addc7c564c69b0c70d2aa9..2520e1770ec7cf77007f0ab1005d2dafca552253 100644
 --- a/clang/test/Driver/DTLTO/dtlto.c
 +++ b/clang/test/Driver/DTLTO/dtlto.c
-@@ -7,13 +7,14 @@
+@@ -7,9 +7,10 @@
  // RUN: %clang -flto=thin %s -### -fuse-ld=lld --target=x86_64-linux-gnu \
  // RUN:   -Xthinlto-distributor=a1 -Xthinlto-distributor=a2,a3 \
  // RUN:   -fthinlto-distributor=d.exe -Werror >>%t_forward.log 2>&1
 -// RUN: FileCheck %s --input-file=%t_forward.log --check-prefix=FORWARD
 +// RUN: FileCheck %s --input-file=%t_forward.log --check-prefix=FORWARD \
-+// RUN:   -DEXEEXT=%if system-windows||system-cygwin %{.exe%}
++// RUN:   -DEXEEXT=%if system-cygwin %{.exe%}
  
 -// FORWARD:      clang-name:[[CLANG:.*]]
 +// FORWARD:      clang-name:[[CLANG:.*]][[EXEEXT]]
  // FORWARD-NEXT: prepend-arg:[[PREPEND_ARG:.*]]
  // FORWARD:      ld.lld
  // FORWARD-SAME: "--thinlto-distributor=d.exe"
--// FORWARD-SAME: "--thinlto-remote-compiler={{[^"]*}}[[CLANG]]"
-+// FORWARD-SAME: "--thinlto-remote-compiler={{[^"]*}}[[CLANG]]{{([[EXEEXT]])?}}"
- // FORWARD-SAME: [[PREPEND_ARG]]
- // FORWARD-SAME: "--thinlto-distributor-arg=a1"
- // FORWARD-SAME: "--thinlto-distributor-arg=a2"
-@@ -36,13 +37,14 @@
+@@ -36,9 +37,10 @@
  // RUN: %clang -flto=thin %s -### -fuse-ld=lld --target=x86_64-linux-gnu \
  // RUN:   -fthinlto-distributor=d.exe -Werror >>%t_default.log 2>&1
  // RUN: FileCheck %s --input-file=%t_default.log --check-prefix=DEFAULT \
 -// RUN:   --implicit-check-not=distributor --implicit-check-not=remote-compiler
 +// RUN:   --implicit-check-not=distributor --implicit-check-not=remote-compiler \
-+// RUN:   -DEXEEXT=%if system-windows||system-cygwin %{.exe%}
++// RUN:   -DEXEEXT=%if system-cygwin %{.exe%}
  
 -// DEFAULT:      clang-name:[[CLANG:.*]]
 +// DEFAULT:      clang-name:[[CLANG:.*]][[EXEEXT]]
  // DEFAULT-NEXT: prepend-arg:[[PREPEND_ARG:.*]]
  // DEFAULT:      ld.lld
  // DEFAULT-SAME: "--thinlto-distributor=d.exe"
--// DEFAULT-SAME: "--thinlto-remote-compiler={{[^"]*}}[[CLANG]]"
-+// DEFAULT-SAME: "--thinlto-remote-compiler={{[^"]*}}[[CLANG]]{{([[EXEEXT]])?}}"
- // DEFAULT-SAME: [[PREPEND_ARG]]
- 
- /// Check that nothing is forwarded when the compiler is not in LTO mode, and that
 diff --git a/clang/test/Driver/DTLTO/ps5-dtlto.c b/clang/test/Driver/DTLTO/ps5-dtlto.c
-index b59fb485120004481806a0d712d8d990136bde7f..f3fb784e560d1df63337772b4155808c0942d11b 100644
+index b59fb485120004481806a0d712d8d990136bde7f..f9608fffd7edb7d78f6317e831c451a7ecdf2f45 100644
 --- a/clang/test/Driver/DTLTO/ps5-dtlto.c
 +++ b/clang/test/Driver/DTLTO/ps5-dtlto.c
-@@ -7,13 +7,14 @@
+@@ -7,9 +7,10 @@
  // RUN: %clang -flto=thin %s -### --target=x86_64-sie-ps5 \
  // RUN:   -Xthinlto-distributor=a1 -Xthinlto-distributor=a2,a3 \
  // RUN:   -fthinlto-distributor=d.exe -Werror >>%t_forward.log 2>&1
 -// RUN: FileCheck %s --input-file=%t_forward.log --check-prefix=FORWARD
 +// RUN: FileCheck %s --input-file=%t_forward.log --check-prefix=FORWARD \
-+// RUN:   -DEXEEXT=%if system-windows||system-cygwin %{.exe%}
++// RUN:   -DEXEEXT=%if system-cygwin %{.exe%}
  
 -// FORWARD:      clang-name:[[CLANG:.*]]
 +// FORWARD:      clang-name:[[CLANG:.*]][[EXEEXT]]
  // FORWARD-NEXT: prepend-arg:[[PREPEND_ARG:.*]]
  // FORWARD:      prospero-lld
  // FORWARD-SAME: "--thinlto-distributor=d.exe"
--// FORWARD-SAME: "--thinlto-remote-compiler={{[^"]*}}[[CLANG]]"
-+// FORWARD-SAME: "--thinlto-remote-compiler={{[^"]*}}[[CLANG]]{{([[EXEEXT]])?}}"
- // FORWARD-SAME: [[PREPEND_ARG]]
- // FORWARD-SAME: "--thinlto-distributor-arg=a1"
- // FORWARD-SAME: "--thinlto-distributor-arg=a2"
-@@ -36,13 +37,14 @@
+@@ -36,9 +37,10 @@
  // RUN: %clang -flto=thin %s -### --target=x86_64-sie-ps5 \
  // RUN:   -fthinlto-distributor=d.exe -Werror >>%t_default.log 2>&1
  // RUN: FileCheck %s --input-file=%t_default.log --check-prefix=DEFAULT \
 -// RUN:   --implicit-check-not=distributor --implicit-check-not=remote-compiler
 +// RUN:   --implicit-check-not=distributor --implicit-check-not=remote-compiler \
-+// RUN:   -DEXEEXT=%if system-windows||system-cygwin %{.exe%}
++// RUN:   -DEXEEXT=%if system-cygwin %{.exe%}
  
 -// DEFAULT:      clang-name:[[CLANG:.*]]
 +// DEFAULT:      clang-name:[[CLANG:.*]][[EXEEXT]]
  // DEFAULT-NEXT: prepend-arg:[[PREPEND_ARG:.*]]
  // DEFAULT:      prospero-lld
  // DEFAULT-SAME: "--thinlto-distributor=d.exe"
--// DEFAULT-SAME: "--thinlto-remote-compiler={{[^"]*}}[[CLANG]]"
-+// DEFAULT-SAME: "--thinlto-remote-compiler={{[^"]*}}[[CLANG]]{{([[EXEEXT]])?}}"
- // DEFAULT-SAME: [[PREPEND_ARG]]
- 
- /// Check that the arguments are forwarded unconditionally even when the
 @@ -51,4 +53,5 @@
  // RUN: %clang %s -### --target=x86_64-sie-ps5 \
  // RUN:   -fthinlto-distributor=d.exe -Werror >>%t_noflto.log 2>&1
  // RUN: FileCheck %s --input-file=%t_noflto.log --check-prefix=DEFAULT \
 -// RUN:   --implicit-check-not=distributor --implicit-check-not=remote-compiler
 +// RUN:   --implicit-check-not=distributor --implicit-check-not=remote-compiler \
-+// RUN:   -DEXEEXT=%if system-windows||system-cygwin %{.exe%}
++// RUN:   -DEXEEXT=%if system-cygwin %{.exe%}
 diff --git a/clang/test/Driver/HLSL/metal-converter.hlsl b/clang/test/Driver/HLSL/metal-converter.hlsl
 index 5c139c62e826bff7194eb781e2e5a5a9290e9a32..852af620ef479b4dfb67ad5e14320512e0842e79 100644
 --- a/clang/test/Driver/HLSL/metal-converter.hlsl

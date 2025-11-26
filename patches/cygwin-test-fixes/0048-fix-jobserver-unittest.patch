@@ -1,4 +1,4 @@
-From f51b7afdb5143f7d0375d9680ad139f80d63c40a Mon Sep 17 00:00:00 2001
+From fe811463d1853f13bf9e855c061e15d6bc342a6c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 6 Nov 2025 21:21:48 +0900
 Subject: [PATCH 48/49] fix jobserver unittest
@@ -30,7 +30,7 @@ index 9f726eb37506f75d383827bd9a3ec6899f024aa6..895e040e8c17b79f95b5a9201ac853f2
    // Re-construct the std::once_flag in place to reset the singleton state.
    new (&GJobserverOnceFlag) std::once_flag();
 diff --git a/llvm/unittests/Support/JobserverTest.cpp b/llvm/unittests/Support/JobserverTest.cpp
-index 191714570460880cdbb966ac283a4fa41c1e5259..77eb6df70766a0b8b977cf3cfbd450182b7f3dd3 100644
+index df623463bb309f66e448808a0b27c5f225f3f49b..951a6fa9c9f06e9b9bfc50fb61537cd018f19aa7 100644
 --- a/llvm/unittests/Support/JobserverTest.cpp
 +++ b/llvm/unittests/Support/JobserverTest.cpp
 @@ -256,6 +256,7 @@ protected:

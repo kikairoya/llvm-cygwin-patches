@@ -1,4 +1,4 @@
-From 7dc0e73b083c00e305005f04498f35fdc876284d Mon Sep 17 00:00:00 2001
+From 7206507f2d95521497f8f154ec1b0f13d3222fc8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 19/33] [libc++][Cygwin] Add support for Cygwin target
@@ -91,7 +91,7 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index d79ace0cbb896a1dcb4b6d1ebbb7a3705f2af629..6ad6e155159f6d0e51ccac42127023c5b1178d00 100644
+index e758acfa870ae8e39b534d4df593ecb749d629ee..456485928008e12c54e36a3c7a3dcd2773cab902 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
 @@ -96,6 +96,10 @@
@@ -121,7 +121,7 @@ index d79ace0cbb896a1dcb4b6d1ebbb7a3705f2af629..6ad6e155159f6d0e51ccac42127023c5
  #        define _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS __declspec(dllexport)
  #        define _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS
  #      else
-@@ -659,6 +663,7 @@ typedef __char32_t char32_t;
+@@ -641,6 +645,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \
@@ -130,7 +130,7 @@ index d79ace0cbb896a1dcb4b6d1ebbb7a3705f2af629..6ad6e155159f6d0e51ccac42127023c5
  // clang-format on
  #      undef _LIBCPP_HAS_THREAD_API_PTHREAD
 diff --git a/libcxx/include/__configuration/platform.h b/libcxx/include/__configuration/platform.h
-index f3c199dee172b8cf8bc87b37aa60f50fbc418d47..87ba2cdd09d7bded8f6dfa114067c0f163913452 100644
+index 88bba5473c608e7325836bbea7c265886b6e077b..3114494ac3f460cb0516354551bb82959f851693 100644
 --- a/libcxx/include/__configuration/platform.h
 +++ b/libcxx/include/__configuration/platform.h
 @@ -20,7 +20,7 @@

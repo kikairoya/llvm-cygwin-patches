@@ -1,37 +1,61 @@
-From b0bbd18fbd9b8adf86e2edccccf39b492a14757f Mon Sep 17 00:00:00 2001
+From 01e795a509f8085f693218807818f4d8df962778 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 5 May 2025 08:28:22 +0900
 Subject: [PATCH 7/9] (Draft)[Clang-Tidy][Test][Cygwin] Make plugin tests
  buildable and pass
 
 ---
- clang-tools-extra/clang-tidy/CMakeLists.txt |  7 ++++-
- clang-tools-extra/test/CMakeLists.txt       | 31 ++++++++++++---------
- 2 files changed, 24 insertions(+), 14 deletions(-)
+ clang-tools-extra/clang-tidy/CMakeLists.txt | 17 ++++++++++++---
+ clang-tools-extra/test/CMakeLists.txt       | 23 +++++++++------------
+ 2 files changed, 24 insertions(+), 16 deletions(-)
 
 diff --git a/clang-tools-extra/clang-tidy/CMakeLists.txt b/clang-tools-extra/clang-tidy/CMakeLists.txt
-index 153356245cfd12c01a8f145e7b912873ad9b5b7c..d932e632edc9ce916ce0eb840a45ad12d7a97117 100644
+index 153356245cfd12c01a8f145e7b912873ad9b5b7c..538518648a01b7343f5d30426246c17b04be6320 100644
 --- a/clang-tools-extra/clang-tidy/CMakeLists.txt
 +++ b/clang-tools-extra/clang-tidy/CMakeLists.txt
-@@ -8,7 +8,12 @@ configure_file(
+@@ -8,7 +8,18 @@ configure_file(
    ${CMAKE_CURRENT_BINARY_DIR}/clang-tidy-config.h)
  include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
  
 -add_clang_library(clangTidy STATIC
 +set(linktype STATIC)
-+if ((WIN32 OR CYGWIN) AND CLANG_LINK_CLANG_DYLIB)
-+  set(linktype SHARED;INSTALL_WITH_TOOLCHAIN)
++set(linkscope PRIVATE)
++if (WIN32 OR CYGWIN)
++  if (CLANG_LINK_CLANG_DYLIB)
++    set(linktype SHARED;INSTALL_WITH_TOOLCHAIN)
++  endif()
++  if (BUILD_SHARED_LIBS OR CLANG_LINK_CLANG_DYLIB)
++    set(linkscope PUBLIC)
++  endif()
 +endif()
 +
 +add_clang_library(clangTidy ${linktype}
    ClangTidy.cpp
    ClangTidyCheck.cpp
    ClangTidyModule.cpp
+@@ -26,7 +37,7 @@ add_clang_library(clangTidy STATIC
+   )
+ 
+ clang_target_link_libraries(clangTidy
+-  PRIVATE
++  ${linkscope}
+   clangAST
+   clangASTMatchers
+   clangAnalysis
+@@ -42,7 +53,7 @@ clang_target_link_libraries(clangTidy
+ 
+ if(CLANG_TIDY_ENABLE_STATIC_ANALYZER)
+   clang_target_link_libraries(clangTidy
+-    PRIVATE
++    ${linkscope}
+     clangStaticAnalyzerCore
+     clangStaticAnalyzerFrontend
+   )
 diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
-index 78447e7a00db872342fb46a55caf213fa01cce6b..d02ad97d15a38dbb3d0bbe9ebd76767f6de1d0c1 100644
+index 78447e7a00db872342fb46a55caf213fa01cce6b..8ba9418dbce40ca1ed129d9189786203c8900ca3 100644
 --- a/clang-tools-extra/test/CMakeLists.txt
 +++ b/clang-tools-extra/test/CMakeLists.txt
-@@ -63,21 +63,26 @@ foreach(dep ${LLVM_UTILS_DEPS})
+@@ -63,21 +63,18 @@ foreach(dep ${LLVM_UTILS_DEPS})
    endif()
  endforeach()
  
@@ -59,14 +83,6 @@ index 78447e7a00db872342fb46a55caf213fa01cce6b..d02ad97d15a38dbb3d0bbe9ebd76767f
 -    endif()
 +  if ((WIN32 OR CYGWIN) AND NOT LLVM_EXPORT_SYMBOLS_FOR_PLUGINS)
 +    target_link_libraries(CTTestTidyModule PRIVATE clangTidy)
-+    clang_target_link_libraries(CTTestTidyModule
-+      PRIVATE
-+      clangAST
-+      clangASTMatchers
-+      clangBasic
-+      clangTooling
-+      clangToolingCore
-+    )
 +  endif()
  endif()
  

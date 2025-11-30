@@ -1,7 +1,7 @@
 From 5dd04f3a507caf64fec85af028deb052b2c80a7a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 15 Nov 2025 11:19:06 +0900
-Subject: [PATCH 05/39] [Clang] Export inline move constructors in dllexport-ed
+Subject: [PATCH 05/43] [Clang] Export inline move constructors in dllexport-ed
  template instantiations on non-MSVC targets
 
 Previously, even when MSVC compatibility was not requested, inline move constructors in dllexport-ed templates were not exported, which was seemingly unintended.

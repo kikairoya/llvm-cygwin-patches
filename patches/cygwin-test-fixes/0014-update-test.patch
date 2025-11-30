@@ -1,48 +1,46 @@
-From 179244bf4e7904444c805c0f494379e93946c735 Mon Sep 17 00:00:00 2001
+From 86d1c50dd0544da752cf28608f04df671ff41c8d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sun, 7 Sep 2025 22:12:34 +0900
-Subject: [PATCH 14/49] update test
+Date: Sun, 30 Nov 2025 07:43:31 +0900
+Subject: [PATCH 14/53] update test
 
 ---
- .../CodeGenCXX/mingw-template-dllexport.cpp   | 20 ++++++++-----------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ ...from_explicit_instantiation.exclude_from_dllimport.cpp | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-index a0a411d09f659c5de0635eefc43496e0b7fdf6e9..ee90b6d81dc6371a7b8afdfe001c80a6dc2091c1 100644
---- a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-+++ b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-@@ -196,23 +196,19 @@ template struct __declspec(dllexport) outer<int>;
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEC1EOS0_
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEaSERKS0_
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEaSEOS0_
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1Ev
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1ERKS1_
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1EOS1_
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSERKS1_
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSEOS1_
-+// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1Ev
-+// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1ERKS1_
-+// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1EOS1_
-+// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSERKS1_
-+// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSEOS1_
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE1fEv
- // FUNC:     declare{{.*}} dllimport{{.*}} @_ZN5outerIcE1gEv
- // FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE1hEv
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1fEv
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1gEv
-+// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1fEv
-+// FUNC:     declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1gEv
- // FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1hEv
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerD1Ev
-+// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerD1Ev
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcED1Ev
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC2Ev
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerD2Ev
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC2ERKS1_
--// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC2EOS1_
- extern template struct __declspec(dllimport) outer<char>;
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+index c80c60c4dd443741943da8d3c226b720b9e9ca4a..b199eaa1afee27b75f1e0cf76e64eac6cf875ade 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+@@ -40,7 +40,7 @@ template <class T>
+ struct D {
+   // For the MSVC ABI: this constructor causes implicit instantiation of
+   // the VTable, which triggers instantiating all virtual member functions
+-  // regardless `exclude_from_explicit_instantiation` (currently not).
++  // regardless `exclude_from_explicit_instantiation`.
+   // For the Itanium ABI: Emitting the VTable is suppressed by implicit
+   // instantiation declaration so virtual member functions won't be instantiated.
+   EXCLUDE_FROM_EXPLICIT_INSTANTIATION explicit D(int);
+@@ -68,6 +68,8 @@ template <class T> void D<T>::to_be_imported() noexcept {}
+ template <class T> void D<T>::to_be_instantiated() noexcept {}
  
- int anchor() noexcept {
+ // MSC: $"?not_to_be_imported@?$C@H@@QEAAXXZ" = comdat any
++// MSC: $"?to_be_instantiated@?$D@H@@UEAAXXZ" = comdat any
++// MSC: $"?to_be_instantiated@?$D@I@@UEAAXXZ" = comdat any
+ // GNU: $_ZN1CIiE18not_to_be_importedEv = comdat any
+ // GNU: @_ZTV1DIiE = external dllimport unnamed_addr
+ // GNU: @_ZTV1DIjE = external unnamed_addr
+@@ -127,9 +129,9 @@ void use() {
+ // GNU: define linkonce_odr dso_local void @_ZN1DIjEC2Ei
+ 
+ // MSC: declare dllimport void @"?to_be_imported@?$D@H@@UEAAXXZ"
+-// MSC: declare dso_local void @"?to_be_instantiated@?$D@H@@UEAAXXZ"
++// MSC: define linkonce_odr dso_local void @"?to_be_instantiated@?$D@H@@UEAAXXZ"
+ // MSC: declare dllimport void @"?to_be_imported_explicitly@?$D@H@@UEAAXXZ"
+ 
+ // MSC: declare dso_local void @"?to_be_imported@?$D@I@@UEAAXXZ"
+-// MSC: declare dso_local void @"?to_be_instantiated@?$D@I@@UEAAXXZ"
++// MSC: define linkonce_odr dso_local void @"?to_be_instantiated@?$D@I@@UEAAXXZ"
+ // MSC: declare dllimport void @"?to_be_imported_explicitly@?$D@I@@UEAAXXZ"
 -- 
 2.51.2
 

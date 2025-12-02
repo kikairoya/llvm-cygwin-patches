@@ -1,7 +1,7 @@
-From fc110e811df8b7e4dfbe1bf11912e941c2f4f81b Mon Sep 17 00:00:00 2001
+From fcd84407cc03927bd29ef1b64176e968d0049e4f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 14:11:39 +0900
-Subject: [PATCH 20/37] [LIT][Cygwin] Implement killProcessAndChildren for
+Subject: [PATCH 20/44] [LIT][Cygwin] Implement killProcessAndChildren for
  Cygwin using /proc/<pid>
 
 ---
@@ -9,10 +9,10 @@ Subject: [PATCH 20/37] [LIT][Cygwin] Implement killProcessAndChildren for
  1 file changed, 30 insertions(+), 1 deletion(-)
 
 diff --git a/llvm/utils/lit/lit/util.py b/llvm/utils/lit/lit/util.py
-index e4e031b3e0898426bf0fba842922b2d02aac35b1..683d2451f02f5ebcf0f99dc8e08065a14ef740b5 100644
+index a800f1f6e14192b25c7d0536acb8391ad82af7e5..126914d66de1138ef7c5973dd582f8231dfcdfd8 100644
 --- a/llvm/utils/lit/lit/util.py
 +++ b/llvm/utils/lit/lit/util.py
-@@ -467,7 +467,7 @@ def killProcessAndChildrenIsSupported():
+@@ -392,7 +392,7 @@ def killProcessAndChildrenIsSupported():
          otherwise is contains a string describing why the function is
          not supported.
      """
@@ -21,7 +21,7 @@ index e4e031b3e0898426bf0fba842922b2d02aac35b1..683d2451f02f5ebcf0f99dc8e08065a1
          return (True, "")
      try:
          import psutil  # noqa: F401
-@@ -481,6 +481,33 @@ def killProcessAndChildrenIsSupported():
+@@ -406,6 +406,33 @@ def killProcessAndChildrenIsSupported():
              " your operating system's package manager.",
          )
  
@@ -55,7 +55,7 @@ index e4e031b3e0898426bf0fba842922b2d02aac35b1..683d2451f02f5ebcf0f99dc8e08065a1
  
  def killProcessAndChildren(pid):
      """This function kills a process with ``pid`` and all its running children
-@@ -496,6 +523,8 @@ def killProcessAndChildren(pid):
+@@ -421,6 +448,8 @@ def killProcessAndChildren(pid):
      elif platform.system() == "OS/390":
          # FIXME: Only the process is killed.
          subprocess.call("kill -KILL $(ps -s {} -o pid=)".format(pid), shell=True)

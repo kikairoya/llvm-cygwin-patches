@@ -1,86 +1,56 @@
-From 8587b2306d1461e2b6af3721b54876debaf8977f Mon Sep 17 00:00:00 2001
+From 1bcc94c461bf607695325a3c7c61b1c741a08bd0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sun, 7 Sep 2025 22:39:48 +0900
-Subject: [PATCH 20/43] update test
+Date: Sun, 30 Nov 2025 07:43:31 +0900
+Subject: [PATCH 20/50] update test
 
 ---
- .../CodeGenCXX/mingw-template-dllexport.cpp   | 52 +++++++------------
- 1 file changed, 20 insertions(+), 32 deletions(-)
+ ..._explicit_instantiation.exclude_from_dllimport.cpp | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-index ee90b6d81dc6371a7b8afdfe001c80a6dc2091c1..2c06aaed6a527f354e67fd33089b13d5c6fab279 100644
---- a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-+++ b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-@@ -157,30 +157,18 @@ template <class T> int outer<T>::inner::v = 0;
- // FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE1fEv
- // FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE1gEv
- // FUNC-NOT: define{{.*}} @_ZN5outerIiE1hEv
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2Ev
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC2Ev
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1Ev
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC1Ev
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2ERKS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC2ERKS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1ERKS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC1ERKS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2EOS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC2EOS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1EOS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC1EOS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD2Ev
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerD2Ev
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD1Ev
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerD1Ev
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSERKS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inneraSERKS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSEOS1_
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inneraSEOS1_
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1fEv
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inner1fEv
--// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1gEv
--// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inner1gEv
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2Ev
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1Ev
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2ERKS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1ERKS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2EOS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1EOS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD2Ev
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD1Ev
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSERKS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSEOS1_
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1fEv
-+// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1gEv
- // FUNC-NOT: define{{.*}} @_ZN5outerIiE5inner1hEv
- template struct __declspec(dllexport) outer<int>;
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+index dc2099384d398bd7c1b3c20feb35657199a56cb0..ead452e48766cf9592c1fdbf9dbcfa88d9a969fb 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+@@ -53,8 +53,8 @@ template <class T> void D<T>::also_to_be_imported() noexcept {}
+ template <class T>
+ struct E {
+   // For the MSVC ABI: this constructor causes implicit instantiation of
+-  // the VTable, which should trigger instantiating all virtual member
+-  // functions regardless `exclude_from_explicit_instantiation` but currently not.
++  // the VTable, which triggers instantiating all virtual member
++  // functions regardless `exclude_from_explicit_instantiation`.
+   // For the Itanium ABI: Emitting the VTable is suppressed by implicit
+   // instantiation declaration so virtual member functions won't be instantiated.
+   EXCLUDE_FROM_EXPLICIT_INSTANTIATION explicit E(int);
+@@ -82,6 +82,8 @@ template <class T> void E<T>::to_be_imported() noexcept {}
+ template <class T> void E<T>::to_be_instantiated() noexcept {}
  
-@@ -196,18 +184,18 @@ template struct __declspec(dllexport) outer<int>;
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEC1EOS0_
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEaSERKS0_
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEaSEOS0_
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1Ev
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1ERKS1_
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1EOS1_
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSERKS1_
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSEOS1_
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerC1Ev
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerC1ERKS1_
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerC1EOS1_
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inneraSERKS1_
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inneraSEOS1_
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE1fEv
- // FUNC:     declare{{.*}} dllimport{{.*}} @_ZN5outerIcE1gEv
- // FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE1hEv
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1fEv
--// FUNC:     declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1gEv
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inner1fEv
-+// FUNC:     declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inner1gEv
- // FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1hEv
--// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerD1Ev
-+// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerD1Ev
- // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcED1Ev
- extern template struct __declspec(dllimport) outer<char>;
+ // MSC: $"?not_to_be_imported@?$C@H@@QEAAXXZ" = comdat any
++// MSC: $"?to_be_instantiated@?$E@H@@UEAAXXZ" = comdat any
++// MSC: $"?to_be_instantiated@?$E@I@@UEAAXXZ" = comdat any
+ // GNU: $_ZN1CIiE18not_to_be_importedEv = comdat any
+ // GNU: @_ZTV1EIiE = external dllimport unnamed_addr
+ // GNU: @_ZTV1EIjE = external unnamed_addr
+@@ -146,6 +148,7 @@ void use() {
+ // MSC: declare dllimport void @"?to_be_imported@?$D@H@@QEAAXXZ"
+ // GNU: declare dllimport void @_ZN1DIiE14to_be_importedEv
  
++
+ // MSC: declare dllimport void @"?also_to_be_imported@?$D@H@@QEAAXXZ"
+ // GNU: declare dllimport void @_ZN1DIiE19also_to_be_importedEv
+ 
+@@ -159,9 +162,9 @@ void use() {
+ // GNU: define linkonce_odr dso_local void @_ZN1EIjEC2Ei
+ 
+ // MSC: declare dllimport void @"?to_be_imported@?$E@H@@UEAAXXZ"
+-// MSC: declare dso_local void @"?to_be_instantiated@?$E@H@@UEAAXXZ"
++// MSC: define linkonce_odr dso_local void @"?to_be_instantiated@?$E@H@@UEAAXXZ"
+ // MSC: declare dllimport void @"?to_be_imported_explicitly@?$E@H@@UEAAXXZ"
+ 
+ // MSC: declare dso_local void @"?to_be_imported@?$E@I@@UEAAXXZ"
+-// MSC: declare dso_local void @"?to_be_instantiated@?$E@I@@UEAAXXZ"
++// MSC: define linkonce_odr dso_local void @"?to_be_instantiated@?$E@I@@UEAAXXZ"
+ // MSC: declare dllimport void @"?to_be_imported_explicitly@?$E@I@@UEAAXXZ"
 -- 
 2.51.2
 

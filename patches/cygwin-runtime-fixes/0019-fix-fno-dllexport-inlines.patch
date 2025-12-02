@@ -1,7 +1,7 @@
-From 476be71b1ad1d6792d21c948e94f67bd828b34ea Mon Sep 17 00:00:00 2001
+From 312be17f0c91b9e1b46586fffa56301a6ccb23ee Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 12:42:37 +0900
-Subject: [PATCH 19/37] fix -fno-dllexport-inlines
+Subject: [PATCH 19/44] fix -fno-dllexport-inlines
 
 ---
  clang/lib/Sema/SemaDecl.cpp                   | 30 +++++++++++++++++++
@@ -9,7 +9,7 @@ Subject: [PATCH 19/37] fix -fno-dllexport-inlines
  2 files changed, 33 insertions(+), 3 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDecl.cpp b/clang/lib/Sema/SemaDecl.cpp
-index 7ad1f17263c4dc443f8041f3d3707356640fc450..9f6b6f5ef3687484a23444debf46e5c92bac3a18 100644
+index 7e7abcee40a56f382c31f56019e328267e030469..c88b0c5166e514e274b1e001c941bf77b6043799 100644
 --- a/clang/lib/Sema/SemaDecl.cpp
 +++ b/clang/lib/Sema/SemaDecl.cpp
 @@ -3958,6 +3958,36 @@ bool Sema::MergeFunctionDecl(FunctionDecl *New, NamedDecl *&OldD, Scope *S,

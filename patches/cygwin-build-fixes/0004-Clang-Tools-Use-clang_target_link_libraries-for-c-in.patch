@@ -1,4 +1,4 @@
-From 65ea1ac8181b4456abdb8403069be6c6e1beac21 Mon Sep 17 00:00:00 2001
+From 12c09b06cb69f278fddb99a2cf7e16a50d16d0d4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 16 May 2025 18:24:46 +0900
 Subject: [PATCH 4/9] [Clang-Tools] Use `clang_target_link_libraries` for

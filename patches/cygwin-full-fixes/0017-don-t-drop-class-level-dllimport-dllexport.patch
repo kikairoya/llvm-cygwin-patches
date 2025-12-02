@@ -1,0 +1,49 @@
+From 8b09a557cd7d469a2ef2da150ef000dfd18b528e Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 1 Dec 2025 21:34:03 +0900
+Subject: [PATCH 17/50] don't drop class level dllimport/dllexport
+
+---
+ clang/lib/Sema/SemaDeclCXX.cpp | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
+index fe732a1328fab814cc3ce99c0f84ad0419ac2c28..4c5dab24b020ba398ee3a3baf125458b6a7d7a31 100644
+--- a/clang/lib/Sema/SemaDeclCXX.cpp
++++ b/clang/lib/Sema/SemaDeclCXX.cpp
+@@ -6551,7 +6551,11 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+     return;
+   }
+ 
+-  TemplateSpecializationKind TSK = Class->getTemplateSpecializationKind();
++  const TemplateSpecializationKind TSK = Class->getTemplateSpecializationKind();
++  const bool ShouldInheritDLLAttr =
++      (TSK != TSK_ExplicitInstantiationDeclaration &&
++       TSK != TSK_ExplicitInstantiationDefinition) ||
++      getDLLAttr(Class->getTemplateInstantiationPattern());
+ 
+   if (Context.getTargetInfo().shouldDLLImportComdatSymbols() &&
+       !ClassAttr->isInherited()) {
+@@ -6563,8 +6567,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+       if (!MemberAttr || MemberAttr->isInherited() || Member->isInvalidDecl())
+         continue;
+ 
+-      if ((TSK == TSK_ExplicitInstantiationDeclaration ||
+-           TSK == TSK_ExplicitInstantiationDefinition) &&
++      if (!ShouldInheritDLLAttr &&
+           Member->hasAttr<ExcludeFromExplicitInstantiationAttr>())
+         continue;
+ 
+@@ -6606,8 +6609,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+   // seem to be true in practice?
+ 
+   for (Decl *Member : Class->decls()) {
+-    if ((TSK == TSK_ExplicitInstantiationDeclaration ||
+-         TSK == TSK_ExplicitInstantiationDefinition) &&
++    if (!ShouldInheritDLLAttr &&
+         Member->hasAttr<ExcludeFromExplicitInstantiationAttr>())
+       continue;
+ 
+-- 
+2.51.2
+

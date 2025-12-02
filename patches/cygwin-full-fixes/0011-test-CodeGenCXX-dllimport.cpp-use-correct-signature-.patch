@@ -1,0 +1,41 @@
+From 69c45af53cc6d3c29f9b528079c51fa35ccaab8b Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 27 Nov 2025 20:19:05 +0900
+Subject: [PATCH 11/50] test/CodeGenCXX/dllimport.cpp: use correct signature
+ for copy assignment operator
+
+---
+ clang/test/CodeGenCXX/dllimport.cpp | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/clang/test/CodeGenCXX/dllimport.cpp b/clang/test/CodeGenCXX/dllimport.cpp
+index 363f97a8d58ee7799f2302f9a437c10b953dce2b..16c51be472a83637d9c78541799ca9894e9182f2 100644
+--- a/clang/test/CodeGenCXX/dllimport.cpp
++++ b/clang/test/CodeGenCXX/dllimport.cpp
+@@ -35,7 +35,7 @@ struct ExplicitSpec_NotImported {};
+ #define USEMEMFUNC(class, func) void (class::*UNIQ(use)())() { return &class::func; }
+ #define USESTATICMEMFUNC(class, func) void (*UNIQ(use)())() { return &class::func; }
+ #define USECLASS(class) void UNIQ(USE)() { class x; }
+-#define USECOPYASSIGN(class) class& (class::*UNIQ(use)())(class&) { return &class::operator=; }
++#define USECOPYASSIGN(class) class& (class::*UNIQ(use)())(const class&) { return &class::operator=; }
+ #define USEMOVEASSIGN(class) class& (class::*UNIQ(use)())(class&&) { return &class::operator=; }
+ 
+ //===----------------------------------------------------------------------===//
+@@ -649,11 +649,11 @@ struct __declspec(dllimport) T {
+   static int b;
+   // MO1-DAG: @"?b@T@@2HA" = external dllimport global i32
+ 
+-  T& operator=(T&) = default;
+-  // MO1-DAG: define available_externally dllimport x86_thiscallcc nonnull align {{[0-9]+}} dereferenceable({{[0-9]+}}) ptr @"??4T@@QAEAAU0@AAU0@@Z"
++  T& operator=(const T&) = default;
++  // MO1-DAG: define available_externally dllimport x86_thiscallcc nonnull align {{[0-9]+}} dereferenceable({{[0-9]+}}) ptr @"??4T@@QAEAAU0@ABU0@@Z"
+ 
+   T& operator=(T&&) = default;
+-  // Note: Don't mark inline move operators dllimport because current MSVC versions don't export them.
++  // Note: Don't mark inline move operators dllimport because MSVC versions before 2015 don't export them.
+   // M18-DAG: define linkonce_odr dso_local x86_thiscallcc nonnull align {{[0-9]+}} dereferenceable({{[0-9]+}}) ptr @"??4T@@QAEAAU0@$$QAU0@@Z"
+   // M19-DAG: define available_externally dllimport x86_thiscallcc nonnull align {{[0-9]+}} dereferenceable({{[0-9]+}}) ptr @"??4T@@QAEAAU0@$$QAU0@@Z"
+ };
+-- 
+2.51.2
+

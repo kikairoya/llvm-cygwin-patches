@@ -1,0 +1,90 @@
+From 12c09b06cb69f278fddb99a2cf7e16a50d16d0d4 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Fri, 16 May 2025 18:24:46 +0900
+Subject: [PATCH 26/50] [Clang-Tools] Use `clang_target_link_libraries` for
+ c-index-test and libclang
+
+`target_link_libraries` shouldn't be used to link clang libraries because
+that may cause symbol dup when CLANG_LINK_CLANG_DYLIB=ON.
+`clang_target_link_libraries` correctly handles both of static and dylib builds.
+---
+ clang/tools/c-index-test/CMakeLists.txt |  6 +++++
+ clang/tools/libclang/CMakeLists.txt     | 31 +++++++++++++------------
+ 2 files changed, 22 insertions(+), 15 deletions(-)
+
+diff --git a/clang/tools/c-index-test/CMakeLists.txt b/clang/tools/c-index-test/CMakeLists.txt
+index 41e80e66ffa7aa4b2ab4064df69853e95854c54d..4b7d007d33af3813b58bfdee2aaa40f8bac1ca43 100644
+--- a/clang/tools/c-index-test/CMakeLists.txt
++++ b/clang/tools/c-index-test/CMakeLists.txt
+@@ -18,6 +18,9 @@ if (LLVM_BUILD_STATIC)
+   target_link_libraries(c-index-test
+     PRIVATE
+     libclang_static
++  )
++  clang_target_link_libraries(c-index-test
++    PRIVATE
+     clangCodeGen
+     clangIndex
+   )
+@@ -25,6 +28,9 @@ else()
+   target_link_libraries(c-index-test
+     PRIVATE
+     libclang
++  )
++  clang_target_link_libraries(c-index-test
++    PRIVATE
+     clangAST
+     clangBasic
+     clangDriver
+diff --git a/clang/tools/libclang/CMakeLists.txt b/clang/tools/libclang/CMakeLists.txt
+index b0105f5a5f79f26e1ee0ea3963709e9525ec9233..c94c7d23aa2bfc3d20f3d93a1d2bcafdf4ad7219 100644
+--- a/clang/tools/libclang/CMakeLists.txt
++++ b/clang/tools/libclang/CMakeLists.txt
+@@ -57,21 +57,6 @@ set(SOURCES
+   ../../include/clang-c/Index.h
+   )
+ 
+-set(LIBS
+-  clangAST
+-  clangBasic
+-  clangDriver
+-  clangExtractAPI
+-  clangFrontend
+-  clangIndex
+-  clangLex
+-  clangOptions
+-  clangRewrite
+-  clangSema
+-  clangSerialization
+-  clangTooling
+-)
+-
+ if (HAVE_LIBDL)
+   list(APPEND LIBS ${CMAKE_DL_LIBS})
+ elseif (CLANG_BUILT_STANDALONE)
+@@ -150,6 +135,22 @@ add_clang_library(libclang ${ENABLE_SHARED} ${ENABLE_STATIC} INSTALL_WITH_TOOLCH
+   TargetParser
+   )
+ 
++clang_target_link_libraries(libclang
++  PRIVATE
++  clangAST
++  clangBasic
++  clangDriver
++  clangExtractAPI
++  clangFrontend
++  clangIndex
++  clangLex
++  clangOptions
++  clangRewrite
++  clangSema
++  clangSerialization
++  clangTooling
++)
++
+ if(ENABLE_STATIC)
+   foreach(name libclang obj.libclang libclang_static)
+     if (TARGET ${name})
+-- 
+2.51.2
+

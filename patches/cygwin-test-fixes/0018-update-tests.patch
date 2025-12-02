@@ -1,0 +1,71 @@
+From cee5222fcd02caff741e703b4e6a02e75aa8edc3 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 1 Dec 2025 21:36:30 +0900
+Subject: [PATCH 18/60] update tests
+
+---
+ ...from_explicit_instantiation.exclude_from_dllexport.cpp | 6 +++---
+ ...from_explicit_instantiation.exclude_from_dllimport.cpp | 8 +++-----
+ 2 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+index 4bff5a828f34ca2457c408b4f1c1a73490c57aed..877e94e240287a1d3d04d014e36925685fa00adf 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+@@ -43,7 +43,7 @@ struct __declspec(dllexport) D {
+   // This should be exported by the class-level attribute.
+   void to_be_exported() noexcept;
+ 
+-  // This also should be exported by the class-level attribute but currently not.
++  // This also will be exported by the class-level attribute.
+   EXCLUDE_FROM_EXPLICIT_INSTANTIATION void also_to_be_exported() noexcept;
+ };
+ 
+@@ -151,8 +151,8 @@ void use() {
+ // MSC: define linkonce_odr dso_local void @"?not_to_be_exported@?$C@H@@QEAAXXZ"
+ // GNU: define linkonce_odr dso_local void @_ZN1CIiE18not_to_be_exportedEv
+ 
+-// MSC: define linkonce_odr dso_local void @"?also_to_be_exported@?$D@H@@QEAAXXZ"
+-// GNU: define linkonce_odr dso_local void @_ZN1DIiE19also_to_be_exportedEv
++// MSC: define weak_odr dso_local dllexport void @"?also_to_be_exported@?$D@H@@QEAAXXZ"
++// GNU: define weak_odr dso_local dllexport void @_ZN1DIiE19also_to_be_exportedEv
+ 
+ // MSC: define linkonce_odr dso_local void @"?to_be_instantiated@?$E@H@@UEAAXXZ"
+ // MSC: define weak_odr dso_local dllexport void @"?to_be_exported_explicitly@?$E@H@@UEAAXXZ"
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+index 6cb169bb5a4d8e034316c05d69dc2ae1b1ffbc1e..dc2099384d398bd7c1b3c20feb35657199a56cb0 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+@@ -42,7 +42,7 @@ struct __declspec(dllimport) D {
+   // This will be imported by the class-level attribute.
+   void to_be_imported() noexcept;
+ 
+-  // This also should be imported by the class-level attribute but currently not.
++  // This also will be imported by the class-level attribute.
+   EXCLUDE_FROM_EXPLICIT_INSTANTIATION void also_to_be_imported() noexcept;
+ };
+ 
+@@ -82,9 +82,7 @@ template <class T> void E<T>::to_be_imported() noexcept {}
+ template <class T> void E<T>::to_be_instantiated() noexcept {}
+ 
+ // MSC: $"?not_to_be_imported@?$C@H@@QEAAXXZ" = comdat any
+-// MSC: $"?also_to_be_imported@?$D@H@@QEAAXXZ" = comdat any
+ // GNU: $_ZN1CIiE18not_to_be_importedEv = comdat any
+-// GNU: $_ZN1DIiE19also_to_be_importedEv = comdat any
+ // GNU: @_ZTV1EIiE = external dllimport unnamed_addr
+ // GNU: @_ZTV1EIjE = external unnamed_addr
+ 
+@@ -148,8 +146,8 @@ void use() {
+ // MSC: declare dllimport void @"?to_be_imported@?$D@H@@QEAAXXZ"
+ // GNU: declare dllimport void @_ZN1DIiE14to_be_importedEv
+ 
+-// MSC: define linkonce_odr dso_local void @"?also_to_be_imported@?$D@H@@QEAAXXZ"
+-// GNU: define linkonce_odr dso_local void @_ZN1DIiE19also_to_be_importedEv
++// MSC: declare dllimport void @"?also_to_be_imported@?$D@H@@QEAAXXZ"
++// GNU: declare dllimport void @_ZN1DIiE19also_to_be_importedEv
+ 
+ // MSC: declare dllimport noundef ptr @"??0?$E@J@@QEAA@J@Z"
+ // MSC: declare dso_local noundef ptr @"??0?$E@K@@QEAA@J@Z"
+-- 
+2.51.2
+

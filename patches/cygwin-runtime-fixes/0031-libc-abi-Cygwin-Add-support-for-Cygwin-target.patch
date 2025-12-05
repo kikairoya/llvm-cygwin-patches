@@ -1,0 +1,166 @@
+From 05efbd57589659005ac9e8bc2decff14aa521bd9 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 31 May 2025 23:08:20 +0900
+Subject: [PATCH 31/43] [libc++abi][Cygwin] Add support for Cygwin target
+
+---
+ libcxxabi/CMakeLists.txt            |  4 ++--
+ libcxxabi/cmake/config-ix.cmake     | 11 +++++++++
+ libcxxabi/include/__cxxabi_config.h | 35 +++++++++++++++--------------
+ libcxxabi/include/cxxabi.h          |  4 ++--
+ libcxxabi/src/CMakeLists.txt        |  6 ++++-
+ libcxxabi/src/fallback_malloc.cpp   |  2 +-
+ 6 files changed, 39 insertions(+), 23 deletions(-)
+
+diff --git a/libcxxabi/CMakeLists.txt b/libcxxabi/CMakeLists.txt
+index 3dabd87b9c58776ba8f19561787662407957bc55..db426e5ad802e9ae47eb77d9a368cd20cd6935a1 100644
+--- a/libcxxabi/CMakeLists.txt
++++ b/libcxxabi/CMakeLists.txt
+@@ -137,7 +137,7 @@ if (NOT LIBCXXABI_ENABLE_SHARED AND NOT LIBCXXABI_ENABLE_STATIC)
+ endif()
+ 
+ set(LIBCXXABI_HERMETIC_STATIC_LIBRARY_DEFAULT OFF)
+-if (WIN32)
++if (WIN32 OR CYGWIN)
+   set(LIBCXXABI_HERMETIC_STATIC_LIBRARY_DEFAULT ON)
+ endif()
+ option(LIBCXXABI_HERMETIC_STATIC_LIBRARY
+@@ -404,7 +404,7 @@ if (LLVM_ENABLE_MODULES)
+ endif()
+ 
+ set(LIBCXXABI_HAS_UNDEFINED_SYMBOLS OFF)
+-if ((NOT LIBCXXABI_ENABLE_NEW_DELETE_DEFINITIONS) OR MINGW)
++if ((NOT LIBCXXABI_ENABLE_NEW_DELETE_DEFINITIONS) OR MINGW OR CYGWIN)
+   set(LIBCXXABI_HAS_UNDEFINED_SYMBOLS ON)
+ endif()
+ 
+diff --git a/libcxxabi/cmake/config-ix.cmake b/libcxxabi/cmake/config-ix.cmake
+index 10f2087c68c5e79f6f360ae9b079a378f0fed89e..2a9e3737a245d3d2a0af867f9c6e4c5fe79df977 100644
+--- a/libcxxabi/cmake/config-ix.cmake
++++ b/libcxxabi/cmake/config-ix.cmake
+@@ -69,6 +69,17 @@ if (NOT CXX_SUPPORTS_NOSTDLIBXX_FLAG AND C_SUPPORTS_NODEFAULTLIBS_FLAG)
+                         moldname mingwex msvcrt)
+     list(APPEND CMAKE_REQUIRED_LIBRARIES ${MINGW_LIBRARIES})
+   endif()
++  if (CYGWIN)
++    if (LIBCXXABI_USE_COMPILER_RT)
++      set(CYGWIN_RUNTIME ${LIBCXXABI_BUILTINS_LIBRARY})
++    else ()
++      set(CYGWIN_RUNTIME gcc_s gcc)
++    endif()
++    set(CYGWIN_LIBRARIES cygwin ${CYGWIN_RUNTIME} advapi32
++                        shell32 user32 kernel32 ${CYGWIN_RUNTIME}
++                        cygwin)
++    list(APPEND CMAKE_REQUIRED_LIBRARIES ${CYGWIN_LIBRARIES})
++  endif()
+ endif()
+ 
+ if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
+diff --git a/libcxxabi/include/__cxxabi_config.h b/libcxxabi/include/__cxxabi_config.h
+index e4fd845b1fb35596e603309612471fdb2aafc893..5d0b460631982fd19c451504241b6cf7ff9ff27f 100644
+--- a/libcxxabi/include/__cxxabi_config.h
++++ b/libcxxabi/include/__cxxabi_config.h
+@@ -23,23 +23,24 @@
+ #  define _LIBCXXABI_COMPILER_GCC
+ #endif
+ 
+-#if defined(_WIN32)
+- #if defined(_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS) || (defined(__MINGW32__) && !defined(_LIBCXXABI_BUILDING_LIBRARY))
+-  #define _LIBCXXABI_HIDDEN
+-  #define _LIBCXXABI_DATA_VIS
+-  #define _LIBCXXABI_FUNC_VIS
+-  #define _LIBCXXABI_TYPE_VIS
+- #elif defined(_LIBCXXABI_BUILDING_LIBRARY)
+-  #define _LIBCXXABI_HIDDEN
+-  #define _LIBCXXABI_DATA_VIS __declspec(dllexport)
+-  #define _LIBCXXABI_FUNC_VIS __declspec(dllexport)
+-  #define _LIBCXXABI_TYPE_VIS __declspec(dllexport)
+- #else
+-  #define _LIBCXXABI_HIDDEN
+-  #define _LIBCXXABI_DATA_VIS __declspec(dllimport)
+-  #define _LIBCXXABI_FUNC_VIS __declspec(dllimport)
+-  #define _LIBCXXABI_TYPE_VIS __declspec(dllimport)
+- #endif
++#if defined(_WIN32) || defined(__CYGWIN__)
++#  if defined(_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS) ||                                                            \
++      ((defined(__MINGW32__) || defined(__CYGWIN__)) && !defined(_LIBCXXABI_BUILDING_LIBRARY))
++#    define _LIBCXXABI_HIDDEN
++#    define _LIBCXXABI_DATA_VIS
++#    define _LIBCXXABI_FUNC_VIS
++#    define _LIBCXXABI_TYPE_VIS
++#  elif defined(_LIBCXXABI_BUILDING_LIBRARY)
++#    define _LIBCXXABI_HIDDEN
++#    define _LIBCXXABI_DATA_VIS __declspec(dllexport)
++#    define _LIBCXXABI_FUNC_VIS __declspec(dllexport)
++#    define _LIBCXXABI_TYPE_VIS __declspec(dllexport)
++#  else
++#    define _LIBCXXABI_HIDDEN
++#    define _LIBCXXABI_DATA_VIS __declspec(dllimport)
++#    define _LIBCXXABI_FUNC_VIS __declspec(dllimport)
++#    define _LIBCXXABI_TYPE_VIS __declspec(dllimport)
++#  endif
+ #else
+  #if !defined(_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS)
+   #define _LIBCXXABI_HIDDEN __attribute__((__visibility__("hidden")))
+diff --git a/libcxxabi/include/cxxabi.h b/libcxxabi/include/cxxabi.h
+index 9ea93680f62e06365ddba048b7a26a19c5b0fa45..aa6f54655b6d06a23950372aab8802d84a1d28a2 100644
+--- a/libcxxabi/include/cxxabi.h
++++ b/libcxxabi/include/cxxabi.h
+@@ -26,7 +26,7 @@
+ #ifdef __cplusplus
+ 
+ namespace std {
+-#if defined(_WIN32)
++#  if defined(_WIN32) || defined(__CYGWIN__)
+ class _LIBCXXABI_TYPE_VIS type_info; // forward declaration
+ #else
+ class type_info; // forward declaration
+@@ -180,7 +180,7 @@ __cxa_decrement_exception_refcount(void *primary_exception) _LIBCXXABI_NOEXCEPT;
+ extern _LIBCXXABI_FUNC_VIS bool __cxa_uncaught_exception() _LIBCXXABI_NOEXCEPT;
+ extern _LIBCXXABI_FUNC_VIS unsigned int __cxa_uncaught_exceptions() _LIBCXXABI_NOEXCEPT;
+ 
+-#if defined(__linux__) || defined(__Fuchsia__)
++#if defined(__linux__) || defined(__Fuchsia__) || defined(__CYGWIN__)
+ // Linux and Fuchsia TLS support. Not yet an official part of the Itanium ABI.
+ // https://sourceware.org/glibc/wiki/Destructor%20support%20for%20thread_local%20variables
+ extern _LIBCXXABI_FUNC_VIS int __cxa_thread_atexit(void (*)(void *), void *,
+diff --git a/libcxxabi/src/CMakeLists.txt b/libcxxabi/src/CMakeLists.txt
+index 38a54b16278a789bbe76b230160570a93edd53a0..70170075f4817334b96b2b8e8bcc4c3609422403 100644
+--- a/libcxxabi/src/CMakeLists.txt
++++ b/libcxxabi/src/CMakeLists.txt
+@@ -36,7 +36,7 @@ else()
+   )
+ endif()
+ 
+-if (LIBCXXABI_ENABLE_THREADS AND (UNIX OR FUCHSIA) AND NOT (APPLE OR CYGWIN)
++if (LIBCXXABI_ENABLE_THREADS AND (UNIX OR FUCHSIA) AND NOT APPLE
+     AND NOT ("${CMAKE_SYSTEM_NAME}" MATCHES "AIX"))
+   list(APPEND LIBCXXABI_SOURCES
+     cxa_thread_atexit.cpp
+@@ -92,6 +92,10 @@ if (MINGW)
+   # MINGW_LIBRARIES is defined in config-ix.cmake
+   list(APPEND LIBCXXABI_LIBRARIES ${MINGW_LIBRARIES})
+ endif()
++if (CYGWIN)
++  # CYGWIN_LIBRARIES is defined in config-ix.cmake
++  list(APPEND LIBCXXABI_LIBRARIES ${CYGWIN_LIBRARIES})
++endif()
+ if (ANDROID AND ANDROID_PLATFORM_LEVEL LESS 21)
+   list(APPEND LIBCXXABI_LIBRARIES android_support)
+ endif()
+diff --git a/libcxxabi/src/fallback_malloc.cpp b/libcxxabi/src/fallback_malloc.cpp
+index 6a261e6f009fee3394a11b01dc938966b3160590..cece3f4e6f191ae60fa9035b7842a774d7e5b40f 100644
+--- a/libcxxabi/src/fallback_malloc.cpp
++++ b/libcxxabi/src/fallback_malloc.cpp
+@@ -256,7 +256,7 @@ namespace __cxxabiv1 {
+ struct __attribute__((aligned)) __aligned_type {};
+ 
+ void* __aligned_malloc_with_fallback(size_t size) {
+-#if defined(_WIN32)
++#if defined(_WIN32) || defined(__CYGWIN__)
+   if (void* dest = std::__libcpp_aligned_alloc(alignof(__aligned_type), size))
+     return dest;
+ #elif !_LIBCPP_HAS_LIBRARY_ALIGNED_ALLOCATION
+-- 
+2.51.2
+

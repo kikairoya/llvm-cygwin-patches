@@ -1,0 +1,355 @@
+From c109c0aa55786c5516a18ba9ec19097cea0756e4 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 25 May 2025 14:11:29 +0900
+Subject: [PATCH 35/43] [runtime][Test][Cygwin] Make test runnable for Cygwin
+ target
+
+---
+ compiler-rt/test/CMakeLists.txt               |  2 +-
+ compiler-rt/test/builtins/Unit/lit.cfg.py     | 11 ++++++++
+ compiler-rt/test/lit.common.cfg.py            |  2 +-
+ .../test/profile/Windows/lit.local.cfg.py     |  2 +-
+ compiler-rt/test/profile/lit.cfg.py           |  1 +
+ libcxx/CMakeLists.txt                         |  4 ++-
+ libcxx/test/configs/llvm-libc++-cygwin.cfg.in | 25 +++++++++++++++++++
+ .../clang/clang_modules_include.gen.py        |  1 +
+ .../test/libcxx/system_reserved_names.gen.py  |  6 ++++-
+ libcxx/utils/libcxx/test/features/platform.py |  1 +
+ libcxxabi/CMakeLists.txt                      |  2 ++
+ .../test/configs/llvm-libc++abi-cygwin.cfg.in | 25 +++++++++++++++++++
+ libunwind/CMakeLists.txt                      | 10 ++++++--
+ .../llvm-libunwind-shared-cygwin.cfg.in       | 25 +++++++++++++++++++
+ .../llvm-libunwind-static-cygwin.cfg.in       | 25 +++++++++++++++++++
+ 15 files changed, 135 insertions(+), 7 deletions(-)
+ create mode 100644 libcxx/test/configs/llvm-libc++-cygwin.cfg.in
+ create mode 100644 libcxxabi/test/configs/llvm-libc++abi-cygwin.cfg.in
+ create mode 100644 libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in
+ create mode 100644 libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
+
+diff --git a/compiler-rt/test/CMakeLists.txt b/compiler-rt/test/CMakeLists.txt
+index 9cfb7ea55947535b36a436d25028e535c8e64d52..819df9251e14cbd6f4dd262630200c6f1c2e9275 100644
+--- a/compiler-rt/test/CMakeLists.txt
++++ b/compiler-rt/test/CMakeLists.txt
+@@ -76,7 +76,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)
+   if(COMPILER_RT_BUILD_BUILTINS)
+     add_subdirectory(builtins)
+   endif()
+-  if(COMPILER_RT_BUILD_SANITIZERS)
++  if(COMPILER_RT_BUILD_SANITIZERS AND COMPILER_RT_HAS_SANITIZER_COMMON)
+     compiler_rt_test_runtime(interception)
+ 
+     compiler_rt_test_runtime(lsan)
+diff --git a/compiler-rt/test/builtins/Unit/lit.cfg.py b/compiler-rt/test/builtins/Unit/lit.cfg.py
+index 59da054848f3ca307629ad27516bdac288c7bc35..820ddf2e61426a59d53c7dab69213bbdef1f45d6 100644
+--- a/compiler-rt/test/builtins/Unit/lit.cfg.py
++++ b/compiler-rt/test/builtins/Unit/lit.cfg.py
+@@ -97,6 +97,17 @@ elif config.target_os == "Windows":
+             + " -lmingw32 -lmoldname -lmingwex -lmsvcrt -ladvapi32 -lshell32 -luser32 -lkernel32 ",
+         )
+     )
++elif config.target_os == "CYGWIN":
++    base_lib = os.path.join(
++        config.compiler_rt_libdir, "libclang_rt.builtins%s.a" % config.target_suffix
++    )
++    config.substitutions.append(
++        (
++            "%librt ",
++            base_lib
++            + " -lcygwin -ladvapi32 -lshell32 -luser32 -lkernel32 -lcygwin ",
++        )
++    )
+ else:
+     base_lib = os.path.join(
+         config.compiler_rt_libdir, "libclang_rt.builtins%s.a" % config.target_suffix
+diff --git a/compiler-rt/test/lit.common.cfg.py b/compiler-rt/test/lit.common.cfg.py
+index dce01cc9743b319733e7d409d9380fa24895038e..25043468636eac6718da5dbec9c9fdee2189e0db 100644
+--- a/compiler-rt/test/lit.common.cfg.py
++++ b/compiler-rt/test/lit.common.cfg.py
+@@ -78,7 +78,7 @@ def find_compiler_libdir():
+ 
+ 
+ def push_dynamic_library_lookup_path(config, new_path):
+-    if platform.system() == "Windows":
++    if platform.system() == "Windows" or platform.sys.platform == 'cygwin':
+         dynamic_library_lookup_var = "PATH"
+     elif platform.system() == "Darwin":
+         dynamic_library_lookup_var = "DYLD_LIBRARY_PATH"
+diff --git a/compiler-rt/test/profile/Windows/lit.local.cfg.py b/compiler-rt/test/profile/Windows/lit.local.cfg.py
+index b622e072bcbfbc28554b5bd44c178de15b016823..2b64b52bf7f1ecb3187ef74ba228056eda52ebe3 100644
+--- a/compiler-rt/test/profile/Windows/lit.local.cfg.py
++++ b/compiler-rt/test/profile/Windows/lit.local.cfg.py
+@@ -6,5 +6,5 @@ def getRoot(config):
+ 
+ root = getRoot(config)
+ 
+-if root.target_os not in ["Windows"]:
++if root.target_os not in ["Windows", "CYGWIN"]:
+     config.unsupported = True
+diff --git a/compiler-rt/test/profile/lit.cfg.py b/compiler-rt/test/profile/lit.cfg.py
+index df7f11e2b286b60c7c99ff88b267ffb4cb4d54a2..9b128ed44b19dc64dae41881c3829252d26c72b2 100644
+--- a/compiler-rt/test/profile/lit.cfg.py
++++ b/compiler-rt/test/profile/lit.cfg.py
+@@ -163,6 +163,7 @@ if config.target_os not in [
+     "SunOS",
+     "AIX",
+     "Haiku",
++    "CYGWIN",
+ ]:
+     config.unsupported = True
+ 
+diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
+index b076fa0abd08fd20a35a6736b07ecac789ad53e1..e77f4d8d4642d57c88ed20252a7f32d9a7c53729 100644
+--- a/libcxx/CMakeLists.txt
++++ b/libcxx/CMakeLists.txt
+@@ -148,6 +148,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+   set(LIBCXX_DEFAULT_TEST_CONFIG "llvm-libc++-shared-gcc.cfg.in")
+ elseif(MINGW)
+   set(LIBCXX_DEFAULT_TEST_CONFIG "llvm-libc++-mingw.cfg.in")
++elseif(CYGWIN)
++  set(LIBCXX_DEFAULT_TEST_CONFIG "llvm-libc++-cygwin.cfg.in")
+ elseif(WIN32) # clang-cl
+   if (LIBCXX_ENABLE_SHARED)
+     set(LIBCXX_DEFAULT_TEST_CONFIG "llvm-libc++-shared-clangcl.cfg.in")
+@@ -864,7 +866,7 @@ if (DEFINED WIN32 AND LIBCXX_ENABLE_STATIC AND NOT LIBCXX_ENABLE_SHARED)
+   config_define(ON _LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS)
+ endif()
+ 
+-if (WIN32 AND LIBCXX_ENABLE_STATIC_ABI_LIBRARY)
++if ((WIN32 OR CYGWIN) AND LIBCXX_ENABLE_STATIC_ABI_LIBRARY)
+   # If linking libcxxabi statically into libcxx, skip the dllimport attributes
+   # on symbols we refer to from libcxxabi.
+   add_definitions(-D_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS)
+diff --git a/libcxx/test/configs/llvm-libc++-cygwin.cfg.in b/libcxx/test/configs/llvm-libc++-cygwin.cfg.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..7e4953b3fd240ef18153dd508c680bd12afdbf52
+--- /dev/null
++++ b/libcxx/test/configs/llvm-libc++-cygwin.cfg.in
+@@ -0,0 +1,25 @@
++# This testing configuration handles running the test suite against LLVM's libc++
++# using either a DLL or a static library, with Cygwin.
++
++lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
++
++config.substitutions.append(('%{flags}', '-pthread'))
++config.substitutions.append(('%{compile_flags}',
++    '-nostdinc++ -I %{target-include-dir} -I %{include-dir} -I %{libcxx-dir}/test/support'
++))
++config.substitutions.append(('%{link_flags}',
++    '-nostdlib++ -L %{lib-dir} -lc++'
++))
++config.substitutions.append(('%{exec}',
++    '%{executor} --execdir %{temp} --prepend_env PATH=%{install-prefix}/bin -- '
++))
++
++import os, site
++site.addsitedir(os.path.join('@LIBCXX_SOURCE_DIR@', 'utils'))
++import libcxx.test.params, libcxx.test.config
++libcxx.test.config.configure(
++    libcxx.test.params.DEFAULT_PARAMETERS,
++    libcxx.test.features.DEFAULT_FEATURES,
++    config,
++    lit_config
++)
+diff --git a/libcxx/test/extensions/clang/clang_modules_include.gen.py b/libcxx/test/extensions/clang/clang_modules_include.gen.py
+index 28661049d6e85c25547d2c63a53d89d31592f679..732de92f8b3b24c5f7ca23ab168b0fbed3859e86 100644
+--- a/libcxx/test/extensions/clang/clang_modules_include.gen.py
++++ b/libcxx/test/extensions/clang/clang_modules_include.gen.py
+@@ -20,6 +20,7 @@
+ # The Windows headers don't appear to be compatible with modules
+ # UNSUPPORTED: windows
+ # UNSUPPORTED: buildhost=windows
++# UNSUPPORTED: LIBCXX-CYGWIN-FIXME
+ 
+ # The Android headers don't appear to be compatible with modules yet
+ # UNSUPPORTED: LIBCXX-ANDROID-FIXME
+diff --git a/libcxx/test/libcxx/system_reserved_names.gen.py b/libcxx/test/libcxx/system_reserved_names.gen.py
+index aaede220531d255e98e6d6f69d4f3d19ccb88afe..766b44e2e752d069a2e7d1653298a48c9b30fe27 100644
+--- a/libcxx/test/libcxx/system_reserved_names.gen.py
++++ b/libcxx/test/libcxx/system_reserved_names.gen.py
+@@ -122,7 +122,7 @@ for header in public_headers:
+ #endif
+ 
+ // Newlib & picolibc use __input as a parameter name of a64l & l64a
+-#if !_LIBCPP_LIBC_NEWLIB
++#if !_LIBCPP_LIBC_NEWLIB && !defined(__CYGWIN__)
+ # define __input SYSTEM_RESERVED_NAME
+ #endif
+ #define __output SYSTEM_RESERVED_NAME
+@@ -177,8 +177,10 @@ for header in public_headers:
+ #define Xs SYSTEM_RESERVED_NAME
+ 
+ // The classic Windows min/max macros
++#ifndef __CYGWIN__
+ #define min SYSTEM_RESERVED_NAME
+ #define max SYSTEM_RESERVED_NAME
++#endif
+ 
+ // Test to make sure curses has no conflicting macros with the standard library
+ #define move SYSTEM_RESERVED_NAME
+@@ -202,8 +204,10 @@ for header in public_headers:
+ // Make sure we don't swallow the definition of the macros we push/pop
+ #define STRINGIFY_IMPL(x) #x
+ #define STRINGIFY(x) STRINGIFY_IMPL(x)
++#ifndef __CYGWIN__
+ static_assert(__builtin_strcmp(STRINGIFY(min), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
+ static_assert(__builtin_strcmp(STRINGIFY(max), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
++#endif
+ static_assert(__builtin_strcmp(STRINGIFY(move), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
+ static_assert(__builtin_strcmp(STRINGIFY(erase), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
+ static_assert(__builtin_strcmp(STRINGIFY(refresh), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
+diff --git a/libcxx/utils/libcxx/test/features/platform.py b/libcxx/utils/libcxx/test/features/platform.py
+index db9d3931da7fff16631984eb63cbc592889049b6..820dd75ae21e860551d4b89086878e8c6ae6f9ff 100644
+--- a/libcxx/utils/libcxx/test/features/platform.py
++++ b/libcxx/utils/libcxx/test/features/platform.py
+@@ -29,6 +29,7 @@ def _getAndroidDeviceApi(cfg):
+ features = [
+     Feature(name="darwin", when=lambda cfg: "__APPLE__" in compilerMacros(cfg)),
+     Feature(name="windows", when=lambda cfg: "_WIN32" in compilerMacros(cfg)),
++    Feature(name="cygwin", when=lambda cfg: "__CYGWIN__" in compilerMacros(cfg)),
+     Feature(
+         name="windows-dll",
+         when=lambda cfg: "_WIN32" in compilerMacros(cfg)
+diff --git a/libcxxabi/CMakeLists.txt b/libcxxabi/CMakeLists.txt
+index db426e5ad802e9ae47eb77d9a368cd20cd6935a1..c60778abd4d4864e348fa7424496827e6ebdd549 100644
+--- a/libcxxabi/CMakeLists.txt
++++ b/libcxxabi/CMakeLists.txt
+@@ -145,6 +145,8 @@ option(LIBCXXABI_HERMETIC_STATIC_LIBRARY
+ 
+ if(MINGW)
+   set(LIBCXXABI_DEFAULT_TEST_CONFIG "llvm-libc++abi-mingw.cfg.in")
++elseif(CYGWIN)
++  set(LIBCXXABI_DEFAULT_TEST_CONFIG "llvm-libc++abi-cygwin.cfg.in")
+ elseif(WIN32) # clang-cl
+   if (LIBCXXABI_ENABLE_SHARED)
+     set(LIBCXXABI_DEFAULT_TEST_CONFIG "llvm-libc++abi-shared-clangcl.cfg.in")
+diff --git a/libcxxabi/test/configs/llvm-libc++abi-cygwin.cfg.in b/libcxxabi/test/configs/llvm-libc++abi-cygwin.cfg.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..938d627fa42d779ca01f5b62bc9a6dbe33b92a5b
+--- /dev/null
++++ b/libcxxabi/test/configs/llvm-libc++abi-cygwin.cfg.in
+@@ -0,0 +1,25 @@
++# This testing configuration handles running the test suite against LLVM's libc++abi
++# using a static library merged into libc++ with Cygwin.
++
++lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
++
++config.substitutions.append(('%{flags}', ''))
++config.substitutions.append(('%{compile_flags}',
++    '-nostdinc++ -I %{include} -I %{cxx-include} -I %{cxx-target-include} %{maybe-include-libunwind} -I %{libcxx}/test/support -I %{libcxx}/src -D_LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS'
++))
++config.substitutions.append(('%{link_flags}',
++    '-nostdlib++ -L %{lib} -lc++'
++))
++config.substitutions.append(('%{exec}',
++    '%{executor} --execdir %{temp} --prepend_env PATH=%{install-prefix}/bin -- '
++))
++
++import os, site
++site.addsitedir(os.path.join('@LIBCXXABI_LIBCXX_PATH@', 'utils'))
++import libcxx.test.params, libcxx.test.config
++libcxx.test.config.configure(
++    libcxx.test.params.DEFAULT_PARAMETERS,
++    libcxx.test.features.DEFAULT_FEATURES,
++    config,
++    lit_config
++)
+diff --git a/libunwind/CMakeLists.txt b/libunwind/CMakeLists.txt
+index 97edff0b87ea3451c575a938ae6bb807d9c78d3d..a71d7f149eb2d5f78fe7e2767f23b0e07a746dde 100644
+--- a/libunwind/CMakeLists.txt
++++ b/libunwind/CMakeLists.txt
+@@ -78,6 +78,12 @@ if(MINGW)
+   else()
+     set(LIBUNWIND_DEFAULT_TEST_CONFIG "llvm-libunwind-static-mingw.cfg.in")
+   endif()
++elseif(CYGWIN)
++  if (LIBUNWIND_ENABLE_SHARED)
++    set(LIBUNWIND_DEFAULT_TEST_CONFIG "llvm-libunwind-shared-cygwin.cfg.in")
++  else()
++    set(LIBUNWIND_DEFAULT_TEST_CONFIG "llvm-libunwind-static-cygwin.cfg.in")
++  endif()
+ elseif (LIBUNWIND_ENABLE_SHARED)
+   set(LIBUNWIND_DEFAULT_TEST_CONFIG "llvm-libunwind-shared.cfg.in")
+ else()
+@@ -101,7 +107,7 @@ if (LIBUNWIND_ENABLE_CET AND MSVC)
+   message(FATAL_ERROR "libunwind CET support is not available for MSVC!")
+ endif()
+ 
+-if (WIN32)
++if (WIN32 OR CYGWIN)
+   set(LIBUNWIND_DEFAULT_HIDE_SYMBOLS TRUE)
+ else()
+   set(LIBUNWIND_DEFAULT_HIDE_SYMBOLS FALSE)
+@@ -208,7 +214,7 @@ if (LIBUNWIND_ENABLE_GCS)
+   endif()
+ endif()
+ 
+-if (WIN32)
++if (WIN32 OR CYGWIN)
+   # The headers lack matching dllexport attributes (_LIBUNWIND_EXPORT);
+   # silence the warning instead of cluttering the headers (which aren't
+   # necessarily the ones that the callers will use anyway) with the
+diff --git a/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in b/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..b01784665582d377e88c2dca60420589d65074b0
+--- /dev/null
++++ b/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in
+@@ -0,0 +1,25 @@
++# This testing configuration handles running the test suite against LLVM's libunwind
++# using a DLL with Cygwin.
++
++lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
++
++config.substitutions.append(('%{flags}', ''))
++config.substitutions.append(('%{compile_flags}',
++    '-nostdinc++ -I %{include} -funwind-tables'
++))
++config.substitutions.append(('%{link_flags}',
++    '-L %{lib} -lunwind'
++))
++config.substitutions.append(('%{exec}',
++    '%{executor} --execdir %{temp} --prepend_env PATH=%{install-prefix}/bin -- '
++))
++
++import os, site
++site.addsitedir(os.path.join('@LIBUNWIND_LIBCXX_PATH@', 'utils'))
++import libcxx.test.params, libcxx.test.config
++libcxx.test.config.configure(
++    libcxx.test.params.DEFAULT_PARAMETERS,
++    libcxx.test.features.DEFAULT_FEATURES,
++    config,
++    lit_config
++)
+diff --git a/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in b/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..dc490a08ba1a63389ccdc01a036020a06e805c49
+--- /dev/null
++++ b/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
+@@ -0,0 +1,25 @@
++# This testing configuration handles running the test suite against LLVM's libunwind
++# using a static library with Cygwin.
++
++lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
++
++config.substitutions.append(('%{flags}', ''))
++config.substitutions.append(('%{compile_flags}',
++    '-nostdinc++ -I %{include} -funwind-tables'
++))
++config.substitutions.append(('%{link_flags}',
++    '-L %{lib} -lunwind'
++))
++config.substitutions.append(('%{exec}',
++    '%{executor} --execdir %{temp} --prepend_env PATH=%{lib} -- '
++))
++
++import os, site
++site.addsitedir(os.path.join('@LIBUNWIND_LIBCXX_PATH@', 'utils'))
++import libcxx.test.params, libcxx.test.config
++libcxx.test.config.configure(
++    libcxx.test.params.DEFAULT_PARAMETERS,
++    libcxx.test.features.DEFAULT_FEATURES,
++    config,
++    lit_config
++)
+-- 
+2.51.2
+

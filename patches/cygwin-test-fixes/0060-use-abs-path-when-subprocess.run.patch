@@ -1,7 +1,7 @@
-From bee002796cab6e1714e8cbe359c055a3a63f3d32 Mon Sep 17 00:00:00 2001
+From f3326da419a11e76adaefe961d2a8e7337174d28 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 9 Nov 2025 17:56:04 +0900
-Subject: [PATCH 60/60] use abs path when subprocess.run
+Subject: [PATCH 60/61] use abs path when subprocess.run
 
 https://github.com/python/cpython/issues/105889#issuecomment-1595930855
 ---

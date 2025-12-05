@@ -1,65 +1,98 @@
-From 0050ef0746b04ed05ca77e1d5f790c7cc0d7cc8a Mon Sep 17 00:00:00 2001
+From 0b086ff04b309275c492d32231d4a02742eca600 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sat, 7 Jun 2025 17:45:43 +0900
-Subject: [PATCH 37/44] [libc++][Test][Cygwin] Diverge expected result for the
- Cygwin target (part 1/5 - test setup)
+Date: Sat, 7 Jun 2025 17:51:03 +0900
+Subject: [PATCH 37/43] [libc++][Test][Cygwin] Diverge expected result for the
+ Cygwin target (part 2/5 - misc)
 
 ---
- libcxx/CMakeLists.txt                     | 4 +++-
- libcxx/include/__config                   | 2 +-
- libcxx/utils/libcxx/test/features/misc.py | 4 ++--
- 3 files changed, 6 insertions(+), 4 deletions(-)
+ libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp       | 1 +
+ .../fs.op.funcs/fs.op.proximate/proximate.pass.cpp          | 6 ++++++
+ .../fs.op.funcs/fs.op.remove_all/toctou.pass.cpp            | 1 +
+ .../futures/futures.async/thread_create_failure.pass.cpp    | 2 +-
+ 4 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index e77f4d8d4642d57c88ed20252a7f32d9a7c53729..3924164bc74b768747dc375a106bd9af6d027d7e 100644
---- a/libcxx/CMakeLists.txt
-+++ b/libcxx/CMakeLists.txt
-@@ -537,7 +537,9 @@ function(cxx_add_basic_build_flags target)
+diff --git a/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp b/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp
+index f5a878582666b674fa973e534ec9a54aeb5435f2..e9c59a4328cc565661cbe7561fab30282bf13f8e 100644
+--- a/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp
++++ b/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp
+@@ -23,6 +23,7 @@
  
-   # Build with -fsized-deallocation, which is default in recent versions of Clang.
-   # TODO(LLVM 21): This can be dropped once we only support Clang >= 19.
--  target_add_compile_flags_if_supported(${target} PRIVATE -fsized-deallocation)
-+  if (NOT CYGWIN)
-+    target_add_compile_flags_if_supported(${target} PRIVATE -fsized-deallocation)
-+  endif()
+ // This test doesn't work as such on Windows.
+ // UNSUPPORTED: windows
++// UNSUPPORTED: cygwin
  
-   # Let the library headers know they are currently being used to build the
-   # library.
-diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 456485928008e12c54e36a3c7a3dcd2773cab902..54b66663cbff9dabb3dfbe1e8727967a703a4fea 100644
---- a/libcxx/include/__config
-+++ b/libcxx/include/__config
-@@ -831,7 +831,7 @@ typedef __char32_t char32_t;
- // the latter depends on internal GNU libc details that are not appropriate
- // to depend on here, so any declarations present when __cpp_char8_t is not
- // defined are ignored.
--#  if _LIBCPP_GLIBC_PREREQ(2, 36) && defined(__cpp_char8_t)
-+#  if (_LIBCPP_GLIBC_PREREQ(2, 36) || defined(__CYGWIN__)) && defined(__cpp_char8_t)
- #    define _LIBCPP_HAS_C8RTOMB_MBRTOC8 1
- #  else
- #    define _LIBCPP_HAS_C8RTOMB_MBRTOC8 0
-diff --git a/libcxx/utils/libcxx/test/features/misc.py b/libcxx/utils/libcxx/test/features/misc.py
-index 738e3d8bb207cc641e8f890cddbc4bbc7cf68c71..b079013d0d9c2b4bb9b47cf6f9261baef0c703eb 100644
---- a/libcxx/utils/libcxx/test/features/misc.py
-+++ b/libcxx/utils/libcxx/test/features/misc.py
-@@ -133,7 +133,7 @@ features = [
-         name="win32-broken-utf8-wchar-ctype",
-         when=lambda cfg: not "_LIBCPP_HAS_LOCALIZATION" in compilerMacros(cfg)
-         or compilerMacros(cfg)["_LIBCPP_HAS_LOCALIZATION"] == "1"
--        and "_WIN32" in compilerMacros(cfg)
-+        and ("_WIN32" in compilerMacros(cfg) or "__CYGWIN__" in compilerMacros(cfg))
-         and not programSucceeds(
-             cfg,
-             """
-@@ -150,7 +150,7 @@ features = [
-     # https://developercommunity.visualstudio.com/t/printf-formatting-with-g-outputs-too/1660837
-     Feature(
-         name="win32-broken-printf-g-precision",
--        when=lambda cfg: "_WIN32" in compilerMacros(cfg)
-+        when=lambda cfg: ("_WIN32" in compilerMacros(cfg) or "__CYGWIN__" in compilerMacros(cfg))
-         and not programSucceeds(
-             cfg,
-             """
+ // RUN: %{cxx} %{flags} %s -o %t.exe %{compile_flags} -g %{link_flags}
+ // Ensure locale-independence for unicode tests.
+diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.proximate/proximate.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.proximate/proximate.pass.cpp
+index ef00a3f8439695f1d16530503479b7748d7d47b1..f897db3273c3d16c1653ad87e713781576febc64 100644
+--- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.proximate/proximate.pass.cpp
++++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.proximate/proximate.pass.cpp
+@@ -75,6 +75,7 @@ static void basic_test() {
+       {"a", "/", relative_cwd / "a"},
+       {"a/b", "/", relative_cwd / "a/b"},
+       {"a", "/net", ".." / relative_cwd / "a"},
++#ifndef __CYGWIN__ // Cygwin treats ^// as a network path
+ #ifdef _WIN32
+       {"//foo/", "//foo", "//foo/"},
+       {"//foo", "//foo/", "//foo"},
+@@ -84,6 +85,7 @@ static void basic_test() {
+ #endif
+       {"//foo", "//foo", "."},
+       {"//foo/", "//foo/", "."},
++#endif
+ #ifdef _WIN32
+       {"//foo", "a", "//foo"},
+       {"//foo/a", "//bar", "//foo/a"},
+@@ -103,12 +105,14 @@ static void basic_test() {
+       {"X:a", "Y:/b", "X:a"},
+       {"X:a", "Y:b", "X:a"},
+ #else
++#ifndef __CYGWIN__
+       {"//foo", "a", dot_dot_to_root / "../foo"},
+       {"//foo/a", "//bar", "../foo/a"},
+       {"//foo/a", "//bar/", "../foo/a"},
+       {"//foo/a", "b", dot_dot_to_root / "../foo/a"},
+       {"//foo/a", "/b", "../foo/a"},
+       {"//foo/a", "//bar/b", "../../foo/a"},
++#endif
+       {"X:/a", "X:/b", "../a"},
+       {"X:/a", "X:b", "../X:/a"},
+       {"X:/a", "Y:/a", "../../X:/a"},
+@@ -123,7 +127,9 @@ static void basic_test() {
+       {"a", "a", "."},
+       {"a/b", "a/b", "."},
+       {"a/b/c/", "a/b/c/", "."},
++#ifndef __CYGWIN__
+       {"//foo/a/b", "//foo/a/b", "."},
++#endif
+       {"/a/d", "/a/b/c", "../../d"},
+       {"/a/b/c", "/a/d", "../b/c"},
+       {"a/b/c", "a", "b/c"},
+diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/toctou.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/toctou.pass.cpp
+index d8a8d83e8af37c966f6d63e27f87111030d07441..0e116c0ee51c0b250e431d2b0b4847ff6ccd6dbd 100644
+--- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/toctou.pass.cpp
++++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/toctou.pass.cpp
+@@ -34,6 +34,7 @@
+ 
+ // Windows doesn't support the necessary APIs to mitigate this issue.
+ // XFAIL: target={{.+}}-windows-{{.+}}
++// XFAIL: cygwin
+ 
+ #include <cstdio>
+ #include <filesystem>
+diff --git a/libcxx/test/std/thread/futures/futures.async/thread_create_failure.pass.cpp b/libcxx/test/std/thread/futures/futures.async/thread_create_failure.pass.cpp
+index 70009589e985bd7a09ad9f6097d9c8425035e078..177f29c7875a35ddb9dd9ebe57cd650c3f25f44a 100644
+--- a/libcxx/test/std/thread/futures/futures.async/thread_create_failure.pass.cpp
++++ b/libcxx/test/std/thread/futures/futures.async/thread_create_failure.pass.cpp
+@@ -14,7 +14,7 @@
+ // UNSUPPORTED: c++03
+ 
+ // There is no way to limit the number of threads on windows
+-// UNSUPPORTED: windows
++// UNSUPPORTED: windows, cygwin
+ 
+ // AIX, macOS and FreeBSD seem to limit the number of processes, not threads via RLIMIT_NPROC
+ // XFAIL: target={{.+}}-aix{{.*}}
 -- 
 2.51.2
 

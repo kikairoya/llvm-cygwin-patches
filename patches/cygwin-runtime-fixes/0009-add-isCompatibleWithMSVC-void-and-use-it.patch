@@ -1,7 +1,7 @@
 From 17966e5a21421b9eea5168efa2fbe8ef75a16c3f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 27 Nov 2025 19:28:00 +0900
-Subject: [PATCH 09/44] add `isCompatibleWithMSVC(void)` and use it
+Subject: [PATCH 09/43] add `isCompatibleWithMSVC(void)` and use it
 
 ---
  clang/include/clang/Basic/LangOptions.h | 2 ++

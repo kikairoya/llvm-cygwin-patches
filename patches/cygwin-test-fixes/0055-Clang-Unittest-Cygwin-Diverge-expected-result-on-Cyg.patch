@@ -1,7 +1,7 @@
-From 96e4f0405d002f646a0ba505f1e8888bbf75b91d Mon Sep 17 00:00:00 2001
+From c0c31181571da8936fa3baf1bfa0b164dbedbbaf Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 11 Oct 2025 17:39:03 +0900
-Subject: [PATCH 55/60] [Clang][Unittest][Cygwin] Diverge expected result on
+Subject: [PATCH 55/61] [Clang][Unittest][Cygwin] Diverge expected result on
  Cygwin host
 
 ---

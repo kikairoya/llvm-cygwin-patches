@@ -1,245 +1,98 @@
-From ff4c0c08edc9b73b3f21b544f6df2a44737c068c Mon Sep 17 00:00:00 2001
+From 174879528345bc699ddea8427faf81578526d1ca Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sat, 7 Jun 2025 17:55:06 +0900
-Subject: [PATCH 39/43] [libc++][Test][Cygwin] Diverge expected result for the
- Cygwin target (part 4/5 - permissions)
+Date: Sat, 7 Jun 2025 17:51:03 +0900
+Subject: [PATCH 39/45] [libc++][Test][Cygwin] Diverge expected result for the
+ Cygwin target (part 2/5 - misc)
 
 ---
- .../directory_entry.cons/path.pass.cpp             |  2 +-
- .../directory_entry.mods/assign.pass.cpp           |  2 +-
- .../fs.op.funcs/fs.op.exists/exists.pass.cpp       | 14 +++++++-------
- .../fs.op.is_block_file/is_block_file.pass.cpp     |  2 +-
- .../fs.op.is_char_file/is_character_file.pass.cpp  |  2 +-
- .../fs.op.is_directory/is_directory.pass.cpp       |  2 +-
- .../fs.op.funcs/fs.op.is_empty/is_empty.pass.cpp   |  4 ++--
- .../fs.op.funcs/fs.op.is_fifo/is_fifo.pass.cpp     |  2 +-
- .../fs.op.funcs/fs.op.is_other/is_other.pass.cpp   |  2 +-
- .../fs.op.is_regular_file/is_regular_file.pass.cpp |  2 +-
- .../fs.op.funcs/fs.op.is_socket/is_socket.pass.cpp |  2 +-
- .../fs.op.is_symlink/is_symlink.pass.cpp           |  2 +-
- .../temp_directory_path.pass.cpp                   |  2 +-
- libcxx/test/support/filesystem_test_helper.h       |  2 +-
- libcxx/test/support/test_macros.h                  |  4 ++--
- 15 files changed, 23 insertions(+), 23 deletions(-)
+ libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp       | 1 +
+ .../fs.op.funcs/fs.op.proximate/proximate.pass.cpp          | 6 ++++++
+ .../fs.op.funcs/fs.op.remove_all/toctou.pass.cpp            | 1 +
+ .../futures/futures.async/thread_create_failure.pass.cpp    | 2 +-
+ 4 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp b/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp
-index a1a37012369d4cdbbf35a3b8cea11fb64fb8e2d9..60daf50a89e3eb3b76caac389c1defc1bd322172 100644
---- a/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp
-@@ -148,7 +148,7 @@ static void path_ctor_dne() {
+diff --git a/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp b/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp
+index f5a878582666b674fa973e534ec9a54aeb5435f2..e9c59a4328cc565661cbe7561fab30282bf13f8e 100644
+--- a/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp
++++ b/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp
+@@ -23,6 +23,7 @@
  
- static void path_ctor_cannot_resolve() {
-   using namespace fs;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-   // Windows doesn't support setting perms::none to trigger failures
-   // reading directories; test using a special inaccessible directory
-   // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.mods/assign.pass.cpp b/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.mods/assign.pass.cpp
-index ba14af1240d4b788dfaa1fd9ed241d6288fdafbf..5542966d412905bc5acecd4643bc85f233880a0a 100644
---- a/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.mods/assign.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.mods/assign.pass.cpp
-@@ -99,7 +99,7 @@ static void test_assign_calls_refresh() {
- static void test_assign_propagates_error() {
-   using namespace fs;
-   scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-   // Windows doesn't support setting perms::none to trigger failures
-   // reading directories; test using a special inaccessible directory
-   // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.exists/exists.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.exists/exists.pass.cpp
-index 56465d01021ad35095d14e94e2670f521ca7cde3..01ca8830af0456931927ce94809ab4499ffed3f1 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.exists/exists.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.exists/exists.pass.cpp
-@@ -84,13 +84,13 @@ static void test_exist_not_found()
+ // This test doesn't work as such on Windows.
+ // UNSUPPORTED: windows
++// UNSUPPORTED: cygwin
  
- static void test_exists_fails()
- {
--#ifdef _WIN32
--    // Windows doesn't support setting perms::none to trigger failures
--    // reading directories; test using a special inaccessible directory
--    // instead.
--    const path p = GetWindowsInaccessibleDir();
--    if (p.empty())
--        return;
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-+  // Windows doesn't support setting perms::none to trigger failures
-+  // reading directories; test using a special inaccessible directory
-+  // instead.
-+  const path p = GetWindowsInaccessibleDir();
-+  if (p.empty())
-+    return;
+ // RUN: %{cxx} %{flags} %s -o %t.exe %{compile_flags} -g %{link_flags}
+ // Ensure locale-independence for unicode tests.
+diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.proximate/proximate.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.proximate/proximate.pass.cpp
+index ef00a3f8439695f1d16530503479b7748d7d47b1..f897db3273c3d16c1653ad87e713781576febc64 100644
+--- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.proximate/proximate.pass.cpp
++++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.proximate/proximate.pass.cpp
+@@ -75,6 +75,7 @@ static void basic_test() {
+       {"a", "/", relative_cwd / "a"},
+       {"a/b", "/", relative_cwd / "a/b"},
+       {"a", "/net", ".." / relative_cwd / "a"},
++#ifndef __CYGWIN__ // Cygwin treats ^// as a network path
+ #ifdef _WIN32
+       {"//foo/", "//foo", "//foo/"},
+       {"//foo", "//foo/", "//foo"},
+@@ -84,6 +85,7 @@ static void basic_test() {
+ #endif
+       {"//foo", "//foo", "."},
+       {"//foo/", "//foo/", "."},
++#endif
+ #ifdef _WIN32
+       {"//foo", "a", "//foo"},
+       {"//foo/a", "//bar", "//foo/a"},
+@@ -103,12 +105,14 @@ static void basic_test() {
+       {"X:a", "Y:/b", "X:a"},
+       {"X:a", "Y:b", "X:a"},
  #else
-     scoped_test_env env;
-     const path dir = env.create_dir("dir");
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_block_file/is_block_file.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_block_file/is_block_file.pass.cpp
-index fad880ecf30f71f40ab26ea62e9ae7a9c3d05b9a..efccd85489d3a28dd1f3836131bfd9cd67c955cc 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_block_file/is_block_file.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_block_file/is_block_file.pass.cpp
-@@ -70,7 +70,7 @@ static void test_exist_not_found()
- static void test_is_block_file_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_char_file/is_character_file.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_char_file/is_character_file.pass.cpp
-index 12bc0c198c0623772765962a3c62ddc89a62301e..bd03d41ead67d8f5b233f4a52932af98fda36458 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_char_file/is_character_file.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_char_file/is_character_file.pass.cpp
-@@ -70,7 +70,7 @@ static void test_exist_not_found()
- static void test_is_character_file_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_directory/is_directory.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_directory/is_directory.pass.cpp
-index f1b559cf2d55ba9e3b7d88e14258f1f85e0ee2fa..c02c8bfae5912e3d2e86bc9aba7d8f7207984f55 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_directory/is_directory.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_directory/is_directory.pass.cpp
-@@ -78,7 +78,7 @@ static void static_env_test()
- static void test_is_directory_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_empty/is_empty.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_empty/is_empty.pass.cpp
-index f3161f2e020d2971fbf56a957e2ba0ffcd9d521c..2aa4287186a44aa68e6e069e0a1498f782d4e441 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_empty/is_empty.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_empty/is_empty.pass.cpp
-@@ -72,7 +72,7 @@ static void test_is_empty_file()
- static void test_is_empty_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-@@ -95,7 +95,7 @@ static void test_is_empty_fails()
- static void test_directory_access_denied()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_fifo/is_fifo.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_fifo/is_fifo.pass.cpp
-index fbf5e7129f7aff9a5eeb8c7887df4336468868e4..48c2464ff90ca363f1ef4bff3e023aeff4900647 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_fifo/is_fifo.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_fifo/is_fifo.pass.cpp
-@@ -70,7 +70,7 @@ static void test_exist_not_found()
- static void test_is_fifo_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_other/is_other.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_other/is_other.pass.cpp
-index d0974640429df09bbcb9b2cb1cdcb60812d8c8e4..9dc7f793909d61b9c402aa95a99d274e7df2d9de 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_other/is_other.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_other/is_other.pass.cpp
-@@ -70,7 +70,7 @@ static void test_exist_not_found()
- static void test_is_other_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_regular_file/is_regular_file.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_regular_file/is_regular_file.pass.cpp
-index 4a5882e36cde2814556e6127d51a39f1809655a0..3dfdfd532d443f365ae872337e9bdbc73da6c3ec 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_regular_file/is_regular_file.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_regular_file/is_regular_file.pass.cpp
-@@ -73,7 +73,7 @@ static void test_exist_not_found()
- static void test_is_regular_file_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_socket/is_socket.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_socket/is_socket.pass.cpp
-index 382685c21dd996560719763992fee0e9f1abc996..5f02455672d88244f98c6e5773319016ed51600c 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_socket/is_socket.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_socket/is_socket.pass.cpp
-@@ -70,7 +70,7 @@ static void test_exist_not_found()
- static void test_is_socket_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_symlink/is_symlink.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_symlink/is_symlink.pass.cpp
-index 07b446d80c4022f7903577e7bf512b1764060ad0..1ab108ee1f605a73880f8905a2f67f469bf72432 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_symlink/is_symlink.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_symlink/is_symlink.pass.cpp
-@@ -92,7 +92,7 @@ static void test_exist_not_found()
- static void test_is_symlink_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.temp_dir_path/temp_directory_path.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.temp_dir_path/temp_directory_path.pass.cpp
-index 38e14438f3fd3d711f2608465a78c6ad2d7ca983..23b41c9ef14a657b8ccb4fa73ff35f15e4950971 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.temp_dir_path/temp_directory_path.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.temp_dir_path/temp_directory_path.pass.cpp
-@@ -45,7 +45,7 @@ static void basic_tests()
-     scoped_test_env env;
-     const path dne = env.make_env_path("dne");
-     const path file = env.create_file("file", 42);
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/support/filesystem_test_helper.h b/libcxx/test/support/filesystem_test_helper.h
-index 2ad9efb32c60f0bc14195f8ca7d508163a118f36..68e919d08e422f5068b107c58c65ec09d36d9515 100644
---- a/libcxx/test/support/filesystem_test_helper.h
-+++ b/libcxx/test/support/filesystem_test_helper.h
-@@ -182,7 +182,7 @@ struct scoped_test_env
-         std::string cmd = "chmod -R 777 " + test_root.string();
- #endif // defined(__MVS__)
-         int ret = std::system(cmd.c_str());
--#  if !defined(_AIX) && !defined(__ANDROID__)
-+#  if !defined(_AIX) && !defined(__ANDROID__) && !defined(__CYGWIN__)
-         // On AIX the chmod command will return non-zero when trying to set
-         // the permissions on a directory that contains a bad symlink. This triggers
-         // the assert, despite being able to delete everything with the following
-diff --git a/libcxx/test/support/test_macros.h b/libcxx/test/support/test_macros.h
-index 8d88d6fad7d0b463a6323262dcaf518319717de3..3366bf30a3756c1b3b442d7d14307510c07e124b 100644
---- a/libcxx/test/support/test_macros.h
-+++ b/libcxx/test/support/test_macros.h
-@@ -404,8 +404,8 @@ inline Tp const& DoNotOptimize(Tp const& value) {
- #define ASSERT_WITH_OPERATOR_NEW_FALLBACKS(...) assert(__VA_ARGS__)
- #endif
++#ifndef __CYGWIN__
+       {"//foo", "a", dot_dot_to_root / "../foo"},
+       {"//foo/a", "//bar", "../foo/a"},
+       {"//foo/a", "//bar/", "../foo/a"},
+       {"//foo/a", "b", dot_dot_to_root / "../foo/a"},
+       {"//foo/a", "/b", "../foo/a"},
+       {"//foo/a", "//bar/b", "../../foo/a"},
++#endif
+       {"X:/a", "X:/b", "../a"},
+       {"X:/a", "X:b", "../X:/a"},
+       {"X:/a", "Y:/a", "../../X:/a"},
+@@ -123,7 +127,9 @@ static void basic_test() {
+       {"a", "a", "."},
+       {"a/b", "a/b", "."},
+       {"a/b/c/", "a/b/c/", "."},
++#ifndef __CYGWIN__
+       {"//foo/a/b", "//foo/a/b", "."},
++#endif
+       {"/a/d", "/a/b/c", "../../d"},
+       {"/a/b/c", "/a/d", "../b/c"},
+       {"a/b/c", "a", "b/c"},
+diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/toctou.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/toctou.pass.cpp
+index d8a8d83e8af37c966f6d63e27f87111030d07441..0e116c0ee51c0b250e431d2b0b4847ff6ccd6dbd 100644
+--- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/toctou.pass.cpp
++++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/toctou.pass.cpp
+@@ -34,6 +34,7 @@
  
--#ifdef _WIN32
--#define TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-+#if defined(_WIN32) || defined(__CYGWIN__)
-+#  define TEST_WIN_NO_FILESYSTEM_PERMS_NONE
- #endif
+ // Windows doesn't support the necessary APIs to mitigate this issue.
+ // XFAIL: target={{.+}}-windows-{{.+}}
++// XFAIL: cygwin
  
- // Support for carving out parts of the test suite, like removing wide characters, etc.
+ #include <cstdio>
+ #include <filesystem>
+diff --git a/libcxx/test/std/thread/futures/futures.async/thread_create_failure.pass.cpp b/libcxx/test/std/thread/futures/futures.async/thread_create_failure.pass.cpp
+index 70009589e985bd7a09ad9f6097d9c8425035e078..177f29c7875a35ddb9dd9ebe57cd650c3f25f44a 100644
+--- a/libcxx/test/std/thread/futures/futures.async/thread_create_failure.pass.cpp
++++ b/libcxx/test/std/thread/futures/futures.async/thread_create_failure.pass.cpp
+@@ -14,7 +14,7 @@
+ // UNSUPPORTED: c++03
+ 
+ // There is no way to limit the number of threads on windows
+-// UNSUPPORTED: windows
++// UNSUPPORTED: windows, cygwin
+ 
+ // AIX, macOS and FreeBSD seem to limit the number of processes, not threads via RLIMIT_NPROC
+ // XFAIL: target={{.+}}-aix{{.*}}
 -- 
 2.51.2
 

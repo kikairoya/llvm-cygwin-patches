@@ -1,7 +1,7 @@
 From cef60afe8f60893e8991c95c615bbb8c03834394 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 15 Nov 2025 11:19:05 +0900
-Subject: [PATCH 01/43] pretest
+Subject: [PATCH 01/45] pretest
 
 ---
  clang/test/CodeGenCXX/dllexport.cpp                | 1 +

@@ -1,0 +1,157 @@
+From 9b672e81308449a3edddbbdf8ab8d8bfce3dae11 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 9 Dec 2025 18:53:11 +0900
+Subject: [PATCH 20/52] drop noexcept from tests
+
+---
+ ...t_instantiation.exclude_from_dllexport.cpp | 32 +++++++++----------
+ ...t_instantiation.exclude_from_dllimport.cpp | 28 ++++++++--------
+ 2 files changed, 30 insertions(+), 30 deletions(-)
+
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+index 2f6767bc96142d23430d2b4e0c60b1bd6141ee2a..2fd838d1ab528edb2ecb299646085753081967e6 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+@@ -19,51 +19,51 @@ template <class T>
+ struct C {
+   // This will be instantiated explicitly as an exported function because it
+   // inherits dllexport from the class instantiation.
+-  void to_be_exported() noexcept;
++  void to_be_exported();
+ 
+   // This will be instantiated implicitly as an exported function because it is
+   // marked as dllexport explicitly.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION __declspec(dllexport) void to_be_exported_explicitly() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION __declspec(dllexport) void to_be_exported_explicitly();
+ 
+   // This will be instantiated implicitly but won't be exported.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void not_to_be_exported() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void not_to_be_exported();
+ 
+   // This won't be instantiated.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void not_to_be_instantiated() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void not_to_be_instantiated();
+ };
+ 
+-template <class T> void C<T>::to_be_exported() noexcept {}
+-template <class T> void C<T>::to_be_exported_explicitly() noexcept {}
+-template <class T> void C<T>::not_to_be_exported() noexcept {}
+-template <class T> void C<T>::not_to_be_instantiated() noexcept {}
++template <class T> void C<T>::to_be_exported() {}
++template <class T> void C<T>::to_be_exported_explicitly() {}
++template <class T> void C<T>::not_to_be_exported() {}
++template <class T> void C<T>::not_to_be_instantiated() {}
+ 
+ // Attach the attribute to class template declaration instead of instantiation declaration.
+ template <class T>
+ struct __declspec(dllexport) D {
+   // This will be exported if and only if no explicit instantiations are provided.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void to_be_exported_iff_no_explicit_instantiation() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void to_be_exported_iff_no_explicit_instantiation();
+ };
+ 
+-template <class T> void D<T>::to_be_exported_iff_no_explicit_instantiation() noexcept {}
++template <class T> void D<T>::to_be_exported_iff_no_explicit_instantiation() {}
+ 
+ // Interaction with VTables.
+ template <class T>
+ struct E {
+   // This will be instanciated by the explicit template instantiation definition.
+-  virtual void to_be_exported() noexcept;
++  virtual void to_be_exported();
+ 
+   // This will be instantiated by the VTable definition, regardless of
+   // `exclude_from_explicit_instantiation`.
+   // The dllexport attribute won't be inherited.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION virtual void to_be_instantiated() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION virtual void to_be_instantiated();
+ 
+   // This too, but will be exported by the member attribute.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION __declspec(dllexport) virtual void to_be_exported_explicitly() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION __declspec(dllexport) virtual void to_be_exported_explicitly();
+ };
+ 
+-template <class T> void E<T>::to_be_exported() noexcept {}
+-template <class T> void E<T>::to_be_instantiated() noexcept {}
+-template <class T> void E<T>::to_be_exported_explicitly() noexcept {}
++template <class T> void E<T>::to_be_exported() {}
++template <class T> void E<T>::to_be_instantiated() {}
++template <class T> void E<T>::to_be_exported_explicitly() {}
+ 
+ // MSC: $"?to_be_exported@?$C@H@@QEAAXXZ" = comdat any
+ // MSC: $"?to_be_exported@?$E@H@@UEAAXXZ" = comdat any
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+index 5106dd72aa7aaed2acd0a256840d4ab3089d0cca..492a83767c7e5dae1f47c58ef705ced13609e33e 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+@@ -19,31 +19,31 @@ template <class T>
+ struct C {
+   // This will be instantiated explicitly as an imported function because it
+   // inherits dllimport from the class instantiation.
+-  void to_be_imported() noexcept;
++  void to_be_imported();
+ 
+   // This will be instantiated implicitly as an imported function because it is
+   // marked as dllimport explicitly.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION __declspec(dllimport) void to_be_imported_explicitly() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION __declspec(dllimport) void to_be_imported_explicitly();
+ 
+   // This will be instantiated implicitly but won't be imported.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void not_to_be_imported() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void not_to_be_imported();
+ 
+   // This won't be instantiated.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void not_to_be_instantiated() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void not_to_be_instantiated();
+ };
+ 
+-template <class T> void C<T>::to_be_imported() noexcept {}
+-template <class T> void C<T>::not_to_be_imported() noexcept {}
+-template <class T> void C<T>::not_to_be_instantiated() noexcept {}
++template <class T> void C<T>::to_be_imported() {}
++template <class T> void C<T>::not_to_be_imported() {}
++template <class T> void C<T>::not_to_be_instantiated() {}
+ 
+ // Attach the attribute to class template declaration instead of instantiation declaration.
+ template <class T>
+ struct __declspec(dllimport) D {
+   // This will be imported if and only if no explicit instantiations are provided.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void to_be_imported_iff_no_explicit_instantiation() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION void to_be_imported_iff_no_explicit_instantiation();
+ };
+ 
+-template <class T> void D<T>::to_be_imported_iff_no_explicit_instantiation() noexcept {}
++template <class T> void D<T>::to_be_imported_iff_no_explicit_instantiation() {}
+ 
+ // Interaction with VTables.
+ template <class T>
+@@ -61,21 +61,21 @@ struct E {
+ 
+   // The body of this shouldn't be emitted since instantiation is suppressed
+   // by the explicit instantiation declaration.
+-  virtual void to_be_imported() noexcept;
++  virtual void to_be_imported();
+ 
+   // The body of this should be emitted if the VTable is instantiated, even if
+   // the instantiation of this class template is declared with dllimport.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION virtual void to_be_instantiated() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION virtual void to_be_instantiated();
+ 
+   // The body of this shouldn't be emitted since that comes from an external DLL.
+-  EXCLUDE_FROM_EXPLICIT_INSTANTIATION __declspec(dllimport) virtual void to_be_imported_explicitly() noexcept;
++  EXCLUDE_FROM_EXPLICIT_INSTANTIATION __declspec(dllimport) virtual void to_be_imported_explicitly();
+ 
+ };
+ 
+ template <class T> E<T>::E(int) {}
+ template <class T> E<T>::E(long) {}
+-template <class T> void E<T>::to_be_imported() noexcept {}
+-template <class T> void E<T>::to_be_instantiated() noexcept {}
++template <class T> void E<T>::to_be_imported() {}
++template <class T> void E<T>::to_be_instantiated() {}
+ 
+ // MSC: $"?not_to_be_imported@?$C@H@@QEAAXXZ" = comdat any
+ // MSC: $"?to_be_imported_iff_no_explicit_instantiation@?$D@H@@QEAAXXZ" = comdat any
+-- 
+2.51.2
+

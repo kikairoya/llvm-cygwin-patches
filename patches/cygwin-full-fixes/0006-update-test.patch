@@ -1,7 +1,7 @@
 From 0291a3477865d23734de369fe06d291393cf7a64 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 15 Nov 2025 11:19:06 +0900
-Subject: [PATCH 06/50] update test
+Subject: [PATCH 06/52] update test
 
 ---
  clang/test/CodeGenCXX/dllexport.cpp                | 2 +-

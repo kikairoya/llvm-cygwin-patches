@@ -1,0 +1,52 @@
+From 12c11c81023d663234c58742543851e89e6c0dca Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 9 Dec 2025 20:12:49 +0900
+Subject: [PATCH 16/39] revise logic
+
+---
+ clang/lib/Sema/SemaDeclCXX.cpp | 29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
+index 3ac8011c030bcf6daf690cc1c156361e465dcb94..67b7277091e5b1e112c90547c7f64ac9234c0ec1 100644
+--- a/clang/lib/Sema/SemaDeclCXX.cpp
++++ b/clang/lib/Sema/SemaDeclCXX.cpp
+@@ -19119,23 +19119,18 @@ bool Sema::DefineUsedVTables() {
+         }
+       }
+ 
+-      if (IsExplicitInstantiationDeclaration) {
+-        DefineVTable = false;
+-
+-        // Ensure the instance of a virtual member function which is declared
+-        // with `__attribute__((exclude_from_explicit_instantiation))` is
+-        // accessible from the VTable.
+-        for (Decl *decl : Class->decls()) {
+-          auto *Method = dyn_cast<CXXMethodDecl>(decl);
+-          if (!Method || !Method->isVirtual())
+-            continue;
+-
+-          if (Method->hasAttr<ExcludeFromExplicitInstantiationAttr>()) {
+-            MarkFunctionReferenced(Loc, Method);
+-            DefinedAnything = true;
+-          }
+-        }
+-      }
++      DefineVTable =
++          !IsExplicitInstantiationDeclaration ||
++          llvm::any_of(Class->decls(), [](Decl *decl) {
++            // If the class has a virtual member function declared with
++            // `__attribute__((exclude_from_explicit_instantiation))`, the
++            // explicit instantiation declaration shouldn't suppress emitting
++            // the VTable to ensure that the excluded member function is
++            // accessible through the VTable.
++            auto *Method = dyn_cast<CXXMethodDecl>(decl);
++            return Method && Method->isVirtual() &&
++                   Method->hasAttr<ExcludeFromExplicitInstantiationAttr>();
++          });
+     }
+ 
+     // The exception specifications for all virtual members may be needed even
+-- 
+2.51.2
+

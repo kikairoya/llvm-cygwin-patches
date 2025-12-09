@@ -1,0 +1,27 @@
+From b7020e30549b36a29bfdc6c8d3040afa7c869cdf Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 13 Sep 2025 19:37:04 +0900
+Subject: [PATCH 37/39] [libcxxabi][Test][Cygwin] Diverge expected result for
+ the Cygwin target
+
+---
+ libcxxabi/test/forced_unwind3.pass.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/libcxxabi/test/forced_unwind3.pass.cpp b/libcxxabi/test/forced_unwind3.pass.cpp
+index e852ab592292f44c2a18f0e4effb20a3314d8dad..f4de509fa117722458ef144e5272567aaf056121 100644
+--- a/libcxxabi/test/forced_unwind3.pass.cpp
++++ b/libcxxabi/test/forced_unwind3.pass.cpp
+@@ -16,6 +16,9 @@
+ // VE only supports SjLj and doesn't provide _Unwind_ForcedUnwind.
+ // UNSUPPORTED: target={{ve-.*}}
+ 
++// Cygwin crashes during unwind
++// UNSUPPORTED: cygwin
++
+ #include <assert.h>
+ #include <exception>
+ #include <stdlib.h>
+-- 
+2.51.2
+

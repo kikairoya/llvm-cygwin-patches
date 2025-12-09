@@ -10,4 +10,4 @@ set(LLVM_ENABLE_RUNTIMES "libcxx;libcxxabi;libunwind;compiler-rt" CACHE STRING "
 set(LLVM_ENABLE_LLD ON CACHE BOOL "" FORCE)
 set(LLVM_INCLUDE_TESTS ON CACHE BOOL "" FORCE)
 set(LLVM_INSTALL_UTILS ON CACHE BOOL "" FORCE)
-set(LLVM_LIT_ARGS "-v --timeout 1200 --max-time 19800" CACHE STRING "" FORCE)
+set(LLVM_LIT_ARGS "-v --timeout 1200 --max-time 19800 -j2" CACHE STRING "" FORCE)

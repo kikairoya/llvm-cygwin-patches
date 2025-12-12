@@ -1,4 +1,4 @@
-From 69d237f82bf9f6c04c7f8249cf6c3cb3682aeb33 Mon Sep 17 00:00:00 2001
+From 4b002324e187e390062c4379459451ed96d0373e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 29/39] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 29/39] [compiler-rt][Cygwin] Add support for Cygwin target
  6 files changed, 30 insertions(+), 11 deletions(-)
 
 diff --git a/compiler-rt/cmake/config-ix.cmake b/compiler-rt/cmake/config-ix.cmake
-index 084a7060e8d13b1f5136527c4ea3772589384af6..a39dac93edae0a443714843349756fe384916e8f 100644
+index 1f82ff3cf75312d58c1a28547a75174fc09df536..b32dadab445856595bbc39470208f0b1aab32b29 100644
 --- a/compiler-rt/cmake/config-ix.cmake
 +++ b/compiler-rt/cmake/config-ix.cmake
 @@ -66,6 +66,19 @@ if (C_SUPPORTS_NODEFAULTLIBS_FLAG)
@@ -40,13 +40,13 @@ index 084a7060e8d13b1f5136527c4ea3772589384af6..a39dac93edae0a443714843349756fe3
  endif()
  
  if (PROFILE_SUPPORTED_ARCH AND NOT LLVM_USE_SANITIZER AND
--    OS_NAME MATCHES "Darwin|Linux|FreeBSD|Windows|Android|Fuchsia|SunOS|NetBSD|AIX|WASI|Haiku")
-+    OS_NAME MATCHES "Darwin|Linux|FreeBSD|Windows|Android|Fuchsia|SunOS|NetBSD|AIX|WASI|Haiku|CYGWIN")
+-    (OS_NAME MATCHES "Darwin|Linux|FreeBSD|Windows|Android|Fuchsia|SunOS|NetBSD|AIX|WASI|Haiku" OR COMPILER_RT_PROFILE_BAREMETAL))
++    (OS_NAME MATCHES "Darwin|Linux|FreeBSD|Windows|Android|Fuchsia|SunOS|NetBSD|AIX|WASI|Haiku|CYGWIN" OR COMPILER_RT_PROFILE_BAREMETAL))
    set(COMPILER_RT_HAS_PROFILE TRUE)
  else()
    set(COMPILER_RT_HAS_PROFILE FALSE)
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index 19483d2547997e2b885128881a65ff7db216a810..e6085931ef9f793bb34f385436db3e66ca551351 100644
+index 7e8621855eb8494d4bc6af87721c55555f5f3878..940379f876839f08dbd6585312d4a7b8b3b84bf2 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -116,10 +116,10 @@ index 19483d2547997e2b885128881a65ff7db216a810..e6085931ef9f793bb34f385436db3e66
      ${aarch64_SOURCES}
      aarch64/chkstk.S
 diff --git a/compiler-rt/lib/profile/InstrProfilingMerge.c b/compiler-rt/lib/profile/InstrProfilingMerge.c
-index 92721c4fd55ea2bc381a380e4dd89f8aeb594847..37b6b43792bf53a96dbce9b4188cc3dccb37a947 100644
+index 681abda0188ac957b1927aa3413387a3cbe7f560..9b88a10c976cf4cac2b9aac79ffabdf49bf7dfdd 100644
 --- a/compiler-rt/lib/profile/InstrProfilingMerge.c
 +++ b/compiler-rt/lib/profile/InstrProfilingMerge.c
-@@ -100,7 +100,7 @@ int __llvm_profile_check_compatibility(const char *ProfileData,
+@@ -99,7 +99,7 @@ int __llvm_profile_check_compatibility(const char *ProfileData,
  }
  
  static uintptr_t signextIfWin64(void *V) {
@@ -129,18 +129,18 @@ index 92721c4fd55ea2bc381a380e4dd89f8aeb594847..37b6b43792bf53a96dbce9b4188cc3dc
  #else
    return (uintptr_t)V;
 diff --git a/compiler-rt/lib/profile/InstrProfilingPlatformOther.c b/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
-index 19414ab78b3bea97b746660d8c8c9e3837b31218..b99be2e14de123b57649f3c0d34448bdb08b958d 100644
+index f5d1c74f1011532f19c25cbb395edccc0e07217a..a83c5d867e4da9da699a94f9946fc839c266c56a 100644
 --- a/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
 +++ b/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
-@@ -9,7 +9,7 @@
+@@ -16,7 +16,7 @@
  #if !defined(__APPLE__) && !defined(__linux__) && !defined(__FreeBSD__) &&     \
      !defined(__Fuchsia__) && !(defined(__sun__) && defined(__svr4__)) &&       \
      !defined(__NetBSD__) && !defined(_WIN32) && !defined(_AIX) &&              \
--    !defined(__wasm__) && !defined(__HAIKU__)
-+    !defined(__wasm__) && !defined(__HAIKU__) && !defined(__CYGWIN__)
+-    !defined(__wasm__) && !defined(__HAIKU__) &&                               \
++    !defined(__wasm__) && !defined(__HAIKU__) && !defined(__CYGWIN__) &&       \
+     !defined(COMPILER_RT_PROFILE_BAREMETAL)
  
  #include <stdlib.h>
- #include <stdio.h>
 diff --git a/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c b/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c
 index d1b347e861411872b6d48a2dfdd082e0c1df0b7f..3dde4a25e68f55282b557dfe422909144b689731 100644
 --- a/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c

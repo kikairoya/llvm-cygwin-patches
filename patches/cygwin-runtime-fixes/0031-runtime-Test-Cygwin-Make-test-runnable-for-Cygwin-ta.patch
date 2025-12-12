@@ -1,4 +1,4 @@
-From 3b55be0cc5a07d287bd28fbec2140bef38559b0c Mon Sep 17 00:00:00 2001
+From c05a8c117291dccbf4ca2416b395a637e11d3b6f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 31/39] [runtime][Test][Cygwin] Make test runnable for Cygwin
@@ -27,11 +27,11 @@ Subject: [PATCH 31/39] [runtime][Test][Cygwin] Make test runnable for Cygwin
  create mode 100644 libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 
 diff --git a/compiler-rt/test/CMakeLists.txt b/compiler-rt/test/CMakeLists.txt
-index 749f244913dc9e618b99da2f123e8766f48d23ac..479280221173426a244c290ad4ef9a47a50682c6 100644
+index 9cfb7ea55947535b36a436d25028e535c8e64d52..819df9251e14cbd6f4dd262630200c6f1c2e9275 100644
 --- a/compiler-rt/test/CMakeLists.txt
 +++ b/compiler-rt/test/CMakeLists.txt
-@@ -79,7 +79,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)
-   if(COMPILER_RT_BUILD_BUILTINS OR COMPILER_RT_TEST_BUILTINS_DIR)
+@@ -76,7 +76,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)
+   if(COMPILER_RT_BUILD_BUILTINS)
      add_subdirectory(builtins)
    endif()
 -  if(COMPILER_RT_BUILD_SANITIZERS)
@@ -254,7 +254,7 @@ index 0000000000000000000000000000000000000000..938d627fa42d779ca01f5b62bc9a6dbe
 +    lit_config
 +)
 diff --git a/libunwind/CMakeLists.txt b/libunwind/CMakeLists.txt
-index 97edff0b87ea3451c575a938ae6bb807d9c78d3d..a71d7f149eb2d5f78fe7e2767f23b0e07a746dde 100644
+index fbef71f3f74467571e71cc0fde2a1a94c0c13f35..74c215a0110021a13fec324e521a787211d697ae 100644
 --- a/libunwind/CMakeLists.txt
 +++ b/libunwind/CMakeLists.txt
 @@ -78,6 +78,12 @@ if(MINGW)

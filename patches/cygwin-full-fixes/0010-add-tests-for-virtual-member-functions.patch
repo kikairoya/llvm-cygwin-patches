@@ -1,7 +1,7 @@
 From bf8df954888217b07b5c5f99f0b98cb5d58e0e6d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 30 Nov 2025 07:37:12 +0900
-Subject: [PATCH 10/45] add tests for virtual member functions
+Subject: [PATCH 10/46] add tests for virtual member functions
 
 ---
  ...t_instantiation.exclude_from_dllexport.cpp | 64 +++++++++++++++++

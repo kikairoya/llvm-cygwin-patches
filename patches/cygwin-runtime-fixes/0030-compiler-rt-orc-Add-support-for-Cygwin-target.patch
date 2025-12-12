@@ -1,4 +1,4 @@
-From f59939f8995dbf35aa931d305a581268a3248cda Mon Sep 17 00:00:00 2001
+From 32eed0fd2d458e40fbbb021b3669ce6b2f1bb624 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 19 Sep 2025 19:04:00 +0900
 Subject: [PATCH 30/39] [compiler-rt][orc] Add support for Cygwin target
@@ -10,7 +10,7 @@ Subject: [PATCH 30/39] [compiler-rt][orc] Add support for Cygwin target
  3 files changed, 21 insertions(+), 6 deletions(-)
 
 diff --git a/compiler-rt/lib/orc/CMakeLists.txt b/compiler-rt/lib/orc/CMakeLists.txt
-index b8d1b03b788c9d475d4d5ef59f62c943d17547e2..50b7c7d6f9353e70f0971f386b526c75b9d43f9b 100644
+index 649d988d9d60846b072c6010f07e1c4ab1119cbc..61ac19f362bb9d715b8ccee3f7985874f19605ad 100644
 --- a/compiler-rt/lib/orc/CMakeLists.txt
 +++ b/compiler-rt/lib/orc/CMakeLists.txt
 @@ -84,7 +84,7 @@ if (APPLE)

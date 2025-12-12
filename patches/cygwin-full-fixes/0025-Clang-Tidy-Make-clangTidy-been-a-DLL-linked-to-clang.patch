@@ -1,0 +1,92 @@
+From b7be5ce95f1ee538c9b4d5148fb5efc33c3a859d Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Wed, 10 Dec 2025 23:56:11 +0900
+Subject: [PATCH 25/46] [Clang-Tidy] Make clangTidy been a DLL linked to
+ clang-shlib if CLANG_LINK_CLANG_DYLIB=ON
+
+---
+ clang-tools-extra/clang-tidy/CMakeLists.txt | 17 ++++++++++++---
+ clang-tools-extra/test/CMakeLists.txt       | 23 +++++++++------------
+ 2 files changed, 24 insertions(+), 16 deletions(-)
+
+diff --git a/clang-tools-extra/clang-tidy/CMakeLists.txt b/clang-tools-extra/clang-tidy/CMakeLists.txt
+index 153356245cfd12c01a8f145e7b912873ad9b5b7c..538518648a01b7343f5d30426246c17b04be6320 100644
+--- a/clang-tools-extra/clang-tidy/CMakeLists.txt
++++ b/clang-tools-extra/clang-tidy/CMakeLists.txt
+@@ -8,7 +8,18 @@ configure_file(
+   ${CMAKE_CURRENT_BINARY_DIR}/clang-tidy-config.h)
+ include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
+ 
+-add_clang_library(clangTidy STATIC
++set(linktype STATIC)
++set(linkscope PRIVATE)
++if (WIN32 OR CYGWIN)
++  if (CLANG_LINK_CLANG_DYLIB)
++    set(linktype SHARED;INSTALL_WITH_TOOLCHAIN)
++  endif()
++  if (BUILD_SHARED_LIBS OR CLANG_LINK_CLANG_DYLIB)
++    set(linkscope PUBLIC)
++  endif()
++endif()
++
++add_clang_library(clangTidy ${linktype}
+   ClangTidy.cpp
+   ClangTidyCheck.cpp
+   ClangTidyModule.cpp
+@@ -26,7 +37,7 @@ add_clang_library(clangTidy STATIC
+   )
+ 
+ clang_target_link_libraries(clangTidy
+-  PRIVATE
++  ${linkscope}
+   clangAST
+   clangASTMatchers
+   clangAnalysis
+@@ -42,7 +53,7 @@ clang_target_link_libraries(clangTidy
+ 
+ if(CLANG_TIDY_ENABLE_STATIC_ANALYZER)
+   clang_target_link_libraries(clangTidy
+-    PRIVATE
++    ${linkscope}
+     clangStaticAnalyzerCore
+     clangStaticAnalyzerFrontend
+   )
+diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
+index 78447e7a00db872342fb46a55caf213fa01cce6b..8ba9418dbce40ca1ed129d9189786203c8900ca3 100644
+--- a/clang-tools-extra/test/CMakeLists.txt
++++ b/clang-tools-extra/test/CMakeLists.txt
+@@ -63,21 +63,18 @@ foreach(dep ${LLVM_UTILS_DEPS})
+   endif()
+ endforeach()
+ 
+-if (NOT WIN32 OR NOT LLVM_LINK_LLVM_DYLIB)
++if (NOT (WIN32 OR CYGWIN) OR CLANG_PLUGIN_SUPPORT)
+   llvm_add_library(
+-      CTTestTidyModule
+-      MODULE clang-tidy/CTTestTidyModule.cpp
+-      PLUGIN_TOOL clang-tidy)
+-endif()
++    CTTestTidyModule
++    MODULE clang-tidy/CTTestTidyModule.cpp
++    PLUGIN_TOOL clang-tidy)
++
++  list(APPEND CLANG_TOOLS_TEST_DEPS CTTestTidyModule)
++  target_include_directories(CTTestTidyModule PUBLIC BEFORE "${CLANG_TOOLS_SOURCE_DIR}")
+ 
+-if(TARGET CTTestTidyModule)
+-    list(APPEND CLANG_TOOLS_TEST_DEPS CTTestTidyModule)
+-    target_include_directories(CTTestTidyModule PUBLIC BEFORE "${CLANG_TOOLS_SOURCE_DIR}")
+-    if(CLANG_PLUGIN_SUPPORT AND (WIN32 OR CYGWIN))
+-      set(LLVM_LINK_COMPONENTS
+-        Support
+-      )
+-    endif()
++  if ((WIN32 OR CYGWIN) AND NOT LLVM_EXPORT_SYMBOLS_FOR_PLUGINS)
++    target_link_libraries(CTTestTidyModule PRIVATE clangTidy)
++  endif()
+ endif()
+ 
+ add_lit_testsuite(check-clang-extra "Running clang-tools-extra/test"
+-- 
+2.51.2
+

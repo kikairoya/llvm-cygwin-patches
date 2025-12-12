@@ -1,6 +1,6 @@
-From 6952b3ff949dd94bb1f60a71cf0dad871cacb9f5 Mon Sep 17 00:00:00 2001
+From 0a4a8d8ff580d3851319c3e96905aa3995528cc4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sun, 7 Sep 2025 21:46:04 +0900
+Date: Sat, 13 Dec 2025 07:29:51 +0900
 Subject: [PATCH 18/46] pretest
 
 ---
@@ -8,7 +8,7 @@ Subject: [PATCH 18/46] pretest
  1 file changed, 220 insertions(+), 42 deletions(-)
 
 diff --git a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-index 9f116c46853b6ea3bb0a24041297a0131a6fca7c..ff0850dcc3704e3503587c7c7cf172d81b3235b3 100644
+index 9f116c46853b6ea3bb0a24041297a0131a6fca7c..5a84e92410b645376cc8a1f79fa0ac700cb73a9f 100644
 --- a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
 +++ b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
 @@ -1,43 +1,112 @@
@@ -83,7 +83,7 @@ index 9f116c46853b6ea3bb0a24041297a0131a6fca7c..ff0850dcc3704e3503587c7c7cf172d8
 +// FUNC:     define{{.*}} dso_local{{.*}} @_ZN1cIdE1gEv
  extern template class c<double>;
 -template class __declspec(dllexport) c<double>;
-+template class __declspec(dllexport) c<double>; // expected-warning {{'dllexport' attribute ignored on explicit instantiation definition}}
++template class __declspec(dllexport) c<double>; // expected-warning {{'dllexport' attribute is missing on previous declaration}}
  
 -// CHECK-NOT: define {{.*}} dllexport {{.*}} @_ZN1cIdE1fEv
  
@@ -300,5 +300,5 @@ index 9f116c46853b6ea3bb0a24041297a0131a6fca7c..ff0850dcc3704e3503587c7c7cf172d8
 +  return oc1.u + oc1.v + ic1.u + ic1.v;
 +}
 -- 
-2.51.2
+2.52.0
 

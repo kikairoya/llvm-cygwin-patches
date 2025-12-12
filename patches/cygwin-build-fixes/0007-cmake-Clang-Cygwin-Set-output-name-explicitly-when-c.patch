@@ -1,4 +1,4 @@
-From a0b4c31359e50c16058cb8007d088d4f85d82ab0 Mon Sep 17 00:00:00 2001
+From e4a1b37d29cd7c0810f76e03a9dea32c50664b16 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Sep 2025 18:23:48 +0900
 Subject: [PATCH 7/9] [cmake][Clang][Cygwin] Set output name explicitly when
@@ -30,5 +30,5 @@ index 002aaef005253724baa0f201a49453116b1e38c0..cab9a83d86db33ebdb71adfd963f8c3e
    set_target_properties(clang PROPERTIES VERSION ${CLANG_EXECUTABLE_VERSION})
  endif()
 -- 
-2.51.2
+2.52.0
 

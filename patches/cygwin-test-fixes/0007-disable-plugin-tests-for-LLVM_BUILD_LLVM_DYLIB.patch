@@ -35,5 +35,5 @@ index 941e18efc1a52aa91f0f9bdd76a4e7833c1937c9..679e4b4b3f8436e9c1caafd1f5422a9d
    add_llvm_library(InlineOrderPlugin MODULE BUILDTREE_ONLY
      InlineOrderPlugin.cpp
 -- 
-2.51.2
+2.52.0
 

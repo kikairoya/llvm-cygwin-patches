@@ -1,4 +1,4 @@
-From 65bc58125e82d854c4bab4e061fffbfddbce69bb Mon Sep 17 00:00:00 2001
+From bbb09b7b7dea250047a1edbc828561d0ea3f9d20 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Oct 2025 10:04:11 +0900
 Subject: [PATCH 36/56] [LLVM][Support] Remove an unused function-local static
@@ -22,5 +22,5 @@ index ab220b8f2cebad228c14174c0c279f0052ca19ca..97c16b0eb333a71d62c7cfcb044bc072
        if (TheJobserver) {
          // Jobserver-mode scheduling:
 -- 
-2.51.2
+2.52.0
 

@@ -1,4 +1,4 @@
-From a7e5a59ee22cbeec2ebea742d54e2e34abdac10e Mon Sep 17 00:00:00 2001
+From b08728b2c96c9ecc33bd931fb60a0c905a0d17c5 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 23:40:07 +0900
 Subject: [PATCH 13/39] add coverage
@@ -125,5 +125,5 @@ index 492a83767c7e5dae1f47c58ef705ced13609e33e..ce75746acf78ef0e3472ea59a5428e5d
  // MSC: declare dllimport void @"?to_be_imported_iff_no_explicit_instantiation@?$D@I@@QEAAXXZ"
  // GNU: define linkonce_odr dso_local void @_ZN1DIiE44to_be_imported_iff_no_explicit_instantiationEv
 -- 
-2.51.2
+2.52.0
 

@@ -1,4 +1,4 @@
-From 875d7d3461fac2c8abc3fb5d488a35a7fcba3fa2 Mon Sep 17 00:00:00 2001
+From b7bde72c9accbc12b9e1d545a3421d3bce9bd6bc Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 28/39] [libunwind][Cygwin] Add support for Cygwin target
@@ -380,5 +380,5 @@ index 004029cfe1e90b27d3672ca5403fa23f2b24c115..0bc9dfacb5364bbdbc770c2f1922fed0
  #undef NDEBUG
  #include <assert.h>
 -- 
-2.51.2
+2.52.0
 

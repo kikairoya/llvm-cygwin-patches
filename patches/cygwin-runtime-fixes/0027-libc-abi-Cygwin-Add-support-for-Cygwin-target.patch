@@ -1,4 +1,4 @@
-From ab3cc6bff2b3111a28f9ef25dc5cec74da68ce9d Mon Sep 17 00:00:00 2001
+From b22947d6957c99d7c01e4578017814e5fd55471b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 27/39] [libc++abi][Cygwin] Add support for Cygwin target
@@ -162,5 +162,5 @@ index 6a261e6f009fee3394a11b01dc938966b3160590..cece3f4e6f191ae60fa9035b7842a774
      return dest;
  #elif !_LIBCPP_HAS_LIBRARY_ALIGNED_ALLOCATION
 -- 
-2.51.2
+2.52.0
 

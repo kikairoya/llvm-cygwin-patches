@@ -1,4 +1,4 @@
-From 39769fad762b4a433cd1ccbd1e85fc7dc775160f Mon Sep 17 00:00:00 2001
+From 4914a397cf63ad4dc5783b6dc32848f54948be0e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 18:02:39 +0900
 Subject: [PATCH 54/56] [LLVM-Tools][Test][Cygwin](NFC) Diverge expected result
@@ -141,5 +141,5 @@ index 43ed0a61c39d87c6bdbaacb43b47ab5c20c74cfe..7ab7ae9d4406e28609a0c7f02d07f547
  ; RUN: llvm-windres -### --include-dir %p/incdir1 --include %p/incdir2 "-DFOO1=\"foo bar\"" -UFOO2 -D FOO3 --preprocessor-arg "-DFOO4=\"baz baz\"" "-DFOO5=bar" %p/Inputs/empty.rc %t.res --use-temp-file | FileCheck %s --check-prefix=CHECK1
  ; CHECK1: {{^}} "clang" "--driver-mode=gcc" "-target" "{{.*}}-{{.*}}{{mingw32|cygwin|windows-gnu|windows-cygnus}}" "-E" "-xc" "-DRC_INVOKED" "-I" "{{.*}}incdir1" "-I" "{{.*}}incdir2" "-D" "FOO1=\"foo bar\"" "-U" "FOO2" "-D" "FOO3" "-DFOO4=\"baz baz\"" "-D" "FOO5=bar" "{{.*}}empty.rc" "-o" "{{.*}}preproc-{{.*}}.rc"{{$}}
 -- 
-2.51.2
+2.52.0
 

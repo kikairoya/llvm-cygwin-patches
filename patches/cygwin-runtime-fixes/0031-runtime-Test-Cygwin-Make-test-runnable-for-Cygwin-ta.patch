@@ -1,4 +1,4 @@
-From c05a8c117291dccbf4ca2416b395a637e11d3b6f Mon Sep 17 00:00:00 2001
+From d4f20dd0aed1ce8e4a937847221010f2a3ebc583 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 31/39] [runtime][Test][Cygwin] Make test runnable for Cygwin
@@ -351,5 +351,5 @@ index 0000000000000000000000000000000000000000..dc490a08ba1a63389ccdc01a036020a0
 +    lit_config
 +)
 -- 
-2.51.2
+2.52.0
 

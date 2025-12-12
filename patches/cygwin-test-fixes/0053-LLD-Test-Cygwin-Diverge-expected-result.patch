@@ -1,4 +1,4 @@
-From 0bf0a96e61600f0d082f1b510bb77bfe5be733af Mon Sep 17 00:00:00 2001
+From e5ba9b7f43418ddec4ed12299fa927705a5cfe4c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Jun 2025 13:10:57 +0900
 Subject: [PATCH 53/56] [LLD][Test][Cygwin] Diverge expected result
@@ -43,5 +43,5 @@ index c862538d592ce8d242f14338133e7a214fe638c4..00964fddd870aba71e4e4a3916abc639
  ;; -object_path_lto specifies a directory that cannot be created
  ; RUN: rm -rf %t && mkdir %t && mkdir %t/dir
 -- 
-2.51.2
+2.52.0
 

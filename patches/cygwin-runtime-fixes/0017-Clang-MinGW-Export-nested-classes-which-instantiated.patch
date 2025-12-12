@@ -1,4 +1,4 @@
-From a01c6cfe4d9ca57ec0e8dd8b625ed7118163c35f Mon Sep 17 00:00:00 2001
+From c6b5af4b7f28735a49425cc05c109b84fea09916 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 22:31:20 +0900
 Subject: [PATCH 17/39] [Clang][MinGW] Export nested classes which instantiated
@@ -14,7 +14,7 @@ inherit to the nested class.
  1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 2a1da7e0cdea8be073facdd20c246aad0d4fb3ec..9d9dc29cbed3a513fa11266cb406d4d511b60dfc 100644
+index 900ce8b404e703b5ecf5119291965e923137bfe7..a6fc0a97f826096f23e9fbdefbe94a1427925f30 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6590,11 +6590,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
@@ -58,5 +58,5 @@ index 2a1da7e0cdea8be073facdd20c246aad0d4fb3ec..9d9dc29cbed3a513fa11266cb406d4d5
              TSK != TSK_ExplicitInstantiationDefinition)
            continue;
 -- 
-2.51.2
+2.52.0
 

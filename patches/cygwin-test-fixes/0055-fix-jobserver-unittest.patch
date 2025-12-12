@@ -1,4 +1,4 @@
-From f045e1bef5805f610bd5bf6801c3152b4e847d9c Mon Sep 17 00:00:00 2001
+From c2d4cf2808445d32ffe53b587c35b4b7b5680b19 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 6 Nov 2025 21:21:48 +0900
 Subject: [PATCH 55/56] fix jobserver unittest
@@ -42,5 +42,5 @@ index df623463bb309f66e448808a0b27c5f225f3f49b..951a6fa9c9f06e9b9bfc50fb61537cd0
  
    // Starts a background thread that emulates `make`. It populates the FIFO
 -- 
-2.51.2
+2.52.0
 

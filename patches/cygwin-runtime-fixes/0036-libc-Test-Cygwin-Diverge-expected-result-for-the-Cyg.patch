@@ -1,4 +1,4 @@
-From cb8a430ddc88f14758c67e997fec3fbce5c5e49e Mon Sep 17 00:00:00 2001
+From c5f5f6e1779b7dfbdc44bb1aa5a6b8270205c6da Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:56:10 +0900
 Subject: [PATCH 36/39] [libc++][Test][Cygwin] Diverge expected result for the
@@ -4563,5 +4563,5 @@ index 820dd75ae21e860551d4b89086878e8c6ae6f9ff..6887466ff491b0fe24ad629eb4b49d31
  
  # Add features representing the build host platform name.
 -- 
-2.51.2
+2.52.0
 

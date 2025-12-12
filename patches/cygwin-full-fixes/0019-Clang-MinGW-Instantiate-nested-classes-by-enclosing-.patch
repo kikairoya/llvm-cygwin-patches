@@ -1,4 +1,4 @@
-From 0b81d44030a593b1f95122c9d81254edf93e1003 Mon Sep 17 00:00:00 2001
+From a0f82971b54eba0527c93bbf1fc4216c44429211 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 13 Jul 2025 17:33:14 +0900
 Subject: [PATCH 19/46] [Clang][MinGW] Instantiate nested classes by enclosing
@@ -29,5 +29,5 @@ index 35205f40cbcef3a6cb1a5655bd495d39306a7f59..2c93b3bb7b0c6f1074d616f5cc8a698d
          // On Windows, explicit instantiation decl of the outer class doesn't
          // affect the inner class. Typically extern template declarations are
 -- 
-2.51.2
+2.52.0
 

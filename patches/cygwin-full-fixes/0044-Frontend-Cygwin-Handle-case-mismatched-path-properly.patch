@@ -1,4 +1,4 @@
-From 97123ed219b0f38d6821777a295903c220802a9b Mon Sep 17 00:00:00 2001
+From 3cb86216bd17213546c03d04bc51a0c689860bd5 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 2 May 2025 23:16:55 +0900
 Subject: [PATCH 44/46] [Frontend][Cygwin] Handle case-mismatched path properly
@@ -96,5 +96,5 @@ index c199d313a262e7e2da6e438628fa52d0162a4f8f..91e5ae6c2de35d53cb13a44d2fe9b6e6
    return std::error_code();
  }
 -- 
-2.51.2
+2.52.0
 

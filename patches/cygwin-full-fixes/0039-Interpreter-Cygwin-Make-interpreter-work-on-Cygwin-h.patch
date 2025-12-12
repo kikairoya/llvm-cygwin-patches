@@ -1,4 +1,4 @@
-From 082bd23fd70e7d8c5cdd56d3f842b11043d08655 Mon Sep 17 00:00:00 2001
+From 9f76297d4eff7084779ed5e7bf10912130edf67c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 24 May 2025 16:58:17 +0900
 Subject: [PATCH 39/46] [Interpreter][Cygwin] Make interpreter work on Cygwin
@@ -22,5 +22,5 @@ index b91301e6096eb721db8f67eebbf06f6e7a26aca8..f309cf836d7c14e361cdbf21b629a1fa
  // at runtime. On Windows, this requires them to be exported from any of the
  // modules loaded at runtime. Marking them as dllexport achieves this; both
 -- 
-2.51.2
+2.52.0
 

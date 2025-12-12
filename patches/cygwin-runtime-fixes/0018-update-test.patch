@@ -1,4 +1,4 @@
-From 862abddcffc0b8c6aaa6c4d3a65a0096f19529ed Mon Sep 17 00:00:00 2001
+From 6a38bfa715adc2db11f76a0fc446992ab3060961 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 22:39:48 +0900
 Subject: [PATCH 18/39] update test
@@ -8,7 +8,7 @@ Subject: [PATCH 18/39] update test
  1 file changed, 20 insertions(+), 32 deletions(-)
 
 diff --git a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-index ac9f060c9569aa84cb8adb54a5f48c1ccc0d2650..5bf70b625d1467ffee78d980e06213bc17249f95 100644
+index fa6b3958a981ac21e348d0c16564f58e0af9c6f3..d1925d8300f82f47549ab4f7d0299cd8e902d67a 100644
 --- a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
 +++ b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
 @@ -167,30 +167,18 @@ template <class T> int outer<T>::inner::v = 0;
@@ -82,5 +82,5 @@ index ac9f060c9569aa84cb8adb54a5f48c1ccc0d2650..5bf70b625d1467ffee78d980e06213bc
  extern template struct __declspec(dllimport) outer<char>;
  
 -- 
-2.51.2
+2.52.0
 

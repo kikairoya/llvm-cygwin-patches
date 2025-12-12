@@ -1,4 +1,4 @@
-From d661c70c14b20480935bdb4bb596aa8e7e16469e Mon Sep 17 00:00:00 2001
+From 45a60bf4674a722e24f31f57a2f5cb6cfe89d75b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 3 Nov 2025 11:09:11 +0900
 Subject: [PATCH 45/56] fix lld exportSourceName
@@ -27,5 +27,5 @@ index 26a2b4944dc6cb64718ac243a54daed6f95cfc24..8073d296ee8dd20b2c212bb441a42267
  
  // Performs error checking on all /export arguments.
 -- 
-2.51.2
+2.52.0
 

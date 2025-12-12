@@ -1,4 +1,4 @@
-From deac65a9fcedcc46ed17e45d22798da4409dfe2e Mon Sep 17 00:00:00 2001
+From 71c28b600eef52cd01ea49e3c0834264c11e6c47 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 32/39] [libc++][Test][Cygwin] Diverge expected result for the
@@ -61,5 +61,5 @@ index 738e3d8bb207cc641e8f890cddbc4bbc7cf68c71..b079013d0d9c2b4bb9b47cf6f9261bae
              cfg,
              """
 -- 
-2.51.2
+2.52.0
 

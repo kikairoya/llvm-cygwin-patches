@@ -1,4 +1,4 @@
-From 3d6f63d554c72b8d88a5fe8f6690c554984f718f Mon Sep 17 00:00:00 2001
+From a08f5d109e5ee166a66135a4e7159c487f95b0b6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 10 Dec 2025 23:50:36 +0900
 Subject: [PATCH 23/56] [LLVM] Annotate LLVM_TEMPLATE_ABI
@@ -110,5 +110,5 @@ index f8b8a2d129c1cefdb342b16d5bf7a9bdb5c56768..2e39e44f41eb6d3ff1cb2942d6c595ad
  } // namespace mca
  } // namespace llvm
 -- 
-2.51.2
+2.52.0
 

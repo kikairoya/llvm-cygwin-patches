@@ -1,4 +1,4 @@
-From b7be5ce95f1ee538c9b4d5148fb5efc33c3a859d Mon Sep 17 00:00:00 2001
+From 3ea790504b6f8d7b4daf0b036fbebe8740255ca2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 10 Dec 2025 23:56:11 +0900
 Subject: [PATCH 4/9] [Clang-Tidy] Make clangTidy been a DLL linked to
@@ -88,5 +88,5 @@ index 78447e7a00db872342fb46a55caf213fa01cce6b..8ba9418dbce40ca1ed129d9189786203
  
  add_lit_testsuite(check-clang-extra "Running clang-tools-extra/test"
 -- 
-2.51.2
+2.52.0
 

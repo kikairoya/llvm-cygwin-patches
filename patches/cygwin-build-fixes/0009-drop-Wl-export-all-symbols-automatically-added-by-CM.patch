@@ -1,4 +1,4 @@
-From 94f9e6d3db04980c9b90a51b258307980dcfa4df Mon Sep 17 00:00:00 2001
+From 7c92206814a072d9c0e91245fe56290a90906baf Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 3 Nov 2025 17:11:21 +0900
 Subject: [PATCH 9/9] drop -Wl,--export-all-symbols automatically added by
@@ -29,5 +29,5 @@ index 6d94cbbcd2559d3b191bbe336aae6b7e92e00a0c..e08f5dd5ca4b2e46c535d71418a864d9
  include(TableGen)
  
 -- 
-2.51.2
+2.52.0
 

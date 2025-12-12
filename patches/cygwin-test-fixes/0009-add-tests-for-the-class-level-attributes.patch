@@ -136,5 +136,5 @@ index fa44f3aaa6e8a46c622e54c2f09e4d3f150d043d..f263ff070d8521f3692a5e27d9b445c2
 +// MSC: define linkonce_odr dso_local void @"?also_to_be_imported@?$D@H@@QEAAXXZ"
 +// GNU: define linkonce_odr dso_local void @_ZN1DIiE19also_to_be_importedEv
 -- 
-2.51.2
+2.52.0
 

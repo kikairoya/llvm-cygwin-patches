@@ -1,0 +1,52 @@
+From 9265383155f1750a65388302aa6bf3234b1b2e3e Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Fri, 5 Dec 2025 20:01:39 +0900
+Subject: [PATCH 07/15] [clangd] Prevent symbol dup for DenseMapInfo<SymbolID>
+
+---
+ clang-tools-extra/clangd/index/SymbolID.h | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/clang-tools-extra/clangd/index/SymbolID.h b/clang-tools-extra/clangd/index/SymbolID.h
+index e8aa462e96c177ab0972667f33b66f888e990177..ebf50452089346c75d4d184d8df944186673de75 100644
+--- a/clang-tools-extra/clangd/index/SymbolID.h
++++ b/clang-tools-extra/clangd/index/SymbolID.h
+@@ -58,6 +58,9 @@ public:
+   explicit operator bool() const { return !isNull(); }
+ 
+ private:
++  friend struct llvm::DenseMapInfo<clang::clangd::SymbolID>;
++  explicit constexpr SymbolID(uint8_t Key1, uint8_t Key2)
++      : HashValue{Key1, Key2} {}
+   using IntTy = uint64_t;
+   static_assert(sizeof(IntTy) == RawSize);
+   std::array<uint8_t, RawSize> HashValue{};
+@@ -81,19 +84,17 @@ llvm::raw_ostream &operator<<(llvm::raw_ostream &OS, const SymbolID &ID);
+ namespace llvm {
+ // Support SymbolIDs as DenseMap keys.
+ template <> struct DenseMapInfo<clang::clangd::SymbolID> {
+-  static inline clang::clangd::SymbolID getEmptyKey() {
+-    static clang::clangd::SymbolID EmptyKey("EMPTYKEY");
+-    return EmptyKey;
++  static constexpr clang::clangd::SymbolID getEmptyKey() {
++    return clang::clangd::SymbolID(0, 1);
+   }
+-  static inline clang::clangd::SymbolID getTombstoneKey() {
+-    static clang::clangd::SymbolID TombstoneKey("TOMBSTONEKEY");
+-    return TombstoneKey;
++  static constexpr clang::clangd::SymbolID getTombstoneKey() {
++    return clang::clangd::SymbolID(1, 0);
+   }
+   static unsigned getHashValue(const clang::clangd::SymbolID &Sym) {
+     return hash_value(Sym);
+   }
+-  static bool isEqual(const clang::clangd::SymbolID &LHS,
+-                      const clang::clangd::SymbolID &RHS) {
++  static constexpr bool isEqual(const clang::clangd::SymbolID &LHS,
++                                const clang::clangd::SymbolID &RHS) {
+     return LHS == RHS;
+   }
+ };
+-- 
+2.52.0
+

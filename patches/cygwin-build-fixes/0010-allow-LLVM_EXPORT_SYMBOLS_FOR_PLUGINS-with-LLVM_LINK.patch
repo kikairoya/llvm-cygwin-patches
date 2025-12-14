@@ -1,0 +1,82 @@
+From b1ecd43edadccc0a34205f9063d81db7cd15fa97 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 15 Dec 2025 06:44:19 +0900
+Subject: [PATCH 10/16] allow LLVM_EXPORT_SYMBOLS_FOR_PLUGINS with
+ LLVM_LINK_LLVM_DYLIB
+
+---
+ llvm/cmake/modules/AddLLVM.cmake           | 42 ++++++++++++----------
+ llvm/cmake/modules/HandleLLVMOptions.cmake |  3 --
+ 2 files changed, 23 insertions(+), 22 deletions(-)
+
+diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
+index 74aa9d6b62aff1b1166a7a2f8f4ad94e946d6265..32ffebce31eb616d0256f6f55a0f27194e72c4fe 100644
+--- a/llvm/cmake/modules/AddLLVM.cmake
++++ b/llvm/cmake/modules/AddLLVM.cmake
+@@ -1393,26 +1393,30 @@ function(export_executable_symbols target)
+       set(new_libs ${newer_libs})
+       set(newer_libs "")
+     endwhile()
+-    list(REMOVE_DUPLICATES static_libs)
+-    if (MSVC)
+-      set(mangling microsoft)
++    if (NOT "${static_libs}" STREQUAL "")
++      list(REMOVE_DUPLICATES static_libs)
++      if (MSVC)
++        set(mangling microsoft)
++      else()
++        set(mangling itanium)
++      endif()
++      get_host_tool_path(llvm-nm LLVM_NM llvm_nm_exe llvm_nm_target)
++      get_host_tool_path(llvm-readobj LLVM_READOBJ llvm_readobj_exe llvm_readobj_target)
++      add_custom_command(OUTPUT ${exported_symbol_file}
++                         COMMAND "${Python3_EXECUTABLE}"
++                           ${LLVM_MAIN_SRC_DIR}/utils/extract_symbols.py
++                           --mangling=${mangling} ${static_libs}
++                           -o ${exported_symbol_file}
++                           --nm=${llvm_nm_exe}
++                           --readobj=${llvm_readobj_exe}
++                         WORKING_DIRECTORY ${LLVM_LIBRARY_OUTPUT_INTDIR}
++                         DEPENDS ${LLVM_MAIN_SRC_DIR}/utils/extract_symbols.py
++                           ${static_libs} ${llvm_nm_target} ${llvm_readobj_target}
++                         VERBATIM
++                         COMMENT "Generating export list for ${target}")
+     else()
+-      set(mangling itanium)
+-    endif()
+-    get_host_tool_path(llvm-nm LLVM_NM llvm_nm_exe llvm_nm_target)
+-    get_host_tool_path(llvm-readobj LLVM_READOBJ llvm_readobj_exe llvm_readobj_target)
+-    add_custom_command(OUTPUT ${exported_symbol_file}
+-                       COMMAND "${Python3_EXECUTABLE}"
+-                         ${LLVM_MAIN_SRC_DIR}/utils/extract_symbols.py
+-                         --mangling=${mangling} ${static_libs}
+-                         -o ${exported_symbol_file}
+-                         --nm=${llvm_nm_exe}
+-                         --readobj=${llvm_readobj_exe}
+-                       WORKING_DIRECTORY ${LLVM_LIBRARY_OUTPUT_INTDIR}
+-                       DEPENDS ${LLVM_MAIN_SRC_DIR}/utils/extract_symbols.py
+-                         ${static_libs} ${llvm_nm_target} ${llvm_readobj_target}
+-                       VERBATIM
+-                       COMMENT "Generating export list for ${target}")
++      file(GENERATE OUTPUT ${exported_symbol_file} CONTENT "")
++    endif()
+     add_llvm_symbol_exports( ${target} ${exported_symbol_file} )
+     # If something links against this executable then we want a
+     # transitive link against only the libraries whose symbols
+diff --git a/llvm/cmake/modules/HandleLLVMOptions.cmake b/llvm/cmake/modules/HandleLLVMOptions.cmake
+index 2d78626d953c979f2ca491834a3d0d50826f7479..9acd555408fb51cae3fd9a25f52769b08067653b 100644
+--- a/llvm/cmake/modules/HandleLLVMOptions.cmake
++++ b/llvm/cmake/modules/HandleLLVMOptions.cmake
+@@ -1396,9 +1396,6 @@ CMAKE_DEPENDENT_OPTION(LLVM_EXPORT_SYMBOLS_FOR_PLUGINS
+ if(BUILD_SHARED_LIBS AND LLVM_EXPORT_SYMBOLS_FOR_PLUGINS)
+   message(FATAL_ERROR "BUILD_SHARED_LIBS not compatible with LLVM_EXPORT_SYMBOLS_FOR_PLUGINS")
+ endif()
+-if(LLVM_LINK_LLVM_DYLIB AND LLVM_EXPORT_SYMBOLS_FOR_PLUGINS)
+-  message(FATAL_ERROR "LLVM_LINK_LLVM_DYLIB not compatible with LLVM_EXPORT_SYMBOLS_FOR_PLUGINS")
+-endif()
+ 
+ # By default we should enable LLVM_ENABLE_IDE only for multi-configuration
+ # generators. This option disables optional build system features that make IDEs
+-- 
+2.52.0
+

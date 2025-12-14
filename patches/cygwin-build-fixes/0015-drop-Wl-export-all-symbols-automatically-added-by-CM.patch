@@ -1,7 +1,7 @@
-From 6da1ff010faf0dafc9d4068010db98599f383bd3 Mon Sep 17 00:00:00 2001
+From 655f440561994280852244e266b7cc1d4cd4fd5f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 3 Nov 2025 17:11:21 +0900
-Subject: [PATCH 15/15] drop -Wl,--export-all-symbols automatically added by
+Subject: [PATCH 15/16] drop -Wl,--export-all-symbols automatically added by
  CMake
 
 ---

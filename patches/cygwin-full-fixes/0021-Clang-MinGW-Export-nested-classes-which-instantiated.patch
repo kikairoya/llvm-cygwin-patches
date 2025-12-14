@@ -1,7 +1,7 @@
-From c4edf12b0277fc06db3868a2ce17b3ed473da0e4 Mon Sep 17 00:00:00 2001
+From 06c2c5dde1bf8c495e00e4e553992b8f3ff83226 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 22:31:20 +0900
-Subject: [PATCH 21/52] [Clang][MinGW] Export nested classes which instantiated
+Subject: [PATCH 21/53] [Clang][MinGW] Export nested classes which instantiated
  by enclosing template's explicit instantiation declaration
 
 MinGW-GCC applies explicit instantiateion declaration of a class template to its nested type but doesn't inherit

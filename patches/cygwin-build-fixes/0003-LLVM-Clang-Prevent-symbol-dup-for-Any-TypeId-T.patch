@@ -1,7 +1,7 @@
 From 353b75940d221b6840a8e4f728924c793a20eb06 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:59:32 +0900
-Subject: [PATCH 03/16] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
+Subject: [PATCH 03/17] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
 
 ---
  clang/include/clang/Analysis/FlowSensitive/NoopLattice.h       | 3 +++

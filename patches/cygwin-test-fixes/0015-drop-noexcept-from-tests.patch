@@ -1,7 +1,7 @@
 From 69378a59b88f3324c137732632ae4a1c7e8d4e7a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 10 Dec 2025 20:58:36 +0900
-Subject: [PATCH 15/63] drop noexcept from tests
+Subject: [PATCH 15/64] drop noexcept from tests
 
 ---
  ...t_instantiation.exclude_from_dllexport.cpp | 32 +++++++++----------

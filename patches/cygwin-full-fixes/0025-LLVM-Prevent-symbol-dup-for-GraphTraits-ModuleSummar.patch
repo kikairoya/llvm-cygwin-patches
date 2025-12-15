@@ -1,7 +1,7 @@
 From f92323fd98c1955acf8dbb0e4493f53ba3cfa397 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:06:12 +0900
-Subject: [PATCH 25/53] [LLVM] Prevent symbol dup for
+Subject: [PATCH 25/54] [LLVM] Prevent symbol dup for
  GraphTraits<ModuleSummaryIndex *>::getEntryNode
 
 ---

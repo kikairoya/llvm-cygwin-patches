@@ -1,0 +1,55 @@
+From fac7518b05d98d87624ce537c079a5151c2d33f5 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 15 Dec 2025 23:45:18 +0900
+Subject: [PATCH 37/64] reorder llvm-shlib/clang-shlib
+
+---
+ clang/tools/CMakeLists.txt | 13 +++++++------
+ llvm/tools/CMakeLists.txt  |  1 +
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/clang/tools/CMakeLists.txt b/clang/tools/CMakeLists.txt
+index afdd613b4ee9981bf107aa131b19659fc8a0dfd6..1ade772f46587ab3a06d3bbcda6c6c8a4f2d89c8 100644
+--- a/clang/tools/CMakeLists.txt
++++ b/clang/tools/CMakeLists.txt
+@@ -1,5 +1,12 @@
+ create_subdirectory_options(CLANG TOOL)
+ 
++# For MinGW/Cygwin we only enable shared library if LLVM_LINK_LLVM_DYLIB=ON.
++# Without that option resulting library is too close to 2^16 DLL exports limit.
++if((UNIX AND NOT CYGWIN) OR (MSVC AND LLVM_BUILD_LLVM_DYLIB_VIS) OR
++  ((MINGW OR CYGWIN) AND LLVM_LINK_LLVM_DYLIB))
++  add_clang_subdirectory(clang-shlib)
++endif()
++
+ add_clang_subdirectory(diagtool)
+ add_clang_subdirectory(driver)
+ if(CLANG_ENABLE_CIR)
+@@ -27,12 +34,6 @@ if(CLANG_INCLUDE_TESTS)
+ endif()
+ 
+ add_clang_subdirectory(clang-refactor)
+-# For MinGW/Cygwin we only enable shared library if LLVM_LINK_LLVM_DYLIB=ON.
+-# Without that option resulting library is too close to 2^16 DLL exports limit.
+-if((UNIX AND NOT CYGWIN) OR (MSVC AND LLVM_BUILD_LLVM_DYLIB_VIS) OR
+-  ((MINGW OR CYGWIN) AND LLVM_LINK_LLVM_DYLIB))
+-  add_clang_subdirectory(clang-shlib)
+-endif()
+ 
+ if(CLANG_ENABLE_STATIC_ANALYZER)
+   add_clang_subdirectory(clang-check)
+diff --git a/llvm/tools/CMakeLists.txt b/llvm/tools/CMakeLists.txt
+index 729797aa43f0b2f2c3a10bdf8d7aa0d2cae6e0fa..23fb2fe29ae0ad821266e9d58026248b9b9a1d49 100644
+--- a/llvm/tools/CMakeLists.txt
++++ b/llvm/tools/CMakeLists.txt
+@@ -34,6 +34,7 @@ endif()
+ # ExternalProject_Add.
+ add_llvm_tool_subdirectory(lto)
+ add_llvm_tool_subdirectory(gold)
++add_llvm_tool_subdirectory(llvm-shlib)
+ add_llvm_tool_subdirectory(llvm-ar)
+ add_llvm_tool_subdirectory(llvm-config)
+ add_llvm_tool_subdirectory(llvm-ctxprof-util)
+-- 
+2.52.0
+

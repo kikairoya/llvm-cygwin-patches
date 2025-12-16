@@ -1,18 +1,18 @@
-From 783837994a56e5eae44a09df9ab88b7f79ee2783 Mon Sep 17 00:00:00 2001
+From 5c9a8bb7c8e8b3a973951c49bf27f5c8a6d8d5a5 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Fri, 12 Dec 2025 06:56:12 +0900
-Subject: [PATCH 06/17] [clang] constexpir-ize `NoneLoc`s and dependants to
+Date: Wed, 17 Dec 2025 18:58:50 +0900
+Subject: [PATCH 06/16] [clang] constexpir-ize `NoneLoc`s and dependants to
  prevent symbol dup
 
 ---
- clang/include/clang/AST/DeclTemplate.h  | 6 +++---
- clang/include/clang/AST/TemplateBase.h  | 4 ++--
- llvm/include/llvm/ADT/FunctionExtras.h  | 6 +++---
- llvm/include/llvm/ADT/PointerIntPair.h  | 3 ++-
- llvm/include/llvm/ADT/PointerUnion.h    | 6 +++---
- llvm/include/llvm/CodeGen/SlotIndexes.h | 2 +-
- llvm/lib/CodeGen/InterferenceCache.h    | 2 +-
- 7 files changed, 15 insertions(+), 14 deletions(-)
+ clang/include/clang/AST/DeclTemplate.h  |  6 +++---
+ clang/include/clang/AST/TemplateBase.h  |  4 ++--
+ llvm/include/llvm/ADT/FunctionExtras.h  | 12 ++++++------
+ llvm/include/llvm/ADT/PointerIntPair.h  |  3 ++-
+ llvm/include/llvm/ADT/PointerUnion.h    |  6 +++---
+ llvm/include/llvm/CodeGen/SlotIndexes.h |  2 +-
+ llvm/lib/CodeGen/InterferenceCache.h    |  2 +-
+ 7 files changed, 18 insertions(+), 17 deletions(-)
 
 diff --git a/clang/include/clang/AST/DeclTemplate.h b/clang/include/clang/AST/DeclTemplate.h
 index a4a1bb9c13c79f826c96fa7969c59d36b9f5321e..a30ec5a76e22b7fdb4940eec9639c1ca659b9037 100644
@@ -68,7 +68,7 @@ index de248ac3cf703857bf8143507a1b742c32724441..f72a009cc20dfb27db477c94c7573173
    TemplateArgumentLoc(const TemplateArgument &Argument,
                        TemplateArgumentLocInfo Opaque)
 diff --git a/llvm/include/llvm/ADT/FunctionExtras.h b/llvm/include/llvm/ADT/FunctionExtras.h
-index 807a2e769999c8caca5cb9edc97c8ddccf88b694..ef0d754080d97093ce75c99a9519fe28eec740e5 100644
+index 807a2e769999c8caca5cb9edc97c8ddccf88b694..38f437ebe77754394a06f4a076271f212f8aa16b 100644
 --- a/llvm/include/llvm/ADT/FunctionExtras.h
 +++ b/llvm/include/llvm/ADT/FunctionExtras.h
 @@ -132,7 +132,7 @@ protected:
@@ -80,7 +80,7 @@ index 807a2e769999c8caca5cb9edc97c8ddccf88b694..ef0d754080d97093ce75c99a9519fe28
  
    // The main storage buffer. This will either have a pointer to out-of-line
    // storage or an inline buffer storing the callable.
-@@ -164,7 +164,7 @@ protected:
+@@ -164,15 +164,15 @@ protected:
    bool isInlineStorage() const { return CallbackAndInlineFlag.getInt(); }
  
    bool isTrivialCallback() const {
@@ -89,6 +89,17 @@ index 807a2e769999c8caca5cb9edc97c8ddccf88b694..ef0d754080d97093ce75c99a9519fe28
    }
  
    CallPtrT getTrivialCallback() const {
+-    return cast<TrivialCallback *>(CallbackAndInlineFlag.getPointer())->CallPtr;
++    return cast<const TrivialCallback *>(CallbackAndInlineFlag.getPointer())->CallPtr;
+   }
+ 
+-  NonTrivialCallbacks *getNonTrivialCallbacks() const {
+-    return cast<NonTrivialCallbacks *>(CallbackAndInlineFlag.getPointer());
++  const NonTrivialCallbacks *getNonTrivialCallbacks() const {
++    return cast<const NonTrivialCallbacks *>(CallbackAndInlineFlag.getPointer());
+   }
+ 
+   CallPtrT getCallPtr() const {
 @@ -231,7 +231,7 @@ protected:
    // here and each instance will contain a pointer to it.
    // Wrap in a struct to avoid https://gcc.gnu.org/PR71954

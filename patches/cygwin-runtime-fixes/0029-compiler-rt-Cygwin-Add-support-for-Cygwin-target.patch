@@ -1,4 +1,4 @@
-From a4f000034767e0153e9ccdcb85e12ec5cb2df4b5 Mon Sep 17 00:00:00 2001
+From 23a3a31e48f59a13d542abe9739ff01737658fe7 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 29/39] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -46,7 +46,7 @@ index 1f82ff3cf75312d58c1a28547a75174fc09df536..b32dadab445856595bbc39470208f0b1
  else()
    set(COMPILER_RT_HAS_PROFILE FALSE)
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index 7e8621855eb8494d4bc6af87721c55555f5f3878..940379f876839f08dbd6585312d4a7b8b3b84bf2 100644
+index a5ce9264d1c6b9e95fc7ef8aeced9d7de4b2bbcb..4c61b1a97b289d3fda1110e4d08d45f0b0d138a9 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)

@@ -1,0 +1,51 @@
+From 7d9eb14e8e255fe3942b8b598bc52cabab6cea1e Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Wed, 10 Dec 2025 20:58:40 +0900
+Subject: [PATCH 13/61] revise logic
+
+---
+ clang/lib/Sema/SemaDeclCXX.cpp | 27 +++++++++++----------------
+ 1 file changed, 11 insertions(+), 16 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
+index 3ac8011c030bcf6daf690cc1c156361e465dcb94..1a470c7dd3b0e6de13581d6cc9c73d6bc446104a 100644
+--- a/clang/lib/Sema/SemaDeclCXX.cpp
++++ b/clang/lib/Sema/SemaDeclCXX.cpp
+@@ -19119,23 +19119,18 @@ bool Sema::DefineUsedVTables() {
+         }
+       }
+ 
+-      if (IsExplicitInstantiationDeclaration) {
++      if (IsExplicitInstantiationDeclaration &&
++          llvm::none_of(Class->decls(), [](Decl *decl) {
++            // If the class has a virtual member function declared with
++            // `__attribute__((exclude_from_explicit_instantiation))`, the
++            // explicit instantiation declaration shouldn't suppress emitting
++            // the vtable to ensure that the excluded member function is
++            // accessible through the vtable.
++            auto *Method = dyn_cast<CXXMethodDecl>(decl);
++            return Method && Method->isVirtual() &&
++                   Method->hasAttr<ExcludeFromExplicitInstantiationAttr>();
++          }))
+         DefineVTable = false;
+-
+-        // Ensure the instance of a virtual member function which is declared
+-        // with `__attribute__((exclude_from_explicit_instantiation))` is
+-        // accessible from the VTable.
+-        for (Decl *decl : Class->decls()) {
+-          auto *Method = dyn_cast<CXXMethodDecl>(decl);
+-          if (!Method || !Method->isVirtual())
+-            continue;
+-
+-          if (Method->hasAttr<ExcludeFromExplicitInstantiationAttr>()) {
+-            MarkFunctionReferenced(Loc, Method);
+-            DefinedAnything = true;
+-          }
+-        }
+-      }
+     }
+ 
+     // The exception specifications for all virtual members may be needed even
+-- 
+2.52.0
+

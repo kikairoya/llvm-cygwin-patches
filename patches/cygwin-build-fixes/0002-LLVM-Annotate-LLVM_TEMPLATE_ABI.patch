@@ -1,7 +1,7 @@
-From 114f2029b852c5ae155a02e56c16af5bd8b3baf4 Mon Sep 17 00:00:00 2001
+From dde5c27cc7bac4ef26d3f401cb356248a5808d25 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 10 Dec 2025 23:50:36 +0900
-Subject: [PATCH 02/17] [LLVM] Annotate LLVM_TEMPLATE_ABI
+Subject: [PATCH 02/16] [LLVM] Annotate LLVM_TEMPLATE_ABI
 
 ---
  llvm/include/llvm/CodeGen/MachinePassManager.h | 10 +++++-----

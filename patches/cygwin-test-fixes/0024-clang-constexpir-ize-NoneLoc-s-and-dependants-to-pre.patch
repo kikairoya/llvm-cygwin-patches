@@ -1,0 +1,185 @@
+From 5c9a8bb7c8e8b3a973951c49bf27f5c8a6d8d5a5 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Wed, 17 Dec 2025 18:58:50 +0900
+Subject: [PATCH 24/61] [clang] constexpir-ize `NoneLoc`s and dependants to
+ prevent symbol dup
+
+---
+ clang/include/clang/AST/DeclTemplate.h  |  6 +++---
+ clang/include/clang/AST/TemplateBase.h  |  4 ++--
+ llvm/include/llvm/ADT/FunctionExtras.h  | 12 ++++++------
+ llvm/include/llvm/ADT/PointerIntPair.h  |  3 ++-
+ llvm/include/llvm/ADT/PointerUnion.h    |  6 +++---
+ llvm/include/llvm/CodeGen/SlotIndexes.h |  2 +-
+ llvm/lib/CodeGen/InterferenceCache.h    |  2 +-
+ 7 files changed, 18 insertions(+), 17 deletions(-)
+
+diff --git a/clang/include/clang/AST/DeclTemplate.h b/clang/include/clang/AST/DeclTemplate.h
+index a4a1bb9c13c79f826c96fa7969c59d36b9f5321e..a30ec5a76e22b7fdb4940eec9639c1ca659b9037 100644
+--- a/clang/include/clang/AST/DeclTemplate.h
++++ b/clang/include/clang/AST/DeclTemplate.h
+@@ -1234,7 +1234,7 @@ public:
+ 
+   /// Retrieve the default argument, if any.
+   const TemplateArgumentLoc &getDefaultArgument() const {
+-    static const TemplateArgumentLoc NoneLoc;
++    static constexpr TemplateArgumentLoc NoneLoc{};
+     return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
+   }
+ 
+@@ -1437,7 +1437,7 @@ public:
+ 
+   /// Retrieve the default argument, if any.
+   const TemplateArgumentLoc &getDefaultArgument() const {
+-    static const TemplateArgumentLoc NoneLoc;
++    static constexpr TemplateArgumentLoc NoneLoc{};
+     return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
+   }
+ 
+@@ -1721,7 +1721,7 @@ public:
+ 
+   /// Retrieve the default argument, if any.
+   const TemplateArgumentLoc &getDefaultArgument() const {
+-    static const TemplateArgumentLoc NoneLoc;
++    static constexpr TemplateArgumentLoc NoneLoc{};
+     return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
+   }
+ 
+diff --git a/clang/include/clang/AST/TemplateBase.h b/clang/include/clang/AST/TemplateBase.h
+index de248ac3cf703857bf8143507a1b742c32724441..f72a009cc20dfb27db477c94c757317339b50512 100644
+--- a/clang/include/clang/AST/TemplateBase.h
++++ b/clang/include/clang/AST/TemplateBase.h
+@@ -489,7 +489,7 @@ struct TemplateArgumentLocInfo {
+     return cast<TemplateTemplateArgLocInfo *>(Pointer);
+   }
+ 
+-  TemplateArgumentLocInfo() {}
++  constexpr TemplateArgumentLocInfo() = default;
+   TemplateArgumentLocInfo(TypeSourceInfo *Declarator) { Pointer = Declarator; }
+ 
+   TemplateArgumentLocInfo(Expr *E) { Pointer = E; }
+@@ -530,7 +530,7 @@ class TemplateArgumentLoc {
+   TemplateArgumentLocInfo LocInfo;
+ 
+ public:
+-  TemplateArgumentLoc() {}
++  constexpr TemplateArgumentLoc() = default;
+ 
+   TemplateArgumentLoc(const TemplateArgument &Argument,
+                       TemplateArgumentLocInfo Opaque)
+diff --git a/llvm/include/llvm/ADT/FunctionExtras.h b/llvm/include/llvm/ADT/FunctionExtras.h
+index 807a2e769999c8caca5cb9edc97c8ddccf88b694..38f437ebe77754394a06f4a076271f212f8aa16b 100644
+--- a/llvm/include/llvm/ADT/FunctionExtras.h
++++ b/llvm/include/llvm/ADT/FunctionExtras.h
+@@ -132,7 +132,7 @@ protected:
+   // pointer in a struct or a pointer to a static struct of the call, move, and
+   // destroy pointers.
+   using CallbackPointerUnionT =
+-      PointerUnion<TrivialCallback *, NonTrivialCallbacks *>;
++      PointerUnion<const TrivialCallback *, const NonTrivialCallbacks *>;
+ 
+   // The main storage buffer. This will either have a pointer to out-of-line
+   // storage or an inline buffer storing the callable.
+@@ -164,15 +164,15 @@ protected:
+   bool isInlineStorage() const { return CallbackAndInlineFlag.getInt(); }
+ 
+   bool isTrivialCallback() const {
+-    return isa<TrivialCallback *>(CallbackAndInlineFlag.getPointer());
++    return isa<const TrivialCallback *>(CallbackAndInlineFlag.getPointer());
+   }
+ 
+   CallPtrT getTrivialCallback() const {
+-    return cast<TrivialCallback *>(CallbackAndInlineFlag.getPointer())->CallPtr;
++    return cast<const TrivialCallback *>(CallbackAndInlineFlag.getPointer())->CallPtr;
+   }
+ 
+-  NonTrivialCallbacks *getNonTrivialCallbacks() const {
+-    return cast<NonTrivialCallbacks *>(CallbackAndInlineFlag.getPointer());
++  const NonTrivialCallbacks *getNonTrivialCallbacks() const {
++    return cast<const NonTrivialCallbacks *>(CallbackAndInlineFlag.getPointer());
+   }
+ 
+   CallPtrT getCallPtr() const {
+@@ -231,7 +231,7 @@ protected:
+   // here and each instance will contain a pointer to it.
+   // Wrap in a struct to avoid https://gcc.gnu.org/PR71954
+   template <typename CallableT, typename CalledAs> struct CallbacksHolder {
+-    inline static auto Callbacks = []() constexpr {
++    static constexpr auto Callbacks = []() constexpr {
+       // For trivial callables, we don't need to store move and destroy
+       // callbacks.
+       if constexpr (std::is_trivially_move_constructible_v<CallableT> &&
+diff --git a/llvm/include/llvm/ADT/PointerIntPair.h b/llvm/include/llvm/ADT/PointerIntPair.h
+index 75e3a58e7ca617a439f8705a77233b9f284f59db..5e5195ecec27d9dd916a77756c8bf850f2fc040c 100644
+--- a/llvm/include/llvm/ADT/PointerIntPair.h
++++ b/llvm/include/llvm/ADT/PointerIntPair.h
+@@ -34,7 +34,8 @@ template <typename Ptr> struct PunnedPointer {
+   static_assert(std::is_trivially_copy_constructible<Ptr>::value, "");
+   static_assert(std::is_trivially_move_constructible<Ptr>::value, "");
+ 
+-  explicit constexpr PunnedPointer(intptr_t i = 0) { *this = i; }
++  constexpr PunnedPointer(): Data{0} {}
++  explicit constexpr PunnedPointer(intptr_t i) { *this = i; }
+ 
+   constexpr intptr_t asInt() const {
+     intptr_t R = 0;
+diff --git a/llvm/include/llvm/ADT/PointerUnion.h b/llvm/include/llvm/ADT/PointerUnion.h
+index d9087dd1c516ee265aa00851ca98b1df09936f3e..dfdce5ed59ed6de8aa4b9237f260b39ae487b61b 100644
+--- a/llvm/include/llvm/ADT/PointerUnion.h
++++ b/llvm/include/llvm/ADT/PointerUnion.h
+@@ -54,7 +54,7 @@ namespace pointer_union_detail {
+   class PointerUnionMembers<Derived, ValTy, I> {
+   protected:
+     ValTy Val;
+-    PointerUnionMembers() = default;
++    constexpr PointerUnionMembers() = default;
+     PointerUnionMembers(ValTy Val) : Val(Val) {}
+ 
+     friend struct PointerLikeTypeTraits<Derived>;
+@@ -67,7 +67,7 @@ namespace pointer_union_detail {
+     using Base = PointerUnionMembers<Derived, ValTy, I + 1, Types...>;
+   public:
+     using Base::Base;
+-    PointerUnionMembers() = default;
++    constexpr PointerUnionMembers() = default;
+     PointerUnionMembers(Type V)
+         : Base(ValTy(const_cast<void *>(
+                          PointerLikeTypeTraits<Type>::getAsVoidPointer(V)),
+@@ -126,7 +126,7 @@ class PointerUnion
+   template <typename To, typename From, typename Enable> friend struct CastInfo;
+ 
+ public:
+-  PointerUnion() = default;
++  constexpr PointerUnion() = default;
+ 
+   PointerUnion(std::nullptr_t) : PointerUnion() {}
+   using Base::Base;
+diff --git a/llvm/include/llvm/CodeGen/SlotIndexes.h b/llvm/include/llvm/CodeGen/SlotIndexes.h
+index 780bd82a4c624ddbfd377437d23c867e4228c0dc..9337856d71ee835a1d34f93def5e8051e96a6ff3 100644
+--- a/llvm/include/llvm/CodeGen/SlotIndexes.h
++++ b/llvm/include/llvm/CodeGen/SlotIndexes.h
+@@ -114,7 +114,7 @@ class raw_ostream;
+     };
+ 
+     /// Construct an invalid index.
+-    SlotIndex() = default;
++    constexpr SlotIndex() = default;
+ 
+     // Creates a SlotIndex from an IndexListEntry and a slot. Generally should
+     // not be used. This method is only public to facilitate writing certain
+diff --git a/llvm/lib/CodeGen/InterferenceCache.h b/llvm/lib/CodeGen/InterferenceCache.h
+index 2a176b4f2cf7b181a4100b3bd8e08f1544614bcf..ed6137ab0fe3622ac4bfd593272b539002c43445 100644
+--- a/llvm/lib/CodeGen/InterferenceCache.h
++++ b/llvm/lib/CodeGen/InterferenceCache.h
+@@ -37,7 +37,7 @@ class LLVM_LIBRARY_VISIBILITY InterferenceCache {
+     SlotIndex First;
+     SlotIndex Last;
+ 
+-    BlockInterference() = default;
++    constexpr BlockInterference() = default;
+   };
+ 
+   /// Entry - A cache entry containing interference information for all aliases
+-- 
+2.52.0
+

@@ -1,0 +1,114 @@
+From b6896e55530cd542ea0dcfb5f4311a2e70ab4d89 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Wed, 17 Dec 2025 19:02:44 +0900
+Subject: [PATCH 10/16] export symbols from executable on cygming if dylib or
+ shared
+
+---
+ llvm/cmake/modules/AddLLVM.cmake | 68 +++++++++++++++++++++++++-------
+ 1 file changed, 54 insertions(+), 14 deletions(-)
+
+diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
+index 74aa9d6b62aff1b1166a7a2f8f4ad94e946d6265..57227adffb523fbb29b2658013b8ecbb86ec37f5 100644
+--- a/llvm/cmake/modules/AddLLVM.cmake
++++ b/llvm/cmake/modules/AddLLVM.cmake
+@@ -547,6 +547,13 @@ function(llvm_add_library name)
+       message(STATUS "${name} ignored -- Loadable modules not supported on this platform.")
+       return()
+     endif()
++    if(ARG_PLUGIN_TOOL AND (WIN32 OR CYGWIN))
++      get_target_property(plugin_tool_exporting ${ARG_PLUGIN_TOOL} ENABLE_EXPORTS)
++      if(NOT plugin_tool_exporting)
++        message(WARNING "PLUGIN_TOOL for ${name} is ignored -- ${ARG_PLUGIN_TOOL} is not configured as a plugin target.")
++        set(ARG_PLUGIN_TOOL)
++      endif()
++    endif()
+   else()
+     if(ARG_PLUGIN_TOOL)
+       message(WARNING "PLUGIN_TOOL without MODULE doesn't make sense.")
+@@ -766,7 +773,7 @@ function(llvm_add_library name)
+     set(libtype PRIVATE)
+   endif()
+ 
+-  if(ARG_MODULE AND LLVM_EXPORT_SYMBOLS_FOR_PLUGINS AND ARG_PLUGIN_TOOL AND (WIN32 OR CYGWIN))
++  if(ARG_MODULE AND ARG_PLUGIN_TOOL AND (WIN32 OR CYGWIN))
+     # On DLL platforms symbols are imported from the tool by linking against it.
+     set(llvm_libs ${ARG_PLUGIN_TOOL})
+   elseif (NOT ARG_COMPONENT_LIB)
+@@ -1349,16 +1356,8 @@ function(process_llvm_pass_plugins)
+   endif()
+ endfunction()
+ 
+-function(export_executable_symbols target)
+-  if (LLVM_EXPORTED_SYMBOL_FILE)
+-    # The symbol file should contain the symbols we want the executable to
+-    # export
+-    set_target_properties(${target} PROPERTIES ENABLE_EXPORTS 1)
+-  elseif (LLVM_EXPORT_SYMBOLS_FOR_PLUGINS)
+-    # Extract the symbols to export from the static libraries that the
+-    # executable links against.
+-    set_target_properties(${target} PROPERTIES ENABLE_EXPORTS 1)
+-    set(exported_symbol_file ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${target}.symbols)
++function(do_export_executable_symbols_for_plugins target exported_symbol_file)
++  if(LLVM_EXPORT_SYMBOLS_FOR_PLUGINS)
+     # We need to consider not just the direct link dependencies, but also the
+     # transitive link dependencies. Do this by starting with the set of direct
+     # dependencies, then the dependencies of those dependencies, and so on.
+@@ -1418,10 +1417,51 @@ function(export_executable_symbols target)
+     # transitive link against only the libraries whose symbols
+     # we aren't exporting.
+     set_target_properties(${target} PROPERTIES INTERFACE_LINK_LIBRARIES "${other_libs}")
++  else()
++    target_link_options(${target} PRIVATE "LINKER:--export-all-symbols")
++    get_target_property(libs ${target} LINK_LIBRARIES)
++    set(shared_libs)
++    foreach(lib ${libs})
++      if(TARGET ${lib})
++        get_target_property(lib_type ${lib} TYPE)
++        if(${lib_type} STREQUAL "SHARED_LIBRARY")
++          list(APPEND shared_libs ${lib})
++        endif()
++      endif()
++    endforeach(lib)
++    set_target_properties(${target} PROPERTIES INTERFACE_LINK_LIBRARIES "${shared_libs}")
++  endif()
++endfunction()
++
++function(export_executable_symbols target)
++  if (LLVM_EXPORTED_SYMBOL_FILE)
++    # The symbol file should contain the symbols we want the executable to
++    # export
++    set_target_properties(${target} PROPERTIES ENABLE_EXPORTS 1)
++  elseif (LLVM_EXPORT_SYMBOLS_FOR_PLUGINS)
++    # Extract the symbols to export from the static libraries that the
++    # executable links against.
++    set_target_properties(${target} PROPERTIES ENABLE_EXPORTS 1)
++    set(exported_symbol_file ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${target}.symbols)
++    # Defer the actual process of exporting since dependants might not
++    # registered yet; e.g. exporting from `clang` is called before
++    # `clang-cpp`(clang-shlib) is registered.
++    cmake_language(EVAL CODE "
++      cmake_language(DEFER DIRECTORY ${CMAKE_SOURCE_DIR}
++        CALL do_export_executable_symbols_for_plugins [[${target}]] [[${exported_symbol_file}]]
++      )
++    ")
++  elseif((MINGW OR CYGWIN) AND (BUILD_SHARED_LIBS OR LLVM_LINK_LLVM_DYLIB))
++    # On Windows auto-exporting everything from a static-linked executable
++    # doesn't work because of the limit on the size of the exported symbol table.
++    set_target_properties(${target} PROPERTIES ENABLE_EXPORTS 1)
++    cmake_language(EVAL CODE "
++      cmake_language(DEFER DIRECTORY ${CMAKE_SOURCE_DIR}
++        CALL do_export_executable_symbols_for_plugins [[${target}]] NO
++      )
++    ")
+   elseif(NOT (WIN32 OR CYGWIN))
+-    # On Windows auto-exporting everything doesn't work because of the limit on
+-    # the size of the exported symbol table, but on other platforms we can do
+-    # it without any trouble.
++    # On non-Windows platforms, we can export everything without any trouble.
+     set_target_properties(${target} PROPERTIES ENABLE_EXPORTS 1)
+     # CMake doesn't set CMAKE_EXE_EXPORTS_${lang}_FLAG on Solaris, so
+     # ENABLE_EXPORTS has no effect.  While Solaris ld defaults to -rdynamic
+-- 
+2.52.0
+

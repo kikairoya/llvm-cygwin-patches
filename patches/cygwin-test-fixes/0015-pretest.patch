@@ -1,7 +1,7 @@
-From 3448119e9cf705968ce205d1e0e8eea21cbc7666 Mon Sep 17 00:00:00 2001
+From 4dbe082dff5f7be6ab1026b6cf2cc8ad371f4c32 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Dec 2025 07:29:51 +0900
-Subject: [PATCH 15/61] pretest
+Subject: [PATCH 15/64] pretest
 
 ---
  .../CodeGenCXX/mingw-template-dllexport.cpp   | 261 +++++++++++++++---

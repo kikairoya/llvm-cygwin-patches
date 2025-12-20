@@ -1,0 +1,46 @@
+From 9bdac1818a240b98be860c97b60f4edb476c2146 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 20 Dec 2025 21:45:53 +0900
+Subject: [PATCH 34/54] [Clangd] Make clangDaemonTweaks to use
+ `clang_target_link_libraries`
+
+---
+ .../clangd/refactor/tweaks/CMakeLists.txt        | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/clang-tools-extra/clangd/refactor/tweaks/CMakeLists.txt b/clang-tools-extra/clangd/refactor/tweaks/CMakeLists.txt
+index 1d6e38088ad67a415667ee1f6bf30062f8d8cbf5..af1f796eb8b1b89769934e5d93c272253115a630 100644
+--- a/clang-tools-extra/clangd/refactor/tweaks/CMakeLists.txt
++++ b/clang-tools-extra/clangd/refactor/tweaks/CMakeLists.txt
+@@ -34,18 +34,22 @@ add_clang_library(clangDaemonTweaks OBJECT
+   SwapIfBranches.cpp
+ 
+   LINK_LIBS
+-  clangAST
+-  clangBasic
+   clangDaemon
+   clangdSupport
++
++  DEPENDS
++  omp_gen
++  ClangDriverOptions
++  )
++
++clang_target_link_libraries(clangDaemon
++  PRIVATE
++  clangAST
++  clangBasic
+   clangFormat
+   clangLex
+   clangSema
+   clangToolingCore
+   clangToolingRefactoring
+   clangToolingSyntax
+-
+-  DEPENDS
+-  omp_gen
+-  ClangDriverOptions
+   )
+-- 
+2.52.0
+

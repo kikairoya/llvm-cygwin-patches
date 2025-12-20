@@ -1,7 +1,7 @@
-From 3e1be7ca95434afc6bf7f0039dedd5944373d54d Mon Sep 17 00:00:00 2001
+From e97e87ba04941e6e031fecf2320b68cf4c88f83d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:01:39 +0900
-Subject: [PATCH 25/51] [clangd] Prevent symbol dup for DenseMapInfo<SymbolID>
+Subject: [PATCH 25/54] [clangd] Prevent symbol dup for DenseMapInfo<SymbolID>
 
 ---
  clang-tools-extra/clangd/index/SymbolID.h | 17 +++++++++--------

@@ -1,0 +1,119 @@
+From c8ffe24dfe847757b52a1a752391ceb25f3ca442 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 15 Dec 2025 06:45:05 +0900
+Subject: [PATCH 31/64] make CTTestTidyModule work on Windows
+
+---
+ clang-tools-extra/clang-tidy/ClangTidy.cpp |  2 +-
+ clang-tools-extra/test/CMakeLists.txt      | 11 ++-----
+ llvm/include/llvm/Support/Registry.h       | 34 +++++++++++-----------
+ 3 files changed, 20 insertions(+), 27 deletions(-)
+
+diff --git a/clang-tools-extra/clang-tidy/ClangTidy.cpp b/clang-tools-extra/clang-tidy/ClangTidy.cpp
+index 970c463029abf65b1d9e424fe81f25b7dc3cbc33..8f76d3917835b7150eb7b2c8f063b8ff66c0ba72 100644
+--- a/clang-tools-extra/clang-tidy/ClangTidy.cpp
++++ b/clang-tools-extra/clang-tidy/ClangTidy.cpp
+@@ -49,7 +49,7 @@ using namespace clang::driver;
+ using namespace clang::tooling;
+ using namespace llvm;
+ 
+-LLVM_INSTANTIATE_REGISTRY(clang::tidy::ClangTidyModuleRegistry)
++template class llvm::Registry<clang::tidy::ClangTidyModule>;
+ 
+ namespace clang::tidy {
+ 
+diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
+index 78447e7a00db872342fb46a55caf213fa01cce6b..bd46d9ef1cbbb3d485adf60c9112e99fbcaa2f38 100644
+--- a/clang-tools-extra/test/CMakeLists.txt
++++ b/clang-tools-extra/test/CMakeLists.txt
+@@ -63,21 +63,14 @@ foreach(dep ${LLVM_UTILS_DEPS})
+   endif()
+ endforeach()
+ 
+-if (NOT WIN32 OR NOT LLVM_LINK_LLVM_DYLIB)
++if (CLANG_PLUGIN_SUPPORT AND
++    (NOT (WIN32 OR CYGWIN) OR BUILD_SHARED_LIBS OR CLANG_LINK_CLANG_DYLIB))
+   llvm_add_library(
+       CTTestTidyModule
+       MODULE clang-tidy/CTTestTidyModule.cpp
+       PLUGIN_TOOL clang-tidy)
+-endif()
+-
+-if(TARGET CTTestTidyModule)
+     list(APPEND CLANG_TOOLS_TEST_DEPS CTTestTidyModule)
+     target_include_directories(CTTestTidyModule PUBLIC BEFORE "${CLANG_TOOLS_SOURCE_DIR}")
+-    if(CLANG_PLUGIN_SUPPORT AND (WIN32 OR CYGWIN))
+-      set(LLVM_LINK_COMPONENTS
+-        Support
+-      )
+-    endif()
+ endif()
+ 
+ add_lit_testsuite(check-clang-extra "Running clang-tools-extra/test"
+diff --git a/llvm/include/llvm/Support/Registry.h b/llvm/include/llvm/Support/Registry.h
+index acd3b06fde6e721ee8c3ffd8b11453259f21b598..fe32cf4f30db9af37b6ff3913177ef403cd1f094 100644
+--- a/llvm/include/llvm/Support/Registry.h
++++ b/llvm/include/llvm/Support/Registry.h
+@@ -58,8 +58,8 @@ namespace llvm {
+     // declaration causing error C2487 "member of dll interface class may not
+     // be declared with dll interface".
+     // https://developercommunity.visualstudio.com/t/c2487-in-dllexport-class-with-static-members/69878
+-    static inline node *Head = nullptr;
+-    static inline node *Tail = nullptr;
++    static node *Head;
++    static node *Tail;
+ 
+   public:
+     /// Node in linked list of entries.
+@@ -82,13 +82,7 @@ namespace llvm {
+     /// add a node to the executable's registry. Therefore it's not defined here
+     /// to avoid it being instantiated in the plugin and is instead defined in
+     /// the executable (see LLVM_INSTANTIATE_REGISTRY below).
+-    static void add_node(node *N) {
+-      if (Tail)
+-        Tail->Next = N;
+-      else
+-        Head = N;
+-      Tail = N;
+-    }
++    static void add_node(node *N);
+ 
+     /// Iterators for registry entries.
+     ///
+@@ -137,19 +131,25 @@ namespace llvm {
+     };
+   };
+ 
++  template<typename T>
++  typename Registry<T>::node *Registry<T>::Head = nullptr;
++  template<typename T>
++  typename Registry<T>::node *Registry<T>::Tail = nullptr;
++  template<typename T>
++  void Registry<T>::add_node(node *N) {
++    if (Tail)
++      Tail->Next = N;
++    else
++      Head = N;
++    Tail = N;
++  }
++
+ } // end namespace llvm
+ 
+-#ifdef _WIN32
+ /// Instantiate a registry class.
+ #define LLVM_INSTANTIATE_REGISTRY(REGISTRY_CLASS)                              \
+   namespace llvm {                                                             \
+-  template class LLVM_ABI_EXPORT Registry<REGISTRY_CLASS::type>;               \
+-  }
+-#else
+-#define LLVM_INSTANTIATE_REGISTRY(REGISTRY_CLASS)                              \
+-  namespace llvm {                                                             \
+-  template class Registry<REGISTRY_CLASS::type>;                               \
++  template class LLVM_ALWAYS_EXPORT Registry<REGISTRY_CLASS::type>;            \
+   }
+-#endif
+ 
+ #endif // LLVM_SUPPORT_REGISTRY_H
+-- 
+2.52.0
+

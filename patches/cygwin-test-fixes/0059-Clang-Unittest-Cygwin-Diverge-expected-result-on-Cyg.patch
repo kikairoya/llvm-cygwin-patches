@@ -1,0 +1,40 @@
+From 44b68c57f601cfe4a51e142613c145d2ecc3d98d Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 11 Oct 2025 17:39:03 +0900
+Subject: [PATCH 59/64] [Clang][Unittest][Cygwin] Diverge expected result on
+ Cygwin host
+
+---
+ clang/unittests/Interpreter/CMakeLists.txt      | 2 +-
+ clang/unittests/Interpreter/InterpreterTest.cpp | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/clang/unittests/Interpreter/CMakeLists.txt b/clang/unittests/Interpreter/CMakeLists.txt
+index 62c8f215dc98cea3b20e7e066752e7f0ed176f39..c274eb9e22bd680a2c1d1dce7a69ac294fc176b0 100644
+--- a/clang/unittests/Interpreter/CMakeLists.txt
++++ b/clang/unittests/Interpreter/CMakeLists.txt
+@@ -97,7 +97,7 @@ if ((MINGW OR CYGWIN) AND NOT (CLANG_LINK_CLANG_DYLIB OR BUILD_SHARED_LIBS))
+ endif()
+ 
+ # Exceptions on Windows are not yet supported.
+-if(NOT WIN32)
++if(NOT WIN32 AND NOT CYGWIN)
+   add_subdirectory(ExceptionTests)
+ endif()
+ 
+diff --git a/clang/unittests/Interpreter/InterpreterTest.cpp b/clang/unittests/Interpreter/InterpreterTest.cpp
+index 9ff9092524d21bd246692555d9d3b7b7e065d1a9..55cb9e388e4e12e55d06f3928c2d7355ffdff53f 100644
+--- a/clang/unittests/Interpreter/InterpreterTest.cpp
++++ b/clang/unittests/Interpreter/InterpreterTest.cpp
+@@ -236,7 +236,7 @@ TEST_F(InterpreterTest, FindMangledNameSymbol) {
+   EXPECT_FALSE(!Addr);
+ 
+   // FIXME: Re-enable when we investigate the way we handle dllimports on Win.
+-#ifndef _WIN32
++#if !defined(_WIN32) && !defined(__CYGWIN__)
+   EXPECT_EQ((uintptr_t)&printf, Addr->getValue());
+ #endif // _WIN32
+ }
+-- 
+2.52.0
+

@@ -1,7 +1,7 @@
-From cd426f4b3f1cc071c0cf161c0615398b89aea04d Mon Sep 17 00:00:00 2001
+From 8b52d15e32a3ffd33b755026da1eb62849572e10 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 22:31:20 +0900
-Subject: [PATCH 18/61] [Clang][MinGW] Export nested classes which instantiated
+Subject: [PATCH 18/64] [Clang][MinGW] Export nested classes which instantiated
  by enclosing template's explicit instantiation declaration
 
 MinGW-GCC applies explicit instantiateion declaration of a class template to its nested type but doesn't inherit
@@ -14,10 +14,10 @@ inherit to the nested class.
  1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 900ce8b404e703b5ecf5119291965e923137bfe7..a6fc0a97f826096f23e9fbdefbe94a1427925f30 100644
+index 1b6b0e0d569a2c8e7d487db112cb28b558db2cec..95a7fc39a9dc7f7d13d41d757205365c346130f8 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
-@@ -6590,11 +6590,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6578,11 +6578,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
        !ClassExported &&
        cast<DLLImportAttr>(ClassAttr)->wasPropagatedToBaseTemplate();
  
@@ -32,7 +32,7 @@ index 900ce8b404e703b5ecf5119291965e923137bfe7..a6fc0a97f826096f23e9fbdefbe94a14
      if (auto *DEA = Class->getAttr<DLLExportAttr>()) {
        Class->addAttr(DLLExportOnDeclAttr::Create(Context, DEA->getLoc()));
        Class->dropAttr<DLLExportAttr>();
-@@ -6614,6 +6616,15 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6602,6 +6604,15 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
          Member->hasAttr<ExcludeFromExplicitInstantiationAttr>())
        continue;
  
@@ -48,7 +48,7 @@ index 900ce8b404e703b5ecf5119291965e923137bfe7..a6fc0a97f826096f23e9fbdefbe94a14
      VarDecl *VD = dyn_cast<VarDecl>(Member);
      CXXMethodDecl *MD = dyn_cast<CXXMethodDecl>(Member);
  
-@@ -6629,7 +6640,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6617,7 +6628,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
        if (MD->isInlined()) {
          // MinGW does not import or export inline methods. But do it for
          // template instantiations.

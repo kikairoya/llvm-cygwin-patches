@@ -1,4 +1,4 @@
-From bf447a9ff9889b54b6afa6b6bdef5e19b63b4b51 Mon Sep 17 00:00:00 2001
+From 13d7e4b79d50291af8a6e6949c1a9a11d0b6938e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 21:20:11 +0900
 Subject: [PATCH 33/64] [Clang-tools] Add an option
@@ -41,10 +41,10 @@ index 4059fc3e986c7654a038259c5d01e74bc33f1d4f..4567a5ce2d763b0b6750f8fe948e024a
    endif()
  endfunction()
 diff --git a/clang/tools/clang-linker-wrapper/CMakeLists.txt b/clang/tools/clang-linker-wrapper/CMakeLists.txt
-index bf37d8031025ed35b7986f5af448c6f202bbe208..e2e0a6f8ab9ca2f8192569331f18b449fcfeced2 100644
+index 0c2dea328f856291694426a1a1e6b33435c0a50e..62400e6d3c01246e4b7930ce9a780edd73098598 100644
 --- a/clang/tools/clang-linker-wrapper/CMakeLists.txt
 +++ b/clang/tools/clang-linker-wrapper/CMakeLists.txt
-@@ -37,8 +37,9 @@ set(CLANG_LINKER_WRAPPER_LIB_DEPS
+@@ -38,8 +38,9 @@ set(CLANG_LINKER_WRAPPER_LIB_DEPS
    clangBasic
    )
  

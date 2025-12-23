@@ -1,4 +1,4 @@
-From c167aa2bba6b9cfa23e4fcbc170a0377a88dfde0 Mon Sep 17 00:00:00 2001
+From 8194ac07741ca86dd067968eaab3931bf68a11ef Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 15 Dec 2025 06:45:05 +0900
 Subject: [PATCH 13/19] make CTTestTidyModule work on Windows
@@ -6,8 +6,8 @@ Subject: [PATCH 13/19] make CTTestTidyModule work on Windows
 ---
  clang-tools-extra/clang-tidy/ClangTidy.cpp |  2 +-
  clang-tools-extra/test/CMakeLists.txt      | 11 ++-----
- llvm/include/llvm/Support/Registry.h       | 34 +++++++++++-----------
- 3 files changed, 20 insertions(+), 27 deletions(-)
+ llvm/include/llvm/Support/Registry.h       | 35 +++++++++++-----------
+ 3 files changed, 21 insertions(+), 27 deletions(-)
 
 diff --git a/clang-tools-extra/clang-tidy/ClangTidy.cpp b/clang-tools-extra/clang-tidy/ClangTidy.cpp
 index e52794feedd2d32e9c395f3e7d6ebe396e7dbdec..eb281f0fb58500e01e57ffc3a9834ce29136df53 100644
@@ -51,51 +51,52 @@ index 78447e7a00db872342fb46a55caf213fa01cce6b..bd46d9ef1cbbb3d485adf60c9112e99f
  
  add_lit_testsuite(check-clang-extra "Running clang-tools-extra/test"
 diff --git a/llvm/include/llvm/Support/Registry.h b/llvm/include/llvm/Support/Registry.h
-index acd3b06fde6e721ee8c3ffd8b11453259f21b598..fe32cf4f30db9af37b6ff3913177ef403cd1f094 100644
+index 01f785a8fd633079237dfd49a8b5272cbac7ff12..8d9707edc8c9efe2e0c5a369543ae5f9157c7b22 100644
 --- a/llvm/include/llvm/Support/Registry.h
 +++ b/llvm/include/llvm/Support/Registry.h
-@@ -58,8 +58,8 @@ namespace llvm {
-     // declaration causing error C2487 "member of dll interface class may not
-     // be declared with dll interface".
-     // https://developercommunity.visualstudio.com/t/c2487-in-dllexport-class-with-static-members/69878
--    static inline node *Head = nullptr;
--    static inline node *Tail = nullptr;
-+    static node *Head;
-+    static node *Tail;
+@@ -56,8 +56,8 @@ private:
+   // declaration causing error C2487 "member of dll interface class may not
+   // be declared with dll interface".
+   // https://developercommunity.visualstudio.com/t/c2487-in-dllexport-class-with-static-members/69878
+-  static inline node *Head = nullptr;
+-  static inline node *Tail = nullptr;
++  static node *Head;
++  static node *Tail;
  
-   public:
-     /// Node in linked list of entries.
-@@ -82,13 +82,7 @@ namespace llvm {
-     /// add a node to the executable's registry. Therefore it's not defined here
-     /// to avoid it being instantiated in the plugin and is instead defined in
-     /// the executable (see LLVM_INSTANTIATE_REGISTRY below).
--    static void add_node(node *N) {
--      if (Tail)
--        Tail->Next = N;
--      else
--        Head = N;
--      Tail = N;
--    }
-+    static void add_node(node *N);
+ public:
+   /// Node in linked list of entries.
+@@ -80,13 +80,7 @@ public:
+   /// add a node to the executable's registry. Therefore it's not defined here
+   /// to avoid it being instantiated in the plugin and is instead defined in
+   /// the executable (see LLVM_INSTANTIATE_REGISTRY below).
+-  static void add_node(node *N) {
+-    if (Tail)
+-      Tail->Next = N;
+-    else
+-      Head = N;
+-    Tail = N;
+-  }
++  static void add_node(node *N);
  
-     /// Iterators for registry entries.
-     ///
-@@ -137,19 +131,25 @@ namespace llvm {
-     };
+   /// Iterators for registry entries.
+   ///
+@@ -137,19 +131,26 @@ public:
    };
+ };
  
-+  template<typename T>
-+  typename Registry<T>::node *Registry<T>::Head = nullptr;
-+  template<typename T>
-+  typename Registry<T>::node *Registry<T>::Tail = nullptr;
-+  template<typename T>
-+  void Registry<T>::add_node(node *N) {
-+    if (Tail)
-+      Tail->Next = N;
-+    else
-+      Head = N;
-+    Tail = N;
-+  }
++// Not to inline these members, otherwise dylib builds on Cygwin/MinGW will be broken.
++template<typename T>
++typename Registry<T>::node *Registry<T>::Head = nullptr;
++template<typename T>
++typename Registry<T>::node *Registry<T>::Tail = nullptr;
++template<typename T>
++void Registry<T>::add_node(node *N) {
++  if (Tail)
++    Tail->Next = N;
++  else
++    Head = N;
++  Tail = N;
++}
 +
  } // end namespace llvm
  

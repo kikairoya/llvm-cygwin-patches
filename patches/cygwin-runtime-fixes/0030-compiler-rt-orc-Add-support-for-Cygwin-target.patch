@@ -1,4 +1,4 @@
-From 30f9fc849c3b5c017c9b4ce49ecdc55cb649df1e Mon Sep 17 00:00:00 2001
+From 60ce60f0007bbccc273e7a360e776ce0b0abf4c1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 19 Sep 2025 19:04:00 +0900
 Subject: [PATCH 30/39] [compiler-rt][orc] Add support for Cygwin target
@@ -10,10 +10,10 @@ Subject: [PATCH 30/39] [compiler-rt][orc] Add support for Cygwin target
  3 files changed, 21 insertions(+), 6 deletions(-)
 
 diff --git a/compiler-rt/lib/orc/CMakeLists.txt b/compiler-rt/lib/orc/CMakeLists.txt
-index 649d988d9d60846b072c6010f07e1c4ab1119cbc..61ac19f362bb9d715b8ccee3f7985874f19605ad 100644
+index efaf0358bb7d87e42af09b29209ee56da646eede..10cb047f7e9e1ae7d8652d07997fa072868df70e 100644
 --- a/compiler-rt/lib/orc/CMakeLists.txt
 +++ b/compiler-rt/lib/orc/CMakeLists.txt
-@@ -84,7 +84,7 @@ if (APPLE)
+@@ -85,7 +85,7 @@ if (APPLE)
      LINK_LIBS ${ORC_LINK_LIBS}
      PARENT_TARGET orc)
  else() # not Apple
@@ -36,10 +36,10 @@ index 4cce20e1323f3a924a8728ba6eb5ba7d358108d8..d200ef9b5e5ced713eb6a681298c9867
  
  //------------------------------------------------------------------------------
 diff --git a/compiler-rt/lib/orc/elfnix_platform.cpp b/compiler-rt/lib/orc/elfnix_platform.cpp
-index 33b09b948b87836e76b2c2265572e8d4ed943463..76c2526d46e40cf9bb4dd75728bdfe6e71bd475c 100644
+index 0ec628be8b3b3e30e236f87e1767466a46e79ba7..303f9b54255137c81312edfd94fef9e95f4a2d88 100644
 --- a/compiler-rt/lib/orc/elfnix_platform.cpp
 +++ b/compiler-rt/lib/orc/elfnix_platform.cpp
-@@ -47,7 +47,10 @@ __unw_remove_dynamic_eh_frame_section(const void *) ORC_RT_WEAK_IMPORT;
+@@ -46,7 +46,10 @@ __unw_remove_dynamic_eh_frame_section(const void *) ORC_RT_WEAK_IMPORT;
  namespace {
  
  struct TLSInfoEntry {
@@ -51,7 +51,7 @@ index 33b09b948b87836e76b2c2265572e8d4ed943463..76c2526d46e40cf9bb4dd75728bdfe6e
    unsigned long DataAddress = 0;
  };
  
-@@ -778,15 +781,27 @@ ORC_RT_INTERFACE ptrdiff_t ___orc_rt_elfnix_tlsdesc_resolver_impl(
+@@ -777,15 +780,27 @@ ORC_RT_INTERFACE ptrdiff_t ___orc_rt_elfnix_tlsdesc_resolver_impl(
  
  ORC_RT_INTERFACE orc_rt_WrapperFunctionResult
  __orc_rt_elfnix_create_pthread_key(char *ArgData, size_t ArgSize) {

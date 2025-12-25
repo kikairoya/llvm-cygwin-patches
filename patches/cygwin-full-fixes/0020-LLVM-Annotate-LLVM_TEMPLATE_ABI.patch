@@ -1,15 +1,16 @@
-From b90aeef5ea9ac8369d83b10c44ae4b5be85a83c3 Mon Sep 17 00:00:00 2001
+From ce7defe2086610e23720ec6d1f9511f6668e8025 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Wed, 10 Dec 2025 23:50:36 +0900
-Subject: [PATCH 19/54] [LLVM] Annotate LLVM_TEMPLATE_ABI
+Date: Wed, 24 Dec 2025 07:04:35 +0900
+Subject: [PATCH 20/54] [LLVM] Annotate LLVM_TEMPLATE_ABI
 
 ---
  llvm/include/llvm/CodeGen/MachinePassManager.h | 10 +++++-----
  llvm/include/llvm/IR/Analysis.h                |  2 ++
+ llvm/include/llvm/IR/PassManager.h             |  4 ++--
  llvm/include/llvm/MCA/Support.h                |  1 +
  llvm/lib/CodeGen/MachinePassManager.cpp        |  4 +++-
  llvm/lib/MCA/Support.cpp                       |  2 ++
- 5 files changed, 13 insertions(+), 6 deletions(-)
+ 6 files changed, 15 insertions(+), 8 deletions(-)
 
 diff --git a/llvm/include/llvm/CodeGen/MachinePassManager.h b/llvm/include/llvm/CodeGen/MachinePassManager.h
 index 08bed33da2c311ed989c5f99ffeceaa0696b8e59..94d6b38f62c9273bbcb759db18b0ea9ea2be6846 100644
@@ -66,6 +67,21 @@ index 8ab70dd9ed594c501d2c2e388818a1b5b5ec84f3..5845cc0b8fed045e4bb2aaa894d027cd
  
  /// Represents analyses that only rely on functions' control flow.
  ///
+diff --git a/llvm/include/llvm/IR/PassManager.h b/llvm/include/llvm/IR/PassManager.h
+index 4354551a2405b06f0d55c8f100ddf091ac0791f5..397f9d4c7b98e7d3718cc4c3d368c855b9edf18d 100644
+--- a/llvm/include/llvm/IR/PassManager.h
++++ b/llvm/include/llvm/IR/PassManager.h
+@@ -679,8 +679,8 @@ LLVM_ABI bool FunctionAnalysisManagerModuleProxy::Result::invalidate(
+ 
+ // Ensure the \c FunctionAnalysisManagerModuleProxy is provided as an extern
+ // template.
+-extern template class InnerAnalysisManagerProxy<FunctionAnalysisManager,
+-                                                Module>;
++extern template class LLVM_TEMPLATE_ABI
++    InnerAnalysisManagerProxy<FunctionAnalysisManager, Module>;
+ 
+ /// An analysis over an "inner" IR unit that provides access to an
+ /// analysis manager over a "outer" IR unit.  The inner unit must be contained
 diff --git a/llvm/include/llvm/MCA/Support.h b/llvm/include/llvm/MCA/Support.h
 index ce2ac9b4b6cd2d2f4b1d2476d51f9c05e4e36541..5982666aeb60baa06c2a4715be080a8e4a6e2350 100644
 --- a/llvm/include/llvm/MCA/Support.h

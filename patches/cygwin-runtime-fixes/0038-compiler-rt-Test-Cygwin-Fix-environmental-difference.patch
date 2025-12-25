@@ -1,4 +1,4 @@
-From be894d04475708153771cd77840a1f9b1389fc8f Mon Sep 17 00:00:00 2001
+From 3ee4a9d8b99bf43f4bccbcb393014845ed5ce07e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 15 Sep 2025 18:35:37 +0900
 Subject: [PATCH 38/39] [compiler-rt][Test][Cygwin] Fix environmental

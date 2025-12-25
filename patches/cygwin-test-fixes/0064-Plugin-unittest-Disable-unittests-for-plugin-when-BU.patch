@@ -1,4 +1,4 @@
-From 4b805a92a0674f24c21f7534dffe21232ef42aa9 Mon Sep 17 00:00:00 2001
+From bd464d86c1cd1d3d3ed075333296ce2856d9f6bb Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:56:11 +0900
 Subject: [PATCH 64/64] [Plugin][unittest] Disable unittests for plugin when

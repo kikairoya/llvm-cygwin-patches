@@ -1,6 +1,6 @@
-From 712b0ffa32d1cc58af9deb0b144b5747d5f6a32f Mon Sep 17 00:00:00 2001
+From e6e1e4598ab628d8667df887887af89ca4678e4c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sat, 20 Dec 2025 21:45:53 +0900
+Date: Wed, 24 Dec 2025 07:07:07 +0900
 Subject: [PATCH 16/19] [Clangd] Make clangDaemonTweaks to use
  `clang_target_link_libraries`
 
@@ -9,7 +9,7 @@ Subject: [PATCH 16/19] [Clangd] Make clangDaemonTweaks to use
  1 file changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/clang-tools-extra/clangd/refactor/tweaks/CMakeLists.txt b/clang-tools-extra/clangd/refactor/tweaks/CMakeLists.txt
-index 1d6e38088ad67a415667ee1f6bf30062f8d8cbf5..af1f796eb8b1b89769934e5d93c272253115a630 100644
+index 1d6e38088ad67a415667ee1f6bf30062f8d8cbf5..82cec568561eaf83607729aa40ea99357ee29647 100644
 --- a/clang-tools-extra/clangd/refactor/tweaks/CMakeLists.txt
 +++ b/clang-tools-extra/clangd/refactor/tweaks/CMakeLists.txt
 @@ -34,18 +34,22 @@ add_clang_library(clangDaemonTweaks OBJECT
@@ -26,7 +26,7 @@ index 1d6e38088ad67a415667ee1f6bf30062f8d8cbf5..af1f796eb8b1b89769934e5d93c27225
 +  ClangDriverOptions
 +  )
 +
-+clang_target_link_libraries(clangDaemon
++clang_target_link_libraries(clangDaemonTweaks
 +  PRIVATE
 +  clangAST
 +  clangBasic

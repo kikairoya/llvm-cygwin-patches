@@ -1,5 +1,5 @@
 upstream-branch=main
-patch-series=cygwin-test-fixes
+patch-series=cygwin-test-fixes,cygwin-runtime-fixes
 build-host=windows-latest
 enable-llvm=true
 __enable-clang=true

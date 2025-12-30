@@ -144,6 +144,7 @@ jobs:
       save-cache-name: ${{ inputs.save-cache-name || steps.config.outputs.save-cache-name }}
       use-cache-name: ${{ inputs.use-cache-name || steps.config.outputs.use-cache-name }}
       install-prefix: ${{ inputs.install-prefix || steps.config.outputs.save-cache-name || steps.config.outputs.config-name || '/' }}
+      save-instrument: ${{ steps.config.outputs.save-instrument }}
 
     steps:
       - name: prepare patches
@@ -281,6 +282,7 @@ jobs:
           check-target: check
           build-name: ${{ needs.select.outputs.build-name }}
           install-prefix: ${{ needs.select.outputs.install-prefix }}
+          save-instrument: ${{ needs.select.outputs.save-instrument }}
           build-retention-days: ${{ inputs.build-retention-days }}
           install-retention-days: ${{ inputs.install-retention-days }}
 

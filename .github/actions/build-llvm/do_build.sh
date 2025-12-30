@@ -82,7 +82,9 @@ fi
 
 if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
   echo "::group::Configure"
-  echorun cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake | \
+  flags=()
+  if [ -n "$SAVE_INSTRUMENT" ]; then flags+=("-DLLVM_BUILD_INSTRUMENTED=$SAVE_INSTRUMENT"); fi
+  echorun cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake "${flags[@]}" | \
     tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
   echo "::endgroup::"
 fi
@@ -100,6 +102,11 @@ for t in ${BUILD_TARGET//,/ }; do
     [[ $t = -* ]]
   fi
 done
+
+if [ -n "$SAVE_INSTRUMENT" ]; then
+  echorun build-$BUILD_PROJECT-$BUILD_NAME/bin/clang++ -O3 -g $LLVM_PATH/libcxx/test/std/algorithms/alg.sorting/alg.sort/sort/sort.pass.cpp -I$LLVM_PATH/libcxx/test/support -o /tmp/sort.pass.cpp.exe
+  echorun llvm-profdata merge -output $CONFIG_NAME.profdata build-$BUILD_PROJECT-$BUILD_NAME/profiles/*.profraw
+fi
 
 if [ -n "$INSTALL_PREFIX" ]; then
   echo "::group::Install"

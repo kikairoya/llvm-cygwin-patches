@@ -39,6 +39,10 @@ inputs:
     description: Additional suffix to artifact name
     required: false
     default: ''
+  save-instrument:
+    description: Type of profile data to be saved
+    required: false
+    default: ''
   build-retention-days:
     required: false
     default: 0
@@ -77,11 +81,28 @@ runs:
         LLVM_PATH: ${{ inputs.llvm-path }}
         PATCH_PATH: ${{ inputs.patch-path }}
         EXTRA_LIT_OPTS: ${{ inputs.extra-lit-opts }}
+        SAVE_INSTRUMENT: ${{ inputs.save-instrument }}
         ACTION_PATH: ${{ github.action_path }}
       run: |
         ## Config, Build, Test
         . "$ACTION_PATH/do_build.sh"
       shell: bash
+
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      if: ${{ inputs.save-instrument }}
+      id: upload-instrument
+      with:
+        name: profiledata-${{ inputs.config-name }}
+        overwrite: true
+        path: ${{ inputs.config-name }}.profdata
+
+    - id: save-instrument
+      uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      if: ${{ inputs.save-instrument }}
+      with:
+        key: profiledata-${{ inputs.config-name }}-${{ steps.upload-instrument.outputs.artifact-id }}
+        enableCrossOsArchive: true
+        path: ${{ inputs.config-name }}.profdata
 
     - id: check-check
       env:

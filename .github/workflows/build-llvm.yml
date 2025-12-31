@@ -145,6 +145,7 @@ jobs:
       use-cache-name: ${{ inputs.use-cache-name || steps.config.outputs.use-cache-name }}
       install-prefix: ${{ inputs.install-prefix || steps.config.outputs.save-cache-name || steps.config.outputs.config-name || '/' }}
       save-instrument: ${{ steps.config.outputs.save-instrument }}
+      use-profile: ${{ steps.config.outputs.use-profile }}
 
     steps:
       - name: prepare patches
@@ -268,6 +269,7 @@ jobs:
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           artifact-ids: ${{ needs.select.outputs.prereq-artifacts }}
           use-cache-name: ${{ needs.select.outputs.use-cache-name }}
+          use-profile: ${{ needs.select.outputs.use-profile }}
 
       - name: build llvm
         id: build
@@ -326,6 +328,7 @@ jobs:
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           artifact-ids: ${{ needs.build-llvm.outputs.artifacts }}
           use-cache-name: ${{ needs.select.outputs.use-cache-name }}
+          use-profile: ${{ needs.select.outputs.use-profile }}
 
       - name: check llvm
         id: check
@@ -385,6 +388,7 @@ jobs:
   #         cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
   #         artifact-ids: ${{ needs.build-llvm.outputs.artifacts }}
   #         use-cache-name: ${{ needs.select.outputs.use-cache-name }}
+  #         use-profile: ${{ needs.select.outputs.use-profile }}
 
   #     - name: build clang
   #       id: build
@@ -433,6 +437,7 @@ jobs:
   #         cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
   #         artifact-ids: ${{ needs.build-clang.outputs.artifacts }}
   #         use-cache-name: ${{ needs.select.outputs.use-cache-name }}
+  #         use-profile: ${{ needs.select.outputs.use-profile }}
 
   #     - name: check clang
   #       id: check
@@ -485,6 +490,7 @@ jobs:
   #         cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
   #         artifact-ids: ${{ needs.build-llvm.outputs.artifacts }}
   #         use-cache-name: ${{ needs.select.outputs.use-cache-name }}
+  #         use-profile: ${{ needs.select.outputs.use-profile }}
 
   #     - name: build lld
   #       id: build
@@ -533,6 +539,7 @@ jobs:
   #         cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
   #         artifact-ids: ${{ needs.build-lld.outputs.artifacts }}
   #         use-cache-name: ${{ needs.select.outputs.use-cache-name }}
+  #         use-profile: ${{ needs.select.outputs.use-profile }}
 
   #     - name: check lld
   #       id: check
@@ -585,6 +592,7 @@ jobs:
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           artifact-ids: ${{ needs.select.outputs.prereq-artifacts }}
           use-cache-name: ${{ needs.select.outputs.use-cache-name }}
+          use-profile: ${{ needs.select.outputs.use-profile }}
 
       - name: build runtimes
         id: build
@@ -632,6 +640,7 @@ jobs:
           cygwin-root: ${{ steps.prepare-cygwin.outputs.root }}
           artifact-ids: ${{ needs.build-runtimes.outputs.artifacts }}
           use-cache-name: ${{ needs.select.outputs.use-cache-name }}
+          use-profile: ${{ needs.select.outputs.use-profile }}
 
       - name: check runtimes
         id: check

@@ -20,6 +20,9 @@ inputs:
   use-cache-name:
     description: Stage1 cache name
     required: false
+  use-profile:
+    description: Proflie name to be used with PGO
+    required: false
 
 runs:
   using: "composite"
@@ -45,6 +48,23 @@ runs:
         key: ${{ inputs.use-cache-name }}
         restore-keys: ${{ inputs.use-cache-name }}
         path: 'package-*.tar'
+
+    - id: profile-restore
+      if: ${{ inputs.use-profile != '' }}
+      uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        enableCrossOsArchive: true
+        key: profiledata-${{ inputs.use-profile }}
+        restore-keys: profiledata-${{ inputs.use-profile }}
+        path: ${{ inputs.use-profile }}.profdata
+
+    - id: check-profile
+      if: ${{ inputs.use-profile != '' && ! steps.profile-restore.outputs.cache-hit }}
+      env:
+        PROFILE: ${{ inputs.use-profile }}
+      run: |
+        echo "::warning ::profile data '$PROFILE' is not found"
+      shell: bash
 
     - name: unpack artifacts
       env:

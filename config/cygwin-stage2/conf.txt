@@ -1,0 +1,7 @@
+upstream-branch=main
+patch-series=cygwin-test-fixes,cygwin-runtime-fixes
+build-host=windows-latest
+enable-llvm=true
+use-cache-name=llvm-cygwin-weekly
+save-cache-name=llvm-cygwin-weekly-pgo
+use-profile=cygwin-instr

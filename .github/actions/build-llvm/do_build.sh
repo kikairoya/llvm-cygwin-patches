@@ -84,6 +84,7 @@ if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
   echo "::group::Configure"
   flags=()
   if [ -n "$SAVE_INSTRUMENT" ]; then flags+=("-DLLVM_BUILD_INSTRUMENTED=$SAVE_INSTRUMENT"); fi
+  for f in $(find . -maxdepth 1 -name '*.profdata'); do flags+=("-DLLVM_PROFDATA_FILE=$(realpath $f)"); break; done
   echorun cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake "${flags[@]}" | \
     tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
   echo "::endgroup::"

@@ -5,3 +5,4 @@ enable-llvm=true
 __enable-clang=true
 __enable-lld=true
 use-cache-name=llvm-cygwin-weekly
+use-profile=cygwin-instr

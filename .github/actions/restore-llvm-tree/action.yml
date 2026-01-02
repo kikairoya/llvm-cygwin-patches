@@ -60,11 +60,15 @@ runs:
 
         for f in *.tar; do
           echo extracting $f
-          tar -xf $f
+          if [[ $f = package-*.tar ]]; then
+            mkdir -p llvm-stage1
+            cd llvm-stage1
+            tar -xf ../$f --strip-components=1
+            cd ..
+          else
+            tar -xf $f
+          fi
           rm $f
         done
-        #if type rebase 2> /dev/null; then
-        #  find . -name '*.dll' | xargs rebase -O || true
-        #fi
       shell: bash
 

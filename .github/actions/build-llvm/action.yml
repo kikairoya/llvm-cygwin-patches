@@ -39,10 +39,6 @@ inputs:
     description: Additional suffix to artifact name
     required: false
     default: ''
-  stage1-bindir:
-    description: Prebuilt stage1 path
-    required: false
-    default: ''
   build-retention-days:
     required: false
     default: 0
@@ -81,7 +77,6 @@ runs:
         LLVM_PATH: ${{ inputs.llvm-path }}
         PATCH_PATH: ${{ inputs.patch-path }}
         EXTRA_LIT_OPTS: ${{ inputs.extra-lit-opts }}
-        STAGE1_BINDIR: ${{ inputs.stage1-bindir }}
         ACTION_PATH: ${{ github.action_path }}
       run: |
         ## Config, Build, Test

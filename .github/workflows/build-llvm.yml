@@ -31,10 +31,6 @@ on:
         type: string
         required: false
         default: ''
-      stage1-bindir:
-        type: string
-        required: false
-        default: ''
   workflow_call:
     inputs:
       config-name:
@@ -44,10 +40,6 @@ on:
         default: ''
       prereq-artifacts:
         description: Additional artifacts to be used
-        type: string
-        required: false
-        default: ''
-      stage1-bindir:
         type: string
         required: false
         default: ''
@@ -152,7 +144,6 @@ jobs:
       save-cache-name: ${{ inputs.save-cache-name || steps.config.outputs.save-cache-name }}
       use-cache-name: ${{ inputs.use-cache-name || steps.config.outputs.use-cache-name }}
       install-prefix: ${{ inputs.install-prefix || steps.config.outputs.save-cache-name || steps.config.outputs.config-name || '/' }}
-      stage1-bindir: ${{ inputs.stage1-bindir || ((inputs.use-cache-name || steps.config.outputs.use-cache-name) && format('{0}/bin', inputs.use-cache-name || steps.config.outputs.use-cache-name)) }}
 
     steps:
       - name: prepare patches
@@ -290,7 +281,6 @@ jobs:
           check-target: check
           build-name: ${{ needs.select.outputs.build-name }}
           install-prefix: ${{ needs.select.outputs.install-prefix }}
-          stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
           build-retention-days: ${{ inputs.build-retention-days }}
           install-retention-days: ${{ inputs.install-retention-days }}
 
@@ -346,7 +336,6 @@ jobs:
           build-project: llvm
           build-target: ${{ needs.build-llvm.outputs.check-target }}
           build-name: ${{ needs.select.outputs.build-name }}
-          stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
 
   # build-clang:
   #   needs: [select, build-llvm]
@@ -408,7 +397,6 @@ jobs:
   #         check-target: check-all
   #         build-name: ${{ needs.select.outputs.build-name }}
   #         install-prefix: ${{ needs.select.outputs.install-prefix }}
-  #         stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
 
   # check-clang:
   #   needs: [select, build-clang]
@@ -455,7 +443,6 @@ jobs:
   #         build-project: clang
   #         build-target: ${{ steps.build-clang.outputs.check-target }}
   #         build-name: ${{ needs.select.outputs.build-name }}
-  #         stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
 
   # build-lld:
   #   needs: [select, build-llvm]
@@ -510,7 +497,6 @@ jobs:
   #         check-target: check-lld
   #         build-name: ${{ needs.select.outputs.build-name }}
   #         install-prefix: ${{ needs.select.outputs.install-prefix }}
-  #         stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
 
   # check-lld:
   #   needs: [select, build-lld]
@@ -557,7 +543,6 @@ jobs:
   #         build-project: lld
   #         build-target: ${{ needs.build-lld.outputs.check-target }}
   #         build-name: ${{ needs.select.outputs.build-name }}
-  #         stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
 
   build-runtimes:
     needs: select
@@ -611,7 +596,6 @@ jobs:
           check-target: check-runtimes
           build-name: ${{ needs.select.outputs.build-name }}
           install-prefix: ${{ needs.select.outputs.install-prefix }}
-          stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
 
   check-runtimes:
     needs: [select, build-runtimes]
@@ -658,7 +642,6 @@ jobs:
           build-project: runtimes
           build-target: ${{ needs.build-runtimes.outputs.check-target }}
           build-name: ${{ needs.select.outputs.build-name }}
-          stage1-bindir: ${{ needs.select.outputs.stage1-bindir }}
 
   collect-results:
     #needs: [select, collect-results, build-llvm, check-llvm, build-clang, check-clang, build-lld, check-lld, build-runtimes, check-runtimes]

@@ -1,7 +1,7 @@
-From bd464d86c1cd1d3d3ed075333296ce2856d9f6bb Mon Sep 17 00:00:00 2001
+From 34af8d9b46c4eed3a69ef08dd59105ae40c4de86 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:56:11 +0900
-Subject: [PATCH 64/64] [Plugin][unittest] Disable unittests for plugin when
+Subject: [PATCH 65/65] [Plugin][unittest] Disable unittests for plugin when
  BUILD_SHARED_LIBS on Windows
 
 ---

@@ -1,6 +1,6 @@
-From ce7defe2086610e23720ec6d1f9511f6668e8025 Mon Sep 17 00:00:00 2001
+From 11127cfd316231936b181049021bedcddb33d421 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Wed, 24 Dec 2025 07:04:35 +0900
+Date: Sat, 27 Dec 2025 09:56:41 +0900
 Subject: [PATCH 02/19] [LLVM] Annotate LLVM_TEMPLATE_ABI
 
 ---
@@ -68,7 +68,7 @@ index 8ab70dd9ed594c501d2c2e388818a1b5b5ec84f3..5845cc0b8fed045e4bb2aaa894d027cd
  /// Represents analyses that only rely on functions' control flow.
  ///
 diff --git a/llvm/include/llvm/IR/PassManager.h b/llvm/include/llvm/IR/PassManager.h
-index 4354551a2405b06f0d55c8f100ddf091ac0791f5..397f9d4c7b98e7d3718cc4c3d368c855b9edf18d 100644
+index 34a55a0ae4eb7d1090eb1ef45a20e8df43bbdbeb..7720850aeb10d54d814dd0386f6e26d086de5b3b 100644
 --- a/llvm/include/llvm/IR/PassManager.h
 +++ b/llvm/include/llvm/IR/PassManager.h
 @@ -679,8 +679,8 @@ LLVM_ABI bool FunctionAnalysisManagerModuleProxy::Result::invalidate(
@@ -95,7 +95,7 @@ index ce2ac9b4b6cd2d2f4b1d2476d51f9c05e4e36541..5982666aeb60baa06c2a4715be080a8e
  /// This class represents the number of cycles per resource (fractions of
  /// cycles).  That quantity is managed here as a ratio, and accessed via the
 diff --git a/llvm/lib/CodeGen/MachinePassManager.cpp b/llvm/lib/CodeGen/MachinePassManager.cpp
-index 6e445f678790353a97dd97d734b162b7dddc533b..ce44d9a31417d7d9a8f9791076ae17c30ac911a5 100644
+index 6e445f678790353a97dd97d734b162b7dddc533b..d78bc69784aab40b20de3dcb1b00aaabfcd136e3 100644
 --- a/llvm/lib/CodeGen/MachinePassManager.cpp
 +++ b/llvm/lib/CodeGen/MachinePassManager.cpp
 @@ -25,7 +25,7 @@ AnalysisKey FunctionAnalysisManagerMachineFunctionProxy::Key;
@@ -112,7 +112,7 @@ index 6e445f678790353a97dd97d734b162b7dddc533b..ce44d9a31417d7d9a8f9791076ae17c3
    return PA;
  }
 +
-+template class LLVM_ABI_EXPORT llvm::AllAnalysesOn<MachineFunction>;
++template class LLVM_EXPORT_TEMPLATE llvm::AllAnalysesOn<MachineFunction>;
 diff --git a/llvm/lib/MCA/Support.cpp b/llvm/lib/MCA/Support.cpp
 index f8b8a2d129c1cefdb342b16d5bf7a9bdb5c56768..2e39e44f41eb6d3ff1cb2942d6c595ad5f672c45 100644
 --- a/llvm/lib/MCA/Support.cpp

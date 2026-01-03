@@ -1,7 +1,7 @@
 From d7e93e8c139252f102bd78fda4a3ab252bf93ab2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 15 Nov 2025 11:25:24 +0900
-Subject: [PATCH 03/64] update test
+Subject: [PATCH 03/65] update test
 
 ---
  ...t_instantiation.exclude_from_dllexport.cpp | 11 +++-------

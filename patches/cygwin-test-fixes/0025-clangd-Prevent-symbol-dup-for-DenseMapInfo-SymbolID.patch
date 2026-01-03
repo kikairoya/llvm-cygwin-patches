@@ -1,17 +1,33 @@
-From aebe19917d98591cef0e3b4460d1150474bf090a Mon Sep 17 00:00:00 2001
+From b9ef3096a3567739aa5efc32b377f007ce86c705 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Fri, 5 Dec 2025 20:01:39 +0900
-Subject: [PATCH 25/64] [clangd] Prevent symbol dup for DenseMapInfo<SymbolID>
+Date: Thu, 25 Dec 2025 21:50:15 +0900
+Subject: [PATCH 25/65] [clangd] Prevent symbol dup for DenseMapInfo<SymbolID>
 
+Make member functions and their callees constexpr.
 ---
- clang-tools-extra/clangd/index/SymbolID.h | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ clang-tools-extra/clangd/index/SymbolID.h | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
 diff --git a/clang-tools-extra/clangd/index/SymbolID.h b/clang-tools-extra/clangd/index/SymbolID.h
-index e8aa462e96c177ab0972667f33b66f888e990177..ebf50452089346c75d4d184d8df944186673de75 100644
+index e8aa462e96c177ab0972667f33b66f888e990177..0e6ab4f0e207e5764f75c91a25782257daacb2a2 100644
 --- a/clang-tools-extra/clangd/index/SymbolID.h
 +++ b/clang-tools-extra/clangd/index/SymbolID.h
-@@ -58,6 +58,9 @@ public:
+@@ -34,10 +34,12 @@ public:
+   SymbolID() = default;
+   explicit SymbolID(llvm::StringRef USR);
+ 
+-  bool operator==(const SymbolID &Sym) const {
++  constexpr bool operator==(const SymbolID &Sym) const {
+     return HashValue == Sym.HashValue;
+   }
+-  bool operator!=(const SymbolID &Sym) const { return !(*this == Sym); }
++  constexpr bool operator!=(const SymbolID &Sym) const {
++    return !(*this == Sym);
++  }
+   bool operator<(const SymbolID &Sym) const {
+     // Avoid lexicographic compare which requires swapping bytes or even memcmp!
+     return llvm::bit_cast<IntTy>(HashValue) <
+@@ -58,6 +60,9 @@ public:
    explicit operator bool() const { return !isNull(); }
  
  private:
@@ -21,7 +37,7 @@ index e8aa462e96c177ab0972667f33b66f888e990177..ebf50452089346c75d4d184d8df94418
    using IntTy = uint64_t;
    static_assert(sizeof(IntTy) == RawSize);
    std::array<uint8_t, RawSize> HashValue{};
-@@ -81,19 +84,17 @@ llvm::raw_ostream &operator<<(llvm::raw_ostream &OS, const SymbolID &ID);
+@@ -81,19 +86,17 @@ llvm::raw_ostream &operator<<(llvm::raw_ostream &OS, const SymbolID &ID);
  namespace llvm {
  // Support SymbolIDs as DenseMap keys.
  template <> struct DenseMapInfo<clang::clangd::SymbolID> {

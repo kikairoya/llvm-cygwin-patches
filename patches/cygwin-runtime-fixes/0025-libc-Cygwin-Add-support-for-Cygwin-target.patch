@@ -1,4 +1,4 @@
-From b35d744fdf5e89b69e343895c6dcbfff42e48894 Mon Sep 17 00:00:00 2001
+From 8dff449f25101dbdf9ff00cd1c0656e5fd485f0b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 25/39] [libc++][Cygwin] Add support for Cygwin target

@@ -23,6 +23,11 @@ fi
 test -n $BUILD_PROJECT
 test -n $BUILD_NAME
 
+echorun() {
+  echo "> $@"
+  "$@"
+}
+
 if [[ $ostype != *Linux ]]; then
   sudo() {
     env "$@"
@@ -77,7 +82,7 @@ fi
 
 if ! [ -f build-$BUILD_PROJECT-$BUILD_NAME/CMakeCache.txt ]; then
   echo "::group::Configure"
-  cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake | \
+  echorun cmake -GNinja -Bbuild-$BUILD_PROJECT-$BUILD_NAME -S$LLVM_PATH/$BUILD_PROJECT -C$PATCH_PATH/config/$CONFIG_NAME/init.cmake | \
     tee configlog-$BUILD_PROJECT-$BUILD_NAME.txt
   echo "::endgroup::"
 fi
@@ -88,8 +93,7 @@ fi
 
 for t in ${BUILD_TARGET//,/ }; do
   if cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- -t query ${t#-} > /dev/null 2>&1; then
-    echo "cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- ${t#-}"
-    cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- ${t#-} | \
+    echorun cmake --build build-$BUILD_PROJECT-$BUILD_NAME -- ${t#-} | \
       tee buildlog-${t#-}-$BUILD_PROJECT-$BUILD_NAME.txt | \
       sed -uE -e "$efree" -f$ACTION_PATH/build-grouping.sed
   else
@@ -99,6 +103,6 @@ done
 
 if [ -n "$INSTALL_PREFIX" ]; then
   echo "::group::Install"
-  cmake --install build-$BUILD_PROJECT-$BUILD_NAME --prefix install/$INSTALL_PREFIX
+  echorun cmake --install build-$BUILD_PROJECT-$BUILD_NAME --prefix install/$INSTALL_PREFIX
   echo "::endgroup::"
 fi

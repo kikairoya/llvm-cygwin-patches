@@ -71,51 +71,10 @@ runs:
         INPUTS_LLVM_PATH: ${{ inputs.llvm-path }}
         INPUTS_PATCH_SERIES: ${{ inputs.patch-series }}
         CYGWIN_ROOT: ${{ inputs.cygwin-root }}
+        ACTION_PATH: ${{ github.action_path }}
       run: |
-        UPSTREAM_REV=$(git -C $INPUTS_LLVM_PATH log -n1 --format=format:%h HEAD)
-        PATCH_REV=$(git -C $INPUTS_PATCH_PATH log -n1 --format=format:%h HEAD)
-
-        BUILD_NAME=$UPSTREAM_REV+mod-$PATCH_REV
-        echo build-name=$BUILD_NAME >> "$GITHUB_OUTPUT"
-
-        pushd $INPUTS_PATCH_PATH > /dev/null
-          PATCH_PATH=$PWD
-        popd > /dev/null
-
-        pushd $INPUTS_LLVM_PATH > /dev/null
-          LLVM_PATH=$PWD
-          git config user.name github-actions
-          git config user.email github@github.com
-          git config status.showuntrackedfiles no
-          for p in ${INPUTS_PATCH_SERIES/,// }; do
-            test -d "$PATCH_PATH/patches/$p"
-            if git am -3 --empty=drop $PATCH_PATH/patches/$p/* > am.log 2>&1; then
-              cat am.log
-              rm am.log
-            else
-              cat am.log
-              echo -n "::error ::"
-              sed 's/$/%0A/' < am.log | tr -d '\n'
-              rm am.log
-              exit 1
-            fi
-          done
-        popd > /dev/null
-
-        tar -cf llvm-source-$BUILD_NAME.tar --exclude=.git $INPUTS_LLVM_PATH
-
-        mkdir -p llvm-patches
-        git -C $LLVM_PATH format-patch --full-index -o $PWD/llvm-patches $UPSTREAM_REV..HEAD
-
-        if [ "$RUNNER_OS" == Windows ] && [ -n "$CYGWIN_ROOT" ]; then
-          set +h
-          pushd "$CYGWIN_ROOT" > /dev/null
-          cd bin
-          export PATH=$PWD:$PATH
-          popd > /dev/null
-        fi
-
-        tar -cf llvm-patches-$BUILD_NAME.tar llvm-patches
+        ## apply patches
+        . "$ACTION_PATH/do_apply_patch.sh"
       shell: bash
 
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

@@ -1,7 +1,7 @@
-From 9886a1a57593c2c72796434c216b155c0c1711b5 Mon Sep 17 00:00:00 2001
+From 389cc1a002c431bd3ee6a21c840e2d1be5f68ebb Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 9 Nov 2025 21:00:27 +0900
-Subject: [PATCH 27/54] always specify `.exe.a` for the suffix of import
+Subject: [PATCH 27/55] always specify `.exe.a` for the suffix of import
  library
 
 needs for LLVM_BUILD_LLVM_DYLIB
@@ -10,10 +10,10 @@ needs for LLVM_BUILD_LLVM_DYLIB
  1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index 2480d7373d1a3d87152a0838b7afaac25f953fe3..74aa9d6b62aff1b1166a7a2f8f4ad94e946d6265 100644
+index d6acb4f984be92246bdbb1fb329c310d6e0d2cee..8d1e47089348a1125cf3c2d83fe95172929f1696 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
-@@ -1110,6 +1110,14 @@ macro(add_llvm_executable name)
+@@ -1076,6 +1076,14 @@ macro(add_llvm_executable name)
      add_llvm_symbol_exports( ${name} ${LLVM_EXPORTED_SYMBOL_FILE} )
    endif(LLVM_EXPORTED_SYMBOL_FILE)
  
@@ -28,7 +28,7 @@ index 2480d7373d1a3d87152a0838b7afaac25f953fe3..74aa9d6b62aff1b1166a7a2f8f4ad94e
    if (DEFINED LLVM_ENABLE_EXPORTED_SYMBOLS_IN_EXECUTABLES AND
        NOT LLVM_ENABLE_EXPORTED_SYMBOLS_IN_EXECUTABLES AND
        NOT ARG_EXPORT_SYMBOLS)
-@@ -1410,13 +1418,6 @@ function(export_executable_symbols target)
+@@ -1376,13 +1384,6 @@ function(export_executable_symbols target)
      # transitive link against only the libraries whose symbols
      # we aren't exporting.
      set_target_properties(${target} PROPERTIES INTERFACE_LINK_LIBRARIES "${other_libs}")

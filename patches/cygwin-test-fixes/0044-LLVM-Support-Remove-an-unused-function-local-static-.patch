@@ -1,7 +1,7 @@
-From 414ab62d3ad0fc21b489630468fcb99a1a4a0032 Mon Sep 17 00:00:00 2001
+From e506bf3fbfa667b65ef50017266d10dad93e5a8e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Oct 2025 10:04:11 +0900
-Subject: [PATCH 44/65] [LLVM][Support] Remove an unused function-local static
+Subject: [PATCH 44/66] [LLVM][Support] Remove an unused function-local static
  thread_local variable
 
 ---
@@ -9,7 +9,7 @@ Subject: [PATCH 44/65] [LLVM][Support] Remove an unused function-local static
  1 file changed, 2 deletions(-)
 
 diff --git a/llvm/lib/Support/Parallel.cpp b/llvm/lib/Support/Parallel.cpp
-index ab220b8f2cebad228c14174c0c279f0052ca19ca..97c16b0eb333a71d62c7cfcb044bc0729ad6e5f0 100644
+index 536c2a12307784f666e54b98ed07f49564cdb0b8..074d023d98dc8ac5a1aa1da7ad14088f63075dc3 100644
 --- a/llvm/lib/Support/Parallel.cpp
 +++ b/llvm/lib/Support/Parallel.cpp
 @@ -129,8 +129,6 @@ private:

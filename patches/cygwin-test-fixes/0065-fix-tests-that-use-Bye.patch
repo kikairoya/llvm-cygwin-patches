@@ -1,4 +1,4 @@
-From ae89196c59806e02f1476099d08d776af537f8e9 Mon Sep 17 00:00:00 2001
+From ae04f07085eb12aa390e048e91e41d693f62216c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:44:20 +0900
 Subject: [PATCH 65/66] fix tests that use Bye
@@ -14,7 +14,7 @@ Subject: [PATCH 65/66] fix tests that use Bye
  7 files changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/clang/test/CodeGen/codegen-plugins.c b/clang/test/CodeGen/codegen-plugins.c
-index 5a9553540cda4e2b69c2d45b1707d4c96b3925ec..63cb3670e64b633a5407d000a5ef471cebfdf549 100644
+index 1506563f4929536bde8e4d70b6bd6a7d628634de..3f53999c03bdea6f2f033345673054767ce13cb7 100644
 --- a/clang/test/CodeGen/codegen-plugins.c
 +++ b/clang/test/CodeGen/codegen-plugins.c
 @@ -3,7 +3,7 @@
@@ -23,11 +23,11 @@ index 5a9553540cda4e2b69c2d45b1707d4c96b3925ec..63cb3670e64b633a5407d000a5ef471c
  // REQUIRES: plugins, llvm-examples
 -// UNSUPPORTED: target={{.*windows.*}}
 +// UNSUPPORTED: (system-windows || system-cygwin) && !llvm-dylib
+ // Plugins are currently broken on AIX, at least in the CI.
+ // XFAIL: target={{.*}}-aix{{.*}}
  // CHECK-INACTIVE-NOT: Bye
- // CHECK-ACTIVE: CodeGen Bye
- // CHECK-LLVM: define{{.*}} i32 @f
 diff --git a/clang/test/CodeGen/pass-plugins.c b/clang/test/CodeGen/pass-plugins.c
-index 9a8ca7b49dff4d06aaee6bd5e13af28e50b22cab..39b9400e0a9a84eadfcbd72a43443453d9efd8e1 100644
+index a87e36c7c725c87c602f9a5c912f37e7721aaecb..e19334502a2f3710b3493d38c84e69864063d7a2 100644
 --- a/clang/test/CodeGen/pass-plugins.c
 +++ b/clang/test/CodeGen/pass-plugins.c
 @@ -1,7 +1,7 @@
@@ -36,9 +36,9 @@ index 9a8ca7b49dff4d06aaee6bd5e13af28e50b22cab..39b9400e0a9a84eadfcbd72a43443453
  // REQUIRES: plugins, llvm-examples
 -// UNSUPPORTED: target={{.*windows.*}}
 +// UNSUPPORTED: (system-windows || system-cygwin) && !llvm-dylib
+ // Plugins are currently broken on AIX, at least in the CI.
+ // XFAIL: target={{.*}}-aix{{.*}}
  // CHECK-INACTIVE-NOT: Bye
- // CHECK-ACTIVE: Bye: f
- 
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
 index d468ff49a7320cb748ad6d1505cca48a405630c5..e33a487c9b6b75942c0deb1c674755cb76253607 100644
 --- a/clang/test/lit.cfg.py

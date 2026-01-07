@@ -1,4 +1,4 @@
-From 9c9af758e6d02d57eb624bfb5b5374072a0843a3 Mon Sep 17 00:00:00 2001
+From 88cc04ebc7645b1c44fcfea49f24be9c0f003138 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 13:18:31 +0900
 Subject: [PATCH 19/39] add mingw test

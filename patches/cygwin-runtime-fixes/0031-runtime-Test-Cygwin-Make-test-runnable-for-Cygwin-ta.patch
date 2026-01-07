@@ -1,4 +1,4 @@
-From 78a14e98460749fb8809c5edec3f88e9c278d59b Mon Sep 17 00:00:00 2001
+From 445167cdd0cd7b2cc619cf32365264626ef365de Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 31/39] [runtime][Test][Cygwin] Make test runnable for Cygwin
@@ -27,11 +27,11 @@ Subject: [PATCH 31/39] [runtime][Test][Cygwin] Make test runnable for Cygwin
  create mode 100644 libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 
 diff --git a/compiler-rt/test/CMakeLists.txt b/compiler-rt/test/CMakeLists.txt
-index 9cfb7ea55947535b36a436d25028e535c8e64d52..819df9251e14cbd6f4dd262630200c6f1c2e9275 100644
+index c1b4caf15fff446b1780c411a4df368cdf310dc2..97452818ef523c5f25738a312be47da69741d75f 100644
 --- a/compiler-rt/test/CMakeLists.txt
 +++ b/compiler-rt/test/CMakeLists.txt
-@@ -76,7 +76,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)
-   if(COMPILER_RT_BUILD_BUILTINS)
+@@ -79,7 +79,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)
+   if(COMPILER_RT_BUILD_BUILTINS OR COMPILER_RT_TEST_EXTERNAL_BUILTINS)
      add_subdirectory(builtins)
    endif()
 -  if(COMPILER_RT_BUILD_SANITIZERS)
@@ -62,7 +62,7 @@ index 59da054848f3ca307629ad27516bdac288c7bc35..820ddf2e61426a59d53c7dab69213bbd
      base_lib = os.path.join(
          config.compiler_rt_libdir, "libclang_rt.builtins%s.a" % config.target_suffix
 diff --git a/compiler-rt/test/lit.common.cfg.py b/compiler-rt/test/lit.common.cfg.py
-index fa74408383638c305068e235c4d130b9d95c1fa9..6603b535402846835f1c3a1cc4443635190f95f6 100644
+index a6913318591c919b4f99cf0d9a174c1eced017fe..18829aeea1e464398f983ceca355522a5aa30080 100644
 --- a/compiler-rt/test/lit.common.cfg.py
 +++ b/compiler-rt/test/lit.common.cfg.py
 @@ -78,7 +78,7 @@ def find_compiler_libdir():

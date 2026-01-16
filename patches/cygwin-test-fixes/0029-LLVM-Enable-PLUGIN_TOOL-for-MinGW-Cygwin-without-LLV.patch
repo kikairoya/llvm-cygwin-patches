@@ -1,7 +1,7 @@
-From e002d17112897bfe41fe5e6e7ab1cd7658aa506f Mon Sep 17 00:00:00 2001
+From a1ef066bad2c51f8a496930c3b9ca4e55ebdca8b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 22:21:44 +0900
-Subject: [PATCH 29/66] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
+Subject: [PATCH 29/65] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
  LLVM_EXPORT_SYMBOLS_FOR_PLUGINS
 
 ---
@@ -9,10 +9,10 @@ Subject: [PATCH 29/66] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
  1 file changed, 37 insertions(+), 4 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index df2a1092c9c5e505c57a6db1c02ad98738ff8cf7..e5c1d162ef0146d0b303d0206432e73979d7c4c1 100644
+index d6c4d8d586cc9fd269dbabe9f86fea5d1d399a0d..4199cc66fe92a2c5bac1d9d548b2d4353d695b8e 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
-@@ -513,6 +513,13 @@ function(llvm_add_library name)
+@@ -528,6 +528,13 @@ function(llvm_add_library name)
        message(STATUS "${name} ignored -- Loadable modules not supported on this platform.")
        return()
      endif()
@@ -26,7 +26,7 @@ index df2a1092c9c5e505c57a6db1c02ad98738ff8cf7..e5c1d162ef0146d0b303d0206432e739
    else()
      if(ARG_PLUGIN_TOOL)
        message(WARNING "PLUGIN_TOOL without MODULE doesn't make sense.")
-@@ -732,7 +739,7 @@ function(llvm_add_library name)
+@@ -747,7 +754,7 @@ function(llvm_add_library name)
      set(libtype PRIVATE)
    endif()
  
@@ -35,7 +35,7 @@ index df2a1092c9c5e505c57a6db1c02ad98738ff8cf7..e5c1d162ef0146d0b303d0206432e739
      # On DLL platforms symbols are imported from the tool by linking against it.
      set(llvm_libs ${ARG_PLUGIN_TOOL})
    elseif (NOT ARG_COMPONENT_LIB)
-@@ -1382,6 +1389,21 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
+@@ -1397,6 +1404,21 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
    set_target_properties(${target} PROPERTIES INTERFACE_LINK_LIBRARIES "${other_libs}")
  endfunction()
  
@@ -57,7 +57,7 @@ index df2a1092c9c5e505c57a6db1c02ad98738ff8cf7..e5c1d162ef0146d0b303d0206432e739
  function(export_executable_symbols target)
    if (LLVM_EXPORTED_SYMBOL_FILE)
      # The symbol file should contain the symbols we want the executable to
-@@ -1400,10 +1422,21 @@ function(export_executable_symbols target)
+@@ -1415,10 +1437,21 @@ function(export_executable_symbols target)
          CALL do_export_executable_symbols_for_plugins [[${target}]] [[${exported_symbol_file}]]
        )
      ")

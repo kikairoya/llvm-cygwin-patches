@@ -1,7 +1,7 @@
 From 7d9eb14e8e255fe3942b8b598bc52cabab6cea1e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 10 Dec 2025 20:58:40 +0900
-Subject: [PATCH 13/55] revise logic
+Subject: [PATCH 13/54] revise logic
 
 ---
  clang/lib/Sema/SemaDeclCXX.cpp | 27 +++++++++++----------------

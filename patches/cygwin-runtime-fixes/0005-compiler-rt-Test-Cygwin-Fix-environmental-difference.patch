@@ -1,0 +1,368 @@
+From def254baed6ac2031637703b6c7c36facc7efeda Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 15 Sep 2025 18:35:37 +0900
+Subject: [PATCH 5/6] [compiler-rt][Test][Cygwin] Fix environmental difference
+ in tests
+
+---
+ .../Inputs/instrprof-gcov-parallel.driver.c   |  1 +
+ .../test/profile/Posix/gcov-shared-flush.c    |  8 ++--
+ .../Posix/instrprof-dlopen-norpath.test       | 12 +++---
+ .../Posix/instrprof-dynamic-one-shared.test   |  4 +-
+ .../Posix/instrprof-dynamic-two-shared.test   |  4 +-
+ .../Posix/instrprof-shared-empty-profile.test | 12 +++---
+ .../instrprof-shared-entry-coverage.test      |  4 +-
+ .../test/profile/Posix/instrprof-shared.test  | 38 +++++++++----------
+ .../Posix/instrprof-value-prof-shared.test    | 10 ++---
+ .../Windows/Inputs/instrprof-multiprocess.c   | 30 +++++++++++++++
+ .../profile/Windows/coverage-linkage-lld.cpp  | 10 +++--
+ 11 files changed, 83 insertions(+), 50 deletions(-)
+
+diff --git a/compiler-rt/test/profile/Inputs/instrprof-gcov-parallel.driver.c b/compiler-rt/test/profile/Inputs/instrprof-gcov-parallel.driver.c
+index 6ce12d35772f1b3427e2184b01bce8d71a920821..7034f893748a57f06d1edbda2ac4caef0fc9d51d 100644
+--- a/compiler-rt/test/profile/Inputs/instrprof-gcov-parallel.driver.c
++++ b/compiler-rt/test/profile/Inputs/instrprof-gcov-parallel.driver.c
+@@ -1,3 +1,4 @@
++#include <stdint.h>
+ #include <stdatomic.h>
+ #include <stdlib.h>
+ #include <sys/mman.h>
+diff --git a/compiler-rt/test/profile/Posix/gcov-shared-flush.c b/compiler-rt/test/profile/Posix/gcov-shared-flush.c
+index 40e3159dcb2811b2b8d1801057fd08b7c24172cb..f1edbe2503c6cf3879bfc329923a368a7057f5ee 100644
+--- a/compiler-rt/test/profile/Posix/gcov-shared-flush.c
++++ b/compiler-rt/test/profile/Posix/gcov-shared-flush.c
+@@ -8,7 +8,7 @@
+ // RUN: test -f shared.gcno
+ 
+ /// Test the case where we exit abruptly after calling __gcov_dump, which means we don't write out the counters at exit.
+-// RUN: %clang -DEXIT_ABRUPTLY -DSHARED_CALL_BEFORE_FLUSH -DSHARED_CALL_AFTER_FLUSH --coverage %s -L%t.d -rpath %t.d -lfunc -o %t -dumpdir ./
++// RUN: %clang -DEXIT_ABRUPTLY -DSHARED_CALL_BEFORE_FLUSH -DSHARED_CALL_AFTER_FLUSH --coverage %s -L%t.d -rpath %t.d libfunc.so -o %t -dumpdir ./
+ // RUN: test -f gcov-shared-flush.gcno
+ 
+ // RUN: rm -f gcov-shared-flush.gcda shared.gcda
+@@ -22,7 +22,7 @@
+ // SHARED: 1: {{[[0-9]+}}:void foo(int n)
+ 
+ /// Test the case where we exit normally and we have a call to the shared library function before __gcov_dump.
+-// RUN: %clang -DSHARED_CALL_BEFORE_FLUSH --coverage %s -L%t.d -rpath %t.d -lfunc -o %t -dumpdir ./
++// RUN: %clang -DSHARED_CALL_BEFORE_FLUSH --coverage %s -L%t.d -rpath %t.d libfunc.so -o %t -dumpdir ./
+ // RUN: test -f gcov-shared-flush.gcno
+ 
+ // RUN: rm -f gcov-shared-flush.gcda shared.gcda
+@@ -41,7 +41,7 @@
+ // SHARED_ONCE: 1: {{[0-9]+}}:void foo(int n)
+ 
+ // # Test the case where we exit normally and we have a call to the shared library function after __gcov_dump.
+-// RUN: %clang -DSHARED_CALL_AFTER_FLUSH --coverage %s -L%t.d -rpath %t.d -lfunc -o %t -dumpdir ./
++// RUN: %clang -DSHARED_CALL_AFTER_FLUSH --coverage %s -L%t.d -rpath %t.d libfunc.so -o %t -dumpdir ./
+ // RUN: test -f gcov-shared-flush.gcno
+ 
+ // RUN: rm -f gcov-shared-flush.gcda shared.gcda
+@@ -58,7 +58,7 @@
+ // AFTER:      1: {{[0-9]+}}:  bar(5);
+ 
+ // # Test the case where we exit normally and we have calls to the shared library function before and after __gcov_dump.
+-// RUN: %clang -DSHARED_CALL_BEFORE_FLUSH -DSHARED_CALL_AFTER_FLUSH --coverage %s -L%t.d -rpath %t.d -lfunc -o %t -dumpdir ./
++// RUN: %clang -DSHARED_CALL_BEFORE_FLUSH -DSHARED_CALL_AFTER_FLUSH --coverage %s -L%t.d -rpath %t.d libfunc.so -o %t -dumpdir ./
+ // RUN: test -f gcov-shared-flush.gcno
+ 
+ // RUN: rm -f gcov-shared-flush.gcda shared.gcda
+diff --git a/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test b/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test
+index 1c98969802817f07599455c27581f31d7f363c55..0a326a2809621cd6ceeffcd5b72d9f8d9f44f156 100644
+--- a/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test
++++ b/compiler-rt/test/profile/Posix/instrprof-dlopen-norpath.test
+@@ -7,20 +7,20 @@ RUN: %clang_pgogen -fprofile-update=atomic -shared foo2.o -o shr_foo2.o
+ 
+ RUN: %clang_pgogen common.c -c
+ 
+-RUN: %clang_pgogen test1.c common.o -Xclang -fprofile-instrument-path="default_test1_%m.profraw"
+-RUN: ./a.out 2>&1 | FileCheck %s -check-prefix=CHECK-FOO
++RUN: %clang_pgogen test1.c common.o -Xclang -fprofile-instrument-path="default_test1_%m.profraw" -o test1.out
++RUN: ./test1.out 2>&1 | FileCheck %s -check-prefix=CHECK-FOO
+ RUN: llvm-profdata show default_test1_*.profraw --counts --all-functions 2>&1 | \
+ RUN:   FileCheck %s -check-prefix=CHECK-TEST1
+ RUN: rm -f default*
+ 
+-RUN: %clang_pgogen test2.c common.o -Xclang -fprofile-instrument-path="default_test2_%m.profraw"
+-RUN: ./a.out 2>&1 | FileCheck %s -check-prefix=CHECK-FOO
++RUN: %clang_pgogen test2.c common.o -Xclang -fprofile-instrument-path="default_test2_%m.profraw" -o test2.out
++RUN: ./test2.out 2>&1 | FileCheck %s -check-prefix=CHECK-FOO
+ RUN: llvm-profdata show default_test2_*.profraw --counts --all-functions 2>&1 | \
+ RUN:   FileCheck %s -check-prefix=CHECK-TEST2
+ RUN: rm -f default*
+ 
+-RUN: %clangxx_pgogen -lpthread test3.cpp common.o -Xclang -fprofile-instrument-path="default_test3_%m.profraw"
+-RUN: ./a.out 2>&1 | FileCheck %s -check-prefix=CHECK-FOO-FOUR-THREADS
++RUN: %clangxx_pgogen -lpthread test3.cpp common.o -Xclang -fprofile-instrument-path="default_test3_%m.profraw" -o test3.out
++RUN: ./test3.out 2>&1 | FileCheck %s -check-prefix=CHECK-FOO-FOUR-THREADS
+ 
+ CHECK-FOO:  foo:
+ CHECK-FOO:    Block counts: [1]
+diff --git a/compiler-rt/test/profile/Posix/instrprof-dynamic-one-shared.test b/compiler-rt/test/profile/Posix/instrprof-dynamic-one-shared.test
+index 16ae64f471a9322b1b13ad4de9f6cfc057bb65ee..18b0210c7d44fc4c5726a752730eb6565d7c3578 100644
+--- a/compiler-rt/test/profile/Posix/instrprof-dynamic-one-shared.test
++++ b/compiler-rt/test/profile/Posix/instrprof-dynamic-one-shared.test
+@@ -4,8 +4,8 @@ RUN: %clang_profgen -o %t-shared -fPIC -rpath %t.d %t.d/a.shared %S/../Inputs/in
+ 
+ RUN: %clang_profgen -o %t-static %S/../Inputs/instrprof-dynamic-a.cpp %S/../Inputs/instrprof-dynamic-b.cpp %S/../Inputs/instrprof-dynamic-main.cpp
+ 
+-RUN: env LLVM_PROFILE_FILE=%t-static.profraw %run %t-static
+-RUN: env LLVM_PROFILE_FILE=%t-shared.profraw %run %t-shared
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-static.profraw PATH="%t.d:$PATH" %run %t-static'
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-shared.profraw PATH="%t.d:$PATH" %run %t-shared'
+ 
+ RUN: llvm-profdata merge -o %t-static.profdata %t-static.profraw
+ RUN: llvm-profdata merge -o %t-shared.profdata %t-shared.profraw
+diff --git a/compiler-rt/test/profile/Posix/instrprof-dynamic-two-shared.test b/compiler-rt/test/profile/Posix/instrprof-dynamic-two-shared.test
+index dd7bacc8aaa7ad643118de31cf3dbb3a03261f11..24bc757f68bcf11c811cdbd1f77cdb0db7443c42 100644
+--- a/compiler-rt/test/profile/Posix/instrprof-dynamic-two-shared.test
++++ b/compiler-rt/test/profile/Posix/instrprof-dynamic-two-shared.test
+@@ -5,8 +5,8 @@ RUN: %clang_profgen -o %t-shared -fPIC -rpath %t.d %t.d/a.shared %t.d/b.shared %
+ 
+ RUN: %clang_profgen -o %t-static %S/../Inputs/instrprof-dynamic-a.cpp %S/../Inputs/instrprof-dynamic-b.cpp %S/../Inputs/instrprof-dynamic-main.cpp
+ 
+-RUN: env LLVM_PROFILE_FILE=%t-static.profraw %run %t-static
+-RUN: env LLVM_PROFILE_FILE=%t-shared.profraw %run %t-shared
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-static.profraw PATH="%t.d:$PATH" %run %t-static'
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-shared.profraw PATH="%t.d:$PATH" %run %t-shared'
+ 
+ RUN: llvm-profdata merge -o %t-static.profdata %t-static.profraw
+ RUN: llvm-profdata merge -o %t-shared.profdata %t-shared.profraw
+diff --git a/compiler-rt/test/profile/Posix/instrprof-shared-empty-profile.test b/compiler-rt/test/profile/Posix/instrprof-shared-empty-profile.test
+index 318a4edda8de1d6b50cb39f9c9d3e620ede85fc7..c546bf1daae03766d7b734c832b7bc3e27c82d29 100644
+--- a/compiler-rt/test/profile/Posix/instrprof-shared-empty-profile.test
++++ b/compiler-rt/test/profile/Posix/instrprof-shared-empty-profile.test
+@@ -15,8 +15,8 @@ RUN: %clang_profgen -o %t.d/libt-no-instr.so -fPIC -shared %t.d/instrprof-shared
+ 
+ # Header + Header
+ RUN: echo "src:other.c" > %t-file.list
+-RUN: %clang_profgen -fprofile-list=%t-file.list -o %t-no-instr-no-instr -L%t.d -rpath %t.d -lt-no-instr  %S/../Inputs/instrprof-shared-main.c
+-RUN: env LLVM_PROFILE_FILE=%t-no-instr-no-instr.profraw %run %t-no-instr-no-instr
++RUN: %clang_profgen -fprofile-list=%t-file.list -o %t-no-instr-no-instr -L%t.d -rpath %t.d %t.d/libt-no-instr.so  %S/../Inputs/instrprof-shared-main.c
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-no-instr-no-instr.profraw PATH="%t.d:$PATH" %run %t-no-instr-no-instr'
+ RUN: llvm-profdata show %t-no-instr-no-instr.profraw | FileCheck %s --check-prefix=HEADER-HEADER
+ // HEADER-HEADER: Instrumentation level: Front-end
+ // HEADER-HEADER-NEXT: Total functions: 0
+@@ -24,8 +24,8 @@ RUN: llvm-profdata show %t-no-instr-no-instr.profraw | FileCheck %s --check-pref
+ // HEADER-HEADER-NEXT: Maximum internal block count: 0
+ 
+ # Header + Profile
+-RUN: %clang_profgen -fprofile-list=%t-file.list -o %t-no-instr-instr -L%t.d -rpath %t.d -lt-instr  %S/../Inputs/instrprof-shared-main.c
+-RUN: env LLVM_PROFILE_FILE=%t-no-instr-instr.profraw %run %t-no-instr-instr
++RUN: %clang_profgen -fprofile-list=%t-file.list -o %t-no-instr-instr -L%t.d -rpath %t.d %t.d/libt-instr.so  %S/../Inputs/instrprof-shared-main.c
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-no-instr-instr.profraw PATH="%t.d:$PATH" %run %t-no-instr-instr'
+ RUN: llvm-profdata show %t-no-instr-instr.profraw | FileCheck %s --check-prefix=HEADER-PROFILE
+ // HEADER-PROFILE: Instrumentation level: Front-end
+ // HEADER-PROFILE-NEXT: Total functions: 1
+@@ -33,8 +33,8 @@ RUN: llvm-profdata show %t-no-instr-instr.profraw | FileCheck %s --check-prefix=
+ // HEADER-PROFILE-NEXT: Maximum internal block count: 360000
+ 
+ # Profile + Header
+-RUN: %clang_profgen -o %t-instr-no-instr -L%t.d -rpath %t.d -lt-no-instr %S/../Inputs/instrprof-shared-main.c
+-RUN: env LLVM_PROFILE_FILE=%t-instr-no-instr.profraw %run %t-instr-no-instr
++RUN: %clang_profgen -o %t-instr-no-instr -L%t.d -rpath %t.d %t.d/libt-no-instr.so %S/../Inputs/instrprof-shared-main.c
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-instr-no-instr.profraw PATH="%t.d:$PATH" %run %t-instr-no-instr'
+ RUN: llvm-profdata show %t-instr-no-instr.profraw | FileCheck %s --check-prefix=PROFILE-HEADER
+ // PROFILE-HEADER: Instrumentation level: Front-end
+ // PROFILE-HEADER-NEXT: Total functions: 1
+diff --git a/compiler-rt/test/profile/Posix/instrprof-shared-entry-coverage.test b/compiler-rt/test/profile/Posix/instrprof-shared-entry-coverage.test
+index 887bc506c436e4f110ece98465c9c8e6965bee52..9031e1f3d6f13387184b8fbcb0946b215c817049 100644
+--- a/compiler-rt/test/profile/Posix/instrprof-shared-entry-coverage.test
++++ b/compiler-rt/test/profile/Posix/instrprof-shared-entry-coverage.test
+@@ -5,8 +5,8 @@
+ 
+ RUN: mkdir -p %t.d
+ RUN: %clang_pgogen -mllvm -pgo-function-entry-coverage -o %t.d/libfoo.so -fPIC -shared %S/../Inputs/instrprof-shared-lib.c
+-RUN: %clang_pgogen -mllvm -pgo-function-entry-coverage -o %t -L%t.d -rpath %t.d -lfoo %S/../Inputs/instrprof-shared-main.c
+-RUN: env LLVM_PROFILE_FILE=%t.profraw %run %t
++RUN: %clang_pgogen -mllvm -pgo-function-entry-coverage -o %t -L%t.d -rpath %t.d %t.d/libfoo.so %S/../Inputs/instrprof-shared-main.c
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t.profraw PATH="%t.d:$PATH" %run %t'
+ RUN: llvm-profdata merge -o %t.profdata %t.profraw
+ RUN: llvm-profdata show --covered %t.profdata | FileCheck %s
+ 
+diff --git a/compiler-rt/test/profile/Posix/instrprof-shared.test b/compiler-rt/test/profile/Posix/instrprof-shared.test
+index 7087fa2fa33ed89c95fde0bebef47f4c2741d777..bfadfcd540dc2e609de147a8718cc8030ff0a172 100644
+--- a/compiler-rt/test/profile/Posix/instrprof-shared.test
++++ b/compiler-rt/test/profile/Posix/instrprof-shared.test
+@@ -19,26 +19,26 @@ RUN: %clang -o %t.d/libt-no-instr1.so -fPIC -shared %S/../Inputs/instrprof-share
+ RUN: %clang -c -o %t.d/instrprof-shared-lib-no-instr2.o -fPIC  %S/../Inputs/instrprof-shared-lib.c
+ RUN: %clang_profgen -o %t.d/libt-no-instr2.so -fPIC -shared %t.d/instrprof-shared-lib-no-instr2.o
+ 
+-RUN: %clang_profgen -o %t-instr-instr -L%t.d -rpath %t.d -lt-instr  %S/../Inputs/instrprof-shared-main.c
+-RUN: %clang_profgen -o %t-instr-no-instr1 -L%t.d -rpath %t.d -lt-no-instr1  %S/../Inputs/instrprof-shared-main.c
+-RUN: %clang_profgen -o %t-instr-no-instr2 -L%t.d -rpath %t.d -lt-no-instr2  %S/../Inputs/instrprof-shared-main.c
+-RUN: %clang -o %t-no-instr1-instr -L%t.d -rpath %t.d -lt-instr  %S/../Inputs/instrprof-shared-main.c
+-RUN: %clang -o %t-no-instr1-no-instr1 -L%t.d -rpath %t.d -lt-no-instr1  %S/../Inputs/instrprof-shared-main.c
+-RUN: %clang -o %t-no-instr1-no-instr2 -L%t.d -rpath %t.d -lt-no-instr2  %S/../Inputs/instrprof-shared-main.c
+-RUN: %clang -c -o %t.d/instrprof-shared-main-no-instr2.o  %S/../Inputs/instrprof-shared-main.c
+-RUN: %clang -o %t-no-instr2-instr -L%t.d -rpath %t.d -lt-instr  %t.d/instrprof-shared-main-no-instr2.o
+-RUN: %clang -o %t-no-instr2-no-instr1 -L%t.d -rpath %t.d -lt-no-instr1  %t.d/instrprof-shared-main-no-instr2.o
+-RUN: %clang -o %t-no-instr2-no-instr2 -L%t.d -rpath %t.d -lt-no-instr2  %t.d/instrprof-shared-main-no-instr2.o
++RUN: %clang_profgen -o %t-instr-instr -L%t.d -rpath %t.d %t.d/libt-instr.so %S/../Inputs/instrprof-shared-main.c
++RUN: %clang_profgen -o %t-instr-no-instr1 -L%t.d -rpath %t.d %t.d/libt-no-instr1.so %S/../Inputs/instrprof-shared-main.c
++RUN: %clang_profgen -o %t-instr-no-instr2 -L%t.d -rpath %t.d %t.d/libt-no-instr2.so %S/../Inputs/instrprof-shared-main.c
++RUN: %clang -o %t-no-instr1-instr -L%t.d -rpath %t.d %t.d/libt-instr.so %S/../Inputs/instrprof-shared-main.c
++RUN: %clang -o %t-no-instr1-no-instr1 -L%t.d -rpath %t.d %t.d/libt-no-instr1.so %S/../Inputs/instrprof-shared-main.c
++RUN: %clang -o %t-no-instr1-no-instr2 -L%t.d -rpath %t.d %t.d/libt-no-instr2.so %S/../Inputs/instrprof-shared-main.c
++RUN: %clang -c -o %t.d/instrprof-shared-main-no-instr2.o %S/../Inputs/instrprof-shared-main.c
++RUN: %clang -o %t-no-instr2-instr -L%t.d -rpath %t.d %t.d/libt-instr.so %t.d/instrprof-shared-main-no-instr2.o
++RUN: %clang -o %t-no-instr2-no-instr1 -L%t.d -rpath %t.d %t.d/libt-no-instr1.so %t.d/instrprof-shared-main-no-instr2.o
++RUN: %clang -o %t-no-instr2-no-instr2 -L%t.d -rpath %t.d %t.d/libt-no-instr2.so %t.d/instrprof-shared-main-no-instr2.o
+ 
+-RUN: env LLVM_PROFILE_FILE=%t-instr-instr.profraw %run %t-instr-instr
+-RUN: env LLVM_PROFILE_FILE=%t-instr-no-instr1.profraw %run %t-instr-no-instr1
+-RUN: env LLVM_PROFILE_FILE=%t-instr-no-instr2.profraw %run %t-instr-no-instr2
+-RUN: env LLVM_PROFILE_FILE=%t-no-instr1-instr.profraw %run %t-no-instr1-instr
+-RUN: env LLVM_PROFILE_FILE=%t-no-instr2-instr.profraw %run %t-no-instr2-instr
+-RUN: env LLVM_PROFILE_FILE=%t-no-instr1-no-instr1.profraw %run %t-no-instr1-no-instr1
+-RUN: env LLVM_PROFILE_FILE=%t-no-instr1-no-instr2.profraw %run %t-no-instr1-no-instr2
+-RUN: env LLVM_PROFILE_FILE=%t-no-instr2-no-instr1.profraw %run %t-no-instr2-no-instr1
+-RUN: env LLVM_PROFILE_FILE=%t-no-instr2-no-instr2.profraw %run %t-no-instr2-no-instr2
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-instr-instr.profraw PATH="%t.d:$PATH" %run %t-instr-instr'
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-instr-no-instr1.profraw PATH="%t.d:$PATH" %run %t-instr-no-instr1'
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-instr-no-instr2.profraw PATH="%t.d:$PATH" %run %t-instr-no-instr2'
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-no-instr1-instr.profraw PATH="%t.d:$PATH" %run %t-no-instr1-instr'
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-no-instr2-instr.profraw PATH="%t.d:$PATH" %run %t-no-instr2-instr'
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-no-instr1-no-instr1.profraw PATH="%t.d:$PATH" %run %t-no-instr1-no-instr1'
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-no-instr1-no-instr2.profraw PATH="%t.d:$PATH" %run %t-no-instr1-no-instr2'
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-no-instr2-no-instr1.profraw PATH="%t.d:$PATH" %run %t-no-instr2-no-instr1'
++RUN: bash -c 'env LLVM_PROFILE_FILE=%t-no-instr2-no-instr2.profraw PATH="%t.d:$PATH" %run %t-no-instr2-no-instr2'
+ 
+ RUN: llvm-profdata merge -o %t-instr-instr.profdata %t-instr-instr.profraw
+ RUN: llvm-profdata merge -o %t-instr-no-instr1.profdata %t-instr-no-instr1.profraw
+diff --git a/compiler-rt/test/profile/Posix/instrprof-value-prof-shared.test b/compiler-rt/test/profile/Posix/instrprof-value-prof-shared.test
+index 34abe82952a238c7b5d9054a16a021f6e079daec..f23eca9e801193a6751cfe85cff85bb9a24232a1 100644
+--- a/compiler-rt/test/profile/Posix/instrprof-value-prof-shared.test
++++ b/compiler-rt/test/profile/Posix/instrprof-value-prof-shared.test
+@@ -1,7 +1,7 @@
+ // RUN: mkdir -p %t.d 
+ // RUN: %clang_profgen -O2 -mllvm -enable-value-profiling=true -mllvm -vp-static-alloc=true -mllvm -vp-counters-per-site=256 -fPIC -shared -o %t.d/t.shared -DSHARED_LIB %S/../Inputs/instrprof-value-prof-real.c
+ // RUN: %clang_profgen -O2 -mllvm -enable-value-profiling=true -mllvm -vp-static-alloc=true -mllvm -vp-counters-per-site=256 -o %t -rpath %t.d %t.d/t.shared -DCALL_SHARED %S/../Inputs/instrprof-value-prof-real.c
+-// RUN: env LLVM_PROFILE_FILE=%t.profraw LLVM_VP_MAX_NUM_VALS_PER_SITE=255  %run %t
++// RUN: bash -c 'env LLVM_PROFILE_FILE=%t.profraw LLVM_VP_MAX_NUM_VALS_PER_SITE=255 PATH="%t.d:$PATH" %run %t'
+ // RUN: llvm-profdata merge -o %t.profdata %t.profraw
+ // RUN: llvm-profdata show --all-functions -ic-targets  %t.profdata | FileCheck  %S/../Inputs/instrprof-value-prof-real.c
+ // RUN: llvm-profdata show --all-functions -ic-targets  %t.profdata | FileCheck  %S/../Inputs/instrprof-value-prof-real.c --check-prefix=SHARED
+@@ -10,7 +10,7 @@
+ // RUN: %clang_pgogen -O2 -mllvm -disable-vp=false -mllvm -vp-static-alloc=true -mllvm -vp-counters-per-site=256 -fPIC -shared -o %t.d/t.ir.shared -DSHARED_LIB  %S/../Inputs/instrprof-value-prof-real.c
+ // RUN: %clang_pgogen -O2 -mllvm -disable-vp=false -mllvm -vp-static-alloc=true -mllvm -vp-counters-per-site=256 -rpath %t.d -o %t.ir %t.d/t.ir.shared -DCALL_SHARED  %S/../Inputs/instrprof-value-prof-real.c
+ // Profile data from shared library will be concatenated to the same raw file.
+-// RUN: env LLVM_PROFILE_FILE=%t.ir.profraw  LLVM_VP_MAX_NUM_VALS_PER_SITE=255 %run %t.ir
++// RUN: bash -c 'env LLVM_PROFILE_FILE=%t.ir.profraw  LLVM_VP_MAX_NUM_VALS_PER_SITE=255 PATH="%t.d:$PATH" %run %t.ir'
+ // RUN: llvm-profdata merge -o %t.ir.profdata %t.ir.profraw
+ // RUN: llvm-profdata show --all-functions -ic-targets  %t.ir.profdata | FileCheck  %S/../Inputs/instrprof-value-prof-real.c
+ // RUN: llvm-profdata merge -text  %t.ir.profdata -o %t.ir.proftxt 
+@@ -22,7 +22,7 @@
+ // RUN: mkdir -p %t.prof/
+ // RUN: %clang_pgogen=%t.prof -O2 -mllvm -disable-vp=false -mllvm -vp-static-alloc=true -mllvm -vp-counters-per-site=256 -fPIC -shared -o %t.d/t.ir.m.shared -DSHARED_LIB  %S/../Inputs/instrprof-value-prof-real.c
+ // RUN: %clang_pgogen=%t.prof -O2 -mllvm -disable-vp=false -mllvm -vp-static-alloc=true -mllvm -vp-counters-per-site=256 -rpath %t.d -o %t.ir.m %t.d/t.ir.m.shared -DCALL_SHARED  %S/../Inputs/instrprof-value-prof-real.c
+-// RUN: env LLVM_VP_MAX_NUM_VALS_PER_SITE=255 %run %t.ir.m
++// RUN: bash -c 'env LLVM_VP_MAX_NUM_VALS_PER_SITE=255 PATH="%t.d:$PATH" %run %t.ir.m'
+ // RUN: llvm-profdata merge -o %t.ir.m.profdata -dump-input-file-list %t.prof/ | count 2
+ // RUN: llvm-profdata merge -o %t.ir.m.profdata  %t.prof/
+ // RUN: llvm-profdata show --all-functions -ic-targets  %t.ir.m.profdata | FileCheck  %S/../Inputs/instrprof-value-prof-real.c
+@@ -34,7 +34,7 @@
+ // IR level instrumentation: dynamic memory allocation
+ // RUN: %clang_pgogen -O2 -mllvm -disable-vp=false -mllvm -vp-static-alloc=false -mllvm -vp-counters-per-site=256 -fPIC -shared -o %t.d/t.ir.dyn.shared -DSHARED_LIB  %S/../Inputs/instrprof-value-prof-real.c
+ // RUN: %clang_pgogen -O2 -mllvm -disable-vp=false -mllvm -vp-static-alloc=false -mllvm -vp-counters-per-site=256 -rpath %t.d -o %t.ir.dyn %t.d/t.ir.dyn.shared -DCALL_SHARED  %S/../Inputs/instrprof-value-prof-real.c
+-// RUN: env LLVM_PROFILE_FILE=%t.ir.dyn.profraw %run %t.ir.dyn
++// RUN: bash -c 'env LLVM_PROFILE_FILE=%t.ir.dyn.profraw PATH="%t.d:$PATH" %run %t.ir.dyn'
+ // RUN: llvm-profdata merge -o %t.ir.dyn.profdata %t.ir.dyn.profraw
+ // RUN: llvm-profdata show --all-functions -ic-targets  %t.ir.dyn.profdata | FileCheck  %S/../Inputs/instrprof-value-prof-real.c
+ // RUN: llvm-profdata merge -text  %t.ir.dyn.profdata -o %t.ir.dyn.proftxt 
+@@ -44,7 +44,7 @@
+ // IR level instrumentation: main program uses static counter, shared library uses dynamic memory alloc.
+ // RUN: %clang_pgogen -O2 -mllvm -disable-vp=false -mllvm -vp-static-alloc=false -mllvm -vp-counters-per-site=256 -fPIC -shared -o %t.d/t.ir.dyn.shared -DSHARED_LIB  %S/../Inputs/instrprof-value-prof-real.c
+ // RUN: %clang_pgogen -O2 -mllvm -disable-vp=false -mllvm -vp-static-alloc=true -mllvm -vp-counters-per-site=256 -rpath %t.d -o %t.ir.mixed %t.d/t.ir.dyn.shared -DCALL_SHARED  %S/../Inputs/instrprof-value-prof-real.c
+-// RUN: env LLVM_PROFILE_FILE=%t.ir.mixed.profraw  LLVM_VP_MAX_NUM_VALS_PER_SITE=255 %run %t.ir.mixed
++// RUN: bash -c 'env LLVM_PROFILE_FILE=%t.ir.mixed.profraw LLVM_VP_MAX_NUM_VALS_PER_SITE=255 PATH="%t.d:$PATH" %run %t.ir.mixed'
+ // RUN: llvm-profdata merge -o %t.ir.mixed.profdata %t.ir.mixed.profraw
+ // RUN: llvm-profdata show --all-functions -ic-targets  %t.ir.mixed.profdata | FileCheck  %S/../Inputs/instrprof-value-prof-real.c
+ // RUN: llvm-profdata merge -text  %t.ir.mixed.profdata -o %t.ir.mixed.proftxt 
+diff --git a/compiler-rt/test/profile/Windows/Inputs/instrprof-multiprocess.c b/compiler-rt/test/profile/Windows/Inputs/instrprof-multiprocess.c
+index 774712d39738ce33cc1549ef4cbc010bc0642793..4d1e43ed48432d85970e744a748a70b555dd72d9 100644
+--- a/compiler-rt/test/profile/Windows/Inputs/instrprof-multiprocess.c
++++ b/compiler-rt/test/profile/Windows/Inputs/instrprof-multiprocess.c
+@@ -3,11 +3,31 @@
+  * file locking support, the data from each child should not
+  * be lost.
+  */
++#include <errno.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <stdint.h>
++#include <process.h>
+ #include <windows.h>
+ 
+ void spawn_child(PROCESS_INFORMATION *pi, int child_num) {
++#ifdef __CYGWIN__
++  extern char ** __argv;
++  char child_str[20];
++  snprintf(child_str, 20, "CHILD_NUM=%d", child_num);
++  if (putenv(child_str) < 0) {
++    printf("putenv failed (%d).\n", errno);
++    fflush(stdout);
++    exit(1);
++  }
++
++  pi->hProcess = (HANDLE)(intptr_t)spawnl(_P_NOWAIT, __argv[0], __argv[0], (void *)0);
++  if (pi->hProcess == (HANDLE)-1) {
++    printf("spawnl failed (%d).\n", errno);
++    fflush(stdout);
++    exit(1);
++  }
++#else
+   wchar_t child_str[10];
+   _itow(child_num, child_str, 10);
+   if (!SetEnvironmentVariableW(L"CHILD_NUM", child_str)) {
+@@ -35,9 +55,18 @@ void spawn_child(PROCESS_INFORMATION *pi, int child_num) {
+     fflush(stdout);
+     exit(1);
+   }
++#endif
+ }
+ 
+ int wait_child(PROCESS_INFORMATION *pi) {
++#ifdef __CYGWIN__
++  int exit_code;
++  if (cwait(&exit_code, (intptr_t)pi->hProcess, 0) < 0) {
++    printf("cwait failed (%d).\n", errno);
++    fflush(stdout);
++    exit(1);
++  }
++#else
+   WaitForSingleObject(pi->hProcess, INFINITE);
+ 
+   DWORD exit_code;
+@@ -49,6 +78,7 @@ int wait_child(PROCESS_INFORMATION *pi) {
+ 
+   CloseHandle(pi->hProcess);
+   CloseHandle(pi->hThread);
++#endif
+ 
+   return exit_code;
+ }
+diff --git a/compiler-rt/test/profile/Windows/coverage-linkage-lld.cpp b/compiler-rt/test/profile/Windows/coverage-linkage-lld.cpp
+index 714e4513bc20ff4f0bdeadb2ca6fa259866a7b28..1df6a58e8a664af974c94e18359b4ad1af034b4a 100644
+--- a/compiler-rt/test/profile/Windows/coverage-linkage-lld.cpp
++++ b/compiler-rt/test/profile/Windows/coverage-linkage-lld.cpp
+@@ -2,10 +2,12 @@
+ /// With lld -opt:ref we can ensure discarded[01] and their profc/profd
+ /// variables are discarded.
+ 
+-// RUN: %clang_profgen -fcoverage-mapping -ffunction-sections -fuse-ld=lld -Wl,-debug:symtab,-opt:noref %S/coverage-linkage.cpp -o %t
++// DEFINE: %{xlink} = %if target={{.*windows-(gnu|cygnus)}} %{-Xlink,%} %else %{%}
++
++// RUN: %clang_profgen -fcoverage-mapping -ffunction-sections -fuse-ld=lld -Wl,%{xlink}-debug:symtab,%{xlink}-opt:noref %S/coverage-linkage.cpp -o %t
+ // RUN: llvm-nm %t | FileCheck %s --check-prefix=NOGC
+-// RUN: %clang_profgen -fcoverage-mapping -ffunction-sections -fuse-ld=lld -Wl,-debug:symtab,-opt:ref %S/coverage-linkage.cpp -o %t
++// RUN: %clang_profgen -fcoverage-mapping -ffunction-sections -fuse-ld=lld -Wl,%{xlink}-debug:symtab,%{xlink}-opt:ref %S/coverage-linkage.cpp -o %t
+ // RUN: llvm-nm %t | FileCheck %s --check-prefix=GC
+ 
+-// NOGC:   T ?discarded{{.*}}
+-// GC-NOT: T ?discarded{{.*}}
++// NOGC:   T {{_Z10|\?}}discarded{{.*}}
++// GC-NOT: T {{_Z10|\?}}discarded{{.*}}
+-- 
+2.52.0
+

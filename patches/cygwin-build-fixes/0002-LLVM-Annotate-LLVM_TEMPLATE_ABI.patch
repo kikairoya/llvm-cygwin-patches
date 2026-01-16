@@ -1,4 +1,4 @@
-From 0ddd04410a9aea1d11dbfc704c01b0a90627a7ba Mon Sep 17 00:00:00 2001
+From 2784a4f12f32ecbe31a9fe61d6d439efc16ddfe3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
 Subject: [PATCH 02/19] [LLVM] Annotate LLVM_TEMPLATE_ABI
@@ -13,7 +13,7 @@ Subject: [PATCH 02/19] [LLVM] Annotate LLVM_TEMPLATE_ABI
  6 files changed, 15 insertions(+), 8 deletions(-)
 
 diff --git a/llvm/include/llvm/CodeGen/MachinePassManager.h b/llvm/include/llvm/CodeGen/MachinePassManager.h
-index 08bed33da2c311ed989c5f99ffeceaa0696b8e59..94d6b38f62c9273bbcb759db18b0ea9ea2be6846 100644
+index f7b888e45a7ecd912d3f8267503874f8dfeeec39..bf331e7a7d9374732a687aa9bf9cdd4f0a72f1f1 100644
 --- a/llvm/include/llvm/CodeGen/MachinePassManager.h
 +++ b/llvm/include/llvm/CodeGen/MachinePassManager.h
 @@ -108,8 +108,8 @@ template <>
@@ -68,7 +68,7 @@ index 8ab70dd9ed594c501d2c2e388818a1b5b5ec84f3..5845cc0b8fed045e4bb2aaa894d027cd
  /// Represents analyses that only rely on functions' control flow.
  ///
 diff --git a/llvm/include/llvm/IR/PassManager.h b/llvm/include/llvm/IR/PassManager.h
-index 34a55a0ae4eb7d1090eb1ef45a20e8df43bbdbeb..7720850aeb10d54d814dd0386f6e26d086de5b3b 100644
+index 4d4c4bcfe943d1e9ff2ef8b45e3a16c03cb60486..e3c0ac452acaa8a4aef96244a994e39c0aa80ecc 100644
 --- a/llvm/include/llvm/IR/PassManager.h
 +++ b/llvm/include/llvm/IR/PassManager.h
 @@ -679,8 +679,8 @@ LLVM_ABI bool FunctionAnalysisManagerModuleProxy::Result::invalidate(

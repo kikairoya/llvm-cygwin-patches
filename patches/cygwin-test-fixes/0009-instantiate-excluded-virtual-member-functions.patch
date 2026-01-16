@@ -1,7 +1,7 @@
 From d40c7412e780977bd7830704a17a9e32f1b075d9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 21:49:45 +0900
-Subject: [PATCH 09/66] instantiate excluded virtual member functions
+Subject: [PATCH 09/65] instantiate excluded virtual member functions
 
 ---
  clang/lib/Sema/SemaDeclCXX.cpp | 17 ++++++++++++++++-

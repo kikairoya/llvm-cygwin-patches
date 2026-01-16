@@ -1,7 +1,7 @@
 From 94d7cf7933a73410548dc787baf6d9eac5b0d60f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 30 Nov 2025 10:03:12 +0900
-Subject: [PATCH 05/66] add --implicit-check-not=dll{{in|ex}}port
+Subject: [PATCH 05/65] add --implicit-check-not=dll{{in|ex}}port
 
 ---
  ...it_instantiation.exclude_from_dllexport.cpp | 18 ++++++++++++++----

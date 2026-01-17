@@ -1,6 +1,6 @@
-From 3f34345e81e8cf8d80e6cdc09a6f9caac9af806e Mon Sep 17 00:00:00 2001
+From d4c5e5f203262290a6d83dfa13e75ddbf68317e9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Mon, 15 Dec 2025 06:45:05 +0900
+Date: Sun, 18 Jan 2026 08:07:40 +0900
 Subject: [PATCH 31/54] make CTTestTidyModule work on Windows
 
 ---
@@ -51,10 +51,10 @@ index 78447e7a00db872342fb46a55caf213fa01cce6b..bd46d9ef1cbbb3d485adf60c9112e99f
  
  add_lit_testsuite(check-clang-extra "Running clang-tools-extra/test"
 diff --git a/llvm/include/llvm/Support/Registry.h b/llvm/include/llvm/Support/Registry.h
-index 01f785a8fd633079237dfd49a8b5272cbac7ff12..8d9707edc8c9efe2e0c5a369543ae5f9157c7b22 100644
+index 2c4a709e22960c910e7bc9eaa8a58df6dc6788a4..7b8e8c51dd732793525f4bac9c27ec655564e536 100644
 --- a/llvm/include/llvm/Support/Registry.h
 +++ b/llvm/include/llvm/Support/Registry.h
-@@ -56,8 +56,8 @@ private:
+@@ -60,8 +60,8 @@ private:
    // declaration causing error C2487 "member of dll interface class may not
    // be declared with dll interface".
    // https://developercommunity.visualstudio.com/t/c2487-in-dllexport-class-with-static-members/69878
@@ -65,7 +65,7 @@ index 01f785a8fd633079237dfd49a8b5272cbac7ff12..8d9707edc8c9efe2e0c5a369543ae5f9
  
  public:
    /// Node in linked list of entries.
-@@ -80,13 +80,7 @@ public:
+@@ -84,13 +84,7 @@ public:
    /// add a node to the executable's registry. Therefore it's not defined here
    /// to avoid it being instantiated in the plugin and is instead defined in
    /// the executable (see LLVM_INSTANTIATE_REGISTRY below).
@@ -80,17 +80,17 @@ index 01f785a8fd633079237dfd49a8b5272cbac7ff12..8d9707edc8c9efe2e0c5a369543ae5f9
  
    /// Iterators for registry entries.
    ///
-@@ -137,19 +131,26 @@ public:
+@@ -140,19 +134,26 @@ public:
    };
  };
  
 +// Not to inline these members, otherwise dylib builds on Cygwin/MinGW will be broken.
-+template<typename T>
-+typename Registry<T>::node *Registry<T>::Head = nullptr;
-+template<typename T>
-+typename Registry<T>::node *Registry<T>::Tail = nullptr;
-+template<typename T>
-+void Registry<T>::add_node(node *N) {
++template<typename T, typename... CtorParamTypes>
++typename Registry<T, CtorParamTypes...>::node *Registry<T, CtorParamTypes...>::Head = nullptr;
++template<typename T, typename... CtorParamTypes>
++typename Registry<T, CtorParamTypes...>::node *Registry<T, CtorParamTypes...>::Tail = nullptr;
++template<typename T, typename... CtorParamTypes>
++void Registry<T, CtorParamTypes...>::add_node(node *N) {
 +  if (Tail)
 +    Tail->Next = N;
 +  else

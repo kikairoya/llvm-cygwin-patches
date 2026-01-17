@@ -1,4 +1,4 @@
-From 780a5c11dc7aca267f11b270adb369bb82c57ca0 Mon Sep 17 00:00:00 2001
+From 4284756c0eed4ce9167131e4ef8af462dfeeea52 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 17 Jun 2025 07:46:03 +0900
 Subject: [PATCH 50/54] [Interpreter][Cygwin] Workaround for laking of

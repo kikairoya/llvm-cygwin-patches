@@ -1,0 +1,77 @@
+From f8278147e73acd20abf662f7231a0ef6d70da657 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 19 Jan 2026 21:04:25 +0900
+Subject: [PATCH 37/67] tweak Registry.h to not inlining
+
+---
+ llvm/include/llvm/Support/Registry.h | 35 ++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
+
+diff --git a/llvm/include/llvm/Support/Registry.h b/llvm/include/llvm/Support/Registry.h
+index 2c4a709e22960c910e7bc9eaa8a58df6dc6788a4..7b8e8c51dd732793525f4bac9c27ec655564e536 100644
+--- a/llvm/include/llvm/Support/Registry.h
++++ b/llvm/include/llvm/Support/Registry.h
+@@ -60,8 +60,8 @@ private:
+   // declaration causing error C2487 "member of dll interface class may not
+   // be declared with dll interface".
+   // https://developercommunity.visualstudio.com/t/c2487-in-dllexport-class-with-static-members/69878
+-  static inline node *Head = nullptr;
+-  static inline node *Tail = nullptr;
++  static node *Head;
++  static node *Tail;
+ 
+ public:
+   /// Node in linked list of entries.
+@@ -84,13 +84,7 @@ public:
+   /// add a node to the executable's registry. Therefore it's not defined here
+   /// to avoid it being instantiated in the plugin and is instead defined in
+   /// the executable (see LLVM_INSTANTIATE_REGISTRY below).
+-  static void add_node(node *N) {
+-    if (Tail)
+-      Tail->Next = N;
+-    else
+-      Head = N;
+-    Tail = N;
+-  }
++  static void add_node(node *N);
+ 
+   /// Iterators for registry entries.
+   ///
+@@ -140,19 +134,26 @@ public:
+   };
+ };
+ 
++// Not to inline these members, otherwise dylib builds on Cygwin/MinGW will be broken.
++template<typename T, typename... CtorParamTypes>
++typename Registry<T, CtorParamTypes...>::node *Registry<T, CtorParamTypes...>::Head = nullptr;
++template<typename T, typename... CtorParamTypes>
++typename Registry<T, CtorParamTypes...>::node *Registry<T, CtorParamTypes...>::Tail = nullptr;
++template<typename T, typename... CtorParamTypes>
++void Registry<T, CtorParamTypes...>::add_node(node *N) {
++  if (Tail)
++    Tail->Next = N;
++  else
++    Head = N;
++  Tail = N;
++}
++
+ } // end namespace llvm
+ 
+-#ifdef _WIN32
+ /// Instantiate a registry class.
+ #define LLVM_INSTANTIATE_REGISTRY(REGISTRY_CLASS)                              \
+   namespace llvm {                                                             \
+-  template class LLVM_ABI_EXPORT Registry<REGISTRY_CLASS::type>;               \
+-  }
+-#else
+-#define LLVM_INSTANTIATE_REGISTRY(REGISTRY_CLASS)                              \
+-  namespace llvm {                                                             \
+-  template class Registry<REGISTRY_CLASS::type>;                               \
++  template class LLVM_ALWAYS_EXPORT Registry<REGISTRY_CLASS::type>;            \
+   }
+-#endif
+ 
+ #endif // LLVM_SUPPORT_REGISTRY_H
+-- 
+2.52.0
+

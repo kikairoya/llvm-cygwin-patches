@@ -1,0 +1,43 @@
+From 090de35439d737bc7b1b80bc5fe12438ad9076d2 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 19 Jan 2026 19:52:00 +0900
+Subject: [PATCH 14/67] [clang][ssaf] Fix instantiation of
+ `Registry<TUSummaryExtractor, TUSummaryBuilder &>`
+
+---
+ .../clang/Analysis/Scalable/TUSummary/ExtractorRegistry.h    | 2 +-
+ clang/lib/Analysis/Scalable/TUSummary/ExtractorRegistry.cpp  | 5 ++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/clang/include/clang/Analysis/Scalable/TUSummary/ExtractorRegistry.h b/clang/include/clang/Analysis/Scalable/TUSummary/ExtractorRegistry.h
+index 13331b3673192ed6b1ba57c00ee8fee129c8cb06..29f5925ed6af670fa6caacc6a3457e5db2d3a509 100644
+--- a/clang/include/clang/Analysis/Scalable/TUSummary/ExtractorRegistry.h
++++ b/clang/include/clang/Analysis/Scalable/TUSummary/ExtractorRegistry.h
+@@ -42,7 +42,7 @@ using TUSummaryExtractorRegistry =
+ 
+ namespace llvm {
+ extern template class CLANG_TEMPLATE_ABI
+-    Registry<clang::ssaf::TUSummaryExtractorRegistry>;
++    Registry<clang::ssaf::TUSummaryExtractor, clang::ssaf::TUSummaryBuilder &>;
+ } // namespace llvm
+ 
+ #endif // LLVM_CLANG_ANALYSIS_SCALABLE_TUSUMMARY_EXTRACTORREGISTRY_H
+diff --git a/clang/lib/Analysis/Scalable/TUSummary/ExtractorRegistry.cpp b/clang/lib/Analysis/Scalable/TUSummary/ExtractorRegistry.cpp
+index 91eede1bebc777d56300df606d99c93c174c001e..8e3871126a2b30520a4ce3fb1f31b4f4f770f8a6 100644
+--- a/clang/lib/Analysis/Scalable/TUSummary/ExtractorRegistry.cpp
++++ b/clang/lib/Analysis/Scalable/TUSummary/ExtractorRegistry.cpp
+@@ -12,7 +12,10 @@
+ using namespace clang;
+ using namespace ssaf;
+ 
+-LLVM_INSTANTIATE_REGISTRY(TUSummaryExtractorRegistry)
++// FIXME: LLVM_INSTANTIATE_REGISTRY can't be used here because it drops extra
++// type parameters.
++template class CLANG_EXPORT_TEMPLATE
++    llvm::Registry<TUSummaryExtractor, TUSummaryBuilder &>;
+ 
+ bool ssaf::isTUSummaryExtractorRegistered(llvm::StringRef SummaryName) {
+   for (const auto &Entry : TUSummaryExtractorRegistry::entries())
+-- 
+2.52.0
+

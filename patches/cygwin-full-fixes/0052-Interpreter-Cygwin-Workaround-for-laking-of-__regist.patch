@@ -1,0 +1,52 @@
+From 1dc6ade2d5fdd3bf8cb3a092f491fa5b6de00f89 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 17 Jun 2025 07:46:03 +0900
+Subject: [PATCH 52/56] [Interpreter][Cygwin] Workaround for laking of
+ __register_frame
+
+---
+ .../Orc/TargetProcess/RegisterEHFrames.cpp        | 15 +++++++++++++++
+ llvm/test/ExecutionEngine/MCJIT/remote/eh.ll      |  2 +-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/llvm/lib/ExecutionEngine/Orc/TargetProcess/RegisterEHFrames.cpp b/llvm/lib/ExecutionEngine/Orc/TargetProcess/RegisterEHFrames.cpp
+index 1856181e367882ed08b8444f5e74cc782699b91a..ceea5288ed793f226a73d7155ca19105cbae3868 100644
+--- a/llvm/lib/ExecutionEngine/Orc/TargetProcess/RegisterEHFrames.cpp
++++ b/llvm/lib/ExecutionEngine/Orc/TargetProcess/RegisterEHFrames.cpp
+@@ -38,6 +38,21 @@ Error deregisterFrameWrapper(const void *P) {
+   return Error::success();
+ }
+ 
++#elif defined(__CYGWIN__)
++
++extern "C" void __gcc_register_frame(const void *);
++extern "C" void __gcc_deregister_frame(const void *);
++
++Error registerFrameWrapper(const void *P) {
++  __gcc_register_frame(P);
++  return Error::success();
++}
++
++Error deregisterFrameWrapper(const void *P) {
++  __gcc_deregister_frame(P);
++  return Error::success();
++}
++
+ #else
+ 
+ // The building compiler does not have __(de)register_frame but
+diff --git a/llvm/test/ExecutionEngine/MCJIT/remote/eh.ll b/llvm/test/ExecutionEngine/MCJIT/remote/eh.ll
+index 4be7f0b66fdae9b0da10f9ff292f6b26455ac039..e6937381afa34ad66410364303da35927c090ef0 100644
+--- a/llvm/test/ExecutionEngine/MCJIT/remote/eh.ll
++++ b/llvm/test/ExecutionEngine/MCJIT/remote/eh.ll
+@@ -1,6 +1,6 @@
+ ; REQUIRES: cxx-shared-library
+ ; RUN: %lli -jit-kind=mcjit -remote-mcjit -mcjit-remote-process=lli-child-target %s
+-; XFAIL: target=arm{{.*}}, target={{.*-(cygwin|windows-msvc|windows-gnu)}}
++; XFAIL: target=arm{{.*}}, target={{.*-(windows-msvc|windows-gnu)}}
+ ; REQUIRES: thread_support
+ ; UNSUPPORTED: target=powerpc64-unknown-linux-gnu
+ ; Remove UNSUPPORTED for powerpc64-unknown-linux-gnu if problem caused by r266663 is fixed
+-- 
+2.52.0
+

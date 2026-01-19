@@ -1,0 +1,101 @@
+From e3810f198ee2f64498aa553a9dbec1070336e9e8 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 20 Dec 2025 21:20:11 +0900
+Subject: [PATCH 40/56] [Clang-tools] Add an option
+ `DIABLE_CLANG_LINK_CLANG_DYLIB` to `clang_target_link_libraries`
+
+---
+ clang/cmake/modules/AddClang.cmake              | 8 +++++---
+ clang/tools/clang-linker-wrapper/CMakeLists.txt | 3 ++-
+ clang/tools/clang-nvlink-wrapper/CMakeLists.txt | 3 ++-
+ clang/tools/clang-sycl-linker/CMakeLists.txt    | 3 ++-
+ clang/tools/offload-arch/CMakeLists.txt         | 5 ++++-
+ 5 files changed, 15 insertions(+), 7 deletions(-)
+
+diff --git a/clang/cmake/modules/AddClang.cmake b/clang/cmake/modules/AddClang.cmake
+index 4059fc3e986c7654a038259c5d01e74bc33f1d4f..4567a5ce2d763b0b6750f8fe948e024a3fb46a62 100644
+--- a/clang/cmake/modules/AddClang.cmake
++++ b/clang/cmake/modules/AddClang.cmake
+@@ -216,8 +216,9 @@ macro(add_clang_symlink name dest)
+ endmacro()
+ 
+ function(clang_target_link_libraries target type)
++  cmake_parse_arguments(ARG "DISABLE_CLANG_LINK_CLANG_DYLIB" "" "" ${ARGN})
+   if (TARGET obj.${target})
+-    target_link_libraries(obj.${target} ${ARGN})
++    target_link_libraries(obj.${target} ${ARG_UNPARSED_ARGUMENTS})
+   endif()
+ 
+   get_property(LLVM_DRIVER_TOOLS GLOBAL PROPERTY LLVM_DRIVER_TOOLS)
+@@ -225,9 +226,10 @@ function(clang_target_link_libraries target type)
+     set(target llvm-driver)
+   endif()
+ 
+-  if (CLANG_LINK_CLANG_DYLIB)
++  if (CLANG_LINK_CLANG_DYLIB AND NOT ARG_DISABLE_CLANG_LINK_CLANG_DYLIB)
+     target_link_libraries(${target} ${type} clang-cpp)
+   else()
+-    target_link_libraries(${target} ${type} ${ARGN})
++    target_link_libraries(${target} ${type} ${ARG_UNPARSED_ARGUMENTS})
++    target_compile_definitions(${target} PRIVATE CLANG_BUILD_STATIC)
+   endif()
+ endfunction()
+diff --git a/clang/tools/clang-linker-wrapper/CMakeLists.txt b/clang/tools/clang-linker-wrapper/CMakeLists.txt
+index 0c2dea328f856291694426a1a1e6b33435c0a50e..62400e6d3c01246e4b7930ce9a780edd73098598 100644
+--- a/clang/tools/clang-linker-wrapper/CMakeLists.txt
++++ b/clang/tools/clang-linker-wrapper/CMakeLists.txt
+@@ -38,8 +38,9 @@ set(CLANG_LINKER_WRAPPER_LIB_DEPS
+   clangBasic
+   )
+ 
+-target_link_libraries(clang-linker-wrapper
++clang_target_link_libraries(clang-linker-wrapper
+   PRIVATE
++  DISABLE_CLANG_LINK_CLANG_DYLIB
+   ${CLANG_LINKER_WRAPPER_LIB_DEPS}
+   )
+ 
+diff --git a/clang/tools/clang-nvlink-wrapper/CMakeLists.txt b/clang/tools/clang-nvlink-wrapper/CMakeLists.txt
+index 846fa952ba58d2782ae073e1cabb493b70b219d6..36a82901b12d42822997694ccb38de518557e06f 100644
+--- a/clang/tools/clang-nvlink-wrapper/CMakeLists.txt
++++ b/clang/tools/clang-nvlink-wrapper/CMakeLists.txt
+@@ -36,7 +36,8 @@ set(CLANG_NVLINK_WRAPPER_LIB_DEPS
+   clangBasic
+   )
+ 
+-target_link_libraries(clang-nvlink-wrapper
++clang_target_link_libraries(clang-nvlink-wrapper
+   PRIVATE
++  DISABLE_CLANG_LINK_CLANG_DYLIB
+   ${CLANG_NVLINK_WRAPPER_LIB_DEPS}
+   )
+diff --git a/clang/tools/clang-sycl-linker/CMakeLists.txt b/clang/tools/clang-sycl-linker/CMakeLists.txt
+index ee89e8b0a5570d39ac1d2e1047ccc4f736feabcb..e7c275160420a9d16753ba4d7c4e7ac21d947eaa 100644
+--- a/clang/tools/clang-sycl-linker/CMakeLists.txt
++++ b/clang/tools/clang-sycl-linker/CMakeLists.txt
+@@ -33,7 +33,8 @@ set(CLANG_SYCL_LINKER_LIB_DEPS
+   clangBasic
+   )
+ 
+-target_link_libraries(clang-sycl-linker
++clang_target_link_libraries(clang-sycl-linker
+   PRIVATE
++  DISABLE_CLANG_LINK_CLANG_DYLIB
+   ${CLANG_SYCL_LINKER_LIB_DEPS}
+   )
+diff --git a/clang/tools/offload-arch/CMakeLists.txt b/clang/tools/offload-arch/CMakeLists.txt
+index f7d7012cf7272ee004bd89668312c88f3e129d93..27361784eafaaf8eb6038a644e84779ea65c9890 100644
+--- a/clang/tools/offload-arch/CMakeLists.txt
++++ b/clang/tools/offload-arch/CMakeLists.txt
+@@ -7,4 +7,7 @@ add_clang_tool(offload-arch OffloadArch.cpp NVPTXArch.cpp AMDGPUArchByKFD.cpp
+ add_clang_symlink(amdgpu-arch offload-arch)
+ add_clang_symlink(nvptx-arch offload-arch)
+ 
+-target_link_libraries(offload-arch PRIVATE clangBasic)
++clang_target_link_libraries(offload-arch
++  PRIVATE
++  DISABLE_CLANG_LINK_CLANG_DYLIB
++  clangBasic)
+-- 
+2.52.0
+

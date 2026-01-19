@@ -1,0 +1,27 @@
+From 996072a879f661010a415c37ddc527986f67a454 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 19 May 2025 20:49:59 +0900
+Subject: [PATCH 53/56] [Preprocessor][Cygwin] Unix-style path should be used
+ on Cygwin
+
+---
+ clang/lib/Lex/PPMacroExpansion.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/clang/lib/Lex/PPMacroExpansion.cpp b/clang/lib/Lex/PPMacroExpansion.cpp
+index 09cf778938427016012c7d393774a05f155897a4..c001ca64bcfabf15fb22d3931dd0cbe7c744d53b 100644
+--- a/clang/lib/Lex/PPMacroExpansion.cpp
++++ b/clang/lib/Lex/PPMacroExpansion.cpp
+@@ -2105,7 +2105,8 @@ void Preprocessor::processPathForFileMacro(SmallVectorImpl<char> &Path,
+                                            const TargetInfo &TI) {
+   LangOpts.remapPathPrefix(Path);
+   if (LangOpts.UseTargetPathSeparator) {
+-    if (TI.getTriple().isOSWindows())
++    if (TI.getTriple().isOSWindows() &&
++        !TI.getTriple().isWindowsCygwinEnvironment())
+       llvm::sys::path::remove_dots(Path, false,
+                                    llvm::sys::path::Style::windows_backslash);
+     else
+-- 
+2.52.0
+

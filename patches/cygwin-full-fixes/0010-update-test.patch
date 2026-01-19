@@ -1,7 +1,7 @@
 From 73b9cf48eec841a6a13b89141cd606a92ab1a0c7 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 21:49:56 +0900
-Subject: [PATCH 10/54] update test
+Subject: [PATCH 10/56] update test
 
 ---
  ...m_explicit_instantiation.exclude_from_dllimport.cpp | 10 ++++++----

@@ -1,0 +1,22 @@
+From ce48ecece7c6ab9e3354143f177baf92a3d777a3 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 7 Dec 2025 22:40:42 +0900
+Subject: [PATCH 39/56] Don't link LLVMSupport twice
+
+---
+ clang-tools-extra/clangd/benchmarks/CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/clang-tools-extra/clangd/benchmarks/CMakeLists.txt b/clang-tools-extra/clangd/benchmarks/CMakeLists.txt
+index 13ca21ad70d81a37c492aaeeff0bbf7034305314..af540bdea2a6f7bb3ed36822cf10134a0e842c9c 100644
+--- a/clang-tools-extra/clangd/benchmarks/CMakeLists.txt
++++ b/clang-tools-extra/clangd/benchmarks/CMakeLists.txt
+@@ -7,5 +7,4 @@ add_benchmark(IndexBenchmark IndexBenchmark.cpp)
+ target_link_libraries(IndexBenchmark
+   PRIVATE
+   clangDaemon
+-  LLVMSupport
+   )
+-- 
+2.52.0
+

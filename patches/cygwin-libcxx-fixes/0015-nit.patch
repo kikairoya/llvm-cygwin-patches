@@ -1,0 +1,27 @@
+From a8a745952993fcb4fd7495fb263ea2d073947b45 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Wed, 21 Jan 2026 21:03:54 +0900
+Subject: [PATCH 15/46] nit
+
+---
+ ...ude_from_explicit_instantiation.exclude_from_dllexport.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+index 7a9d1343f451e266402973c9a01d0a3044d35393..d5c942c2d82d67b00c63d19bae57a0c037f81a8a 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+@@ -93,8 +93,8 @@ template <class T> void E<T>::to_be_exported_explicitly() {}
+ // MSC: @1 = private unnamed_addr constant {{.*}}, comdat($"??_7?$E@I@@6B@")
+ // MSC: @"??_7?$E@H@@6B@" = dllexport unnamed_addr
+ // MSC: @"??_7?$E@I@@6B@" = unnamed_addr
+-// GNU:@_ZTV1EIiE = weak_odr dso_local dllexport unnamed_addr constant {{.*}}, comdat
+-// GNU:@_ZTV1EIjE = weak_odr dso_local unnamed_addr constant {{.*}}, comdat
++// GNU: @_ZTV1EIiE = weak_odr dso_local dllexport unnamed_addr constant {{.*}}, comdat
++// GNU: @_ZTV1EIjE = weak_odr dso_local unnamed_addr constant {{.*}}, comdat
+ 
+ // MSC: define weak_odr dso_local dllexport{{.*}} ptr @"??4?$C@H@@QEAAAEAU0@AEBU0@@Z"
+ // MSC: define weak_odr dso_local dllexport{{.*}} ptr @"??4?$C@H@@QEAAAEAU0@$$QEAU0@@Z"
+-- 
+2.52.0
+

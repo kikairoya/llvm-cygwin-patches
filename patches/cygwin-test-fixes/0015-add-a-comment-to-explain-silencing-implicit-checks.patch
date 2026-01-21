@@ -1,0 +1,37 @@
+From d9c78ee6f3d1149484e95b0111e6847dae3a06c0 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 25 Dec 2025 21:16:19 +0900
+Subject: [PATCH 15/69] add a comment to explain silencing implicit checks
+
+---
+ ...xclude_from_explicit_instantiation.exclude_from_dllexport.cpp | 1 +
+ ...xclude_from_explicit_instantiation.exclude_from_dllimport.cpp | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+index c955c932a3619a03bd0d9f89a0ede5088c496b84..7a9d1343f451e266402973c9a01d0a3044d35393 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+@@ -8,6 +8,7 @@
+ // Test that __declspec(dllexport) doesn't instantiate entities marked with
+ // the exclude_from_explicit_instantiation attribute unless marked as dllexport explicitly.
+ 
++// Silence --implicit-check-not=dllexport.
+ // MSC: ModuleID = {{.*}}exclude_from_dllexport.cpp
+ // MSC: source_filename = {{.*}}exclude_from_dllexport.cpp
+ // GNU: ModuleID = {{.*}}exclude_from_dllexport.cpp
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+index 492a83767c7e5dae1f47c58ef705ced13609e33e..353e7f8facc3b4b437d737279455da0118a8c776 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+@@ -8,6 +8,7 @@
+ // Test that __declspec(dllimport) doesn't instantiate entities marked with
+ // the exclude_from_explicit_instantiation attribute unless marked as dllimport explicitly.
+ 
++// Silence --implicit-check-not=dllimport.
+ // MSC: ModuleID = {{.*}}exclude_from_dllimport.cpp
+ // MSC: source_filename = {{.*}}exclude_from_dllimport.cpp
+ // GNU: ModuleID = {{.*}}exclude_from_dllimport.cpp
+-- 
+2.52.0
+

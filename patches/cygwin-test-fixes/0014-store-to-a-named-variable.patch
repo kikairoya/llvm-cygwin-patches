@@ -1,0 +1,50 @@
+From 6e487588dfca444d0f3ee2315bc5fc49cad1534d Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 25 Dec 2025 21:19:37 +0900
+Subject: [PATCH 14/69] store to a named variable
+
+---
+ clang/lib/Sema/SemaDeclCXX.cpp | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
+index 1a470c7dd3b0e6de13581d6cc9c73d6bc446104a..dc46e50171c9372149e89e47076f8ac1acd6eb55 100644
+--- a/clang/lib/Sema/SemaDeclCXX.cpp
++++ b/clang/lib/Sema/SemaDeclCXX.cpp
+@@ -19119,18 +19119,21 @@ bool Sema::DefineUsedVTables() {
+         }
+       }
+ 
+-      if (IsExplicitInstantiationDeclaration &&
+-          llvm::none_of(Class->decls(), [](Decl *decl) {
+-            // If the class has a virtual member function declared with
+-            // `__attribute__((exclude_from_explicit_instantiation))`, the
+-            // explicit instantiation declaration shouldn't suppress emitting
+-            // the vtable to ensure that the excluded member function is
+-            // accessible through the vtable.
+-            auto *Method = dyn_cast<CXXMethodDecl>(decl);
+-            return Method && Method->isVirtual() &&
+-                   Method->hasAttr<ExcludeFromExplicitInstantiationAttr>();
+-          }))
+-        DefineVTable = false;
++      if (IsExplicitInstantiationDeclaration) {
++        const bool HasExcludeFromExplicitInstantiation =
++            llvm::any_of(Class->decls(), [](Decl *decl) {
++              // If the class has a virtual member function declared with
++              // `__attribute__((exclude_from_explicit_instantiation))`, the
++              // explicit instantiation declaration shouldn't suppress emitting
++              // the vtable to ensure that the excluded member function is
++              // accessible through the vtable.
++              auto *Method = dyn_cast<CXXMethodDecl>(decl);
++              return Method && Method->isVirtual() &&
++                     Method->hasAttr<ExcludeFromExplicitInstantiationAttr>();
++            });
++        if (!HasExcludeFromExplicitInstantiation)
++          DefineVTable = false;
++      }
+     }
+ 
+     // The exception specifications for all virtual members may be needed even
+-- 
+2.52.0
+

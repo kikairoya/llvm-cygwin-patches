@@ -1,7 +1,7 @@
 From f2f249690fec9b8245dc17cdcfc605fd632a2fff Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 10 Dec 2025 20:58:20 +0900
-Subject: [PATCH 11/67] post-merge fix
+Subject: [PATCH 11/69] post-merge fix
 
 ---
  ..._explicit_instantiation.exclude_from_dllexport.cpp | 11 ++++++++++-

@@ -1,7 +1,7 @@
 From 5a16b110f4efc41bb1c64d601061d9abff5a472c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 21:49:19 +0900
-Subject: [PATCH 07/42] fix tests
+Subject: [PATCH 07/46] fix tests
 
 ---
  ...t_instantiation.exclude_from_dllexport.cpp | 46 +++++++++++--------

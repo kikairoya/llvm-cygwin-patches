@@ -1,0 +1,41 @@
+From 0cb91b7f3cd62cab6181878bc81bf5c120550675 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 23 Dec 2025 06:56:25 +0900
+Subject: [PATCH 46/46] [libcxxabi][Test][Cygwin] Diverge expected result for
+ the Cygwin target
+
+---
+ libcxxabi/src/cxa_thread_atexit.cpp    | 2 +-
+ libcxxabi/test/forced_unwind3.pass.cpp | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/libcxxabi/src/cxa_thread_atexit.cpp b/libcxxabi/src/cxa_thread_atexit.cpp
+index 402a52c741012d168a7ab0d3a839e7a765aee7e7..854559dff2b61a425bc8ee14444205b45cf58338 100644
+--- a/libcxxabi/src/cxa_thread_atexit.cpp
++++ b/libcxxabi/src/cxa_thread_atexit.cpp
+@@ -106,7 +106,7 @@ namespace {
+ 
+ #endif // HAVE___CXA_THREAD_ATEXIT_IMPL
+ 
+-#if defined(__linux__) || defined(__Fuchsia__)
++#if defined(__linux__) || defined(__Fuchsia__) || defined(__CYGWIN__)
+ extern "C" {
+ 
+   _LIBCXXABI_FUNC_VIS int __cxa_thread_atexit(Dtor dtor, void* obj, void* dso_symbol) throw() {
+diff --git a/libcxxabi/test/forced_unwind3.pass.cpp b/libcxxabi/test/forced_unwind3.pass.cpp
+index e852ab592292f44c2a18f0e4effb20a3314d8dad..f4de509fa117722458ef144e5272567aaf056121 100644
+--- a/libcxxabi/test/forced_unwind3.pass.cpp
++++ b/libcxxabi/test/forced_unwind3.pass.cpp
+@@ -16,6 +16,9 @@
+ // VE only supports SjLj and doesn't provide _Unwind_ForcedUnwind.
+ // UNSUPPORTED: target={{ve-.*}}
+ 
++// Cygwin crashes during unwind
++// UNSUPPORTED: cygwin
++
+ #include <assert.h>
+ #include <exception>
+ #include <stdlib.h>
+-- 
+2.52.0
+

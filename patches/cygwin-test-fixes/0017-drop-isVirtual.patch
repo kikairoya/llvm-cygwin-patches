@@ -1,0 +1,39 @@
+From 8f6b530c5b6d7e0d8a23ff27ab85faff38aecddf Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Wed, 21 Jan 2026 21:31:59 +0900
+Subject: [PATCH 17/69] drop isVirtual
+
+---
+ clang/lib/Sema/SemaDeclCXX.cpp | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
+index dc46e50171c9372149e89e47076f8ac1acd6eb55..df381736f24ce1e5ce6aecba6226340e30f1cbfb 100644
+--- a/clang/lib/Sema/SemaDeclCXX.cpp
++++ b/clang/lib/Sema/SemaDeclCXX.cpp
+@@ -19121,15 +19121,14 @@ bool Sema::DefineUsedVTables() {
+ 
+       if (IsExplicitInstantiationDeclaration) {
+         const bool HasExcludeFromExplicitInstantiation =
+-            llvm::any_of(Class->decls(), [](Decl *decl) {
+-              // If the class has a virtual member function declared with
++            llvm::any_of(Class->methods(), [](CXXMethodDecl *method) {
++              // If the class has a member function declared with
+               // `__attribute__((exclude_from_explicit_instantiation))`, the
+-              // explicit instantiation declaration shouldn't suppress emitting
+-              // the vtable to ensure that the excluded member function is
+-              // accessible through the vtable.
+-              auto *Method = dyn_cast<CXXMethodDecl>(decl);
+-              return Method && Method->isVirtual() &&
+-                     Method->hasAttr<ExcludeFromExplicitInstantiationAttr>();
++              // explicit instantiation declaration should not suppress emitting
++              // the vtable, since the corresponding explicit instantiation
++              // definition might not emit the vtable if a triggering method is
++              // excluded.
++              return method->hasAttr<ExcludeFromExplicitInstantiationAttr>();
+             });
+         if (!HasExcludeFromExplicitInstantiation)
+           DefineVTable = false;
+-- 
+2.52.0
+

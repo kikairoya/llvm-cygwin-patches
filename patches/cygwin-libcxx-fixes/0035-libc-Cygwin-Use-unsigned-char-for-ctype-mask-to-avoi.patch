@@ -1,0 +1,46 @@
+From 471543d029f7cb861087c28bc3774eeb853852d1 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 8 Jun 2025 22:30:56 +0900
+Subject: [PATCH 35/46] [libc++][Cygwin] Use unsigned char for ctype mask to
+ avoid sign-extension
+
+---
+ libcxx/include/__locale | 5 +++++
+ libcxx/src/locale.cpp   | 3 +++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/libcxx/include/__locale b/libcxx/include/__locale
+index 5b1787451fb2594e105554be2b8fda6d008ede6e..866e810915bd9f628c74faefde5ae1c04db66902 100644
+--- a/libcxx/include/__locale
++++ b/libcxx/include/__locale
+@@ -389,8 +389,13 @@ public:
+   static const mask blank        = _ISBLANK;
+   static const mask __regex_word = 0x8000;
+ #  elif _LIBCPP_LIBC_NEWLIB
++#    if !defined(__CYGWIN__)
+   // Same type as Newlib's _ctype_ array in newlib/libc/include/ctype.h.
+   typedef char mask;
++#    else
++  // Cygwin uses newlib but char is signed so need to use unsigned that to avoid sign-extension.
++  typedef unsigned char mask;
++#    endif
+   // In case char is signed, static_cast is needed to avoid warning on
+   // positive value becomming negative.
+   static const mask space  = static_cast<mask>(_S);
+diff --git a/libcxx/src/locale.cpp b/libcxx/src/locale.cpp
+index 4d5e681e2556acb8e80ae461d8f9383ace9aad07..503f9c3e01230cd8d4efe8b674fd1fbba55f6c9f 100644
+--- a/libcxx/src/locale.cpp
++++ b/libcxx/src/locale.cpp
+@@ -908,6 +908,9 @@ const ctype<char>::mask* ctype<char>::classic_table() noexcept {
+   return __pctype_func();
+ #  elif defined(__EMSCRIPTEN__)
+   return *__ctype_b_loc();
++#  elif defined(__CYGWIN__)
++  // Cygwin uses newlib but need a casting to unsigned to avoid sign-extension
++  return (const unsigned char *)_ctype_ + 1;
+ #  elif _LIBCPP_LIBC_NEWLIB
+   // Newlib has a 257-entry table in ctype_.c, where (char)0 starts at [1].
+   return _ctype_ + 1;
+-- 
+2.52.0
+

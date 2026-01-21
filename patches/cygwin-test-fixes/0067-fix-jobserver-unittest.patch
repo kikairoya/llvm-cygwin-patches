@@ -1,0 +1,46 @@
+From f7f3d25ff810b9f34e3f369eebdceff946aa85ba Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 6 Nov 2025 21:21:48 +0900
+Subject: [PATCH 67/69] fix jobserver unittest
+
+---
+ llvm/lib/Support/Jobserver.cpp           | 7 ++++---
+ llvm/unittests/Support/JobserverTest.cpp | 1 +
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/llvm/lib/Support/Jobserver.cpp b/llvm/lib/Support/Jobserver.cpp
+index 522ab914f7eea0835fa8bbfa2565195dfb71e039..e9f45524ed8415a10a0f4f2a82b14efcaa22e057 100644
+--- a/llvm/lib/Support/Jobserver.cpp
++++ b/llvm/lib/Support/Jobserver.cpp
+@@ -241,12 +241,13 @@ JobserverClient *JobserverClient::getInstance() {
+   return GJobserver;
+ }
+ 
+-/// For testing purposes only. This function resets the singleton instance by
+-/// destroying the existing client and re-initializing the `std::once_flag`.
++/// For testing purposes only. This function resets the reference to the
++/// existing singleton client and re-initializing the `std::once_flag`.
++/// Note that the instance shouldn't be destroyed since it might be
++/// still referenced by `ThreadPoolExecutor`.
+ /// This allows tests to simulate the first-time initialization of the
+ /// jobserver client multiple times.
+ void JobserverClient::resetForTesting() {
+-  delete GJobserver;
+   GJobserver = nullptr;
+   // Re-construct the std::once_flag in place to reset the singleton state.
+   new (&GJobserverOnceFlag) std::once_flag();
+diff --git a/llvm/unittests/Support/JobserverTest.cpp b/llvm/unittests/Support/JobserverTest.cpp
+index c36769087aba781b2d3ca4adfe0a9c6abb469785..2ee690a85d777a8ee47fcfb0a6ce72915b98e519 100644
+--- a/llvm/unittests/Support/JobserverTest.cpp
++++ b/llvm/unittests/Support/JobserverTest.cpp
+@@ -291,6 +291,7 @@ protected:
+     TheFifo.reset();
+     // Restore the original strategy to ensure subsequent tests are unaffected.
+     parallel::strategy = SavedStrategy;
++    JobserverClient::resetForTesting();
+   }
+ 
+   // Starts a background thread that emulates `make`. It populates the FIFO
+-- 
+2.52.0
+

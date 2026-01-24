@@ -1,4 +1,4 @@
-From bc45a6dcd7eaab6af2c498384c3bbe981aa23be5 Mon Sep 17 00:00:00 2001
+From 9d9f3b40a0e278e82c391fe76053496d605569b5 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 13 Jul 2025 17:33:14 +0900
 Subject: [PATCH 20/69] [Clang][MinGW] Instantiate nested classes by enclosing
@@ -17,10 +17,10 @@ libstdc++ on Cygwin.
  1 file changed, 1 insertion(+)
 
 diff --git a/clang/lib/Sema/SemaTemplateInstantiate.cpp b/clang/lib/Sema/SemaTemplateInstantiate.cpp
-index 27d73a85552020715158bb649c5c6a0597076efc..bcfc85a8bfb780d5beb47a18fd6bc69a0ebef2e9 100644
+index 255c6ace8f6035d67b04dc034e59e03555def16a..aae7c20c72b3b67f39a8f7fd596af9208116c3d5 100644
 --- a/clang/lib/Sema/SemaTemplateInstantiate.cpp
 +++ b/clang/lib/Sema/SemaTemplateInstantiate.cpp
-@@ -4195,6 +4195,7 @@ Sema::InstantiateClassMembers(SourceLocation PointOfInstantiation,
+@@ -4177,6 +4177,7 @@ Sema::InstantiateClassMembers(SourceLocation PointOfInstantiation,
          continue;
  
        if (Context.getTargetInfo().getTriple().isOSWindows() &&

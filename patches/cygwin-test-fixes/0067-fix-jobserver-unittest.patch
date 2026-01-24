@@ -1,4 +1,4 @@
-From f7f3d25ff810b9f34e3f369eebdceff946aa85ba Mon Sep 17 00:00:00 2001
+From 2c02972b10ed2812200681ef9279aaa696865856 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 6 Nov 2025 21:21:48 +0900
 Subject: [PATCH 67/69] fix jobserver unittest

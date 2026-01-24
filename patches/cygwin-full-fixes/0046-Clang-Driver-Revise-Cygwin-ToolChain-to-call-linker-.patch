@@ -1,4 +1,4 @@
-From ba84941ce532b59cfcacf7acb114cd61af82cbc7 Mon Sep 17 00:00:00 2001
+From 03ea4bcdf34b28f184bd92f5592e42cfad2a1d7a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 20:09:56 +0900
 Subject: [PATCH 46/58] [Clang][Driver] Revise Cygwin ToolChain to call linker
@@ -24,6 +24,10 @@ Map -rdynamic to --export-all-symbols to match https://cygwin.com/cgit/cygwin-pa
 Co-authored-by: Jeremy Drake <github@jdrake.com>
 
 add /lib/win32api
+
+Co-authored-by: kikairoya <kikairoya@gmail.com>
+
+adopt HIPRuntimes changes
 
 Co-authored-by: kikairoya <kikairoya@gmail.com>
 ---
@@ -57,7 +61,7 @@ index 77a2c73f0d446b124bf3d0e3cf95544d6c695319..192218d332a225ecc2f7b240e99259ca
    switch (Triple.getOS()) {
    case llvm::Triple::FreeBSD:
 diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
-index 55438125ce0f136e63ff2a81608af176a24fd590..d1f15a2fc992903560288ad1f0a094e13076c4eb 100644
+index 55438125ce0f136e63ff2a81608af176a24fd590..83547ccdc9abe2866d0fe5fc0160de84e41c9f30 100644
 --- a/clang/lib/Driver/ToolChains/Cygwin.cpp
 +++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
 @@ -9,6 +9,7 @@
@@ -274,10 +278,10 @@ index 55438125ce0f136e63ff2a81608af176a24fd590..d1f15a2fc992903560288ad1f0a094e1
 +  if (!saw_nxcompat)
 +    CmdArgs.push_back("--disable-nxcompat");
 +
-+  tools::addHIPRuntimeLibArgs(ToolChain, C, Args, CmdArgs);
++  ToolChain.addOffloadRTLibs(C.getActiveOffloadKinds(), Args, CmdArgs);
 +
 +  // The profile runtime also needs access to system libraries.
-+  getToolChain().addProfileRTLibs(Args, CmdArgs);
++  ToolChain.addProfileRTLibs(Args, CmdArgs);
 +
 +  if (D.CCCIsCXX() &&
 +      !Args.hasArg(options::OPT_nostdlib, options::OPT_nodefaultlibs,

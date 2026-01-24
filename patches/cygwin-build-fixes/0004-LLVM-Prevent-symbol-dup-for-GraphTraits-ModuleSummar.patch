@@ -1,4 +1,4 @@
-From 836e656a8f2cf4d153d560044f897d17e028c6da Mon Sep 17 00:00:00 2001
+From cb1e965aea5cd786af728affff6d86965783d689 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:06:12 +0900
 Subject: [PATCH 04/19] [LLVM] Prevent symbol dup for
@@ -10,10 +10,10 @@ Subject: [PATCH 04/19] [LLVM] Prevent symbol dup for
  2 files changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/llvm/include/llvm/IR/ModuleSummaryIndex.h b/llvm/include/llvm/IR/ModuleSummaryIndex.h
-index d85730c77d5c5b2a35f200b2032c2a331d3a350b..234858d3b8210d7d5e1827ad90acc4703655c654 100644
+index 31c2f13a63e5f3754ca01c9887ba05cdf325a120..e3bb6420ea6a308718fa868e077b9a374d5c29b6 100644
 --- a/llvm/include/llvm/IR/ModuleSummaryIndex.h
 +++ b/llvm/include/llvm/IR/ModuleSummaryIndex.h
-@@ -2082,15 +2082,7 @@ template <> struct GraphTraits<ValueInfo> {
+@@ -2055,15 +2055,7 @@ template <> struct GraphTraits<ValueInfo> {
  
  template <>
  struct GraphTraits<ModuleSummaryIndex *> : public GraphTraits<ValueInfo> {

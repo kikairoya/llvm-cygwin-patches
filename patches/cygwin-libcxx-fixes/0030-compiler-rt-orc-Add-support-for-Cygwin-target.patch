@@ -1,4 +1,4 @@
-From 744f203798eca8ebabcc3291dd9ce38b575dfd4a Mon Sep 17 00:00:00 2001
+From 9d28d84e9184e88852b568cdc1eb9111827458cb Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 19 Sep 2025 19:04:00 +0900
 Subject: [PATCH 30/46] [compiler-rt][orc] Add support for Cygwin target
@@ -36,7 +36,7 @@ index 4cce20e1323f3a924a8728ba6eb5ba7d358108d8..d200ef9b5e5ced713eb6a681298c9867
  
  //------------------------------------------------------------------------------
 diff --git a/compiler-rt/lib/orc/elfnix_platform.cpp b/compiler-rt/lib/orc/elfnix_platform.cpp
-index 0ec628be8b3b3e30e236f87e1767466a46e79ba7..303f9b54255137c81312edfd94fef9e95f4a2d88 100644
+index 54d6a557934db0289b36fc9a537fdb1d29371f86..a64e33751803a53f03628bff362bd965791e2f15 100644
 --- a/compiler-rt/lib/orc/elfnix_platform.cpp
 +++ b/compiler-rt/lib/orc/elfnix_platform.cpp
 @@ -46,7 +46,10 @@ __unw_remove_dynamic_eh_frame_section(const void *) ORC_RT_WEAK_IMPORT;
@@ -51,7 +51,7 @@ index 0ec628be8b3b3e30e236f87e1767466a46e79ba7..303f9b54255137c81312edfd94fef9e9
    unsigned long DataAddress = 0;
  };
  
-@@ -777,15 +780,27 @@ ORC_RT_INTERFACE ptrdiff_t ___orc_rt_elfnix_tlsdesc_resolver_impl(
+@@ -880,15 +883,27 @@ ORC_RT_INTERFACE ptrdiff_t ___orc_rt_elfnix_tlsdesc_resolver_impl(
  
  ORC_RT_INTERFACE orc_rt_WrapperFunctionResult
  __orc_rt_elfnix_create_pthread_key(char *ArgData, size_t ArgSize) {

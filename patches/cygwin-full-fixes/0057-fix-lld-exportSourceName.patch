@@ -1,4 +1,4 @@
-From ad937e4cd27cc9899685924c46ed3c35a73bf96a Mon Sep 17 00:00:00 2001
+From e91f7329c81e1480b93f0158a71734ea11646cde Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 3 Nov 2025 11:09:11 +0900
 Subject: [PATCH 57/58] fix lld exportSourceName
@@ -10,7 +10,7 @@ large but failed reproduce with a simple test.
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/lld/COFF/SymbolTable.cpp b/lld/COFF/SymbolTable.cpp
-index 26a2b4944dc6cb64718ac243a54daed6f95cfc24..8073d296ee8dd20b2c212bb441a422673b187411 100644
+index 38a43390c15ab2b382e12a0b285b62ec47126bfc..2a8835fdbe4115f2fd05e52e15caf27517c62ed5 100644
 --- a/lld/COFF/SymbolTable.cpp
 +++ b/lld/COFF/SymbolTable.cpp
 @@ -1190,9 +1190,10 @@ static StringRef exportSourceName(ExportSource s) {

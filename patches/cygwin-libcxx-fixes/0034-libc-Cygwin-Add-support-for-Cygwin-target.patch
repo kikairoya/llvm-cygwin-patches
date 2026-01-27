@@ -1,15 +1,16 @@
-From 01392acc3089f40ada6d705af26bd35e35cf5691 Mon Sep 17 00:00:00 2001
+From bb3ed58e482d11ad36125291dece032305c08596 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 34/46] [libc++][Cygwin] Add support for Cygwin target
 
 ---
- libcxx/CMakeLists.txt                     | 26 +++++++++++++++++++++--
- libcxx/cmake/config-ix.cmake              | 11 ++++++++++
- libcxx/include/__config                   |  9 ++++++--
- libcxx/include/__configuration/platform.h |  2 +-
- libcxx/src/filesystem/posix_compat.h      |  4 +++-
- 5 files changed, 46 insertions(+), 6 deletions(-)
+ libcxx/CMakeLists.txt                       | 26 +++++++++++++++++++--
+ libcxx/cmake/config-ix.cmake                | 11 +++++++++
+ libcxx/include/__config                     |  5 ++++
+ libcxx/include/__configuration/attributes.h |  5 ++--
+ libcxx/include/__configuration/platform.h   |  2 +-
+ libcxx/src/filesystem/posix_compat.h        |  4 +++-
+ 6 files changed, 47 insertions(+), 6 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
 index b1a52c95edead821079500861c236f950845c7b0..1b61f42384b55a758fa2df8e385c0faecba5c92e 100644
@@ -99,10 +100,10 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 2a4abfd469d9eafee4783a3eed258f4675b4cd4d..71f71099ab27cefa8a7d73eb2278ac1c92660d84 100644
+index 3813e11929217f6c8f1d468ef7531d02e5f8db5a..2e97b80a3746d598659020aaf7cda888250c4f61 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -96,6 +96,10 @@
+@@ -94,6 +94,10 @@
  #      define _LIBCPP_HAS_BITSCAN64 0
  #    endif
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 1
@@ -113,23 +114,7 @@ index 2a4abfd469d9eafee4783a3eed258f4675b4cd4d..71f71099ab27cefa8a7d73eb2278ac1c
  #  else
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 0
  #    define _LIBCPP_HAS_BITSCAN64 0
-@@ -194,13 +198,13 @@ typedef __char32_t char32_t;
- #      define _LIBCPP_CRT_FUNC
- #    endif
- 
--#    if defined(_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS) || (defined(__MINGW32__) && !defined(_LIBCPP_BUILDING_LIBRARY))
-+#    if defined(_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS) || ((defined(__MINGW32__) || defined(__CYGWIN__)) && !defined(_LIBCPP_BUILDING_LIBRARY))
- #      define _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS
- #      define _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS
- #      define _LIBCPP_OVERRIDABLE_FUNC_VIS
- #      define _LIBCPP_EXPORTED_FROM_ABI
- #    elif defined(_LIBCPP_BUILDING_LIBRARY)
--#      if defined(__MINGW32__)
-+#      if defined(__MINGW32__) || defined(__CYGWIN__)
- #        define _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS __declspec(dllexport)
- #        define _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS
- #      else
-@@ -627,6 +631,7 @@ typedef __char32_t char32_t;
+@@ -386,6 +390,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \
@@ -137,6 +122,27 @@ index 2a4abfd469d9eafee4783a3eed258f4675b4cd4d..71f71099ab27cefa8a7d73eb2278ac1c
          defined(__EMSCRIPTEN__)
  // clang-format on
  #      undef _LIBCPP_HAS_THREAD_API_PTHREAD
+diff --git a/libcxx/include/__configuration/attributes.h b/libcxx/include/__configuration/attributes.h
+index 7322995701ba29bf705cc69ebe3c0a321baad2db..b78269ff4fa8af07600090cde62979d144cba316 100644
+--- a/libcxx/include/__configuration/attributes.h
++++ b/libcxx/include/__configuration/attributes.h
+@@ -54,13 +54,14 @@
+ #    define _LIBCPP_CRT_FUNC
+ #  endif
+ 
+-#  if defined(_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS) || (defined(__MINGW32__) && !defined(_LIBCPP_BUILDING_LIBRARY))
++#  if defined(_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS) ||                                                               \
++      ((defined(__MINGW32__) || defined(__CYGWIN__)) && !defined(_LIBCPP_BUILDING_LIBRARY))
+ #    define _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS
+ #    define _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS
+ #    define _LIBCPP_OVERRIDABLE_FUNC_VIS
+ #    define _LIBCPP_EXPORTED_FROM_ABI
+ #  elif defined(_LIBCPP_BUILDING_LIBRARY)
+-#    if defined(__MINGW32__)
++#    if defined(__MINGW32__) || defined(__CYGWIN__)
+ #      define _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS __declspec(dllexport)
+ #      define _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS
+ #    else
 diff --git a/libcxx/include/__configuration/platform.h b/libcxx/include/__configuration/platform.h
 index 644fe1724e42edecc6d252c583e44d28d83c797f..4232cbba106e68eae1ab1931b3c777c0d89b08e7 100644
 --- a/libcxx/include/__configuration/platform.h

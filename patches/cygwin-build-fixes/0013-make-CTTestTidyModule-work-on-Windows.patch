@@ -1,4 +1,4 @@
-From 70d2872c90991fef4e8c4e0a651aae8d0ba505e7 Mon Sep 17 00:00:00 2001
+From ba6b37338a2f52ec0094108ad63f0db05c5d901d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 Jan 2026 08:07:40 +0900
 Subject: [PATCH 13/19] make CTTestTidyModule work on Windows
@@ -9,7 +9,7 @@ Subject: [PATCH 13/19] make CTTestTidyModule work on Windows
  2 files changed, 3 insertions(+), 10 deletions(-)
 
 diff --git a/clang-tools-extra/clang-tidy/ClangTidy.cpp b/clang-tools-extra/clang-tidy/ClangTidy.cpp
-index c6498521be2d987d6ee2f14c7ef61251844097f7..a3ff964efb33ba5de831ab869d371a0afb68c2ad 100644
+index 9f5d21001ec89e8897598b730b1be9d260d49823..8f0f1fd1bf68b1158f07b896ca16d4c1e28109fa 100644
 --- a/clang-tools-extra/clang-tidy/ClangTidy.cpp
 +++ b/clang-tools-extra/clang-tidy/ClangTidy.cpp
 @@ -49,7 +49,7 @@ using namespace clang::driver;

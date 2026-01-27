@@ -1,4 +1,4 @@
-From d34b68dd01c3752ec7f726377097733ed07b5cd6 Mon Sep 17 00:00:00 2001
+From 70534f906db1a1614664c6f07f758552d1b1431b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 11 Oct 2025 17:32:22 +0900
 Subject: [PATCH 60/69] [LLVM][Unittest][Cygwin] Diverge expected result on
@@ -13,10 +13,10 @@ Subject: [PATCH 60/69] [LLVM][Unittest][Cygwin] Diverge expected result on
  5 files changed, 12 insertions(+), 6 deletions(-)
 
 diff --git a/llvm/unittests/CAS/ObjectStoreTest.cpp b/llvm/unittests/CAS/ObjectStoreTest.cpp
-index b43ae33d741270d7f8ca0ac13f0f84914b1ac1b8..5fd105f7e1f969d0d6c8b62825be3fd02a84b781 100644
+index d7c059566a457efc67f6a2b37aec84409ee66a72..ccf278271bafa12283127bef4a655721fc71d8e3 100644
 --- a/llvm/unittests/CAS/ObjectStoreTest.cpp
 +++ b/llvm/unittests/CAS/ObjectStoreTest.cpp
-@@ -378,6 +378,7 @@ TEST_F(OnDiskCASTest, OnDiskCASBlobsParallelMultiCAS) {
+@@ -379,6 +379,7 @@ TEST_F(OnDiskCASTest, OnDiskCASBlobsParallelMultiCAS) {
    ASSERT_NO_FATAL_FAILURE(testBlobsParallel(*CAS1, *CAS2, *CAS3, *CAS4, Size));
  }
  
@@ -24,7 +24,7 @@ index b43ae33d741270d7f8ca0ac13f0f84914b1ac1b8..5fd105f7e1f969d0d6c8b62825be3fd0
  TEST_F(OnDiskCASTest, OnDiskCASBlobsBigParallelMultiCAS) {
    // See comment in BlobsParallelMultiCAS.
    unittest::TempDir Temp("on-disk-cas", /*Unique=*/true);
-@@ -404,6 +405,7 @@ TEST_F(OnDiskCASTest, OnDiskCASBlobsBigParallelMultiCAS) {
+@@ -405,6 +406,7 @@ TEST_F(OnDiskCASTest, OnDiskCASBlobsBigParallelMultiCAS) {
    uint64_t Size = 100ULL * 1024;
    ASSERT_NO_FATAL_FAILURE(testBlobsParallel(*CAS1, *CAS2, *CAS3, *CAS4, Size));
  }

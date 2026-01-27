@@ -1,4 +1,4 @@
-From f1db177fca02fe3184f866cf5e635b30d0fc3f1d Mon Sep 17 00:00:00 2001
+From 54bbcaddf283f60c07222b080bc00e96e2d2e6b9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 22:31:20 +0900
 Subject: [PATCH 22/58] [Clang][MinGW] Export nested classes which instantiated

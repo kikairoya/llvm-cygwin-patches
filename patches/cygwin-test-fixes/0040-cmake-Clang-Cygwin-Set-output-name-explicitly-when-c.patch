@@ -1,0 +1,34 @@
+From cd0565047ee1418a999a414c163645b88d57ea74 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Wed, 17 Sep 2025 18:23:48 +0900
+Subject: [PATCH 40/69] [cmake][Clang][Cygwin] Set output name explicitly when
+ cross-compiling to Cygwin
+
+---
+ clang/tools/driver/CMakeLists.txt | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/clang/tools/driver/CMakeLists.txt b/clang/tools/driver/CMakeLists.txt
+index 002aaef005253724baa0f201a49453116b1e38c0..cab9a83d86db33ebdb71adfd963f8c3eee75d4ff 100644
+--- a/clang/tools/driver/CMakeLists.txt
++++ b/clang/tools/driver/CMakeLists.txt
+@@ -67,8 +67,15 @@ clang_target_link_libraries(clang
+   clangSerialization
+   )
+ 
+-if(WIN32 AND NOT CYGWIN)
++if(WIN32)
+   # Prevent versioning if the buildhost is targeting for Win32.
++elseif(CYGWIN AND CMAKE_CROSSCOMPILING)
++  # When cross-compiling targeting Cygwin, CMake makes output-name like "clang.exe-22"
++  # unless name it explicitly.
++  set_target_properties(clang PROPERTIES OUTPUT_NAME "clang-${CLANG_VERSION_MAJOR}")
++  # We need to geneate the symlink `clang.exe` points to `clang-22.exe` but `add_clang_symlink`
++  # generates a self recurring symlink `clang.exe`.
++  llvm_install_symlink(CLANG clang "clang-${CLANG_VERSION_MAJOR}" ALWAYS_GENERATE)
+ else()
+   set_target_properties(clang PROPERTIES VERSION ${CLANG_EXECUTABLE_VERSION})
+ endif()
+-- 
+2.52.0
+

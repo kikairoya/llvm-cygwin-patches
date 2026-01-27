@@ -1,4 +1,4 @@
-From 63f19ad28080aeb7f3a1522b66ef94ec727eea2e Mon Sep 17 00:00:00 2001
+From b17f03566d458a2aa78a928b28aa0349a45723b2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 37/46] [libunwind][Cygwin] Add support for Cygwin target
@@ -33,7 +33,7 @@ index a1179c73c5906b2df9bb3973cd7918ad1f42b28a..1fd2696c0486c559b3979d7367807089
  #    ifdef __SEH__
  #      define _LIBUNWIND_CURSOR_SIZE 204
 diff --git a/libunwind/include/libunwind.h b/libunwind/include/libunwind.h
-index 56ca7110274a30c842d845a4c1ab8761bcd57388..427b8f0f12d59b38fd5e0f2eb4e2c5417264af4a 100644
+index 6c2dfe58e53bf1f97bca6c78dacb47cc3676b8dc..b5f58b0e3fea7308fc7846f07926311122c7cf95 100644
 --- a/libunwind/include/libunwind.h
 +++ b/libunwind/include/libunwind.h
 @@ -146,7 +146,7 @@
@@ -126,7 +126,7 @@ index 6e947039fb0d52f1b388a7a1236790ce83e169a4..dfe4ebee49e5844c2d20d95356eb2ed7
      NOT (CXX_SUPPORTS_FNO_EXCEPTIONS_FLAG AND
           CXX_SUPPORTS_FUNWIND_TABLES_FLAG))
 diff --git a/libunwind/src/Registers.hpp b/libunwind/src/Registers.hpp
-index 474b17461bf77e269c5437aa1fe7b148aee25864..f3b0b73855945fa8a383a2c86a351146c05f15be 100644
+index 87314d8265879eebb0deed160c7840662eb0db46..b08c9969a01cca3ddade96b33a730a81fb0a489c 100644
 --- a/libunwind/src/Registers.hpp
 +++ b/libunwind/src/Registers.hpp
 @@ -348,12 +348,12 @@ private:
@@ -194,7 +194,7 @@ index 110c5987c3f1ab4cb555deb0dcd3cf5c1483156c..6783bdccd33a1fe29dc181d92f8ac75c
    urc = pers(1, action, exc->exception_class, exc, ctx);
    _LIBUNWIND_TRACE_UNWINDING("_GCC_specific_handler() personality returned %d", urc);
 diff --git a/libunwind/src/UnwindCursor.hpp b/libunwind/src/UnwindCursor.hpp
-index 5838dbcaa9980adc472919dcb6ed274706d4e00e..93074af36b7fda9ba848aefa3f06eb8a17a4d4b8 100644
+index ff92c9e0a844ab861ae410591c0280e6d56d35f7..32849ef8b1984f95327d2ee668cc21f3033534b8 100644
 --- a/libunwind/src/UnwindCursor.hpp
 +++ b/libunwind/src/UnwindCursor.hpp
 @@ -17,9 +17,9 @@

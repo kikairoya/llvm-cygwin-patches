@@ -1,7 +1,7 @@
-From 591b564b2b5a8bf7ba8bf2f5d955b4e7df384409 Mon Sep 17 00:00:00 2001
+From 6f5c0e56894e6d1276921d9768fbd492bcf3e155 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 22:12:34 +0900
-Subject: [PATCH 21/58] update test
+Subject: [PATCH 21/59] update test
 
 ---
  .../CodeGenCXX/mingw-template-dllexport.cpp   | 20 ++++++++-----------

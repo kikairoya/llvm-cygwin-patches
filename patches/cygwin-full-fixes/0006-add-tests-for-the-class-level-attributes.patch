@@ -1,7 +1,7 @@
 From bdbeeac2ccefd653641ab115edf58408d8c12d91 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 1 Dec 2025 21:15:38 +0900
-Subject: [PATCH 06/58] add tests for the class-level attributes
+Subject: [PATCH 06/59] add tests for the class-level attributes
 
 ---
  ...t_instantiation.exclude_from_dllexport.cpp | 32 +++++++++++++++++

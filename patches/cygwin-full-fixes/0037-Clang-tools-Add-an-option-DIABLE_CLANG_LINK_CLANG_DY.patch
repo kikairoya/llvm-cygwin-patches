@@ -1,7 +1,7 @@
-From f7e2a60ab96e2ad657915cc969c7ea20e321826e Mon Sep 17 00:00:00 2001
+From 996b99339e51ab397c234c1d3163c3b8d02074ae Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 21:20:11 +0900
-Subject: [PATCH 37/58] [Clang-tools] Add an option
+Subject: [PATCH 37/59] [Clang-tools] Add an option
  `DIABLE_CLANG_LINK_CLANG_DYLIB` to `clang_target_link_libraries`
 
 ---

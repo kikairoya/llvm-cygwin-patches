@@ -1,0 +1,52 @@
+From baabad87ad2bda81c6d5452bb6c2ec027aced278 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Fri, 5 Dec 2025 19:55:10 +0900
+Subject: [PATCH 59/70] [llvm-config] Fix for BUILD_SHARED_LIBS to use import
+ libraries instead of DLLs directly
+
+---
+ llvm/tools/llvm-config/llvm-config.cpp | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/llvm/tools/llvm-config/llvm-config.cpp b/llvm/tools/llvm-config/llvm-config.cpp
+index 24ea264419af4a5be8c994e0ae98aca3738e77b1..3ce655ed40acba1811ac8b45d91d2595f8525d67 100644
+--- a/llvm/tools/llvm-config/llvm-config.cpp
++++ b/llvm/tools/llvm-config/llvm-config.cpp
+@@ -384,18 +384,18 @@ int main(int argc, char **argv) {
+   /// in the first place. This can't be done at configure/build time.
+ 
+   StringRef SharedExt, SharedVersionedExt, SharedDir, SharedPrefix, StaticExt,
+-      StaticPrefix, StaticDir = "lib";
++      StaticPrefix, StaticDir;
+   std::string DirSep = "/";
+   const Triple HostTriple(Triple::normalize(LLVM_HOST_TRIPLE));
+   if (HostTriple.isOSWindows()) {
+-    SharedExt = "dll";
+-    SharedVersionedExt = LLVM_DYLIB_VERSION ".dll";
+     if (HostTriple.isOSCygMing()) {
+-      SharedPrefix = LLVM_SHARED_LIBRARY_PREFIX;
++      SharedExt = "dll.a";
++      SharedVersionedExt = LLVM_DYLIB_VERSION ".dll.a";
+       StaticExt = "a";
+-      StaticPrefix = "lib";
++      SharedPrefix = StaticPrefix = "lib";
+     } else {
+-      StaticExt = "lib";
++      SharedVersionedExt = LLVM_DYLIB_VERSION ".lib";
++      SharedExt = StaticExt = "lib";
+       DirSep = "\\";
+       llvm::replace(ActiveObjRoot, '/', '\\');
+       llvm::replace(ActivePrefix, '/', '\\');
+@@ -406,8 +406,7 @@ int main(int argc, char **argv) {
+       for (auto &Include : ActiveIncludeOptions)
+         llvm::replace(Include, '/', '\\');
+     }
+-    SharedDir = ActiveBinDir;
+-    StaticDir = ActiveLibDir;
++    SharedDir = StaticDir = ActiveLibDir;
+   } else if (HostTriple.isOSDarwin()) {
+     SharedExt = "dylib";
+     SharedVersionedExt = LLVM_DYLIB_VERSION ".dylib";
+-- 
+2.52.0
+

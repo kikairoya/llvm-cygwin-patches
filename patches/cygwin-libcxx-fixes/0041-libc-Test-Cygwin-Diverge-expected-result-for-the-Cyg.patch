@@ -1,4 +1,4 @@
-From 07bc2e347e358d9c845772bd161c2b7d8beba659 Mon Sep 17 00:00:00 2001
+From 23f42afe079bdbee040bc0e84eada99ac03525df Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 41/46] [libc++][Test][Cygwin] Diverge expected result for the
@@ -11,7 +11,7 @@ Subject: [PATCH 41/46] [libc++][Test][Cygwin] Diverge expected result for the
  3 files changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index 1ea659db0251785429966b9ed8a98aeef95c12ac..296f4dcb5ab5cfbabc578468d3fb6764564f7600 100644
+index b60726d821d6c0324597c1f42d294fda610039b3..b50056f750a011e8811dd54a127af2b461d35571 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
 @@ -540,7 +540,9 @@ function(cxx_add_basic_build_flags target)
@@ -26,10 +26,10 @@ index 1ea659db0251785429966b9ed8a98aeef95c12ac..296f4dcb5ab5cfbabc578468d3fb6764
    # Let the library headers know they are currently being used to build the
    # library.
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 2e97b80a3746d598659020aaf7cda888250c4f61..0e104d3e738aa39a2b878ec6181a4af5ed3ef68f 100644
+index 82e7e50e65ce93f02f6d2a6ef76daf4f139e67d7..b90270ccac657fc010f54ab9b86b3b8cec80a05d 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -535,7 +535,7 @@ typedef __char32_t char32_t;
+@@ -531,7 +531,7 @@ typedef __char32_t char32_t;
  // the latter depends on internal GNU libc details that are not appropriate
  // to depend on here, so any declarations present when __cpp_char8_t is not
  // defined are ignored.

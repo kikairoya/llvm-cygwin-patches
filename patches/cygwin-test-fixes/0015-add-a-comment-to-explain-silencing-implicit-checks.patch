@@ -1,7 +1,7 @@
 From d9c78ee6f3d1149484e95b0111e6847dae3a06c0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 25 Dec 2025 21:16:19 +0900
-Subject: [PATCH 15/69] add a comment to explain silencing implicit checks
+Subject: [PATCH 15/70] add a comment to explain silencing implicit checks
 
 ---
  ...xclude_from_explicit_instantiation.exclude_from_dllexport.cpp | 1 +

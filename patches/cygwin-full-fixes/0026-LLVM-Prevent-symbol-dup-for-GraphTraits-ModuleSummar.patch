@@ -1,7 +1,7 @@
-From 454f5cdb889b48fdee349273e028c5270b033d2b Mon Sep 17 00:00:00 2001
+From 14e1d67c720de8b9fbb1ffc4f5f75de64caf345a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:06:12 +0900
-Subject: [PATCH 26/58] [LLVM] Prevent symbol dup for
+Subject: [PATCH 26/59] [LLVM] Prevent symbol dup for
  GraphTraits<ModuleSummaryIndex *>::getEntryNode
 
 ---
@@ -31,10 +31,10 @@ index 31c2f13a63e5f3754ca01c9887ba05cdf325a120..e3bb6420ea6a308718fa868e077b9a37
  } // end namespace llvm
  
 diff --git a/llvm/lib/IR/ModuleSummaryIndex.cpp b/llvm/lib/IR/ModuleSummaryIndex.cpp
-index 33947542bcf16f0f686c35c57281c0d1f2e259c2..0f8c6f54f0896584ce0f46378ac959ccb8934068 100644
+index 9a3bb970494a2ae37f33f38db68dd6e45543beed..46fb2b0f05932fdd547480eb27130c5d740ea949 100644
 --- a/llvm/lib/IR/ModuleSummaryIndex.cpp
 +++ b/llvm/lib/IR/ModuleSummaryIndex.cpp
-@@ -716,3 +716,14 @@ void ModuleSummaryIndex::exportToDot(
+@@ -741,3 +741,14 @@ void ModuleSummaryIndex::exportToDot(
  
    OS << "}";
  }

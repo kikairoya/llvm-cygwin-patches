@@ -1,0 +1,130 @@
+From bc0d28393b9f576f32c276e032e06ddfd4a35797 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 27 Dec 2025 09:56:41 +0900
+Subject: [PATCH 24/59] [LLVM] Annotate LLVM_TEMPLATE_ABI
+
+---
+ llvm/include/llvm/CodeGen/MachinePassManager.h | 10 +++++-----
+ llvm/include/llvm/IR/Analysis.h                |  2 ++
+ llvm/include/llvm/IR/PassManager.h             |  4 ++--
+ llvm/include/llvm/MCA/Support.h                |  1 +
+ llvm/lib/CodeGen/MachinePassManager.cpp        |  4 +++-
+ llvm/lib/MCA/Support.cpp                       |  2 ++
+ 6 files changed, 15 insertions(+), 8 deletions(-)
+
+diff --git a/llvm/include/llvm/CodeGen/MachinePassManager.h b/llvm/include/llvm/CodeGen/MachinePassManager.h
+index f7b888e45a7ecd912d3f8267503874f8dfeeec39..bf331e7a7d9374732a687aa9bf9cdd4f0a72f1f1 100644
+--- a/llvm/include/llvm/CodeGen/MachinePassManager.h
++++ b/llvm/include/llvm/CodeGen/MachinePassManager.h
+@@ -108,8 +108,8 @@ template <>
+ LLVM_ABI bool MachineFunctionAnalysisManagerModuleProxy::Result::invalidate(
+     Module &M, const PreservedAnalyses &PA,
+     ModuleAnalysisManager::Invalidator &Inv);
+-extern template class InnerAnalysisManagerProxy<MachineFunctionAnalysisManager,
+-                                                Module>;
++extern template class LLVM_TEMPLATE_ABI
++    InnerAnalysisManagerProxy<MachineFunctionAnalysisManager, Module>;
+ using MachineFunctionAnalysisManagerFunctionProxy =
+     InnerAnalysisManagerProxy<MachineFunctionAnalysisManager, Function>;
+ 
+@@ -117,8 +117,8 @@ template <>
+ LLVM_ABI bool MachineFunctionAnalysisManagerFunctionProxy::Result::invalidate(
+     Function &F, const PreservedAnalyses &PA,
+     FunctionAnalysisManager::Invalidator &Inv);
+-extern template class InnerAnalysisManagerProxy<MachineFunctionAnalysisManager,
+-                                                Function>;
++extern template class LLVM_TEMPLATE_ABI
++    InnerAnalysisManagerProxy<MachineFunctionAnalysisManager, Function>;
+ 
+ extern template class LLVM_TEMPLATE_ABI
+     OuterAnalysisManagerProxy<ModuleAnalysisManager, MachineFunction>;
+@@ -225,7 +225,7 @@ createFunctionToMachineFunctionPassAdaptor(MachineFunctionPassT &&Pass) {
+ template <>
+ LLVM_ABI PreservedAnalyses PassManager<MachineFunction>::run(
+     MachineFunction &, AnalysisManager<MachineFunction> &);
+-extern template class PassManager<MachineFunction>;
++extern template class LLVM_TEMPLATE_ABI PassManager<MachineFunction>;
+ 
+ /// Convenience typedef for a pass manager over functions.
+ using MachineFunctionPassManager = PassManager<MachineFunction>;
+diff --git a/llvm/include/llvm/IR/Analysis.h b/llvm/include/llvm/IR/Analysis.h
+index 8ab70dd9ed594c501d2c2e388818a1b5b5ec84f3..5845cc0b8fed045e4bb2aaa894d027cd9806e8ed 100644
+--- a/llvm/include/llvm/IR/Analysis.h
++++ b/llvm/include/llvm/IR/Analysis.h
+@@ -19,6 +19,7 @@ namespace llvm {
+ 
+ class Function;
+ class Module;
++class MachineFunction;
+ 
+ /// A special type used by analysis passes to provide an address that
+ /// identifies that particular analysis pass type.
+@@ -59,6 +60,7 @@ template <typename IRUnitT> AnalysisSetKey AllAnalysesOn<IRUnitT>::SetKey;
+ 
+ extern template class LLVM_TEMPLATE_ABI AllAnalysesOn<Module>;
+ extern template class LLVM_TEMPLATE_ABI AllAnalysesOn<Function>;
++extern template class LLVM_TEMPLATE_ABI AllAnalysesOn<MachineFunction>;
+ 
+ /// Represents analyses that only rely on functions' control flow.
+ ///
+diff --git a/llvm/include/llvm/IR/PassManager.h b/llvm/include/llvm/IR/PassManager.h
+index 4d4c4bcfe943d1e9ff2ef8b45e3a16c03cb60486..e3c0ac452acaa8a4aef96244a994e39c0aa80ecc 100644
+--- a/llvm/include/llvm/IR/PassManager.h
++++ b/llvm/include/llvm/IR/PassManager.h
+@@ -679,8 +679,8 @@ LLVM_ABI bool FunctionAnalysisManagerModuleProxy::Result::invalidate(
+ 
+ // Ensure the \c FunctionAnalysisManagerModuleProxy is provided as an extern
+ // template.
+-extern template class InnerAnalysisManagerProxy<FunctionAnalysisManager,
+-                                                Module>;
++extern template class LLVM_TEMPLATE_ABI
++    InnerAnalysisManagerProxy<FunctionAnalysisManager, Module>;
+ 
+ /// An analysis over an "inner" IR unit that provides access to an
+ /// analysis manager over a "outer" IR unit.  The inner unit must be contained
+diff --git a/llvm/include/llvm/MCA/Support.h b/llvm/include/llvm/MCA/Support.h
+index ce2ac9b4b6cd2d2f4b1d2476d51f9c05e4e36541..5982666aeb60baa06c2a4715be080a8e4a6e2350 100644
+--- a/llvm/include/llvm/MCA/Support.h
++++ b/llvm/include/llvm/MCA/Support.h
+@@ -42,6 +42,7 @@ public:
+ };
+ 
+ template <typename T> char InstructionError<T>::ID;
++extern template class LLVM_TEMPLATE_ABI InstructionError<MCInst>;
+ 
+ /// This class represents the number of cycles per resource (fractions of
+ /// cycles).  That quantity is managed here as a ratio, and accessed via the
+diff --git a/llvm/lib/CodeGen/MachinePassManager.cpp b/llvm/lib/CodeGen/MachinePassManager.cpp
+index 6e445f678790353a97dd97d734b162b7dddc533b..d78bc69784aab40b20de3dcb1b00aaabfcd136e3 100644
+--- a/llvm/lib/CodeGen/MachinePassManager.cpp
++++ b/llvm/lib/CodeGen/MachinePassManager.cpp
+@@ -25,7 +25,7 @@ AnalysisKey FunctionAnalysisManagerMachineFunctionProxy::Key;
+ 
+ namespace llvm {
+ template class LLVM_EXPORT_TEMPLATE AnalysisManager<MachineFunction>;
+-template class PassManager<MachineFunction>;
++template class LLVM_EXPORT_TEMPLATE PassManager<MachineFunction>;
+ template class LLVM_EXPORT_TEMPLATE
+     InnerAnalysisManagerProxy<MachineFunctionAnalysisManager, Module>;
+ template class LLVM_EXPORT_TEMPLATE
+@@ -167,3 +167,5 @@ PreservedAnalyses llvm::getMachineFunctionPassPreservedAnalyses() {
+   PA.template preserveSet<AllAnalysesOn<Function>>();
+   return PA;
+ }
++
++template class LLVM_EXPORT_TEMPLATE llvm::AllAnalysesOn<MachineFunction>;
+diff --git a/llvm/lib/MCA/Support.cpp b/llvm/lib/MCA/Support.cpp
+index f8b8a2d129c1cefdb342b16d5bf7a9bdb5c56768..2e39e44f41eb6d3ff1cb2942d6c595ad5f672c45 100644
+--- a/llvm/lib/MCA/Support.cpp
++++ b/llvm/lib/MCA/Support.cpp
+@@ -107,5 +107,7 @@ double computeBlockRThroughput(const MCSchedModel &SM, unsigned DispatchWidth,
+   return Max;
+ }
+ 
++template class LLVM_EXPORT_TEMPLATE InstructionError<MCInst>;
++
+ } // namespace mca
+ } // namespace llvm
+-- 
+2.52.0
+

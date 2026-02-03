@@ -1,0 +1,31 @@
+From bec9037367bda5418d95b7aaf3dd0a9208cb7ef3 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 3 Nov 2025 11:09:11 +0900
+Subject: [PATCH 58/70] fix lld exportSourceName
+
+I've encountered a crash with combination of -Wl,--export-all-symbols, specifying a .def, linking an exe, and got ordinal too
+large but failed reproduce with a simple test.
+---
+ lld/COFF/SymbolTable.cpp | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/lld/COFF/SymbolTable.cpp b/lld/COFF/SymbolTable.cpp
+index 38a43390c15ab2b382e12a0b285b62ec47126bfc..2a8835fdbe4115f2fd05e52e15caf27517c62ed5 100644
+--- a/lld/COFF/SymbolTable.cpp
++++ b/lld/COFF/SymbolTable.cpp
+@@ -1190,9 +1190,10 @@ static StringRef exportSourceName(ExportSource s) {
+     return "/export";
+   case ExportSource::ModuleDefinition:
+     return "/def";
+-  default:
+-    llvm_unreachable("unknown ExportSource");
++  case ExportSource::Unset:
++    return "(unknown)";
+   }
++  llvm_unreachable("unknown ExportSource");
+ }
+ 
+ // Performs error checking on all /export arguments.
+-- 
+2.52.0
+

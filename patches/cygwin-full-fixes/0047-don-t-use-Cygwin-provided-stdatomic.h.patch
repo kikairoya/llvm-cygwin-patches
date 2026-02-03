@@ -1,0 +1,24 @@
+From 80ec4636ed433966f5124afd18b488af6038ec79 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 3 Feb 2026 19:54:03 +0900
+Subject: [PATCH 47/59] don't use Cygwin provided stdatomic.h
+
+---
+ clang/lib/Headers/stdatomic.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/clang/lib/Headers/stdatomic.h b/clang/lib/Headers/stdatomic.h
+index 1991351f9e9efed0fc4154afe02c9a9faf200c73..76e5da0eef36562c7612e8e6819b42e1e98bf78a 100644
+--- a/clang/lib/Headers/stdatomic.h
++++ b/clang/lib/Headers/stdatomic.h
+@@ -19,6 +19,7 @@
+  * `stdatomic.h` header requires C++23 or newer.
+  */
+ #if __STDC_HOSTED__ &&                                                         \
++    !defined(__CYGWIN__) &&                                                    \
+     __has_include_next(<stdatomic.h>) &&                                       \
+     (!defined(_MSC_VER) || (defined(__cplusplus) && __cplusplus >= 202002L))
+ # include_next <stdatomic.h>
+-- 
+2.52.0
+

@@ -1,7 +1,7 @@
 From 6e487588dfca444d0f3ee2315bc5fc49cad1534d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 25 Dec 2025 21:19:37 +0900
-Subject: [PATCH 14/58] store to a named variable
+Subject: [PATCH 14/59] store to a named variable
 
 ---
  clang/lib/Sema/SemaDeclCXX.cpp | 27 +++++++++++++++------------

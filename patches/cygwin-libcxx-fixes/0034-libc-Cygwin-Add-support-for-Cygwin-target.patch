@@ -1,4 +1,4 @@
-From bb3ed58e482d11ad36125291dece032305c08596 Mon Sep 17 00:00:00 2001
+From 29f49a933af33afdd6ab5838d3aec1f92d7bb480 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 34/46] [libc++][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 34/46] [libc++][Cygwin] Add support for Cygwin target
  6 files changed, 47 insertions(+), 6 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index b1a52c95edead821079500861c236f950845c7b0..1b61f42384b55a758fa2df8e385c0faecba5c92e 100644
+index 0ac582cb561a88f9873820efa4c334882cf48570..9e62db81483ae35f632ed90d24d8d2ae58fce920 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
 @@ -275,7 +275,7 @@ if (LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY
@@ -100,10 +100,10 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 3813e11929217f6c8f1d468ef7531d02e5f8db5a..2e97b80a3746d598659020aaf7cda888250c4f61 100644
+index 9cb98bbb593411eb7136daa1af254ffddc1f9e01..82e7e50e65ce93f02f6d2a6ef76daf4f139e67d7 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -94,6 +94,10 @@
+@@ -90,6 +90,10 @@
  #      define _LIBCPP_HAS_BITSCAN64 0
  #    endif
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 1
@@ -114,7 +114,7 @@ index 3813e11929217f6c8f1d468ef7531d02e5f8db5a..2e97b80a3746d598659020aaf7cda888
  #  else
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 0
  #    define _LIBCPP_HAS_BITSCAN64 0
-@@ -386,6 +390,7 @@ typedef __char32_t char32_t;
+@@ -382,6 +386,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \

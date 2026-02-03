@@ -239,9 +239,9 @@ jobs:
       check-target: ${{ steps.build.outputs.check-target }}
 
     steps:
-      - name: Maximize build disk space
-        if: ${{ runner.os == 'Linux' }}
-        uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
+      #- name: Maximize build disk space
+      #  if: ${{ runner.os == 'Linux' }}
+      #  uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
 
       - name: configure Pagefile
         if: ${{ runner.os == 'Windows' }}

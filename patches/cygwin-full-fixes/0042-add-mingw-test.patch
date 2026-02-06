@@ -1,7 +1,7 @@
-From 957cba4370f0a831be95fae2cb86ea03faa84a22 Mon Sep 17 00:00:00 2001
+From ebebbd3d3d4d528c5202a2963f3e676f84c70050 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 13:18:31 +0900
-Subject: [PATCH 41/59] add mingw test
+Subject: [PATCH 42/59] add mingw test
 
 ---
  .../dllexport-no-dllexport-inlines.cpp        | 56 +++++++++++++++----

@@ -1,7 +1,7 @@
-From 5979d9aabeae41e82c2fe4ba7d4510f50c2efd8a Mon Sep 17 00:00:00 2001
+From 54733b983e6696398298570c56d1be40229ffb37 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 20:09:56 +0900
-Subject: [PATCH 46/59] [Clang][Driver] Revise Cygwin ToolChain to call linker
+Subject: [PATCH 45/59] [Clang][Driver] Revise Cygwin ToolChain to call linker
  directly
 
 ...so that libc++, compiler-rt, and libunwind can be used by the

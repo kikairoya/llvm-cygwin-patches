@@ -1,4 +1,4 @@
-From 5f109d31f4dc749721bbf1baad806e1bdfef4128 Mon Sep 17 00:00:00 2001
+From d38ca3054bd8191d1437eae924bd7e4a008d34a9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 14 Dec 2025 00:23:16 +0900
 Subject: [PATCH 17/19] make libcxx clang-tidy test runnable with win32 dylib

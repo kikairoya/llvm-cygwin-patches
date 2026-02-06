@@ -1,4 +1,4 @@
-From 88c290c0e90b93017c4f142eb5d770b168245352 Mon Sep 17 00:00:00 2001
+From 4253c2871fc4a284b2c4a0972cd2e56abae15fae Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:59:32 +0900
 Subject: [PATCH 25/59] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
@@ -32,18 +32,18 @@ index 96c695473b67a198280fdde4f38d4593212cb09a..acc549c97213edcff24f194a9d6acec3
  
  #endif // LLVM_CLANG_ANALYSIS_FLOWSENSITIVE_NOOP_LATTICE_H
 diff --git a/clang/lib/Analysis/FlowSensitive/TypeErasedDataflowAnalysis.cpp b/clang/lib/Analysis/FlowSensitive/TypeErasedDataflowAnalysis.cpp
-index 1113bbe7f4d9ce06544cb02697c1f9d0144208b4..8f5dc464726e2eceea70c69d83b1bdd0dff35e09 100644
+index 02982274093cbd8dab8286a3437c25e5e4d9ffd3..20cccd361bd99bc6282f7ed770aaeea2724ba9fd 100644
 --- a/clang/lib/Analysis/FlowSensitive/TypeErasedDataflowAnalysis.cpp
 +++ b/clang/lib/Analysis/FlowSensitive/TypeErasedDataflowAnalysis.cpp
-@@ -23,6 +23,7 @@
- #include "clang/AST/StmtVisitor.h"
+@@ -25,6 +25,7 @@
  #include "clang/Analysis/Analyses/PostOrderCFGView.h"
  #include "clang/Analysis/CFG.h"
+ #include "clang/Analysis/CFGBackEdges.h"
 +#include "clang/Analysis/FlowSensitive/CachedConstAccessorsLattice.h"
  #include "clang/Analysis/FlowSensitive/DataflowEnvironment.h"
  #include "clang/Analysis/FlowSensitive/DataflowLattice.h"
  #include "clang/Analysis/FlowSensitive/DataflowWorklist.h"
-@@ -49,6 +50,8 @@ namespace llvm {
+@@ -54,6 +55,8 @@ namespace llvm {
  // of creating one in the test executable. when building with
  // CLANG_LINK_CLANG_DYLIB
  template struct CLANG_EXPORT_TEMPLATE Any::TypeId<clang::dataflow::NoopLattice>;

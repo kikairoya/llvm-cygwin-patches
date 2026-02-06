@@ -1,4 +1,4 @@
-From d531a40ff9c28b46b8b937140eb8d3f0a1ab349b Mon Sep 17 00:00:00 2001
+From 6700856da296317cd97bb2e241a8e3999fe9d72e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 11 Oct 2025 17:32:22 +0900
 Subject: [PATCH 61/70] [LLVM][Unittest][Cygwin] Diverge expected result on
@@ -33,12 +33,12 @@ index d7c059566a457efc67f6a2b37aec84409ee66a72..ccf278271bafa12283127bef4a655721
  #endif // LLVM_ENABLE_THREADS
  
 diff --git a/llvm/unittests/CAS/OnDiskCASLoggerTest.cpp b/llvm/unittests/CAS/OnDiskCASLoggerTest.cpp
-index a9aff7bdd328bced9f05595936009bf0dbf16082..9de2121fec69f81b42b2164da58322355fb792b4 100644
+index 7357a976f5f50387d01ca4b3b0d271780fa400c4..44ad63ca5ab593931fde6c8372f125c9ae10f206 100644
 --- a/llvm/unittests/CAS/OnDiskCASLoggerTest.cpp
 +++ b/llvm/unittests/CAS/OnDiskCASLoggerTest.cpp
-@@ -23,7 +23,7 @@ using namespace llvm::cas;
- using namespace llvm::cas::ondisk;
- using namespace llvm::sys;
+@@ -82,7 +82,7 @@ protected:
+   ArrayRef<StringRef> getEnviron() const { return EnvTable; }
+ };
  
 -#ifndef _WIN32 // windows doesn't support logging yet.
 +#if !defined(_WIN32) && !defined(__CYGWIN__) // windows doesn't support logging yet.

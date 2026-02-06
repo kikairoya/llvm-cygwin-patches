@@ -1,4 +1,4 @@
-From 346b61c4abc14f69504cc38dd44a9c918329d947 Mon Sep 17 00:00:00 2001
+From 02c4f46de05d15727b00341f49beaf91d94e7de4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:51:03 +0900
 Subject: [PATCH 42/46] [libc++][Test][Cygwin] Diverge expected result for the
@@ -12,7 +12,7 @@ Subject: [PATCH 42/46] [libc++][Test][Cygwin] Diverge expected result for the
  4 files changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp b/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp
-index f5a878582666b674fa973e534ec9a54aeb5435f2..e9c59a4328cc565661cbe7561fab30282bf13f8e 100644
+index 638137f8d4c581fb868a434570ec62971c0498ed..39e42eee62855298fb343fb971e28d21581a07d4 100644
 --- a/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp
 +++ b/libcxx/test/libcxx/gdb/gdb_pretty_printer_test.sh.cpp
 @@ -23,6 +23,7 @@

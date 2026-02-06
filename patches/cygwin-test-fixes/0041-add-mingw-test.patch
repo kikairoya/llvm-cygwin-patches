@@ -1,4 +1,4 @@
-From 1aac13d5065f66c7ed9e0fd59564b96bd7630380 Mon Sep 17 00:00:00 2001
+From 957cba4370f0a831be95fae2cb86ea03faa84a22 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 13:18:31 +0900
 Subject: [PATCH 41/70] add mingw test

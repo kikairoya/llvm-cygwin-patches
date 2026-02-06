@@ -1,4 +1,4 @@
-From b357a64d633f5ca8cfa92c3b40254960571b05d8 Mon Sep 17 00:00:00 2001
+From 88c290c0e90b93017c4f142eb5d770b168245352 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:59:32 +0900
 Subject: [PATCH 25/70] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
@@ -74,7 +74,7 @@ index edb8963ce42b6f3b002028ec211141c82021eae8..3437463f62ca032a9e1b3d53fa9ed6ad
  // GraphTraits specializations for function basic block graphs (CFGs)
  //===--------------------------------------------------------------------===//
 diff --git a/llvm/lib/CodeGen/MachineFunction.cpp b/llvm/lib/CodeGen/MachineFunction.cpp
-index 8d7694537e07d88cd024fdd6de2586dd36fe2190..a371e2e818ba8362df1801d561c488cc2b87b13b 100644
+index fb35c7e62dad64bc9b16bc51876d9abea4466cc2..b90a1e3cf9b3a19a619420d6363b788ab0d8fd1b 100644
 --- a/llvm/lib/CodeGen/MachineFunction.cpp
 +++ b/llvm/lib/CodeGen/MachineFunction.cpp
 @@ -1322,6 +1322,8 @@ void MachineFunction::setUseDebugInstrRef(bool Use) {

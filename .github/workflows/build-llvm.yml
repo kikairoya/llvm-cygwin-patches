@@ -242,6 +242,9 @@ jobs:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
         uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
+        with:
+          root-reserve-mb: 10240
+          temp-reserve-mb: 5120
 
       - name: configure Pagefile
         if: ${{ runner.os == 'Windows' }}
@@ -301,6 +304,9 @@ jobs:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
         uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
+        with:
+          root-reserve-mb: 10240
+          temp-reserve-mb: 5120
 
       - name: configure Pagefile
         if: ${{ runner.os == 'Windows' }}
@@ -572,6 +578,9 @@ jobs:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
         uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
+        with:
+          root-reserve-mb: 10240
+          temp-reserve-mb: 5120
 
       - run: git config --global core.autocrlf input
 
@@ -620,6 +629,9 @@ jobs:
       - name: Maximize build disk space
         if: ${{ runner.os == 'Linux' }}
         uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
+        with:
+          root-reserve-mb: 10240
+          temp-reserve-mb: 5120
 
       - run: git config --global core.autocrlf input
 

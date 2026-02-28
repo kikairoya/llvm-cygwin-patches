@@ -1,7 +1,7 @@
-From 8dd21535430c2d633fec3cbc4082f87cfc500bd4 Mon Sep 17 00:00:00 2001
+From 49d977d1f2088826c7e1601f14c55b9ae4052bd5 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 24 Jan 2026 10:23:54 +0900
-Subject: [PATCH 07/19] [clangd] Prevent symbol dup for DenseMapInfo<SymbolID>
+Subject: [PATCH 07/20] [clangd] Prevent symbol dup for DenseMapInfo<SymbolID>
 
 Make member functions and their callees constexpr.
 ---
@@ -41,5 +41,5 @@ index e8aa462e96c177ab0972667f33b66f888e990177..34aa5eac24497206c59388bfb249fdab
    static unsigned getHashValue(const clang::clangd::SymbolID &Sym) {
      return hash_value(Sym);
 -- 
-2.52.0
+2.53.0
 

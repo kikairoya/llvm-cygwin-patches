@@ -1,0 +1,130 @@
+From 9bb00dde5e8c9c0bcfc73daefd9b31ceb9cb714f Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 26 Feb 2026 21:50:15 +0900
+Subject: [PATCH 03/51] [Clang] Drop `exclude_from_explicit_instantiation` on a
+ non-template context
+
+---
+ .../clang/Basic/DiagnosticSemaKinds.td        |  6 ++
+ clang/lib/Sema/SemaDeclAttr.cpp               | 12 ++++
+ ...rom_explicit_instantiation.nontemplate.cpp | 68 +++++++++++++++++++
+ 3 files changed, 86 insertions(+)
+ create mode 100644 clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.nontemplate.cpp
+
+diff --git a/clang/include/clang/Basic/DiagnosticSemaKinds.td b/clang/include/clang/Basic/DiagnosticSemaKinds.td
+index 8a3b9de19ad3291c7a1c8c44d54b6c8ab0f530bd..b35c0694cf51887c2a781e8b64d1a052df153e6b 100644
+--- a/clang/include/clang/Basic/DiagnosticSemaKinds.td
++++ b/clang/include/clang/Basic/DiagnosticSemaKinds.td
+@@ -3796,6 +3796,12 @@ def warn_attribute_ignored_on_non_definition :
+ def warn_attribute_ignored_on_inline :
+   Warning<"%0 attribute ignored on inline function">,
+   InGroup<IgnoredAttributes>;
++def warn_attribute_ignored_on_non_member :
++  Warning<"%0 attribute ignored on a non-member declaration">,
++  InGroup<IgnoredAttributes>;
++def warn_attribute_ignored_on_non_template :
++  Warning<"%0 attribute ignored on a non-template context">,
++  InGroup<IgnoredAttributes>;
+ def warn_nocf_check_attribute_ignored :
+   Warning<"'nocf_check' attribute ignored; use -fcf-protection to enable the attribute">,
+   InGroup<IgnoredAttributes>;
+diff --git a/clang/lib/Sema/SemaDeclAttr.cpp b/clang/lib/Sema/SemaDeclAttr.cpp
+index 3abc69d0e4b96e43a749a8f907411ac490d21a0a..680f24dde5143cf1d64ea53465af35d4ec049522 100644
+--- a/clang/lib/Sema/SemaDeclAttr.cpp
++++ b/clang/lib/Sema/SemaDeclAttr.cpp
+@@ -705,6 +705,18 @@ static void handleExcludeFromExplicitInstantiationAttr(Sema &S, Decl *D,
+         << AL << /*IsMember=*/!isa<CXXRecordDecl>(D);
+     return;
+   }
++  if (const auto *RD = dyn_cast_if_present<CXXRecordDecl>(
++          D->getDeclContext()->getRedeclContext())) {
++    if (!isa<TemplateDecl>(RD) && !RD->isDependentType() &&
++        !isTemplateInstantiation(RD->getTemplateSpecializationKind())) {
++      S.Diag(AL.getLoc(), diag::warn_attribute_ignored_on_non_template) << AL;
++      return;
++    }
++  } else {
++    S.Diag(AL.getLoc(), diag::warn_attribute_ignored_on_non_member) << AL;
++    return;
++  }
++
+   D->addAttr(::new (S.Context)
+                  ExcludeFromExplicitInstantiationAttr(S.Context, AL));
+ }
+diff --git a/clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.nontemplate.cpp b/clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.nontemplate.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..0196869117ed8ccf82bc204566affacc5f188dec
+--- /dev/null
++++ b/clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.nontemplate.cpp
+@@ -0,0 +1,68 @@
++// RUN: %clang_cc1 -fsyntax-only -verify %s
++
++// Test that exclude_from_explicit_instantiation is warned if attached
++// on a non-template context or on a non-member entity.
++
++#define EXCLUDE_ATTR __attribute__((exclude_from_explicit_instantiation))
++
++struct C {
++  EXCLUDE_ATTR void fn_excluded();
++  // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-template context}}
++  EXCLUDE_ATTR static int var_excluded;
++  // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-template context}}
++  struct EXCLUDE_ATTR nested_excluded {
++  // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-template context}}
++    EXCLUDE_ATTR void fn_excluded();
++    // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-template context}}
++    EXCLUDE_ATTR static int var_excluded;
++    // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-template context}}
++  };
++  struct nested {
++    EXCLUDE_ATTR void fn_excluded();
++    // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-template context}}
++    EXCLUDE_ATTR static int var_excluded;
++    // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-template context}}
++  };
++  template <class T>
++  struct EXCLUDE_ATTR class_template_excluded {};
++  // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-template context}}
++  template <class T>
++  EXCLUDE_ATTR static T var_template_excluded;
++  // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-template context}}
++  template <class T>
++  EXCLUDE_ATTR void fn_template_excluded();
++  // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-template context}}
++};
++
++struct EXCLUDE_ATTR class_excluded {};
++// expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-member declaration}}
++EXCLUDE_ATTR int var_excluded;
++// expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-member declaration}}
++EXCLUDE_ATTR void fn_excluded();
++// expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-member declaration}}
++
++template <class T>
++struct EXCLUDE_ATTR class_template_excluded {};
++// expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-member declaration}}
++template <class T>
++EXCLUDE_ATTR T var_template_excluded;
++// expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-member declaration}}
++template <class T>
++EXCLUDE_ATTR void fn_template_excluded();
++// expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-member declaration}}
++
++void fn () {
++  EXCLUDE_ATTR static int var_excluded;
++  // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-member declaration}}
++}
++
++auto lambda = [](auto x) {
++  EXCLUDE_ATTR static int var_excluded;
++  // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-member declaration}}
++};
++
++template <class T>
++void fn_template() {
++  EXCLUDE_ATTR static T var_excluded;
++  // expected-warning@-1{{'exclude_from_explicit_instantiation' attribute ignored on a non-member declaration}}
++};
+-- 
+2.53.0
+

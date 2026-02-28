@@ -1,7 +1,7 @@
-From 041fa549cd36367a138703ea16ad7b062fdb780b Mon Sep 17 00:00:00 2001
+From 43d982a8e6c7f141460ef8777be4839e82ad69ca Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:03:35 +0900
-Subject: [PATCH 05/19] [clang] Prevent symbol dup for
+Subject: [PATCH 05/20] [clang] Prevent symbol dup for
  DeclarationName::getUsingDirectiveName
 
 ---
@@ -58,5 +58,5 @@ index 9a89a66f3f63aa44a0dbc3661a33734945062005..84ea72e645b42793383aea3f761b78ee
    return (A < B ? -1 : (A > B ? 1 : 0));
  }
 -- 
-2.52.0
+2.53.0
 

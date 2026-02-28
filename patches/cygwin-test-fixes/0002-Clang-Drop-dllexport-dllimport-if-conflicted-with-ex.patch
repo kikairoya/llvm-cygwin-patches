@@ -1,0 +1,164 @@
+From 7dee8e88b0ffad0e1226fdacbfd36899dd0bda16 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 26 Feb 2026 21:49:40 +0900
+Subject: [PATCH 02/62] [Clang] Drop dllexport/dllimport if conflicted with
+ `exclude_from_explicit_instantiation`
+
+Drop `dllexport` and `dllimport` attributes from a entity that is declared with
+the `exclude_from_explicit_instantiation` attribute. Despite its name, the
+exclude attribute takes precedence over the DLL attributes, even if the entity
+is implicitly instantiated.
+
+This makes the semantics of the attribute simpler -- "excluded members are never
+DLL-exported/imported".
+
+In a non-template context, the exclude attribute is already dropped, so the DLL
+attributes take precedence.
+---
+ .../clang/Basic/DiagnosticSemaKinds.td        |  3 +
+ clang/lib/Sema/SemaDeclCXX.cpp                |  9 ++
+ ..._explicit_instantiation.ignore-dllattr.cpp | 98 +++++++++++++++++++
+ 3 files changed, 110 insertions(+)
+ create mode 100644 clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.ignore-dllattr.cpp
+
+diff --git a/clang/include/clang/Basic/DiagnosticSemaKinds.td b/clang/include/clang/Basic/DiagnosticSemaKinds.td
+index 8a3b9de19ad3291c7a1c8c44d54b6c8ab0f530bd..3bded7c6f78e71994af0d9e91d321d875a39d715 100644
+--- a/clang/include/clang/Basic/DiagnosticSemaKinds.td
++++ b/clang/include/clang/Basic/DiagnosticSemaKinds.td
+@@ -3784,6 +3784,9 @@ def warn_redeclaration_without_attribute_prev_attribute_ignored : Warning<
+ def warn_redeclaration_without_import_attribute : Warning<
+   "%q0 redeclared without 'dllimport' attribute: 'dllexport' attribute added">,
+   InGroup<MicrosoftInconsistentDllImport>;
++def warn_dllattr_ignored_exclusion_takes_precedence : Warning<
++  "%0 attribute ignored; %1 takes precedence">,
++  InGroup<IgnoredAttributes>;
+ def warn_dllimport_dropped_from_inline_function : Warning<
+   "%q0 redeclared inline; %1 attribute ignored">,
+   InGroup<IgnoredAttributes>;
+diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
+index 5837ecd6b9163b1c68ce97a7dbd137c688a87f81..ed6da8bd317f659b2acc6e064e143104982f87d4 100644
+--- a/clang/lib/Sema/SemaDeclCXX.cpp
++++ b/clang/lib/Sema/SemaDeclCXX.cpp
+@@ -7229,6 +7229,15 @@ void Sema::CheckCompletedCXXClass(Scope *S, CXXRecordDecl *Record) {
+   bool HasMethodWithOverrideControl = false,
+        HasOverridingMethodWithoutOverrideControl = false;
+   for (auto *D : Record->decls()) {
++    if (auto *EA = D->getAttr<ExcludeFromExplicitInstantiationAttr>()) {
++      if (auto *DA = getDLLAttr(D)) {
++        Diag(DA->getRange().getBegin(),
++             diag::warn_dllattr_ignored_exclusion_takes_precedence)
++            << *DA << EA;
++        D->dropAttrs<DLLExportAttr, DLLImportAttr>();
++      }
++    }
++
+     if (auto *M = dyn_cast<CXXMethodDecl>(D)) {
+       // FIXME: We could do this check for dependent types with non-dependent
+       // bases.
+diff --git a/clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.ignore-dllattr.cpp b/clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.ignore-dllattr.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..af15ed9f34688066576d0e48ab476e4ef3293022
+--- /dev/null
++++ b/clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.ignore-dllattr.cpp
+@@ -0,0 +1,98 @@
++// RUN: %clang_cc1 -triple x86_64-win32 -fms-extensions -fsyntax-only -verify %s
++// RUN: %clang_cc1 -triple x86_64-mingw                 -fsyntax-only -verify %s
++// RUN: %clang_cc1 -triple x86_64-cygwin                -fsyntax-only -verify %s
++
++// Test that memberwise dllexport and dllimport are warned if the
++// exclude_from_explicit_instantiation attribute is attached.
++
++#define EXCLUDE_ATTR __attribute__((exclude_from_explicit_instantiation))
++
++template <class T>
++struct C {
++  EXCLUDE_ATTR __declspec(dllexport) void fn_excluded_exported();
++// expected-warning@-1{{'dllexport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++  EXCLUDE_ATTR __declspec(dllimport) void fn_excluded_imported();
++// expected-warning@-1{{'dllimport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++  EXCLUDE_ATTR __declspec(dllexport) static int var_excluded_exported;
++// expected-warning@-1{{'dllexport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++  EXCLUDE_ATTR __declspec(dllimport) static int var_excluded_imported;
++// expected-warning@-1{{'dllimport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++  struct EXCLUDE_ATTR __declspec(dllexport) nested_excluded_exported {};
++// expected-warning@-1{{'dllexport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++  struct EXCLUDE_ATTR __declspec(dllimport) nested_excluded_imported {};
++// expected-warning@-1{{'dllimport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++
++  // No warnings here since nested_excluded is not instantiated.
++  struct EXCLUDE_ATTR nested_excluded {
++    __declspec(dllexport) void fn_exported();
++    __declspec(dllimport) void fn_imported();
++  };
++  // This too. nested_exported is not instantiated.
++  struct __declspec(dllexport) nested_exported {
++    EXCLUDE_ATTR void fn_excluded();
++    EXCLUDE_ATTR static int var_excluded;
++  };
++  // The same. nested_imported is not instantiated.
++  struct __declspec(dllimport) nested_imported {
++    EXCLUDE_ATTR void fn_excluded();
++    EXCLUDE_ATTR static int var_excluded;
++  };
++
++  struct nested {
++    EXCLUDE_ATTR __declspec(dllexport) void fn_excluded_exported();
++    // expected-warning@-1{{'dllexport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++    EXCLUDE_ATTR __declspec(dllimport) void fn_excluded_imported();
++    // expected-warning@-1{{'dllimport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++    EXCLUDE_ATTR __declspec(dllexport) static int var_excluded_exported;
++    // expected-warning@-1{{'dllexport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++    EXCLUDE_ATTR __declspec(dllimport) static int var_excluded_imported;
++    // expected-warning@-1{{'dllimport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++  };
++};
++
++// Test that class-level dll attributes doesn't cause a warning on an excluded member.
++template <class T>
++struct __declspec(dllexport) DE {
++  EXCLUDE_ATTR void fn_excluded();
++};
++template struct DE<int>;
++
++template <class T>
++struct __declspec(dllimport) DI {
++  EXCLUDE_ATTR void fn_excluded();
++};
++template struct DI<int>;
++
++// Test that dll attributes on explicit instantiation doesn't cause a warning on
++// an excluded member.
++// However, a non-template nested type may be warned on an excluded member by
++// its dll attribute.
++template <class T>
++struct E {
++  EXCLUDE_ATTR void fn_excluded();
++  struct EXCLUDE_ATTR nested_excluded {
++    __declspec(dllexport) void fn_exported();
++    __declspec(dllimport) void fn_imported();
++  };
++
++  struct __declspec(dllexport) nested_exported_1 {
++    // expected-warning@-1{{'dllexport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++    EXCLUDE_ATTR void fn_excluded();
++  };
++  struct __declspec(dllimport) nested_imported_1 {
++    // expected-warning@-1{{'dllimport' attribute ignored; 'exclude_from_explicit_instantiation' takes precedence}}
++    EXCLUDE_ATTR void fn_excluded();
++  };
++
++  // Make sure that any warning isn't emitted if the nested type has no excluded members.
++  struct __declspec(dllexport) nested_exported_2 {
++    void fn();
++  };
++  struct __declspec(dllimport) nested_imported_2 {
++    void fn();
++  };
++};
++extern template struct __declspec(dllimport) E<long>;
++template struct __declspec(dllexport) E<int>;
++// expected-note@-1{{in instantiation of member class 'E<int>::nested_exported_1' requested here}}
++// expected-note@-2{{in instantiation of member class 'E<int>::nested_imported_1' requested here}}
+-- 
+2.53.0
+

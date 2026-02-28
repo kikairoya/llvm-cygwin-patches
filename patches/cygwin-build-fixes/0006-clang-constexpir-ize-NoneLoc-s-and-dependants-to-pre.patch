@@ -1,7 +1,7 @@
-From e60c96296403136bf55442a966222372ad76759c Mon Sep 17 00:00:00 2001
+From cfe343aba6750c02651fa5bc19be25f5291521dd Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
-Subject: [PATCH 06/19] [clang] constexpir-ize `NoneLoc`s and dependants to
+Subject: [PATCH 06/20] [clang] constexpir-ize `NoneLoc`s and dependants to
  prevent symbol dup
 
 ---
@@ -155,18 +155,18 @@ index d9087dd1c516ee265aa00851ca98b1df09936f3e..dfdce5ed59ed6de8aa4b9237f260b39a
    PointerUnion(std::nullptr_t) : PointerUnion() {}
    using Base::Base;
 diff --git a/llvm/include/llvm/CodeGen/SlotIndexes.h b/llvm/include/llvm/CodeGen/SlotIndexes.h
-index 780bd82a4c624ddbfd377437d23c867e4228c0dc..9337856d71ee835a1d34f93def5e8051e96a6ff3 100644
+index 6d897e427cf7961fd8e48a9df9bedb1196770ddd..269878cbaa0b32bc3a12250420fa196959562edf 100644
 --- a/llvm/include/llvm/CodeGen/SlotIndexes.h
 +++ b/llvm/include/llvm/CodeGen/SlotIndexes.h
-@@ -114,7 +114,7 @@ class raw_ostream;
+@@ -116,7 +116,7 @@ class raw_ostream;
      };
  
      /// Construct an invalid index.
 -    SlotIndex() = default;
 +    constexpr SlotIndex() = default;
  
-     // Creates a SlotIndex from an IndexListEntry and a slot. Generally should
-     // not be used. This method is only public to facilitate writing certain
+     // Construct a new slot index from the given one, and set the slot.
+     SlotIndex(const SlotIndex &li, Slot s) : lie(li.listEntry(), unsigned(s)) {
 diff --git a/llvm/lib/CodeGen/InterferenceCache.h b/llvm/lib/CodeGen/InterferenceCache.h
 index 2a176b4f2cf7b181a4100b3bd8e08f1544614bcf..ed6137ab0fe3622ac4bfd593272b539002c43445 100644
 --- a/llvm/lib/CodeGen/InterferenceCache.h
@@ -181,5 +181,5 @@ index 2a176b4f2cf7b181a4100b3bd8e08f1544614bcf..ed6137ab0fe3622ac4bfd593272b5390
  
    /// Entry - A cache entry containing interference information for all aliases
 -- 
-2.52.0
+2.53.0
 

@@ -1,7 +1,7 @@
 From 7dee8e88b0ffad0e1226fdacbfd36899dd0bda16 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 26 Feb 2026 21:49:40 +0900
-Subject: [PATCH 02/51] [Clang] Drop dllexport/dllimport if conflicted with
+Subject: [PATCH 02/49] [Clang] Drop dllexport/dllimport if conflicted with
  `exclude_from_explicit_instantiation`
 
 Drop `dllexport` and `dllimport` attributes from a entity that is declared with

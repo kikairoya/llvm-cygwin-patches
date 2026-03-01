@@ -1,0 +1,104 @@
+From da8554f41a182bc5330aca4bde5ee503b9b403af Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 28 Feb 2026 09:14:38 +0900
+Subject: [PATCH 18/35] update test
+
+---
+ ...t_instantiation.exclude_from_dllimport.cpp |  8 ++++----
+ .../CodeGenCXX/mingw-template-dllexport.cpp   | 20 ++++++++-----------
+ ..._explicit_instantiation.ignore-dllattr.cpp |  6 +++---
+ 3 files changed, 15 insertions(+), 19 deletions(-)
+
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+index 6a2c3461a2b3d5508ff067cc7c1813d19f7b14dc..d2ebb5351c2fa77a2a77a9be332afaf6be8f695c 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+@@ -74,7 +74,7 @@ void useBaseCase() {
+ 
+   BasicCase<WithImportTag>::nestedType().noAttrMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+-  // GNU-DAG: define linkonce_odr dso_local void @_ZN9BasicCaseI13WithImportTagE10nestedType12noAttrMethodEv
++  // GNU-DAG: declare dso_local void @_ZN9BasicCaseI13WithImportTagE10nestedType12noAttrMethodEv
+ 
+   BasicCase<WithImportTag>::nestedType().importedMethod();
+   // MSC-DAG: declare dllimport void @"?importedMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+@@ -82,7 +82,7 @@ void useBaseCase() {
+ 
+   BasicCase<WithImportTag>::nestedType().importedInlineMethod();
+   // MSC-DAG: declare dllimport void @"?importedInlineMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+-  // GNU-DAG: define linkonce_odr dso_local void @_ZN9BasicCaseI13WithImportTagE10nestedType20importedInlineMethodEv
++  // GNU-DAG: declare dso_local void @_ZN9BasicCaseI13WithImportTagE10nestedType20importedInlineMethodEv
+ 
+   BasicCase<WithImportTag>::nestedType().excludedMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?excludedMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+@@ -122,7 +122,7 @@ void useBaseCase() {
+ 
+   BasicCase<NoAttrTag>::nestedType().noAttrMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedType@?$BasicCase@UNoAttrTag@@@@QEAAXXZ"
+-  // GNU-DAG: define linkonce_odr dso_local void @_ZN9BasicCaseI9NoAttrTagE10nestedType12noAttrMethodEv
++  // GNU-DAG: declare dso_local void @_ZN9BasicCaseI9NoAttrTagE10nestedType12noAttrMethodEv
+ 
+   BasicCase<NoAttrTag>::nestedType().importedMethod();
+   // MSC-DAG: declare dllimport void @"?importedMethod@nestedType@?$BasicCase@UNoAttrTag@@@@QEAAXXZ"
+@@ -130,7 +130,7 @@ void useBaseCase() {
+ 
+   BasicCase<NoAttrTag>::nestedType().importedInlineMethod();
+   // MSC-DAG: declare dllimport void @"?importedInlineMethod@nestedType@?$BasicCase@UNoAttrTag@@@@QEAAXXZ"
+-  // GNU-DAG: define linkonce_odr dso_local void @_ZN9BasicCaseI9NoAttrTagE10nestedType20importedInlineMethodEv
++  // GNU-DAG: declare dso_local void @_ZN9BasicCaseI9NoAttrTagE10nestedType20importedInlineMethodEv
+ 
+   BasicCase<NoAttrTag>::nestedType().excludedMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?excludedMethod@nestedType@?$BasicCase@UNoAttrTag@@@@QEAAXXZ"
+diff --git a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
+index f0efde2f7602f09a0664cb376a4b90385f9a40d2..cd9fc868f229b15f30571c4afc11157a73cc27b1 100644
+--- a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
++++ b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
+@@ -205,23 +205,19 @@ template struct __declspec(dllexport) outer<int>;
+ // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEC1EOS0_
+ // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEaSERKS0_
+ // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEaSEOS0_
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1Ev
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1ERKS1_
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1EOS1_
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSERKS1_
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSEOS1_
++// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1Ev
++// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1ERKS1_
++// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1EOS1_
++// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSERKS1_
++// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSEOS1_
+ // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE1fEv
+ // FUNC:     declare{{.*}} dllimport{{.*}} @_ZN5outerIcE1gEv
+ // FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE1hEv
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1fEv
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1gEv
++// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1fEv
++// FUNC:     declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1gEv
+ // FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1hEv
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerD1Ev
++// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerD1Ev
+ // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcED1Ev
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC2Ev
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerD2Ev
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC2ERKS1_
+-// FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC2EOS1_
+ extern template struct __declspec(dllimport) outer<char>;
+ 
+ int anchor() noexcept {
+diff --git a/clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.ignore-dllattr.cpp b/clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.ignore-dllattr.cpp
+index c6a348ea963d193a286302452127e6994f370812..e80388ffcc5577af798f8a4abf5188d805b1aa2e 100644
+--- a/clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.ignore-dllattr.cpp
++++ b/clang/test/SemaCXX/attr-exclude_from_explicit_instantiation.ignore-dllattr.cpp
+@@ -1,6 +1,6 @@
+-// RUN: %clang_cc1 -triple x86_64-win32 -fms-extensions -fsyntax-only -verify %s
+-// RUN: %clang_cc1 -triple x86_64-mingw                 -fsyntax-only -verify %s
+-// RUN: %clang_cc1 -triple x86_64-cygwin                -fsyntax-only -verify %s
++// RUN: %clang_cc1 -triple x86_64-win32 -fms-extensions -fsyntax-only -verify=expected %s
++// RUN: %clang_cc1 -triple x86_64-mingw                 -fsyntax-only -verify=expected,mingw %s
++// RUN: %clang_cc1 -triple x86_64-cygwin                -fsyntax-only -verify=expected,mingw %s
+ 
+ // Test that a warning is emitted when a dllexport or dllimport attribute together with a
+ // exclude_from_explicit_instantiation attribute is attached.
+-- 
+2.53.0
+

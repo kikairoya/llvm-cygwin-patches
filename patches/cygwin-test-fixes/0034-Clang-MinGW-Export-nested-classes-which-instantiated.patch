@@ -1,0 +1,64 @@
+From c98c8a50e2fd4dadb05408b1fe93064cbf16d296 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 7 Sep 2025 22:31:20 +0900
+Subject: [PATCH 34/58] [Clang][MinGW] Export nested classes which instantiated
+ by enclosing template's explicit instantiation declaration
+
+MinGW-GCC applies explicit instantiateion declaration of a class template to its nested type but doesn't inherit
+`__declspec(dllexport)` attribute to the nested class, causes undefined reference to member functions of the nested
+class.
+To resolve this self-inconsistency, such `__declspec(dllexport)` attribute on explicit instantiation declaration should
+inherit to the nested class.
+---
+ clang/lib/Sema/SemaDeclCXX.cpp | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
+index 8173a4b53a67998643ada0f18ec73d992d5ab0fa..a5bb81e06a0b4af600788b48ed377cb4b6ba9d99 100644
+--- a/clang/lib/Sema/SemaDeclCXX.cpp
++++ b/clang/lib/Sema/SemaDeclCXX.cpp
+@@ -6571,13 +6571,15 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+       !ClassExported &&
+       cast<DLLImportAttr>(ClassAttr)->wasPropagatedToBaseTemplate();
+ 
++
+   TemplateSpecializationKind TSK = Class->getTemplateSpecializationKind();
++  const TargetInfo &TI = Context.getTargetInfo();
+ 
+   // Ignore explicit dllexport on explicit class template instantiation
+   // declarations, except in MinGW mode.
+   if (ClassExported && !ClassAttr->isInherited() &&
+       TSK == TSK_ExplicitInstantiationDeclaration &&
+-      !Context.getTargetInfo().getTriple().isOSCygMing()) {
++      !TI.getTriple().isOSCygMing()) {
+     if (auto *DEA = Class->getAttr<DLLExportAttr>()) {
+       Class->addAttr(DLLExportOnDeclAttr::Create(Context, DEA->getLoc()));
+       Class->dropAttr<DLLExportAttr>();
+@@ -6597,6 +6599,15 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+         Member->hasAttr<ExcludeFromExplicitInstantiationAttr>())
+       continue;
+ 
++    // Inherit dllexport to nested class in MinGW mode.
++    if (TI.getTriple().isOSCygMing() && !getDLLAttr(Member) &&
++        isa<RecordDecl>(Member)) {
++      auto *NewAttr = cast<InheritableAttr>(ClassAttr->clone(getASTContext()));
++      NewAttr->setInherited(true);
++      Member->addAttr(NewAttr);
++      continue;
++    }
++
+     VarDecl *VD = dyn_cast<VarDecl>(Member);
+     CXXMethodDecl *MD = dyn_cast<CXXMethodDecl>(Member);
+ 
+@@ -6612,7 +6623,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+       if (MD->isInlined()) {
+         // MinGW does not import or export inline methods. But do it for
+         // template instantiations.
+-        if (!Context.getTargetInfo().shouldDLLImportComdatSymbols() &&
++        if (!TI.shouldDLLImportComdatSymbols() &&
+             TSK != TSK_ExplicitInstantiationDeclaration &&
+             TSK != TSK_ExplicitInstantiationDefinition)
+           continue;
+-- 
+2.53.0
+

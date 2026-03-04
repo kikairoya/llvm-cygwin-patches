@@ -1,4 +1,4 @@
-From 352561d2ef2fc39257cc5dffd70874980557ca68 Mon Sep 17 00:00:00 2001
+From 9bd846feae7e832499ece86380c730bd50aadf24 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 22:21:44 +0900
 Subject: [PATCH 12/20] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
@@ -9,7 +9,7 @@ Subject: [PATCH 12/20] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
  1 file changed, 37 insertions(+), 4 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index 0181ae1c810611ed957fc4dcf387b456f7252e88..54722027e1e155b1ab3d464432c92a140ac45871 100644
+index fbc9d4f2fb16a9b4c368ecd6682f9b3d2d6c349f..00b800a02978611532f592e00e778dbcd2a53236 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
 @@ -603,6 +603,13 @@ function(llvm_add_library name)

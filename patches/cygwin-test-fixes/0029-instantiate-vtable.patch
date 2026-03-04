@@ -1,0 +1,79 @@
+From 4ef6f96861d79b4bb83ed666c6c99d7911e9450c Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 5 Mar 2026 00:04:42 +0900
+Subject: [PATCH 29/58] instantiate vtable
+
+---
+ clang/lib/Sema/SemaDeclCXX.cpp                   | 16 ++++++++++++++--
+ ...icit_instantiation.exclude_from_dllimport.cpp | 10 +++++-----
+ 2 files changed, 19 insertions(+), 7 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
+index fdf3898ba52e518f88160f1500352106ea223188..8173a4b53a67998643ada0f18ec73d992d5ab0fa 100644
+--- a/clang/lib/Sema/SemaDeclCXX.cpp
++++ b/clang/lib/Sema/SemaDeclCXX.cpp
+@@ -19124,8 +19124,20 @@ bool Sema::DefineUsedVTables() {
+         }
+       }
+ 
+-      if (IsExplicitInstantiationDeclaration)
+-        DefineVTable = false;
++      if (IsExplicitInstantiationDeclaration) {
++        const bool HasExcludeFromExplicitInstantiation =
++            llvm::any_of(Class->methods(), [](CXXMethodDecl *method) {
++              // If the class has a member function declared with
++              // `__attribute__((exclude_from_explicit_instantiation))`, the
++              // explicit instantiation declaration should not suppress emitting
++              // the vtable, since the corresponding explicit instantiation
++              // definition might not emit the vtable if a triggering method is
++              // excluded.
++              return method->hasAttr<ExcludeFromExplicitInstantiationAttr>();
++            });
++        if (!HasExcludeFromExplicitInstantiation)
++          DefineVTable = false;
++      }
+     }
+ 
+     // The exception specifications for all virtual members may be needed even
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+index b8b0596cdb4e5219951dca55cbb15fa6d744f871..f2dd22f53ac080f9355ca04fb28815f22b191226 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+@@ -2,7 +2,7 @@
+ //
+ // RUN: %clang_cc1 -triple x86_64-win32 -fms-extensions -emit-llvm -o - %s > x86_64-win32.ll
+ // RUN: FileCheck %s --check-prefixes=MSC                                  < x86_64-win32.ll
+-// RUN: FileCheck %s --check-prefixes=UNDESIRED-MSC --implicit-check-not=notToBeInstantiated < x86_64-win32.ll
++// RUN: FileCheck %s --implicit-check-not=notToBeInstantiated              < x86_64-win32.ll
+ //
+ // RUN: %clang_cc1 -triple x86_64-mingw                 -emit-llvm -o - %s > x86_64-mingw.ll
+ // RUN: FileCheck %s --check-prefixes=GNU                                  < x86_64-mingw.ll
+@@ -150,10 +150,10 @@ void usePolymorphic() {
+   // MSC-DAG: declare dllimport void @"?noAttrVirtualMethod@?$Polymorphic@UWithImportTag@@@@UEAAXXZ"
+   // NEGATIVE-GNU-NOT: @_ZN11PolymorphicI13WithImportTagE19noAttrVirtualMethodEv
+ 
+-  // UNDESIRED-MSC: declare dso_local void @"?excludedVirtualMethod@?$Polymorphic@UWithImportTag@@@@UEAAXXZ"
++  // MSC-DAG: define linkonce_odr dso_local void @"?excludedVirtualMethod@?$Polymorphic@UWithImportTag@@@@UEAAXXZ"
+   // NEGATIVE-GNU-NOT: @_ZN11PolymorphicI13WithImportTagE21excludedVirtualMethodEv
+ 
+-  // UNDESIRED-MSC: declare dso_local void @"?excludedImportedVirtualMethod@?$Polymorphic@UWithImportTag@@@@UEAAXXZ"
++  // MSC-DAG: define linkonce_odr dso_local void @"?excludedImportedVirtualMethod@?$Polymorphic@UWithImportTag@@@@UEAAXXZ"
+   // NEGATIVE-GNU-NOT: @_ZN11PolymorphicI13WithImportTagE29excludedImportedVirtualMethodEv
+ 
+   new Polymorphic<NoAttrTag>();
+@@ -163,10 +163,10 @@ void usePolymorphic() {
+   // MSC-DAG: declare dso_local void @"?noAttrVirtualMethod@?$Polymorphic@UNoAttrTag@@@@UEAAXXZ"
+   // NEGATIVE-GNU-NOT: @_ZN11PolymorphicI9NoAttrTagE19noAttrVirtualMethodEv
+ 
+-  // UNDESIRED-MSC: declare dso_local void @"?excludedVirtualMethod@?$Polymorphic@UNoAttrTag@@@@UEAAXXZ"
++  // MSC-DAG: define linkonce_odr dso_local void @"?excludedVirtualMethod@?$Polymorphic@UNoAttrTag@@@@UEAAXXZ"
+   // NEGATIVE-GNU-NOT: @_ZN11PolymorphicI9NoAttrTagE21excludedVirtualMethodEv
+ 
+-  // UNDESIRED-MSC: declare dso_local void @"?excludedImportedVirtualMethod@?$Polymorphic@UNoAttrTag@@@@UEAAXXZ"
++  // MSC-DAG: define linkonce_odr dso_local void @"?excludedImportedVirtualMethod@?$Polymorphic@UNoAttrTag@@@@UEAAXXZ"
+   // NEGATIVE-GNU-NOT: @_ZN11PolymorphicI9NoAttrTagE29excludedImportedVirtualMethodEv
+ 
+   new Polymorphic<ImplicitTag>();
+-- 
+2.53.0
+

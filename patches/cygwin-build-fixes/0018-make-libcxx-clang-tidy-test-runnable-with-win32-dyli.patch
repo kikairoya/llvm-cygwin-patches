@@ -1,14 +1,41 @@
-From 2dbfc89b12d82aff9662a7e69f95fb0413650a2c Mon Sep 17 00:00:00 2001
+From e6bc88686cf22bf7fb736bd835ed0ef7ef500f51 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sun, 14 Dec 2025 00:23:16 +0900
+Date: Mon, 2 Mar 2026 22:00:33 +0900
 Subject: [PATCH 18/20] make libcxx clang-tidy test runnable with win32 dylib
  builds
 
 ---
+ libcxx/CMakeLists.txt                              | 2 ++
+ libcxx/test/tools/CMakeLists.txt                   | 3 +++
  libcxx/test/tools/clang_tidy_checks/CMakeLists.txt | 4 +++-
  libcxx/utils/libcxx/test/params.py                 | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ 4 files changed, 10 insertions(+), 1 deletion(-)
 
+diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
+index 0ac582cb561a88f9873820efa4c334882cf48570..9c1f22054383b0354662e8b8dd4eab18e6adbb10 100644
+--- a/libcxx/CMakeLists.txt
++++ b/libcxx/CMakeLists.txt
+@@ -326,6 +326,8 @@ endif()
+ option(LIBCXX_HERMETIC_STATIC_LIBRARY
+   "Do not export any symbols from the static library." ${LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT})
+ 
++option(LIBCXX_ENABLE_TEST_CLANG_TIDY "Enable clang-tidy checking." ON)
++
+ #===============================================================================
+ # Check option configurations
+ #===============================================================================
+diff --git a/libcxx/test/tools/CMakeLists.txt b/libcxx/test/tools/CMakeLists.txt
+index 6d99c53ad46d9f0beb303b95cf9da0987cb2e500..af3e9f6dcec37bd702e2fe6d628f67aaf83249d4 100644
+--- a/libcxx/test/tools/CMakeLists.txt
++++ b/libcxx/test/tools/CMakeLists.txt
+@@ -5,4 +5,7 @@ if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+   message(STATUS "Clang-tidy tests are disabled due to non-clang based compiler.")
+   return()
+ endif()
++if(NOT LIBCXX_ENABLE_TEST_CLANG_TIDY)
++  return()
++endif()
+ add_subdirectory(clang_tidy_checks)
 diff --git a/libcxx/test/tools/clang_tidy_checks/CMakeLists.txt b/libcxx/test/tools/clang_tidy_checks/CMakeLists.txt
 index 521a60c0fc498f861ecba11026bc3a26d0ca5737..b55ec2477619d2d25ada5f2e09781e12d33c304d 100644
 --- a/libcxx/test/tools/clang_tidy_checks/CMakeLists.txt

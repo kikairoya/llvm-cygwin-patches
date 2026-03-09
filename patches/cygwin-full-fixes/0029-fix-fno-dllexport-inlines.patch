@@ -1,4 +1,4 @@
-From fb75026c5733766f7b6542a17043797e8c4643cc Mon Sep 17 00:00:00 2001
+From 0bfc627cfb5231ae458e7872c15a53ae1631a00c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 12:42:37 +0900
 Subject: [PATCH 29/44] fix -fno-dllexport-inlines
@@ -9,10 +9,10 @@ Subject: [PATCH 29/44] fix -fno-dllexport-inlines
  2 files changed, 33 insertions(+), 3 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDecl.cpp b/clang/lib/Sema/SemaDecl.cpp
-index 405832a446e100ab886008321bcf071611d302fa..f2a19ffc5c83f812082a09286a448a416059f278 100644
+index 53650e2083e4463419b8d74cbd342b20f028c83d..bd6367138a6514063f5bf034abba699ddeb514ab 100644
 --- a/clang/lib/Sema/SemaDecl.cpp
 +++ b/clang/lib/Sema/SemaDecl.cpp
-@@ -3964,6 +3964,36 @@ bool Sema::MergeFunctionDecl(FunctionDecl *New, NamedDecl *&OldD, Scope *S,
+@@ -3975,6 +3975,36 @@ bool Sema::MergeFunctionDecl(FunctionDecl *New, NamedDecl *&OldD, Scope *S,
      UndefinedButUsed.insert(std::make_pair(Old->getCanonicalDecl(),
                                             SourceLocation()));
  

@@ -1,4 +1,4 @@
-From 146ca5d69886cfe625f797332dc14629fdc5e389 Mon Sep 17 00:00:00 2001
+From 745d73050d281b8f82194442079467019f6ca02c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 4 Jan 2026 21:53:48 +0900
 Subject: [PATCH 36/55] [Clang][Cygwin] Set default DWARF version to 4

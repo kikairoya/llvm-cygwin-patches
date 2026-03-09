@@ -1,4 +1,4 @@
-From b0cdd502416b9a2641b7f2c634a945cae6a60e38 Mon Sep 17 00:00:00 2001
+From b0752c6886ad37892e6956413c9939790378abda Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 19:02:44 +0900
 Subject: [PATCH 17/44] [LLVM] Support EXPORT_SYMBOLS_FOR_PLUGINS with shared

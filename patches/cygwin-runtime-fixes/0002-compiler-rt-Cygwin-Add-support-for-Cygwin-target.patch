@@ -1,19 +1,19 @@
-From 82c07c44e232fb4a52e3258363546a4693a26d90 Mon Sep 17 00:00:00 2001
+From 080f23f2f3e4fc64fa78ab2494bd0a52f6224781 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 2/6] [compiler-rt][Cygwin] Add support for Cygwin target
 
 ---
- compiler-rt/cmake/config-ix.cmake               | 15 ++++++++++++++-
- compiler-rt/lib/builtins/CMakeLists.txt         | 17 +++++++++++------
- compiler-rt/lib/profile/InstrProfilingMerge.c   |  2 +-
- .../lib/profile/InstrProfilingPlatformOther.c   |  2 +-
- .../lib/profile/InstrProfilingPlatformWindows.c |  3 ++-
- compiler-rt/lib/profile/InstrProfilingWriter.c  |  2 +-
- 6 files changed, 30 insertions(+), 11 deletions(-)
+ compiler-rt/cmake/config-ix.cmake             | 15 +++++++++++++-
+ compiler-rt/lib/builtins/CMakeLists.txt       | 20 ++++++++++---------
+ compiler-rt/lib/profile/InstrProfilingMerge.c |  2 +-
+ .../lib/profile/InstrProfilingPlatformOther.c |  2 +-
+ .../profile/InstrProfilingPlatformWindows.c   |  3 ++-
+ .../lib/profile/InstrProfilingWriter.c        |  2 +-
+ 6 files changed, 30 insertions(+), 14 deletions(-)
 
 diff --git a/compiler-rt/cmake/config-ix.cmake b/compiler-rt/cmake/config-ix.cmake
-index 1f82ff3cf75312d58c1a28547a75174fc09df536..b32dadab445856595bbc39470208f0b1aab32b29 100644
+index 95cac0f8faa9f7aa49ce4cabf62dba10b981218d..bfccb6dbb7966d6c454dbbbb1ac1ed39803ccd35 100644
 --- a/compiler-rt/cmake/config-ix.cmake
 +++ b/compiler-rt/cmake/config-ix.cmake
 @@ -66,6 +66,19 @@ if (C_SUPPORTS_NODEFAULTLIBS_FLAG)
@@ -46,7 +46,7 @@ index 1f82ff3cf75312d58c1a28547a75174fc09df536..b32dadab445856595bbc39470208f0b1
  else()
    set(COMPILER_RT_HAS_PROFILE FALSE)
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index f43ef4743ff97537f85ebcf9976bc9b171daf695..e40b0f0c24de43e2569b5f85ae6041f8e11d234a 100644
+index 7ce929657eb829990664ecfddfdae051fab09cbf..cc3c15a3c3a6ba7651d083eab6acf62dc111b948 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -70,16 +70,19 @@ index f43ef4743ff97537f85ebcf9976bc9b171daf695..e40b0f0c24de43e2569b5f85ae6041f8
      set(x86_64_SOURCES
        ${x86_64_SOURCES}
        x86_64/floatundidf.S
-@@ -342,7 +347,7 @@ if (NOT MSVC)
+@@ -342,10 +347,7 @@ if (NOT MSVC)
        ${x86_80_BIT_SOURCES}
        x86_64/floatdixf.c
      )
--    if (NOT WIN32)
+-
+-    # TODO(compnerd) floatundixf.S currently implements the SysV calling
+-    # convention, this must be ported to the Windows ABI.
+-    if(NOT WIN32)
 +    if (NOT WIN32 AND NOT CYGWIN)
        set(x86_64_SOURCES
          ${x86_64_SOURCES}
          x86_64/floatundixf.S
-@@ -353,7 +358,7 @@ if (NOT MSVC)
+@@ -356,7 +358,7 @@ if (NOT MSVC)
    # Darwin x86_64 Haswell
    set(x86_64h_SOURCES ${x86_64_SOURCES})
  
@@ -88,7 +91,7 @@ index f43ef4743ff97537f85ebcf9976bc9b171daf695..e40b0f0c24de43e2569b5f85ae6041f8
      set(x86_64_SOURCES
        ${x86_64_SOURCES}
        x86_64/chkstk.S
-@@ -386,7 +391,7 @@ if (NOT MSVC)
+@@ -388,7 +390,7 @@ if (NOT MSVC)
      )
    endif()
  
@@ -97,7 +100,7 @@ index f43ef4743ff97537f85ebcf9976bc9b171daf695..e40b0f0c24de43e2569b5f85ae6041f8
      set(i386_SOURCES
        ${i386_SOURCES}
        i386/chkstk.S
-@@ -609,7 +614,7 @@ set(arm_min_SOURCES
+@@ -617,7 +619,7 @@ set(arm_min_SOURCES
    ${arm_EABI_SOURCES}
  )
  
@@ -106,7 +109,7 @@ index f43ef4743ff97537f85ebcf9976bc9b171daf695..e40b0f0c24de43e2569b5f85ae6041f8
    set(arm_SOURCES
      arm/aeabi_idivmod.S
      arm/aeabi_ldivmod.S
-@@ -720,7 +725,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
+@@ -728,7 +730,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
    endforeach(size)
  endforeach(pat)
  

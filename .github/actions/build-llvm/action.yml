@@ -88,7 +88,7 @@ runs:
         . "$ACTION_PATH/do_build.sh"
       shell: bash
 
-    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+    - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       if: ${{ inputs.save-instrument }}
       id: upload-instrument
       with:
@@ -97,7 +97,7 @@ runs:
         path: ${{ inputs.config-name }}.profdata
 
     - id: save-instrument
-      uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      uses: actions/cache/save@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
       if: ${{ inputs.save-instrument }}
       with:
         key: profiledata-${{ inputs.config-name }}-${{ steps.upload-instrument.outputs.artifact-id }}
@@ -132,7 +132,7 @@ runs:
         tar -cf build-$BUILD_PROJECT-$BUILD_NAME.tar --ignore-failed-read build-$BUILD_PROJECT-$BUILD_NAME
       shell: bash
 
-    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+    - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       if: ${{ always() && inputs.build-retention-days >= 0 }}
       id: upload-build
       with:
@@ -141,7 +141,7 @@ runs:
         path: build-${{ inputs.build-project }}-${{ inputs.build-name }}.tar
         retention-days: ${{ inputs.build-retention-days }}
 
-    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+    - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       if: ${{ always() }}
       id: upload-log
       with:
@@ -181,7 +181,7 @@ runs:
         cd ..
       shell: bash
 
-    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+    - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       if: ${{ inputs.install-prefix != '/' && inputs.install-retention-days >= 0 }}
       id: upload-install
       with:

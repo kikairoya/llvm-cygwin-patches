@@ -1,15 +1,15 @@
-From a2b91332e1347d3430ec56587b9b3a6a9a955400 Mon Sep 17 00:00:00 2001
+From 16a64b7f0123b8ad6de27539902742b0a34322fb Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Feb 2026 09:14:38 +0900
-Subject: [PATCH 04/30] update test
+Subject: [PATCH 04/31] update test
 
 ---
- ...t_instantiation.exclude_from_dllimport.cpp |  8 ++++----
+ ...t_instantiation.exclude_from_dllimport.cpp | 10 +++++-----
  .../CodeGenCXX/mingw-template-dllexport.cpp   | 20 ++++++++-----------
- 2 files changed, 12 insertions(+), 16 deletions(-)
+ 2 files changed, 13 insertions(+), 17 deletions(-)
 
 diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
-index 51f30b532f49467edb2757a42741cbc0b994c103..beb4fec5eb17160801de377631bb3bca1a9f47db 100644
+index 8f49fd1978c91b9b14f7fdfe5ace98e80d599d16..9f7b89bd4c29d01d0c4a9f0fe85e459cee4fdcaa 100644
 --- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
 +++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
 @@ -74,7 +74,7 @@ void useBaseCase() {
@@ -48,6 +48,15 @@ index 51f30b532f49467edb2757a42741cbc0b994c103..beb4fec5eb17160801de377631bb3bca
  
    BasicCase<NoAttrTag>::nestedType().excludedMethod();
    // MSC-DAG: define linkonce_odr dso_local void @"?excludedMethod@nestedType@?$BasicCase@UNoAttrTag@@@@QEAAXXZ"
+@@ -230,7 +230,7 @@ void useImportWholeTemplate() {
+ 
+   ImportWholeTemplate<NoAttrTag>::nestedType().noAttrMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedType@?$ImportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+-  // GNU-DAG: define linkonce_odr dso_local void @_ZN19ImportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
++  // GNU-DAG: declare dso_local void @_ZN19ImportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
+ 
+   ImportWholeTemplate<NoAttrTag>::nestedExcludedType().noAttrMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedExcludedType@?$ImportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
 diff --git a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
 index f0efde2f7602f09a0664cb376a4b90385f9a40d2..cd9fc868f229b15f30571c4afc11157a73cc27b1 100644
 --- a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp

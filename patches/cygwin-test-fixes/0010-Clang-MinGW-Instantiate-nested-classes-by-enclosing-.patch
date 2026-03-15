@@ -1,0 +1,33 @@
+From f2eb2ee68866133611aee94b248202ed8c9ad643 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 13 Jul 2025 17:33:14 +0900
+Subject: [PATCH 10/56] [Clang][MinGW] Instantiate nested classes by enclosing
+ template's explicit instantiation declaration
+
+In-code comment says "explicit instantiation decl of the outer class
+doesn't affect the inner class" but this behavior seems MSVC
+specific, MinGW-GCC and Cygwin-GCC does not.
+Clang should honor gcc's behavior.
+
+This change fixes std::string compatibilty and resolves strange link
+error (statically linked), strange crash (dynamically linked) using
+libstdc++ on Cygwin.
+---
+ clang/lib/Sema/SemaTemplateInstantiate.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/clang/lib/Sema/SemaTemplateInstantiate.cpp b/clang/lib/Sema/SemaTemplateInstantiate.cpp
+index 34ed5dffa11b4adc249dd2b7b1594341770b0450..ebdeecd8f112c774d73df7ed1a5a3b603ba8eccf 100644
+--- a/clang/lib/Sema/SemaTemplateInstantiate.cpp
++++ b/clang/lib/Sema/SemaTemplateInstantiate.cpp
+@@ -4227,6 +4227,7 @@ Sema::InstantiateClassMembers(SourceLocation PointOfInstantiation,
+         continue;
+ 
+       if (Context.getTargetInfo().getTriple().isOSWindows() &&
++          !Context.getTargetInfo().getTriple().isOSCygMing() &&
+           TSK == TSK_ExplicitInstantiationDeclaration) {
+         // On Windows, explicit instantiation decl of the outer class doesn't
+         // affect the inner class. Typically extern template declarations are
+-- 
+2.53.0
+

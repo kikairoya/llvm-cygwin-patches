@@ -1,0 +1,141 @@
+From 553215d042f1af51ac3d1627b9c56a6d99446378 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 28 Feb 2026 09:30:01 +0900
+Subject: [PATCH 13/56] update test
+
+---
+ ...t_instantiation.exclude_from_dllexport.cpp |  4 +-
+ ...t_instantiation.exclude_from_dllimport.cpp |  6 +--
+ .../CodeGenCXX/mingw-template-dllexport.cpp   | 52 +++++++------------
+ 3 files changed, 25 insertions(+), 37 deletions(-)
+
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+index fced733e864b028ca813bf31b671bb4195ac83e2..7316b85e497f32ca6e74e1724c5e1dfa42f7f971 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+@@ -54,7 +54,7 @@ template struct __declspec(dllexport) BasicCase<WithExportTag>;
+ // GNU-DAG: define weak_odr dso_local dllexport void @_ZN9BasicCaseI13WithExportTagE12noAttrMethodEv
+ 
+ // MSC-DAG: define weak_odr dso_local void @"?noAttrMethod@nestedType@?$BasicCase@UWithExportTag@@@@QEAAXXZ"
+-// GNU-DAG: define weak_odr dso_local void @_ZN9BasicCaseI13WithExportTagE10nestedType12noAttrMethodEv
++// GNU-DAG: define weak_odr dso_local dllexport void @_ZN9BasicCaseI13WithExportTagE10nestedType12noAttrMethodEv
+ 
+ // MSC-DAG: define weak_odr dso_local dllexport void @"?exportedMethod@nestedType@?$BasicCase@UWithExportTag@@@@QEAAXXZ"
+ // GNU-DAG: define weak_odr dso_local dllexport void @_ZN9BasicCaseI13WithExportTagE10nestedType14exportedMethodEv
+@@ -169,7 +169,7 @@ template struct ExportWholeTemplate<NoAttrTag>;
+ // MSC-DAG: define weak_odr dso_local dllexport void @"?noAttrMethod@?$ExportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+ // GNU-DAG: define weak_odr dso_local dllexport void @_ZN19ExportWholeTemplateI9NoAttrTagE12noAttrMethodEv
+ // MSC-DAG: define weak_odr dso_local void @"?noAttrMethod@nestedType@?$ExportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+-// GNU-DAG: define weak_odr dso_local void @_ZN19ExportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
++// GNU-DAG: define weak_odr dso_local dllexport void @_ZN19ExportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
+ 
+ void useExportWholeTemplate() {
+   ExportWholeTemplate<NoAttrTag>().excludedMethod();
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+index 9f7b89bd4c29d01d0c4a9f0fe85e459cee4fdcaa..3ceef1712e5893829070ec94e779dd5c7778277c 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+@@ -74,7 +74,7 @@ void useBaseCase() {
+ 
+   BasicCase<WithImportTag>::nestedType().noAttrMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+-  // GNU-DAG: declare dso_local void @_ZN9BasicCaseI13WithImportTagE10nestedType12noAttrMethodEv
++  // GNU-DAG: declare dllimport void @_ZN9BasicCaseI13WithImportTagE10nestedType12noAttrMethodEv
+ 
+   BasicCase<WithImportTag>::nestedType().importedMethod();
+   // MSC-DAG: declare dllimport void @"?importedMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+@@ -82,7 +82,7 @@ void useBaseCase() {
+ 
+   BasicCase<WithImportTag>::nestedType().importedInlineMethod();
+   // MSC-DAG: declare dllimport void @"?importedInlineMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+-  // GNU-DAG: declare dso_local void @_ZN9BasicCaseI13WithImportTagE10nestedType20importedInlineMethodEv
++  // GNU-DAG: declare dllimport void @_ZN9BasicCaseI13WithImportTagE10nestedType20importedInlineMethodEv
+ 
+   BasicCase<WithImportTag>::nestedType().excludedMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?excludedMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+@@ -230,7 +230,7 @@ void useImportWholeTemplate() {
+ 
+   ImportWholeTemplate<NoAttrTag>::nestedType().noAttrMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedType@?$ImportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+-  // GNU-DAG: declare dso_local void @_ZN19ImportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
++  // GNU-DAG: declare dllimport void @_ZN19ImportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
+ 
+   ImportWholeTemplate<NoAttrTag>::nestedExcludedType().noAttrMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedExcludedType@?$ImportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+diff --git a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
+index cd9fc868f229b15f30571c4afc11157a73cc27b1..7b804dd8a858f6d2b2eb6e64270c6772619df19e 100644
+--- a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
++++ b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
+@@ -166,30 +166,18 @@ template <class T> int outer<T>::inner::v = 0;
+ // FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE1fEv
+ // FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE1gEv
+ // FUNC-NOT: define{{.*}} @_ZN5outerIiE1hEv
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2Ev
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC2Ev
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1Ev
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC1Ev
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2ERKS1_
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC2ERKS1_
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1ERKS1_
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC1ERKS1_
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2EOS1_
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC2EOS1_
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1EOS1_
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerC1EOS1_
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD2Ev
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerD2Ev
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD1Ev
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5innerD1Ev
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSERKS1_
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inneraSERKS1_
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSEOS1_
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inneraSEOS1_
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1fEv
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inner1fEv
+-// FUNC-NOT: define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1gEv
+-// FUNC:     define{{.*}} dso_local{{.*}} @_ZN5outerIiE5inner1gEv
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2Ev
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1Ev
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2ERKS1_
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1ERKS1_
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC2EOS1_
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerC1EOS1_
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD2Ev
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5innerD1Ev
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSERKS1_
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inneraSEOS1_
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1fEv
++// FUNC:     define{{.*}} dllexport{{.*}} @_ZN5outerIiE5inner1gEv
+ // FUNC-NOT: define{{.*}} @_ZN5outerIiE5inner1hEv
+ template struct __declspec(dllexport) outer<int>;
+ 
+@@ -205,18 +193,18 @@ template struct __declspec(dllexport) outer<int>;
+ // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEC1EOS0_
+ // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEaSERKS0_
+ // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcEaSEOS0_
+-// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1Ev
+-// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1ERKS1_
+-// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerC1EOS1_
+-// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSERKS1_
+-// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inneraSEOS1_
++// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerC1Ev
++// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerC1ERKS1_
++// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerC1EOS1_
++// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inneraSERKS1_
++// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inneraSEOS1_
+ // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE1fEv
+ // FUNC:     declare{{.*}} dllimport{{.*}} @_ZN5outerIcE1gEv
+ // FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE1hEv
+-// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1fEv
+-// FUNC:     declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1gEv
++// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inner1fEv
++// FUNC:     declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5inner1gEv
+ // FUNC-O0:  define{{.*}} dso_local{{.*}} @_ZN5outerIcE5inner1hEv
+-// FUNC-O0:  declare{{.*}} dso_local{{.*}} @_ZN5outerIcE5innerD1Ev
++// FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcE5innerD1Ev
+ // FUNC-O0:  declare{{.*}} dllimport{{.*}} @_ZN5outerIcED1Ev
+ extern template struct __declspec(dllimport) outer<char>;
+ 
+-- 
+2.53.0
+

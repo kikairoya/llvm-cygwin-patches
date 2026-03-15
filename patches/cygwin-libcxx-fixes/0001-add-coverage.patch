@@ -1,15 +1,15 @@
-From 5b3bff8c27f18dcdbc800bfa03bd1886919001d3 Mon Sep 17 00:00:00 2001
+From 11d50b77023df14d1e5b4e0578fb0393d5f7e943 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 23:40:07 +0900
-Subject: [PATCH 01/30] add coverage
+Subject: [PATCH 01/31] add coverage
 
 ---
- ...t_instantiation.exclude_from_dllexport.cpp |  75 +++++++++++
- ...t_instantiation.exclude_from_dllimport.cpp | 126 ++++++++++++++++++
- 2 files changed, 201 insertions(+)
+ ...t_instantiation.exclude_from_dllexport.cpp |  96 +++++++++++
+ ...t_instantiation.exclude_from_dllimport.cpp | 149 ++++++++++++++++++
+ 2 files changed, 245 insertions(+)
 
 diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
-index f041e587f5ace7b72649d888b3aab325f77b2761..d2882fede5e1682e29fe4edbb15f370557d4b437 100644
+index f041e587f5ace7b72649d888b3aab325f77b2761..fced733e864b028ca813bf31b671bb4195ac83e2 100644
 --- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
 +++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
 @@ -31,6 +31,20 @@ struct BasicCase {
@@ -128,8 +128,50 @@ index f041e587f5ace7b72649d888b3aab325f77b2761..d2882fede5e1682e29fe4edbb15f3705
  }
  
  // Test that a class-level dllexport attribute won't affect to excluded methods.
+@@ -81,20 +156,41 @@ struct __declspec(dllexport) ExportWholeTemplate {
+   void noAttrMethod() {}
+   EXCLUDE_ATTR void excludedMethod() {}
+   EXCLUDE_ATTR void notToBeInstantiated() {}
++  struct nestedType {
++    void noAttrMethod() {}
++  };
++  struct EXCLUDE_ATTR nestedExcludedType {
++    void noAttrMethod() {}
++    void notToBeInstantiated_noAttr() {}
++  };
+ };
+ 
+ template struct ExportWholeTemplate<NoAttrTag>;
+ // MSC-DAG: define weak_odr dso_local dllexport void @"?noAttrMethod@?$ExportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+ // GNU-DAG: define weak_odr dso_local dllexport void @_ZN19ExportWholeTemplateI9NoAttrTagE12noAttrMethodEv
++// MSC-DAG: define weak_odr dso_local void @"?noAttrMethod@nestedType@?$ExportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
++// GNU-DAG: define weak_odr dso_local void @_ZN19ExportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
+ 
+ void useExportWholeTemplate() {
+   ExportWholeTemplate<NoAttrTag>().excludedMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?excludedMethod@?$ExportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+   // GNU-DAG: define linkonce_odr dso_local void @_ZN19ExportWholeTemplateI9NoAttrTagE14excludedMethodEv
+ 
++  ExportWholeTemplate<NoAttrTag>::nestedExcludedType().noAttrMethod();
++  // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedExcludedType@?$ExportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
++  // GNU-DAG: define linkonce_odr dso_local void @_ZN19ExportWholeTemplateI9NoAttrTagE18nestedExcludedType12noAttrMethodEv
++
+   ExportWholeTemplate<ImplicitTag>().excludedMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?excludedMethod@?$ExportWholeTemplate@UImplicitTag@@@@QEAAXXZ"
+   // GNU-DAG: define linkonce_odr dso_local void @_ZN19ExportWholeTemplateI11ImplicitTagE14excludedMethodEv
++
++  ExportWholeTemplate<ImplicitTag>::nestedType().noAttrMethod();
++  // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedType@?$ExportWholeTemplate@UImplicitTag@@@@QEAAXXZ"
++  // GNU-DAG: define linkonce_odr dso_local void @_ZN19ExportWholeTemplateI11ImplicitTagE10nestedType12noAttrMethodEv
++
++  ExportWholeTemplate<ImplicitTag>::nestedExcludedType().noAttrMethod();
++  // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedExcludedType@?$ExportWholeTemplate@UImplicitTag@@@@QEAAXXZ"
++  // GNU-DAG: define linkonce_odr dso_local void @_ZN19ExportWholeTemplateI11ImplicitTagE18nestedExcludedType12noAttrMethodEv
+ }
+ 
+ // Interaction with VTables.
 diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
-index d445d0252d905d35ed62b01f3ed8bfd730f30536..51f30b532f49467edb2757a42741cbc0b994c103 100644
+index d445d0252d905d35ed62b01f3ed8bfd730f30536..8f49fd1978c91b9b14f7fdfe5ace98e80d599d16 100644
 --- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
 +++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
 @@ -32,6 +32,24 @@ struct BasicCase {
@@ -286,6 +328,46 @@ index d445d0252d905d35ed62b01f3ed8bfd730f30536..51f30b532f49467edb2757a42741cbc0
  }
  
  // Test that a class-level dllimport attribute won't affect to excluded methods.
+@@ -86,6 +212,13 @@ struct __declspec(dllimport) ImportWholeTemplate {
+   EXCLUDE_ATTR void excludedMethod() {}
+   EXCLUDE_ATTR void notToBeInstantiated() {}
+   void notToBeInstantiated_noAttr() {}
++  struct nestedType {
++    void noAttrMethod() {}
++  };
++  struct EXCLUDE_ATTR nestedExcludedType {
++    void noAttrMethod() {}
++    void notToBeInstantiated_noAttr() {}
++  };
+ };
+ 
+ extern template struct ImportWholeTemplate<NoAttrTag>;
+@@ -95,9 +228,25 @@ void useImportWholeTemplate() {
+   // MSC-DAG: define linkonce_odr dso_local void @"?excludedMethod@?$ImportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+   // GNU-DAG: define linkonce_odr dso_local void @_ZN19ImportWholeTemplateI9NoAttrTagE14excludedMethodEv
+ 
++  ImportWholeTemplate<NoAttrTag>::nestedType().noAttrMethod();
++  // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedType@?$ImportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
++  // GNU-DAG: define linkonce_odr dso_local void @_ZN19ImportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
++
++  ImportWholeTemplate<NoAttrTag>::nestedExcludedType().noAttrMethod();
++  // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedExcludedType@?$ImportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
++  // GNU-DAG: define linkonce_odr dso_local void @_ZN19ImportWholeTemplateI9NoAttrTagE18nestedExcludedType12noAttrMethodEv
++
+   ImportWholeTemplate<ImplicitTag>().excludedMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?excludedMethod@?$ImportWholeTemplate@UImplicitTag@@@@QEAAXXZ"
+   // GNU-DAG: define linkonce_odr dso_local void @_ZN19ImportWholeTemplateI11ImplicitTagE14excludedMethodEv
++
++  ImportWholeTemplate<ImplicitTag>::nestedType().noAttrMethod();
++  // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedType@?$ImportWholeTemplate@UImplicitTag@@@@QEAAXXZ"
++  // GNU-DAG: define linkonce_odr dso_local void @_ZN19ImportWholeTemplateI11ImplicitTagE10nestedType12noAttrMethodEv
++
++  ImportWholeTemplate<ImplicitTag>::nestedExcludedType().noAttrMethod();
++  // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedExcludedType@?$ImportWholeTemplate@UImplicitTag@@@@QEAAXXZ"
++  // GNU-DAG: define linkonce_odr dso_local void @_ZN19ImportWholeTemplateI11ImplicitTagE18nestedExcludedType12noAttrMethodEv
+ }
+ 
+ template <class T>
 -- 
 2.53.0
 

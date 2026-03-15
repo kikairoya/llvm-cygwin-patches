@@ -1,7 +1,7 @@
-From 3e82429ef4baa4357fcf29f8a306f289c9f391a4 Mon Sep 17 00:00:00 2001
+From c9ae0611a3e547821d3484f965e1f25f8586ea0c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:59:32 +0900
-Subject: [PATCH 03/20] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
+Subject: [PATCH 03/30] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
 
 ---
  clang/include/clang/Analysis/FlowSensitive/NoopLattice.h       | 3 +++
@@ -74,7 +74,7 @@ index 2785a3c959472479cbf30eb8b1121954d0a743b4..e8015ee3f98f3e656ac5620bfea48078
  // GraphTraits specializations for function basic block graphs (CFGs)
  //===--------------------------------------------------------------------===//
 diff --git a/llvm/lib/CodeGen/MachineFunction.cpp b/llvm/lib/CodeGen/MachineFunction.cpp
-index 71ddafbbd7876d7a4fa8508ed99664752aa084a1..326e6e257a044d684fc202a2a6fb60efbc7b4238 100644
+index 7ab7b65e8350f88f0f6cd9160e444b69d4d4ab4e..32307cffb443ab8fe86b4f0fa93b18dd71bb32a6 100644
 --- a/llvm/lib/CodeGen/MachineFunction.cpp
 +++ b/llvm/lib/CodeGen/MachineFunction.cpp
 @@ -1333,6 +1333,8 @@ void MachineFunction::setUseDebugInstrRef(bool Use) {

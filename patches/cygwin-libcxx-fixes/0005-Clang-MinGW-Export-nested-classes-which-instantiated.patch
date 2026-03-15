@@ -1,7 +1,7 @@
-From c36f1020b6c4e773b7fe9843b27cd096be0b2835 Mon Sep 17 00:00:00 2001
+From 81f14aee9adea864c43d129251aed666d9cbf4d4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 22:31:20 +0900
-Subject: [PATCH 05/30] [Clang][MinGW] Export nested classes which instantiated
+Subject: [PATCH 05/31] [Clang][MinGW] Export nested classes which instantiated
  by enclosing template's explicit instantiation declaration
 
 MinGW-GCC applies explicit instantiateion declaration of a class template to its nested type but doesn't inherit
@@ -10,11 +10,11 @@ class.
 To resolve this self-inconsistency, such `__declspec(dllexport)` attribute on explicit instantiation declaration should
 inherit to the nested class.
 ---
- clang/lib/Sema/SemaDeclCXX.cpp | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ clang/lib/Sema/SemaDeclCXX.cpp | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 2ae6e5de0e3ee36867a8007bd2d0316f8e1711bb..5a5983e52ae9c33da45570e3c36b6281175238ed 100644
+index 2ae6e5de0e3ee36867a8007bd2d0316f8e1711bb..8538df4298b22af7e30c63d6fa775c234d47bbea 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6571,13 +6571,15 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
@@ -34,12 +34,14 @@ index 2ae6e5de0e3ee36867a8007bd2d0316f8e1711bb..5a5983e52ae9c33da45570e3c36b6281
      if (auto *DEA = Class->getAttr<DLLExportAttr>()) {
        Class->addAttr(DLLExportOnDeclAttr::Create(Context, DEA->getLoc()));
        Class->dropAttr<DLLExportAttr>();
-@@ -6609,6 +6611,15 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6609,6 +6611,17 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
          Member->hasAttr<ExcludeFromExplicitInstantiationAttr>())
        continue;
  
 +    // Inherit dllexport to nested class in MinGW mode.
 +    if (TI.getTriple().isOSCygMing() && !getDLLAttr(Member) &&
++        (TSK == TSK_ExplicitInstantiationDeclaration ||
++         TSK == TSK_ExplicitInstantiationDefinition) &&
 +        isa<RecordDecl>(Member)) {
 +      auto *NewAttr = cast<InheritableAttr>(ClassAttr->clone(getASTContext()));
 +      NewAttr->setInherited(true);
@@ -50,7 +52,7 @@ index 2ae6e5de0e3ee36867a8007bd2d0316f8e1711bb..5a5983e52ae9c33da45570e3c36b6281
      VarDecl *VD = dyn_cast<VarDecl>(Member);
      CXXMethodDecl *MD = dyn_cast<CXXMethodDecl>(Member);
  
-@@ -6660,7 +6671,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6660,7 +6673,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
          // MinGW does not import or export inline methods. But do it for
          // template instantiations and inherited constructors (which are
          // marked inline but must be exported to match MSVC behavior).

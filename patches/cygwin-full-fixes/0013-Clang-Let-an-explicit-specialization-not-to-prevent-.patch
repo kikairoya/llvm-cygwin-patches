@@ -1,0 +1,96 @@
+From 1c0c55243b2db8aa2e0bd5d0c595d522d13057bd Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 19 Mar 2026 21:33:49 +0900
+Subject: [PATCH 13/49] [Clang] Let an explicit specialization not to prevent
+ dllexport/dllimport-ing following explicit instantiation
+
+---
+ clang/lib/Sema/SemaDeclCXX.cpp  |  7 ++++++
+ clang/lib/Sema/SemaTemplate.cpp | 39 +++++++++++++++++++++------------
+ 2 files changed, 32 insertions(+), 14 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
+index 2a24ee42bcb4d735b927fea7ce8ee6a2ca95685d..0b28f8bf356b5777c01a17f9059a2c62ad71d17c 100644
+--- a/clang/lib/Sema/SemaDeclCXX.cpp
++++ b/clang/lib/Sema/SemaDeclCXX.cpp
+@@ -6621,6 +6621,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+ 
+     VarDecl *VD = dyn_cast<VarDecl>(Member);
+     CXXMethodDecl *MD = dyn_cast<CXXMethodDecl>(Member);
++    TemplateSpecializationKind MemberTSK =
++        VD   ? VD->getTemplateSpecializationKind()
++        : MD ? MD->getTemplateSpecializationKind()
++             : TSK_Undeclared;
++
++    if (MemberTSK == TSK_ExplicitSpecialization)
++      continue;
+ 
+     // Only methods and static fields inherit the attributes.
+     if (!VD && !MD)
+diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
+index c261a7c1a7f8e8b6ba8a0b48b01dbf54de70c518..98cbcdfe7a9084d57042c9ec4363d0eff4122de6 100644
+--- a/clang/lib/Sema/SemaTemplate.cpp
++++ b/clang/lib/Sema/SemaTemplate.cpp
+@@ -10388,10 +10388,8 @@ DeclResult Sema::ActOnExplicitInstantiation(
+   Specialization->setTemplateKeywordLoc(TemplateLoc);
+   Specialization->setBraceRange(SourceRange());
+ 
+-  bool PreviouslyDLLExported = Specialization->hasAttr<DLLExportAttr>() ||
+-                               (PrevDecl && PrevDecl->hasAttr<DLLExportAttr>());
+-  bool PreviouslyDLLImported = Specialization->hasAttr<DLLImportAttr>() ||
+-                               (PrevDecl && PrevDecl->hasAttr<DLLImportAttr>());
++  bool PreviouslyDLLExported = Specialization->hasAttr<DLLExportAttr>() || (PrevDecl && PrevDecl->hasAttr<DLLExportAttr>());
++  bool PreviouslyDLLImported = Specialization->hasAttr<DLLImportAttr>() || (PrevDecl && PrevDecl->hasAttr<DLLImportAttr>());
+   ProcessDeclAttributeList(S, Specialization, Attr);
+   ProcessAPINotes(Specialization);
+ 
+@@ -10457,10 +10455,10 @@ DeclResult Sema::ActOnExplicitInstantiation(
+ 
+     // Fix a TSK_ImplicitInstantiation followed by a
+     // TSK_ExplicitInstantiationDefinition
+-    bool NewlyDLLExported = !PreviouslyDLLExported && AttachedExportAttr &&
+-                            Specialization->hasAttr<DLLExportAttr>();
+-    bool NewlyDLLImported = !PreviouslyDLLImported && AttachedImportAttr &&
+-                            Specialization->hasAttr<DLLImportAttr>();
++    bool NewlyDLLExported =
++      !PreviouslyDLLExported && AttachedExportAttr && Specialization->hasAttr<DLLExportAttr>();
++    bool NewlyDLLImported =
++        !PreviouslyDLLImported && AttachedImportAttr && Specialization->hasAttr<DLLImportAttr>();
+     if (Old_TSK == TSK_ImplicitInstantiation && NewlyDLLExported &&
+         Context.getTargetInfo().shouldDLLImportComdatSymbols()) {
+       // An explicit instantiation definition can add a dll attribute to a
+@@ -10492,12 +10490,25 @@ DeclResult Sema::ActOnExplicitInstantiation(
+ 
+     if (!DLLAttrAffected && Old_TSK == TSK_ImplicitInstantiation &&
+         (NewlyDLLExported || NewlyDLLImported)) {
+-      const ParsedAttr *A =
+-          AttachedExportAttr ? AttachedExportAttr : AttachedImportAttr;
+-      Diag(A->getLoc(), diag::warn_dllattr_ignored_already_instantiated) << A;
+-      Diag(Def->getPointOfInstantiation(),
+-           diag::note_instantiation_required_here)
+-          << /*implicit|explicit=*/0;
++      bool MemberAlreadyUsed = llvm::any_of(Def->decls(), [&](Decl *Member) {
++        auto *VD = dyn_cast<VarDecl>(Member);
++        auto *MD = dyn_cast<CXXMethodDecl>(Member);
++        auto MemberTSK = VD   ? VD->getTemplateSpecializationKind()
++                         : MD ? MD->getTemplateSpecializationKind()
++                              : TSK_Undeclared;
++        return MemberTSK == TSK_ImplicitInstantiation && Member->isUsed();
++      });
++      if (!MemberAlreadyUsed) {
++        Specialization->setTemplateSpecializationKind(TSK);
++        dllExportImportClassTemplateSpecialization(*this, Def);
++      } else {
++        const ParsedAttr *A =
++            (AttachedImportAttr ? AttachedImportAttr : AttachedExportAttr);
++        Diag(A->getLoc(), diag::warn_dllattr_ignored_already_instantiated) << A;
++        Diag(Def->getPointOfInstantiation(),
++             diag::note_instantiation_required_here)
++            << /*implicit|explicit=*/0;
++      }
+     }
+ 
+     // Set the template specialization kind. Make sure it is set before
+-- 
+2.53.0
+

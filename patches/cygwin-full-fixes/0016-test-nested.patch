@@ -1,0 +1,210 @@
+From a8af94e60b95509567e5d6d0b25fdf7d6bd91f69 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 19 Mar 2026 21:48:00 +0900
+Subject: [PATCH 16/49] test nested
+
+---
+ ...t_instantiation.exclude_from_dllexport.cpp |  4 +-
+ ...t_instantiation.exclude_from_dllimport.cpp | 10 +--
+ .../CodeGenCXX/mingw-template-dllexport.cpp   | 72 +++++++++----------
+ 3 files changed, 43 insertions(+), 43 deletions(-)
+
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+index 6f39b2745c5151c08b7541b6671159ac6c81c6eb..64f5da7ee46df8d5d913f61cfb0b8b6a891c0c79 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
+@@ -54,7 +54,7 @@ template struct __declspec(dllexport) BasicCase<WithExportTag>;
+ // GNU-DAG: define weak_odr dso_local dllexport void @_ZN9BasicCaseI13WithExportTagE12noAttrMethodEv
+ 
+ // MSC-DAG: define weak_odr dso_local void @"?noAttrMethod@nestedType@?$BasicCase@UWithExportTag@@@@QEAAXXZ"
+-// GNU-DAG: define weak_odr dso_local void @_ZN9BasicCaseI13WithExportTagE10nestedType12noAttrMethodEv
++// GNU-DAG: define weak_odr dso_local dllexport void @_ZN9BasicCaseI13WithExportTagE10nestedType12noAttrMethodEv
+ 
+ // MSC-DAG: define weak_odr dso_local dllexport void @"?exportedMethod@nestedType@?$BasicCase@UWithExportTag@@@@QEAAXXZ"
+ // GNU-DAG: define weak_odr dso_local dllexport void @_ZN9BasicCaseI13WithExportTagE10nestedType14exportedMethodEv
+@@ -169,7 +169,7 @@ template struct ExportWholeTemplate<NoAttrTag>;
+ // MSC-DAG: define weak_odr dso_local dllexport void @"?noAttrMethod@?$ExportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+ // GNU-DAG: define weak_odr dso_local dllexport void @_ZN19ExportWholeTemplateI9NoAttrTagE12noAttrMethodEv
+ // MSC-DAG: define weak_odr dso_local void @"?noAttrMethod@nestedType@?$ExportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+-// GNU-DAG: define weak_odr dso_local void @_ZN19ExportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
++// GNU-DAG: define weak_odr dso_local dllexport void @_ZN19ExportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
+ 
+ void useExportWholeTemplate() {
+   ExportWholeTemplate<NoAttrTag>().excludedMethod();
+diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+index 9d9f0038083f9083209c85eb18129ffe445acbf2..f15c7b378b71636c103475bf730b2d360b5f0434 100644
+--- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
++++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
+@@ -74,7 +74,7 @@ void useBaseCase() {
+ 
+   BasicCase<WithImportTag>::nestedType().noAttrMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+-  // GNU-DAG: define linkonce_odr dso_local void @_ZN9BasicCaseI13WithImportTagE10nestedType12noAttrMethodEv
++  // GNU-DAG: declare dllimport void @_ZN9BasicCaseI13WithImportTagE10nestedType12noAttrMethodEv
+ 
+   BasicCase<WithImportTag>::nestedType().importedMethod();
+   // MSC-DAG: declare dllimport void @"?importedMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+@@ -82,7 +82,7 @@ void useBaseCase() {
+ 
+   BasicCase<WithImportTag>::nestedType().importedInlineMethod();
+   // MSC-DAG: declare dllimport void @"?importedInlineMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+-  // GNU-DAG: define linkonce_odr dso_local void @_ZN9BasicCaseI13WithImportTagE10nestedType20importedInlineMethodEv
++  // GNU-DAG: declare dllimport void @_ZN9BasicCaseI13WithImportTagE10nestedType20importedInlineMethodEv
+ 
+   BasicCase<WithImportTag>::nestedType().excludedMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?excludedMethod@nestedType@?$BasicCase@UWithImportTag@@@@QEAAXXZ"
+@@ -122,7 +122,7 @@ void useBaseCase() {
+ 
+   BasicCase<NoAttrTag>::nestedType().noAttrMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedType@?$BasicCase@UNoAttrTag@@@@QEAAXXZ"
+-  // GNU-DAG: define linkonce_odr dso_local void @_ZN9BasicCaseI9NoAttrTagE10nestedType12noAttrMethodEv
++  // GNU-DAG: declare dso_local void @_ZN9BasicCaseI9NoAttrTagE10nestedType12noAttrMethodEv
+ 
+   BasicCase<NoAttrTag>::nestedType().importedMethod();
+   // MSC-DAG: declare dllimport void @"?importedMethod@nestedType@?$BasicCase@UNoAttrTag@@@@QEAAXXZ"
+@@ -130,7 +130,7 @@ void useBaseCase() {
+ 
+   BasicCase<NoAttrTag>::nestedType().importedInlineMethod();
+   // MSC-DAG: declare dllimport void @"?importedInlineMethod@nestedType@?$BasicCase@UNoAttrTag@@@@QEAAXXZ"
+-  // GNU-DAG: define linkonce_odr dso_local void @_ZN9BasicCaseI9NoAttrTagE10nestedType20importedInlineMethodEv
++  // GNU-DAG: declare dso_local void @_ZN9BasicCaseI9NoAttrTagE10nestedType20importedInlineMethodEv
+ 
+   BasicCase<NoAttrTag>::nestedType().excludedMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?excludedMethod@nestedType@?$BasicCase@UNoAttrTag@@@@QEAAXXZ"
+@@ -230,7 +230,7 @@ void useImportWholeTemplate() {
+ 
+   ImportWholeTemplate<NoAttrTag>::nestedType().noAttrMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedType@?$ImportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+-  // GNU-DAG: define linkonce_odr dso_local void @_ZN19ImportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
++  // GNU-DAG: declare dllimport void @_ZN19ImportWholeTemplateI9NoAttrTagE10nestedType12noAttrMethodEv
+ 
+   ImportWholeTemplate<NoAttrTag>::nestedExcludedType().noAttrMethod();
+   // MSC-DAG: define linkonce_odr dso_local void @"?noAttrMethod@nestedExcludedType@?$ImportWholeTemplate@UNoAttrTag@@@@QEAAXXZ"
+diff --git a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
+index 4f48aae3e63113fc9a98a7aa1de22e9ab6d5bb07..4cad39f4a42d0bbd786822499bfa8b2393bcf3ca 100644
+--- a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
++++ b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
+@@ -73,18 +73,18 @@ template struct __declspec(dllexport) Class<ExportDefinition>;
+ // CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI16ExportDefinitionE7InlinedEv
+ // VAR: @_ZN5ClassI16ExportDefinitionE3VarE = weak_odr dso_local dllexport global
+ // VAR: @_ZN5ClassI16ExportDefinitionE9InlineVarE = weak_odr dso_local dllexport global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI16ExportDefinitionE6NestedC1ERKS2_
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI16ExportDefinitionE6NestedC1EOS2_
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI16ExportDefinitionE6Nested6MethodEv
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI16ExportDefinitionE6Nested7InlinedEv
+-// VAR: @_ZN5ClassI16ExportDefinitionE6Nested3VarE = weak_odr dso_local global
+-// VAR: @_ZN5ClassI16ExportDefinitionE6Nested9InlineVarE = weak_odr dso_local global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI16ExportDefinitionE6Nested10DeepNestedC1ERKS3_
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI16ExportDefinitionE6Nested10DeepNestedC1EOS3_
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI16ExportDefinitionE6Nested10DeepNested6MethodEv
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI16ExportDefinitionE6Nested10DeepNested7InlinedEv
+-// VAR: @_ZN5ClassI16ExportDefinitionE6Nested10DeepNested3VarE = weak_odr dso_local global
+-// VAR: @_ZN5ClassI16ExportDefinitionE6Nested10DeepNested9InlineVarE = weak_odr dso_local global
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI16ExportDefinitionE6NestedC1ERKS2_
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI16ExportDefinitionE6NestedC1EOS2_
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI16ExportDefinitionE6Nested6MethodEv
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI16ExportDefinitionE6Nested7InlinedEv
++// VAR: @_ZN5ClassI16ExportDefinitionE6Nested3VarE = weak_odr dso_local dllexport global
++// VAR: @_ZN5ClassI16ExportDefinitionE6Nested9InlineVarE = weak_odr dso_local dllexport global
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI16ExportDefinitionE6Nested10DeepNestedC1ERKS3_
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI16ExportDefinitionE6Nested10DeepNestedC1EOS3_
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI16ExportDefinitionE6Nested10DeepNested6MethodEv
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI16ExportDefinitionE6Nested10DeepNested7InlinedEv
++// VAR: @_ZN5ClassI16ExportDefinitionE6Nested10DeepNested3VarE = weak_odr dso_local dllexport global
++// VAR: @_ZN5ClassI16ExportDefinitionE6Nested10DeepNested9InlineVarE = weak_odr dso_local dllexport global
+ 
+ //
+ // Check that a dllexport-ed explicit instantiation declaration makes all members dllexport-ed.
+@@ -93,10 +93,10 @@ extern template struct __declspec(dllexport) Class<ExportDeclaration>;
+ template struct Class<ExportDeclaration>;
+ // CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI17ExportDeclarationE7InlinedEv
+ // VAR: @_ZN5ClassI17ExportDeclarationE9InlineVarE = weak_odr dso_local dllexport global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI17ExportDeclarationE6Nested7InlinedEv
+-// VAR: @_ZN5ClassI17ExportDeclarationE6Nested9InlineVarE = weak_odr dso_local global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI17ExportDeclarationE6Nested10DeepNested7InlinedEv
+-// VAR: @_ZN5ClassI17ExportDeclarationE6Nested10DeepNested9InlineVarE = weak_odr dso_local global
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI17ExportDeclarationE6Nested7InlinedEv
++// VAR: @_ZN5ClassI17ExportDeclarationE6Nested9InlineVarE = weak_odr dso_local dllexport global
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI17ExportDeclarationE6Nested10DeepNested7InlinedEv
++// VAR: @_ZN5ClassI17ExportDeclarationE6Nested10DeepNested9InlineVarE = weak_odr dso_local dllexport global
+ 
+ //
+ // Check that a dllexport-ed instantiation which has declared already without dllexport doesn't make members dllexport-ed.
+@@ -131,10 +131,10 @@ void useNestedCtors(Class<ImportDeclaration>::Nested &&x) {
+   Class<ImportDeclaration>::Nested::Inlined();
+   Class<ImportDeclaration>::Nested::InlineVar = 0;
+ }
+-// CHECK: define linkonce_odr dso_local void @_ZN5ClassI17ImportDeclarationE6NestedC1ERKS2_
+-// CHECK: define linkonce_odr dso_local void @_ZN5ClassI17ImportDeclarationE6NestedC1EOS2_
+-// CHECK: define linkonce_odr dso_local void @_ZN5ClassI17ImportDeclarationE6Nested7InlinedEv
+-// VAR: @_ZN5ClassI17ImportDeclarationE6Nested9InlineVarE = linkonce_odr dso_local global
++// CHECK: declare dllimport void @_ZN5ClassI17ImportDeclarationE6NestedC1ERKS2_
++// CHECK: declare dllimport void @_ZN5ClassI17ImportDeclarationE6NestedC1EOS2_
++// CHECK: declare dllimport void @_ZN5ClassI17ImportDeclarationE6Nested7InlinedEv
++// VAR: @_ZN5ClassI17ImportDeclarationE6Nested9InlineVarE = external dllimport global
+ 
+ void useDeepNestedCtors(Class<ImportDeclaration>::Nested::DeepNested &&x) {
+   Class<ImportDeclaration>::Nested::DeepNested y{x};
+@@ -142,10 +142,10 @@ void useDeepNestedCtors(Class<ImportDeclaration>::Nested::DeepNested &&x) {
+   Class<ImportDeclaration>::Nested::DeepNested::Inlined();
+   Class<ImportDeclaration>::Nested::DeepNested::InlineVar = 0;
+ }
+-// CHECK: define linkonce_odr dso_local void @_ZN5ClassI17ImportDeclarationE6Nested10DeepNestedC1ERKS3_
+-// CHECK: define linkonce_odr dso_local void @_ZN5ClassI17ImportDeclarationE6Nested10DeepNestedC1EOS3_
+-// CHECK: define linkonce_odr dso_local void @_ZN5ClassI17ImportDeclarationE6Nested10DeepNested7InlinedEv
+-// VAR: @_ZN5ClassI17ImportDeclarationE6Nested10DeepNested9InlineVarE = linkonce_odr dso_local global
++// CHECK: declare dllimport void @_ZN5ClassI17ImportDeclarationE6Nested10DeepNestedC1ERKS3_
++// CHECK: declare dllimport void @_ZN5ClassI17ImportDeclarationE6Nested10DeepNestedC1EOS3_
++// CHECK: declare dllimport void @_ZN5ClassI17ImportDeclarationE6Nested10DeepNested7InlinedEv
++// VAR: @_ZN5ClassI17ImportDeclarationE6Nested10DeepNested9InlineVarE = external dllimport global
+ 
+ //
+ // Check that a specialized member doesn't prevent other members to be dllexport-ed.
+@@ -156,10 +156,10 @@ extern template struct __declspec(dllexport) Class<SpecializeOuterMethod>;
+ template struct Class<SpecializeOuterMethod>;
+ // CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI21SpecializeOuterMethodE7InlinedEv
+ // VAR: @_ZN5ClassI21SpecializeOuterMethodE9InlineVarE = weak_odr dso_local dllexport global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI21SpecializeOuterMethodE6Nested7InlinedEv
+-// VAR: @_ZN5ClassI21SpecializeOuterMethodE6Nested9InlineVarE = weak_odr dso_local global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI21SpecializeOuterMethodE6Nested10DeepNested7InlinedEv
+-// VAR: @_ZN5ClassI21SpecializeOuterMethodE6Nested10DeepNested9InlineVarE = weak_odr dso_local global
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI21SpecializeOuterMethodE6Nested7InlinedEv
++// VAR: @_ZN5ClassI21SpecializeOuterMethodE6Nested9InlineVarE = weak_odr dso_local dllexport global
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI21SpecializeOuterMethodE6Nested10DeepNested7InlinedEv
++// VAR: @_ZN5ClassI21SpecializeOuterMethodE6Nested10DeepNested9InlineVarE = weak_odr dso_local dllexport global
+ 
+ //
+ // Check that an instantiation which has a specialized member requires a
+@@ -225,21 +225,21 @@ USE(&Class<SpecializeBothMethodsImport>::Var);
+ USE(&Class<SpecializeBothMethodsImport>::InlineVar);
+ // VAR: @_ZN5ClassI27SpecializeBothMethodsImportE9InlineVarE = external dllimport global
+ USE(&Class<SpecializeBothMethodsImport>::Nested::Method);
+-// CHECK: define linkonce_odr dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested6MethodEv
++// CHECK: declare dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested6MethodEv
+ USE(&Class<SpecializeBothMethodsImport>::Nested::Inlined);
+-// CHECK: define linkonce_odr dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested7InlinedEv
++// CHECK: declare dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested7InlinedEv
+ USE(&Class<SpecializeBothMethodsImport>::Nested::Var);
+-// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested3VarE = linkonce_odr dso_local global
++// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested3VarE = external global
+ USE(&Class<SpecializeBothMethodsImport>::Nested::InlineVar);
+-// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested9InlineVarE = linkonce_odr dso_local global
++// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested9InlineVarE = external global
+ USE(&Class<SpecializeBothMethodsImport>::Nested::DeepNested::Method);
+-// CHECK: define linkonce_odr dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested6MethodEv
++// CHECK: declare dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested6MethodEv
+ USE(&Class<SpecializeBothMethodsImport>::Nested::DeepNested::Inlined);
+-// CHECK: define linkonce_odr dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested7InlinedEv
++// CHECK: declare dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested7InlinedEv
+ USE(&Class<SpecializeBothMethodsImport>::Nested::DeepNested::Var);
+-// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested3VarE = linkonce_odr dso_local global
++// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested3VarE = external global
+ USE(&Class<SpecializeBothMethodsImport>::Nested::DeepNested::InlineVar);
+-// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested9InlineVarE = linkonce_odr dso_local global
++// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested9InlineVarE = external global
+ 
+ //
+ // Check that a specialized nested class doesn't prevent other members to be dllexport-ed.
+-- 
+2.53.0
+

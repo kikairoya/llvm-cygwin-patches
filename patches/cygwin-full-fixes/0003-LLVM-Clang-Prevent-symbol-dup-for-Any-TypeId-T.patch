@@ -1,7 +1,7 @@
-From c9ae0611a3e547821d3484f965e1f25f8586ea0c Mon Sep 17 00:00:00 2001
+From fce4885fdec6a670024bacbb853a53157e7ea062 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:59:32 +0900
-Subject: [PATCH 03/45] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
+Subject: [PATCH 03/49] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
 
 ---
  clang/include/clang/Analysis/FlowSensitive/NoopLattice.h       | 3 +++
@@ -32,10 +32,10 @@ index 96c695473b67a198280fdde4f38d4593212cb09a..acc549c97213edcff24f194a9d6acec3
  
  #endif // LLVM_CLANG_ANALYSIS_FLOWSENSITIVE_NOOP_LATTICE_H
 diff --git a/clang/lib/Analysis/FlowSensitive/TypeErasedDataflowAnalysis.cpp b/clang/lib/Analysis/FlowSensitive/TypeErasedDataflowAnalysis.cpp
-index 02982274093cbd8dab8286a3437c25e5e4d9ffd3..20cccd361bd99bc6282f7ed770aaeea2724ba9fd 100644
+index 9e0fd8122c89055af9d2bb6528df80fdb8d524da..3816e8c2004daaaebf33ce05b7f361bc6cd1cc79 100644
 --- a/clang/lib/Analysis/FlowSensitive/TypeErasedDataflowAnalysis.cpp
 +++ b/clang/lib/Analysis/FlowSensitive/TypeErasedDataflowAnalysis.cpp
-@@ -25,6 +25,7 @@
+@@ -26,6 +26,7 @@
  #include "clang/Analysis/Analyses/PostOrderCFGView.h"
  #include "clang/Analysis/CFG.h"
  #include "clang/Analysis/CFGBackEdges.h"
@@ -43,7 +43,7 @@ index 02982274093cbd8dab8286a3437c25e5e4d9ffd3..20cccd361bd99bc6282f7ed770aaeea2
  #include "clang/Analysis/FlowSensitive/DataflowEnvironment.h"
  #include "clang/Analysis/FlowSensitive/DataflowLattice.h"
  #include "clang/Analysis/FlowSensitive/DataflowWorklist.h"
-@@ -54,6 +55,8 @@ namespace llvm {
+@@ -56,6 +57,8 @@ namespace llvm {
  // of creating one in the test executable. when building with
  // CLANG_LINK_CLANG_DYLIB
  template struct CLANG_EXPORT_TEMPLATE Any::TypeId<clang::dataflow::NoopLattice>;
@@ -53,7 +53,7 @@ index 02982274093cbd8dab8286a3437c25e5e4d9ffd3..20cccd361bd99bc6282f7ed770aaeea2
  
  namespace clang {
 diff --git a/llvm/include/llvm/CodeGen/MachineFunction.h b/llvm/include/llvm/CodeGen/MachineFunction.h
-index 2785a3c959472479cbf30eb8b1121954d0a743b4..e8015ee3f98f3e656ac5620bfea480783eb5d3ea 100644
+index 683bb958c9f9b948fcbfdf5339ca7d69899c935f..5d6ba6f539c6f30fafa395bbe73a36e904098b0d 100644
 --- a/llvm/include/llvm/CodeGen/MachineFunction.h
 +++ b/llvm/include/llvm/CodeGen/MachineFunction.h
 @@ -17,6 +17,7 @@
@@ -64,7 +64,7 @@ index 2785a3c959472479cbf30eb8b1121954d0a743b4..e8015ee3f98f3e656ac5620bfea48078
  #include "llvm/ADT/ArrayRef.h"
  #include "llvm/ADT/DenseMap.h"
  #include "llvm/ADT/GraphTraits.h"
-@@ -1516,6 +1517,8 @@ public:
+@@ -1523,6 +1524,8 @@ public:
    }
  };
  
@@ -74,10 +74,10 @@ index 2785a3c959472479cbf30eb8b1121954d0a743b4..e8015ee3f98f3e656ac5620bfea48078
  // GraphTraits specializations for function basic block graphs (CFGs)
  //===--------------------------------------------------------------------===//
 diff --git a/llvm/lib/CodeGen/MachineFunction.cpp b/llvm/lib/CodeGen/MachineFunction.cpp
-index 7ab7b65e8350f88f0f6cd9160e444b69d4d4ab4e..32307cffb443ab8fe86b4f0fa93b18dd71bb32a6 100644
+index a2dd9c425370cf43d1ce42c833d4392b4c09d831..1947a7c116dc3eb9d8506d48ee05b2c085543dca 100644
 --- a/llvm/lib/CodeGen/MachineFunction.cpp
 +++ b/llvm/lib/CodeGen/MachineFunction.cpp
-@@ -1333,6 +1333,8 @@ void MachineFunction::setUseDebugInstrRef(bool Use) {
+@@ -1332,6 +1332,8 @@ void MachineFunction::setUseDebugInstrRef(bool Use) {
  // Use one million as a high / reserved number.
  const unsigned MachineFunction::DebugOperandMemNumber = 1000000;
  

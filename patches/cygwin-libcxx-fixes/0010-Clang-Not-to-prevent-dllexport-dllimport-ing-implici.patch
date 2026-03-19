@@ -1,0 +1,78 @@
+From f049e0a958457110ae6ec533327fbc85e99c9074 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 19 Mar 2026 21:27:37 +0900
+Subject: [PATCH 10/35] [Clang] Not to prevent dllexport/dllimport-ing implicit
+ instantiated nested class
+
+---
+ clang/lib/Sema/SemaTemplate.cpp            | 24 ++++++++++++++--------
+ clang/lib/Sema/SemaTemplateInstantiate.cpp |  8 ++++++--
+ 2 files changed, 22 insertions(+), 10 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
+index 98cbcdfe7a9084d57042c9ec4363d0eff4122de6..5d3ddbbd1d1c98ed29897a552d2989f1a82ba363 100644
+--- a/clang/lib/Sema/SemaTemplate.cpp
++++ b/clang/lib/Sema/SemaTemplate.cpp
+@@ -10184,6 +10184,20 @@ static void dllExportImportClassTemplateSpecialization(
+   S.referenceDLLExportedClassMethods();
+ }
+ 
++static bool anyImplicitInstantiatedMemberAlreadyUsed(Decl *Member) {
++  if (Member->hasAttr<ExcludeFromExplicitInstantiationAttr>())
++    return false;
++  if (auto *RD = dyn_cast<CXXRecordDecl>(Member))
++    return RD->getTemplateSpecializationKind() == TSK_ImplicitInstantiation &&
++           llvm::any_of(RD->decls(), anyImplicitInstantiatedMemberAlreadyUsed);
++  auto *VD = dyn_cast<VarDecl>(Member);
++  auto *MD = dyn_cast<CXXMethodDecl>(Member);
++  auto MemberTSK = VD   ? VD->getTemplateSpecializationKind()
++                   : MD ? MD->getTemplateSpecializationKind()
++                        : TSK_Undeclared;
++  return MemberTSK == TSK_ImplicitInstantiation && Member->isUsed();
++}
++
+ DeclResult Sema::ActOnExplicitInstantiation(
+     Scope *S, SourceLocation ExternLoc, SourceLocation TemplateLoc,
+     unsigned TagSpec, SourceLocation KWLoc, const CXXScopeSpec &SS,
+@@ -10490,14 +10504,8 @@ DeclResult Sema::ActOnExplicitInstantiation(
+ 
+     if (!DLLAttrAffected && Old_TSK == TSK_ImplicitInstantiation &&
+         (NewlyDLLExported || NewlyDLLImported)) {
+-      bool MemberAlreadyUsed = llvm::any_of(Def->decls(), [&](Decl *Member) {
+-        auto *VD = dyn_cast<VarDecl>(Member);
+-        auto *MD = dyn_cast<CXXMethodDecl>(Member);
+-        auto MemberTSK = VD   ? VD->getTemplateSpecializationKind()
+-                         : MD ? MD->getTemplateSpecializationKind()
+-                              : TSK_Undeclared;
+-        return MemberTSK == TSK_ImplicitInstantiation && Member->isUsed();
+-      });
++      bool MemberAlreadyUsed =
++          llvm::any_of(Def->decls(), anyImplicitInstantiatedMemberAlreadyUsed);
+       if (!MemberAlreadyUsed) {
+         Specialization->setTemplateSpecializationKind(TSK);
+         dllExportImportClassTemplateSpecialization(*this, Def);
+diff --git a/clang/lib/Sema/SemaTemplateInstantiate.cpp b/clang/lib/Sema/SemaTemplateInstantiate.cpp
+index ebdeecd8f112c774d73df7ed1a5a3b603ba8eccf..2ffbeec1bd79e1cbdb1efb3f1f355dcb8f804236 100644
+--- a/clang/lib/Sema/SemaTemplateInstantiate.cpp
++++ b/clang/lib/Sema/SemaTemplateInstantiate.cpp
+@@ -4269,11 +4269,15 @@ Sema::InstantiateClassMembers(SourceLocation PointOfInstantiation,
+                          TemplateArgs,
+                          TSK);
+       } else {
++        auto MemberTSK = Record->getTemplateSpecializationKind();
+         if (TSK == TSK_ExplicitInstantiationDefinition &&
+-            Record->getTemplateSpecializationKind() ==
+-                TSK_ExplicitInstantiationDeclaration) {
++            MemberTSK == TSK_ExplicitInstantiationDeclaration) {
+           Record->setTemplateSpecializationKind(TSK);
+           MarkVTableUsed(PointOfInstantiation, Record, true);
++        } else if (MemberTSK == TSK_ImplicitInstantiation) {
++          Record->setTemplateSpecializationKind(TSK);
++          checkClassLevelDLLAttribute(Record);
++          referenceDLLExportedClassMethods();
+         }
+       }
+ 
+-- 
+2.53.0
+

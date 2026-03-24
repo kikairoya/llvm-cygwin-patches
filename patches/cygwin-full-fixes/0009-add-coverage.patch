@@ -1,4 +1,4 @@
-From 13423f5038471b6a7f03b44c4aa5590124ee6486 Mon Sep 17 00:00:00 2001
+From 3053be61ede2544042d6ddf7ac92c8a6c11fe46a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 23:40:07 +0900
 Subject: [PATCH 09/49] add coverage
@@ -6,10 +6,11 @@ Subject: [PATCH 09/49] add coverage
 ---
  ...t_instantiation.exclude_from_dllexport.cpp |  96 +++++++++++
  ...t_instantiation.exclude_from_dllimport.cpp | 149 ++++++++++++++++++
- clang/test/CodeGenCXX/dllimport.cpp           |  25 +++
- clang/test/SemaCXX/dllexport.cpp              |  60 +++++++
- clang/test/SemaCXX/dllimport.cpp              |  55 +++++++
- 5 files changed, 385 insertions(+)
+ clang/test/CodeGenCXX/dllexport.cpp           |  35 ++++
+ clang/test/CodeGenCXX/dllimport.cpp           |  39 +++++
+ clang/test/SemaCXX/dllexport.cpp              |  50 ++++++
+ clang/test/SemaCXX/dllimport.cpp              |  45 ++++++
+ 6 files changed, 414 insertions(+)
 
 diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
 index 7048d32feb9e39e5a9b24edd84f1eb8cd8433169..6f39b2745c5151c08b7541b6671159ac6c81c6eb 100644
@@ -371,47 +372,114 @@ index 05e0a6efadf7bc614f66d505abebf113bb79b0fe..9d9f0038083f9083209c85eb18129ffe
  }
  
  template <class T>
+diff --git a/clang/test/CodeGenCXX/dllexport.cpp b/clang/test/CodeGenCXX/dllexport.cpp
+index a34a87c5b9f2146e71dc1ff7ab9b0024185c4faa..87f4ef64c2f526df9b3886de275c2919e24c71f1 100644
+--- a/clang/test/CodeGenCXX/dllexport.cpp
++++ b/clang/test/CodeGenCXX/dllexport.cpp
+@@ -805,6 +805,41 @@ USEMEMFUNC(ImplicitInstantiationExportedExplicitInstantiationDefExportedTemplate
+ // G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN69ImplicitInstantiationExportedExplicitInstantiationDefExportedTemplateIiE1fEv
+ // C32-DAG: define weak_odr dso_local void @_ZN69ImplicitInstantiationExportedExplicitInstantiationDefExportedTemplateIiE1fEv
+ 
++template <typename T> struct ExplicitInstantiationAfterMemberSpecialization { void f(){} void g(){} void h(){} };
++template <> void ExplicitInstantiationAfterMemberSpecialization<int>::g() {}
++// M32-DAG: define dso_local x86_thiscallcc void @"?g@?$ExplicitInstantiationAfterMemberSpecialization@H@@QAEXXZ"
++// G32-DAG: define dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1gEv
++// C32-DAG: define dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1gEv
++template struct __declspec(dllexport) ExplicitInstantiationAfterMemberSpecialization<int>;
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<int>, f);
++// M32-DAG: define weak_odr dso_local dllexport x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@H@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1fEv
++
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<long>, h);
++// M32-DAG: define weak_odr dso_local dllexport x86_thiscallcc void @"?h@?$ExplicitInstantiationAfterMemberSpecialization@J@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1hEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1hEv
++template struct __declspec(dllexport) ExplicitInstantiationAfterMemberSpecialization<long>;
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<long>, f);
++// M32-DAG: define weak_odr dso_local dllexport x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@J@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1fEv
++
++template <> void ExplicitInstantiationAfterMemberSpecialization<short>::g() {}
++// M32-DAG: define dso_local x86_thiscallcc void @"?g@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
++// G32-DAG: define dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1gEv
++// C32-DAG: define dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1gEv
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<short>, h);
++// M32-DAG: define weak_odr dso_local dllexport x86_thiscallcc void @"?h@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1hEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1hEv
++template struct __declspec(dllexport) ExplicitInstantiationAfterMemberSpecialization<short>;
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<short>, f);
++// M32-DAG: define weak_odr dso_local dllexport x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1fEv
++
+ namespace { struct InternalLinkageType {}; }
+ struct __declspec(dllexport) PR23308 {
+   void f(InternalLinkageType*);
 diff --git a/clang/test/CodeGenCXX/dllimport.cpp b/clang/test/CodeGenCXX/dllimport.cpp
-index ed1c72c5185d3cd4f573822f0f7497b5834f5930..987bbdeee04dd19d7ba06b7946bf051626730d5a 100644
+index ed1c72c5185d3cd4f573822f0f7497b5834f5930..d0dca72e681bca2d07663c678a7ccddcd92024d6 100644
 --- a/clang/test/CodeGenCXX/dllimport.cpp
 +++ b/clang/test/CodeGenCXX/dllimport.cpp
-@@ -861,6 +861,31 @@ USEMEMFUNC(ExplicitInstantiationDeclExportedDefImportedTemplate<int>, f);
+@@ -852,6 +852,7 @@ USEMEMFUNC(ExplicitInstantiationDeclImportedDefTemplate<int>, f);
+ // M32-DAG: {{declare|define available_externally}} dllimport x86_thiscallcc ptr @"??0?$ExplicitInstantiationDeclImportedDefTemplate@H@@QAE@XZ"
+ // G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN44ExplicitInstantiationDeclImportedDefTemplateIiE1fEv
+ // C32-DAG: define weak_odr dso_local void @_ZN44ExplicitInstantiationDeclImportedDefTemplateIiE1fEv
++// PS-DAG: declare dllimport void @_ZN44ExplicitInstantiationDeclImportedDefTemplateIiE1fEv
+ 
+ template <typename T> struct __declspec(dllimport) ExplicitInstantiationDeclExportedDefImportedTemplate { void f() {} ExplicitInstantiationDeclExportedDefImportedTemplate() {} };
+ extern template struct __declspec(dllimport) ExplicitInstantiationDeclExportedDefImportedTemplate <int>;
+@@ -861,6 +862,44 @@ USEMEMFUNC(ExplicitInstantiationDeclExportedDefImportedTemplate<int>, f);
  // M32-DAG: {{declare|define available_externally}} dllimport x86_thiscallcc void @"?f@?$ExplicitInstantiationDeclExportedDefImportedTemplate@H@@QAEXXZ"
  // M32-DAG: {{declare|define available_externally}} dllimport x86_thiscallcc ptr @"??0?$ExplicitInstantiationDeclExportedDefImportedTemplate@H@@QAE@XZ"
  
-+template <typename T> struct ExplicitInstantiationAfterMemberSpecialization { void f(); void g(); void h(); };
-+template <> void ExplicitInstantiationAfterMemberSpecialization<int>::g();
++template <typename T> struct ExplicitInstantiationAfterMemberSpecialization { void f(){} void g(){} void h(){} };
++template <> void ExplicitInstantiationAfterMemberSpecialization<int>::g() {}
++// M32-DAG: define dso_local x86_thiscallcc void @"?g@?$ExplicitInstantiationAfterMemberSpecialization@H@@QAEXXZ"
++// G32-DAG: define dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1gEv
++// C32-DAG: define dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1gEv
 +extern template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<int>;
 +template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<int>;
 +USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<int>, f);
-+// M32-DAG: {{declare|define available_externally}} dso_local x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@H@@QAEXXZ"
-+// G32-DAG: {{declare|define available_externally}} dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1fEv
-+// C32-DAG: {{declare|define available_externally}} dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1fEv
++// M32-DAG: declare dso_local x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@H@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1fEv
++
 +USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<long>, h);
++// M32-DAG: declare dso_local x86_thiscallcc void @"?h@?$ExplicitInstantiationAfterMemberSpecialization@J@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1hEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1hEv
 +extern template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<long>;
 +template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<long>;
 +USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<long>, f);
 +// M32-DAG: declare dso_local x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@J@@QAEXXZ"
-+// G32-DAG: declare dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1fEv
-+// C32-DAG: declare dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1fEv
-+template <> void ExplicitInstantiationAfterMemberSpecialization<short>::g();
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1fEv
++
++template <> void ExplicitInstantiationAfterMemberSpecialization<short>::g() {}
++// M32-DAG: define dso_local x86_thiscallcc void @"?g@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
++// G32-DAG: define dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1gEv
++// C32-DAG: define dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1gEv
 +USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<short>, h);
++// M32-DAG: declare dso_local x86_thiscallcc void @"?h@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1hEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1hEv
 +extern template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<short>;
 +template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<short>;
 +USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<short>, f);
 +// M32-DAG: declare dso_local x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
-+// G32-DAG: declare dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1fEv
-+// C32-DAG: declare dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1fEv
-+
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1fEv
 +
  template <typename T> struct PR23770BaseTemplate { void f() {} };
  template <typename T> struct PR23770DerivedTemplate : PR23770BaseTemplate<int> {};
  extern template struct PR23770DerivedTemplate<int>;
 diff --git a/clang/test/SemaCXX/dllexport.cpp b/clang/test/SemaCXX/dllexport.cpp
-index d625b15557762c452289e2541ab19448f39b3c9a..b4c56999be0652e218bff0026daf23da5a49192e 100644
+index d625b15557762c452289e2541ab19448f39b3c9a..0235ac430de03ef367593a34ce47b8d557931701 100644
 --- a/clang/test/SemaCXX/dllexport.cpp
 +++ b/clang/test/SemaCXX/dllexport.cpp
-@@ -1049,6 +1049,66 @@ template<typename T> __declspec(dllexport) constexpr int CTMR<T>::ConstexprField
+@@ -1049,6 +1049,56 @@ template<typename T> __declspec(dllexport) constexpr int CTMR<T>::ConstexprField
  // dllexport.
  template <> void ExportClassTmplMembers<int>::normalDecl() = delete; // non-gnu-error {{attribute 'dllexport' cannot be applied to a deleted function}}
  
@@ -432,14 +500,10 @@ index d625b15557762c452289e2541ab19448f39b3c9a..b4c56999be0652e218bff0026daf23da
 +template <> void ClassTmplSpecializedMember<false, InstTrig::Spec>::specializedMember1();
 +extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
 +                                                                                                   non-gnu-note{{attribute is here}}
-+extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
-+                                                                                                   non-gnu-note{{attribute is here}}
 +template <> void ClassTmplSpecializedMember<true, InstTrig::Spec>::specializedMember1();
 +template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Spec>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
 +
 +void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl> &x) { x.instantiatedMember1(); }
-+extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Impl>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
-+                                                                                                   non-gnu-note{{attribute is here}}
 +extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Impl>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
 +                                                                                                   non-gnu-note{{attribute is here}}
 +void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl> &x) { x.instantiatedMember1(); }
@@ -447,8 +511,6 @@ index d625b15557762c452289e2541ab19448f39b3c9a..b4c56999be0652e218bff0026daf23da
 +
 +template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>::specializedMember1();
 +template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>::specializedMember2();
-+extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
-+                                                                                                                   non-gnu-note{{attribute is here}}
 +extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
 +                                                                                                                   non-gnu-note{{attribute is here}}
 +template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>::specializedMember1();
@@ -459,16 +521,12 @@ index d625b15557762c452289e2541ab19448f39b3c9a..b4c56999be0652e218bff0026daf23da
 +void anchor(ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
 +extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
 +                                                                                                                   non-gnu-note{{attribute is here}}
-+extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
-+                                                                                                                   non-gnu-note{{attribute is here}}
 +template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>::specializedMember1();
 +void anchor(ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
 +template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
 +
 +void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); }
 +template <> void ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>::specializedMember1();
-+extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
-+                                                                                                                   non-gnu-note{{attribute is here}}
 +extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
 +                                                                                                                   non-gnu-note{{attribute is here}}
 +void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); }
@@ -479,10 +537,10 @@ index d625b15557762c452289e2541ab19448f39b3c9a..b4c56999be0652e218bff0026daf23da
  //===----------------------------------------------------------------------===//
  // Class template member templates
 diff --git a/clang/test/SemaCXX/dllimport.cpp b/clang/test/SemaCXX/dllimport.cpp
-index deb0574cb5e68aa667697366812ed0720f8d70b7..9a193fddc100cac9b3ebac253cfabc4d238d0e28 100644
+index deb0574cb5e68aa667697366812ed0720f8d70b7..aa8c823bfe85c21d3fcf1f11fbc0e4af858221fe 100644
 --- a/clang/test/SemaCXX/dllimport.cpp
 +++ b/clang/test/SemaCXX/dllimport.cpp
-@@ -999,6 +999,61 @@ template<> void ClassTmpl<int>::importedStatic() {} // non-gnu-error{{cannot def
+@@ -999,6 +999,51 @@ template<> void ClassTmpl<int>::importedStatic() {} // non-gnu-error{{cannot def
  
  template <> void ImportClassTmplMembers<int>::normalDecl() = delete; // non-gnu-error{{cannot define non-inline dllimport template specialization}} \
                                                                          non-gnu-error{{attribute 'dllimport' cannot be applied to a deleted function}}
@@ -502,44 +560,34 @@ index deb0574cb5e68aa667697366812ed0720f8d70b7..9a193fddc100cac9b3ebac253cfabc4d
 +
 +template <> void ClassTmplSpecializedMember<false, InstTrig::Spec>::specializedMember1();
 +extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Spec>;
-+extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Spec>;
-+template <> void ClassTmplSpecializedMember<true, InstTrig::Spec>::specializedMember1(); // non-ms-note{{previous explicit instantiation is here}}
++template <> void ClassTmplSpecializedMember<true, InstTrig::Spec>::specializedMember1();
 +template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Spec>;
-+template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Spec>; // non-ms-error{{duplicate explicit instantiation of 'ClassTmplSpecializedMember<true, InstTrig::Spec>}}
 +
 +void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl> &x) { x.instantiatedMember1(); }
 +extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Impl>;
-+extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Impl>;
-+void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl> &x) { x.instantiatedMember1(); } // non-ms-note{{previous explicit instantiation is here}}
++void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl> &x) { x.instantiatedMember1(); }
 +template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Impl>;
-+template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Impl>; // non-ms-error{{duplicate explicit instantiation of 'ClassTmplSpecializedMember<true, InstTrig::Impl>}}
 +
 +template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>::specializedMember1();
 +template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>::specializedMember2();
 +extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>;
-+extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>;
-+template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>::specializedMember1(); // non-ms-note{{previous explicit instantiation is here}}
++template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>::specializedMember1();
 +template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>::specializedMember2();
 +template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>;
-+template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>; // non-ms-error{{duplicate explicit instantiation of 'ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>}}
 +
 +template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>::specializedMember1();
 +void anchor(ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
 +extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>;
-+extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>;
-+template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>::specializedMember1(); // non-ms-note{{previous explicit instantiation is here}}
++template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>::specializedMember1();
 +void anchor(ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
 +template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>;
-+template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>; // non-ms-error{{duplicate explicit instantiation of 'ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>}}
 +
 +void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); }
 +template <> void ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>::specializedMember1();
 +extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>;
-+extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>;
-+void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); } // non-ms-note{{previous explicit instantiation is here}}
++void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); }
 +template <> void ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>::specializedMember1();
 +template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>;
-+template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>; // non-ms-error{{duplicate explicit instantiation of 'ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>}}
 +
  
  //===----------------------------------------------------------------------===//

@@ -1,4 +1,4 @@
-From b6ddc92f0172e706318e982951d5f11d50252706 Mon Sep 17 00:00:00 2001
+From a4be4651143764ac2076d588e86cb8207f5c4919 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 24 Dec 2025 07:07:07 +0900
 Subject: [PATCH 31/34] [Clangd] Make clangDaemonTweaks to use

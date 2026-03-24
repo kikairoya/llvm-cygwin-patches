@@ -1,91 +1,141 @@
-From 80d57436d02cd94a853e0ff958a7c404085de6b0 Mon Sep 17 00:00:00 2001
+From cdf2c07582c5b6aea5d6dfee5f4a27a473a4c092 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Thu, 19 Mar 2026 22:49:34 +0900
+Date: Tue, 24 Mar 2026 07:34:40 +0900
 Subject: [PATCH 11/35] test specialize nested
 
 ---
- .../CodeGenCXX/mingw-template-dllexport.cpp   | 40 +++++++++----------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ .../CodeGenCXX/mingw-template-dllexport.cpp   | 28 +++++++--------
+ .../CodeGenCXX/mingw-template-dllimport.cpp   | 36 +++++++++----------
+ 2 files changed, 32 insertions(+), 32 deletions(-)
 
 diff --git a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-index 4cad39f4a42d0bbd786822499bfa8b2393bcf3ca..2972c719d3dc3a0b1c094d25e7ef890ffae6c3fd 100644
+index a3d150a55bef34d3543eef62745519aa3b2000ec..96639acbac81cb19f458b054826bd3415f3fdbdf 100644
 --- a/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
 +++ b/clang/test/CodeGenCXX/mingw-template-dllexport.cpp
-@@ -171,10 +171,10 @@ template <> __declspec(dllexport) void Class<SpecializeOuterMethodNonExportDecla
- template struct __declspec(dllexport) Class<SpecializeOuterMethodNonExportDeclaration>;
- // CHECK: define weak_odr dso_local void @_ZN5ClassI41SpecializeOuterMethodNonExportDeclarationE6MethodEv
- // VAR: @_ZN5ClassI41SpecializeOuterMethodNonExportDeclarationE3VarE = weak_odr dso_local global
--// CHECK: define weak_odr dso_local void @_ZN5ClassI41SpecializeOuterMethodNonExportDeclarationE6Nested6MethodEv
--// VAR: @_ZN5ClassI41SpecializeOuterMethodNonExportDeclarationE6Nested3VarE = weak_odr dso_local global
--// CHECK: define weak_odr dso_local void @_ZN5ClassI41SpecializeOuterMethodNonExportDeclarationE6Nested10DeepNested6MethodEv
--// VAR: @_ZN5ClassI41SpecializeOuterMethodNonExportDeclarationE6Nested10DeepNested3VarE = weak_odr dso_local global
-+// HECK: define weak_odr dso_local void @_ZN5ClassI41SpecializeOuterMethodNonExportDeclarationE6Nested6MethodEv
-+// AR: @_ZN5ClassI41SpecializeOuterMethodNonExportDeclarationE6Nested3VarE = weak_odr dso_local global
-+// HECK: define weak_odr dso_local void @_ZN5ClassI41SpecializeOuterMethodNonExportDeclarationE6Nested10DeepNested6MethodEv
-+// AR: @_ZN5ClassI41SpecializeOuterMethodNonExportDeclarationE6Nested10DeepNested3VarE = weak_odr dso_local global
+@@ -114,7 +114,7 @@ template struct __declspec(dllexport) Class<NonExportDeclaration>;
+ // Export after instantiation: an implicitly instantiated member doesn't prevent other members to be dllexport-ed.
+ //
+ USE(&Class<SpecializeOuterMethodImplicit>::Specialized);
+-// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI29SpecializeOuterMethodImplicitE11SpecializedEv
++// _CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI29SpecializeOuterMethodImplicitE11SpecializedEv
+ extern template struct __declspec(dllexport) Class<SpecializeOuterMethodImplicit>;
+ template struct Class<SpecializeOuterMethodImplicit>;
+ // CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI29SpecializeOuterMethodImplicitE7InlinedEv
+@@ -157,16 +157,16 @@ template struct Class<SpecializeOuterMethodNonExportDeclaration>;
+ // Export after instantiation: an implicitly instantiated member of nested class doesn't prevent other members to be dllexport-ed.
+ //
+ USE(&Class<SpecializeNestedMethodImplicit>::Nested::Specialized);
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested11SpecializedEv
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested11SpecializedEv
+ 
+ extern template struct __declspec(dllexport) Class<SpecializeNestedMethodImplicit>;
+ template struct Class<SpecializeNestedMethodImplicit>;
+ // CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI30SpecializeNestedMethodImplicitE7InlinedEv
+ // VAR: @_ZN5ClassI30SpecializeNestedMethodImplicitE9InlineVarE = weak_odr dso_local dllexport global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested6MethodEv
+-// VAR: @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested9StaticVarE = weak_odr dso_local global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested10DeepNested6MethodEv
+-// VAR: @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested10DeepNested9StaticVarE = weak_odr dso_local global
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested7InlinedEv
++// VAR: @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested9InlineVarE = weak_odr dso_local dllexport global
++// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested10DeepNested7InlinedEv
++// VAR: @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested10DeepNested9InlineVarE = weak_odr dso_local dllexport global
  
  //
- // Check that a specialized member of nested class doesn't prevent other members to be dllexport-ed.
-@@ -186,10 +186,10 @@ extern template struct __declspec(dllexport) Class<SpecializeNestedMethod>;
+ // Export after specialization: a specialized member of nested class doesn't prevent other members to be dllexport-ed.
+@@ -178,10 +178,10 @@ extern template struct __declspec(dllexport) Class<SpecializeNestedMethod>;
  template struct Class<SpecializeNestedMethod>;
  // CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI22SpecializeNestedMethodE7InlinedEv
  // VAR: @_ZN5ClassI22SpecializeNestedMethodE9InlineVarE = weak_odr dso_local dllexport global
--// CHECK: define weak_odr dso_local void @_ZN5ClassI22SpecializeNestedMethodE6Nested7InlinedEv
--// VAR: @_ZN5ClassI22SpecializeNestedMethodE6Nested9InlineVarE = weak_odr dso_local global
--// CHECK: define weak_odr dso_local void @_ZN5ClassI22SpecializeNestedMethodE6Nested10DeepNested7InlinedEv
--// VAR: @_ZN5ClassI22SpecializeNestedMethodE6Nested10DeepNested9InlineVarE = weak_odr dso_local global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI22SpecializeNestedMethodE6Nested6MethodEv
+-// VAR: @_ZN5ClassI22SpecializeNestedMethodE6Nested9StaticVarE = weak_odr dso_local global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI22SpecializeNestedMethodE6Nested10DeepNested6MethodEv
+-// VAR: @_ZN5ClassI22SpecializeNestedMethodE6Nested10DeepNested9StaticVarE = weak_odr dso_local global
 +// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI22SpecializeNestedMethodE6Nested7InlinedEv
 +// VAR: @_ZN5ClassI22SpecializeNestedMethodE6Nested9InlineVarE = weak_odr dso_local dllexport global
 +// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI22SpecializeNestedMethodE6Nested10DeepNested7InlinedEv
 +// VAR: @_ZN5ClassI22SpecializeNestedMethodE6Nested10DeepNested9InlineVarE = weak_odr dso_local dllexport global
  
- template <> void Class<SpecializeBothMethods>::Specialized() {}
- // CHECK: define dso_local void @_ZN5ClassI21SpecializeBothMethodsE11SpecializedEv
-@@ -201,10 +201,10 @@ extern template struct __declspec(dllexport) Class<SpecializeBothMethods>;
+ //
+ //
+@@ -196,10 +196,10 @@ extern template struct __declspec(dllexport) Class<SpecializeBothMethods>;
  template struct Class<SpecializeBothMethods>;
  // CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI21SpecializeBothMethodsE7InlinedEv
  // VAR: @_ZN5ClassI21SpecializeBothMethodsE9InlineVarE = weak_odr dso_local dllexport global
--// CHECK: define weak_odr dso_local void @_ZN5ClassI21SpecializeBothMethodsE6Nested7InlinedEv
--// VAR: @_ZN5ClassI21SpecializeBothMethodsE6Nested9InlineVarE = weak_odr dso_local global
--// CHECK: define weak_odr dso_local void @_ZN5ClassI21SpecializeBothMethodsE6Nested10DeepNested7InlinedEv
--// VAR: @_ZN5ClassI21SpecializeBothMethodsE6Nested10DeepNested9InlineVarE = weak_odr dso_local global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI21SpecializeBothMethodsE6Nested6MethodEv
+-// VAR: @_ZN5ClassI21SpecializeBothMethodsE6Nested9StaticVarE = weak_odr dso_local global
+-// CHECK: define weak_odr dso_local void @_ZN5ClassI21SpecializeBothMethodsE6Nested10DeepNested6MethodEv
+-// VAR: @_ZN5ClassI21SpecializeBothMethodsE6Nested10DeepNested9StaticVarE = weak_odr dso_local global
 +// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI21SpecializeBothMethodsE6Nested7InlinedEv
 +// VAR: @_ZN5ClassI21SpecializeBothMethodsE6Nested9InlineVarE = weak_odr dso_local dllexport global
 +// CHECK: define weak_odr dso_local dllexport void @_ZN5ClassI21SpecializeBothMethodsE6Nested10DeepNested7InlinedEv
 +// VAR: @_ZN5ClassI21SpecializeBothMethodsE6Nested10DeepNested9InlineVarE = weak_odr dso_local dllexport global
  
  //
- // Check that an imported instantiation which has a specialized member only imports exported entities.
-@@ -225,21 +225,21 @@ USE(&Class<SpecializeBothMethodsImport>::Var);
- USE(&Class<SpecializeBothMethodsImport>::InlineVar);
- // VAR: @_ZN5ClassI27SpecializeBothMethodsImportE9InlineVarE = external dllimport global
- USE(&Class<SpecializeBothMethodsImport>::Nested::Method);
--// CHECK: declare dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested6MethodEv
-+// CHECK: declare dllimport void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested6MethodEv
- USE(&Class<SpecializeBothMethodsImport>::Nested::Inlined);
--// CHECK: declare dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested7InlinedEv
-+// CHECK: declare dllimport void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested7InlinedEv
- USE(&Class<SpecializeBothMethodsImport>::Nested::Var);
--// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested3VarE = external global
-+// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested3VarE = external dllimport global
- USE(&Class<SpecializeBothMethodsImport>::Nested::InlineVar);
--// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested9InlineVarE = external global
-+// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested9InlineVarE = external dllimport global
- USE(&Class<SpecializeBothMethodsImport>::Nested::DeepNested::Method);
--// CHECK: declare dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested6MethodEv
-+// CHECK: declare dllimport void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested6MethodEv
- USE(&Class<SpecializeBothMethodsImport>::Nested::DeepNested::Inlined);
--// CHECK: declare dso_local void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested7InlinedEv
-+// CHECK: declare dllimport void @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested7InlinedEv
- USE(&Class<SpecializeBothMethodsImport>::Nested::DeepNested::Var);
--// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested3VarE = external global
-+// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested3VarE = external dllimport global
- USE(&Class<SpecializeBothMethodsImport>::Nested::DeepNested::InlineVar);
--// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested9InlineVarE = external global
-+// VAR: @_ZN5ClassI27SpecializeBothMethodsImportE6Nested10DeepNested9InlineVarE = external dllimport global
+ // Exported specialization of nested class: a specialized nested class doesn't prevent other members to be dllexport-ed.
+diff --git a/clang/test/CodeGenCXX/mingw-template-dllimport.cpp b/clang/test/CodeGenCXX/mingw-template-dllimport.cpp
+index 3382bd385aae2a3c7199dd9bc5115d88908638d5..75725e5c548aab68186b1f0b8b211431602a6109 100644
+--- a/clang/test/CodeGenCXX/mingw-template-dllimport.cpp
++++ b/clang/test/CodeGenCXX/mingw-template-dllimport.cpp
+@@ -176,10 +176,10 @@ USE(&Class<SpecializeNestedMethodImplicit>::Nested::Specialized);
+ // CHECK: declare dso_local void @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested11SpecializedEv
+ 
+ extern template struct __declspec(dllimport) Class<SpecializeNestedMethodImplicit>;
+-USE(&Class<SpecializeNestedMethodImplicit>::Inlined);
+-USE(&Class<SpecializeNestedMethodImplicit>::InlineVar);
+-// CHECK: declare dllimport void @_ZN5ClassI30SpecializeNestedMethodImplicitE7InlinedEv
+-// VAR: @_ZN5ClassI30SpecializeNestedMethodImplicitE9InlineVarE = external dllimport global
++USE(&Class<SpecializeNestedMethodImplicit>::Method);
++USE(&Class<SpecializeNestedMethodImplicit>::StaticVar);
++// CHECK: declare dso_local void @_ZN5ClassI30SpecializeNestedMethodImplicitE6MethodEv
++// VAR: @_ZN5ClassI30SpecializeNestedMethodImplicitE9StaticVarE = external global
+ USE(&Class<SpecializeNestedMethodImplicit>::Nested::Method);
+ USE(&Class<SpecializeNestedMethodImplicit>::Nested::StaticVar);
+ // CHECK: declare dso_local void @_ZN5ClassI30SpecializeNestedMethodImplicitE6Nested6MethodEv
+@@ -200,14 +200,14 @@ USE(&Class<SpecializeNestedMethod>::Inlined);
+ USE(&Class<SpecializeNestedMethod>::InlineVar);
+ // CHECK: declare dllimport void @_ZN5ClassI22SpecializeNestedMethodE7InlinedEv
+ // VAR: @_ZN5ClassI22SpecializeNestedMethodE9InlineVarE = external dllimport global
+-USE(&Class<SpecializeNestedMethod>::Nested::Method);
++USE(&Class<SpecializeNestedMethod>::Nested::Inlined);
+ USE(&Class<SpecializeNestedMethod>::Nested::StaticVar);
+-// CHECK: declare dso_local void @_ZN5ClassI22SpecializeNestedMethodE6Nested6MethodEv
+-// VAR: @_ZN5ClassI22SpecializeNestedMethodE6Nested9StaticVarE = external global
+-USE(&Class<SpecializeNestedMethod>::Nested::DeepNested::Method);
++// CHECK: declare dllimport void @_ZN5ClassI22SpecializeNestedMethodE6Nested7InlinedEv
++// VAR: @_ZN5ClassI22SpecializeNestedMethodE6Nested9StaticVarE = external dllimport global
++USE(&Class<SpecializeNestedMethod>::Nested::DeepNested::Inlined);
+ USE(&Class<SpecializeNestedMethod>::Nested::DeepNested::StaticVar);
+-// CHECK: declare dso_local void @_ZN5ClassI22SpecializeNestedMethodE6Nested10DeepNested6MethodEv
+-// VAR: @_ZN5ClassI22SpecializeNestedMethodE6Nested10DeepNested9StaticVarE = external global
++// CHECK: declare dllimport void @_ZN5ClassI22SpecializeNestedMethodE6Nested10DeepNested7InlinedEv
++// VAR: @_ZN5ClassI22SpecializeNestedMethodE6Nested10DeepNested9StaticVarE = external dllimport global
  
  //
- // Check that a specialized nested class doesn't prevent other members to be dllexport-ed.
+ //
+@@ -223,14 +223,14 @@ USE(&Class<SpecializeBothMethods>::Inlined);
+ USE(&Class<SpecializeBothMethods>::InlineVar);
+ // CHECK: declare dllimport void @_ZN5ClassI21SpecializeBothMethodsE7InlinedEv
+ // VAR: @_ZN5ClassI21SpecializeBothMethodsE9InlineVarE = external dllimport global
+-USE(&Class<SpecializeBothMethods>::Nested::Method);
+-USE(&Class<SpecializeBothMethods>::Nested::StaticVar);
+-// CHECK: declare dso_local void @_ZN5ClassI21SpecializeBothMethodsE6Nested6MethodEv
+-// VAR: @_ZN5ClassI21SpecializeBothMethodsE6Nested9StaticVarE = external global
+-USE(&Class<SpecializeBothMethods>::Nested::DeepNested::Method);
+-USE(&Class<SpecializeBothMethods>::Nested::DeepNested::StaticVar);
+-// CHECK: declare dso_local void @_ZN5ClassI21SpecializeBothMethodsE6Nested10DeepNested6MethodEv
+-// VAR: @_ZN5ClassI21SpecializeBothMethodsE6Nested10DeepNested9StaticVarE = external global
++USE(&Class<SpecializeBothMethods>::Nested::Inlined);
++USE(&Class<SpecializeBothMethods>::Nested::InlineVar);
++// CHECK: declare dllimport void @_ZN5ClassI21SpecializeBothMethodsE6Nested7InlinedEv
++// VAR: @_ZN5ClassI21SpecializeBothMethodsE6Nested9InlineVarE = external dllimport global
++USE(&Class<SpecializeBothMethods>::Nested::DeepNested::Inlined);
++USE(&Class<SpecializeBothMethods>::Nested::DeepNested::InlineVar);
++// CHECK: declare dllimport void @_ZN5ClassI21SpecializeBothMethodsE6Nested10DeepNested7InlinedEv
++// VAR: @_ZN5ClassI21SpecializeBothMethodsE6Nested10DeepNested9InlineVarE = external dllimport global
+ 
+ //
+ // Imported specialization of nested class: a specialized nested class doesn't prevent other members to be dllimport-ed.
 -- 
 2.53.0
 

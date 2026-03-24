@@ -1,4 +1,4 @@
-From b8eff5b226a2d727c137efb542bbd9b88caf8e9d Mon Sep 17 00:00:00 2001
+From 42396c3681103edb86c5ff927fb644ecf665a511 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:30:56 +0900
 Subject: [PATCH 24/35] [libc++][Cygwin] Use unsigned char for ctype mask to

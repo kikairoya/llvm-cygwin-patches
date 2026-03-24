@@ -1,6 +1,6 @@
-From a2dcd64f3e6cd6b6986434303f7c976d64051dc1 Mon Sep 17 00:00:00 2001
+From 74ea5e42261deaf664796d786387604c7fde3e14 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Thu, 19 Mar 2026 21:27:23 +0900
+Date: Tue, 24 Mar 2026 07:30:26 +0900
 Subject: [PATCH 08/35] [Clang][MinGW] Instantiate nested classes by enclosing
  template's explicit instantiation declaration
 
@@ -26,7 +26,7 @@ inherit to the nested class.
  2 files changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 0b28f8bf356b5777c01a17f9059a2c62ad71d17c..21a7d3ef0798ff3f7e9337959da761ff23f5acc3 100644
+index 8fdd360dd6de7fd0123cd095a3f340a3c9e19a7f..38d6a0f21b5bde573fd0fd3650eeab061cbd455c 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6572,12 +6572,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {

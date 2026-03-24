@@ -1,4 +1,4 @@
-From e662283b879cf5b859034bc7a8a21d7587402d10 Mon Sep 17 00:00:00 2001
+From 3d938e4d1fec71b0dbbaf6f90ffff26d59956c6a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 20 Feb 2026 21:09:06 +0900
 Subject: [PATCH 24/60] [LLVM][Support] Enforce proper instantiations of

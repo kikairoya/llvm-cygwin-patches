@@ -1,4 +1,4 @@
-From 73b8a4223c5adf879bf44b534c85f86c55158183 Mon Sep 17 00:00:00 2001
+From 3eddece13596dc9f4963487590e21d1d90a209da Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 2 May 2025 23:16:55 +0900
 Subject: [PATCH 47/60] [Frontend][Cygwin] Handle case-mismatched path properly
@@ -27,7 +27,7 @@ index 25584b4900228740ba4f581e20f3628bbe7e5af4..0d0b1de69a2bae4f2ca4de3bb6e84e46
    llvm::SmallString<256> TmpPath = Filename;
    llvm::sys::path::native(TmpPath);
 diff --git a/llvm/lib/Support/Unix/Path.inc b/llvm/lib/Support/Unix/Path.inc
-index fc71ca46d823a512925262f786bcdc6a3598d575..3bf7911bcb95635e2b860e17888591016d0635a1 100644
+index 057276f9b7eb2f6200c3f69ce382a55934f4c090..7202f53ade0ba2ca4d79b896cc3c0693b2ff0217 100644
 --- a/llvm/lib/Support/Unix/Path.inc
 +++ b/llvm/lib/Support/Unix/Path.inc
 @@ -55,6 +55,12 @@ extern char **environ;
@@ -43,7 +43,7 @@ index fc71ca46d823a512925262f786bcdc6a3598d575..3bf7911bcb95635e2b860e1788859101
  // Both stdio.h and cstdio are included via different paths and
  // stdcxx's cstdio doesn't include stdio.h, so it doesn't #undef the macros
  // either.
-@@ -1016,7 +1022,7 @@ ErrorOr<basic_file_status> directory_entry::status() const {
+@@ -1021,7 +1027,7 @@ ErrorOr<basic_file_status> directory_entry::status() const {
  #define TRY_PROC_SELF_FD
  #endif
  
@@ -52,7 +52,7 @@ index fc71ca46d823a512925262f786bcdc6a3598d575..3bf7911bcb95635e2b860e1788859101
  static bool hasProcSelfFD() {
    // If we have a /proc filesystem mounted, we can quickly establish the
    // real name of the file with readlink
-@@ -1200,6 +1206,8 @@ std::error_code openFileForRead(const Twine &Name, int &ResultFD,
+@@ -1205,6 +1211,8 @@ std::error_code openFileForRead(const Twine &Name, int &ResultFD,
    if (!RealPath)
      return std::error_code();
    RealPath->clear();
@@ -61,7 +61,7 @@ index fc71ca46d823a512925262f786bcdc6a3598d575..3bf7911bcb95635e2b860e1788859101
  #if defined(F_GETPATH)
    // When F_GETPATH is availble, it is the quickest way to get
    // the real path name.
-@@ -1226,6 +1234,33 @@ std::error_code openFileForRead(const Twine &Name, int &ResultFD,
+@@ -1231,6 +1239,33 @@ std::error_code openFileForRead(const Twine &Name, int &ResultFD,
  #if defined(TRY_PROC_SELF_FD)
    }
  #endif

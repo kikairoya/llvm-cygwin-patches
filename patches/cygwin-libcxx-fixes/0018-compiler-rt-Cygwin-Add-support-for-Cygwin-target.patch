@@ -1,4 +1,4 @@
-From c5b9ec0514b42ffd92dbfdbdf5c9e7c7900a5b76 Mon Sep 17 00:00:00 2001
+From 5a4a71a79849a1a7d4e8ff84334c23b220573053 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 18/35] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -46,7 +46,7 @@ index 381e2e4b28abd0384692dce0cc330ce00228933b..9017c700f0fbec2a10a75fc75a27f75f
  else()
    set(COMPILER_RT_HAS_PROFILE FALSE)
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index 08d000fc35106074abb583a280d411fa52bb702a..670d402511ada4b7e11c4388208e83068611ffcc 100644
+index e64e6b70366e4aa201076bbfb6d857dd080ba839..d1821bf496962317a9bb0dadde4877867fe9a663 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -61,7 +61,7 @@ index 08d000fc35106074abb583a280d411fa52bb702a..670d402511ada4b7e11c4388208e8306
  endif()
  
  if (COMPILER_RT_STANDALONE_BUILD)
-@@ -328,7 +333,7 @@ if (NOT MSVC)
+@@ -341,7 +346,7 @@ if (NOT MSVC)
      x86_64/floatdidf.c
      x86_64/floatdisf.c
    )
@@ -70,7 +70,7 @@ index 08d000fc35106074abb583a280d411fa52bb702a..670d402511ada4b7e11c4388208e8306
      set(x86_64_SOURCES
        ${x86_64_SOURCES}
        x86_64/floatundidf.S
-@@ -342,10 +347,7 @@ if (NOT MSVC)
+@@ -355,10 +360,7 @@ if (NOT MSVC)
        ${x86_80_BIT_SOURCES}
        x86_64/floatdixf.c
      )
@@ -82,7 +82,7 @@ index 08d000fc35106074abb583a280d411fa52bb702a..670d402511ada4b7e11c4388208e8306
        set(x86_64_SOURCES
          ${x86_64_SOURCES}
          x86_64/floatundixf.S
-@@ -356,7 +358,7 @@ if (NOT MSVC)
+@@ -369,7 +371,7 @@ if (NOT MSVC)
    # Darwin x86_64 Haswell
    set(x86_64h_SOURCES ${x86_64_SOURCES})
  
@@ -91,7 +91,7 @@ index 08d000fc35106074abb583a280d411fa52bb702a..670d402511ada4b7e11c4388208e8306
      set(x86_64_SOURCES
        ${x86_64_SOURCES}
        x86_64/chkstk.S
-@@ -388,7 +390,7 @@ if (NOT MSVC)
+@@ -401,7 +403,7 @@ if (NOT MSVC)
      )
    endif()
  
@@ -100,7 +100,7 @@ index 08d000fc35106074abb583a280d411fa52bb702a..670d402511ada4b7e11c4388208e8306
      set(i386_SOURCES
        ${i386_SOURCES}
        i386/chkstk.S
-@@ -617,7 +619,7 @@ set(arm_min_SOURCES
+@@ -630,7 +632,7 @@ set(arm_min_SOURCES
    ${arm_EABI_SOURCES}
  )
  
@@ -109,7 +109,7 @@ index 08d000fc35106074abb583a280d411fa52bb702a..670d402511ada4b7e11c4388208e8306
    set(arm_SOURCES
      arm/aeabi_idivmod.S
      arm/aeabi_ldivmod.S
-@@ -728,7 +730,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
+@@ -741,7 +743,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
    endforeach(size)
  endforeach(pat)
  

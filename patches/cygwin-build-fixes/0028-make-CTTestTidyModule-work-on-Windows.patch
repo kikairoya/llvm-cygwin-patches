@@ -1,4 +1,4 @@
-From 470bba3de358982c68e48e3d5558e94a102a04e5 Mon Sep 17 00:00:00 2001
+From f14817a77f8fe6714441cb97921233fa3c794bc2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 Jan 2026 08:07:40 +0900
 Subject: [PATCH 28/34] make CTTestTidyModule work on Windows
@@ -8,10 +8,10 @@ Subject: [PATCH 28/34] make CTTestTidyModule work on Windows
  1 file changed, 2 insertions(+), 9 deletions(-)
 
 diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
-index 78447e7a00db872342fb46a55caf213fa01cce6b..bd46d9ef1cbbb3d485adf60c9112e99fbcaa2f38 100644
+index 97c7a66cd69fda5853d091aba7e7b4b8d490f39c..81f8a4e6ef745cd431358902e0502b71354df100 100644
 --- a/clang-tools-extra/test/CMakeLists.txt
 +++ b/clang-tools-extra/test/CMakeLists.txt
-@@ -63,21 +63,14 @@ foreach(dep ${LLVM_UTILS_DEPS})
+@@ -56,21 +56,14 @@ foreach(dep ${LLVM_UTILS_DEPS})
    endif()
  endforeach()
  

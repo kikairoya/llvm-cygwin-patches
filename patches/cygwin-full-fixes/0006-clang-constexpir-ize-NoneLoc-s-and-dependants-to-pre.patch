@@ -1,4 +1,4 @@
-From 55dbe6ac2ef253b9a16a2dce1f9882ac1ece83ef Mon Sep 17 00:00:00 2001
+From 322e445059bf285f830f6c6e74bb157f2d94ce39 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/49] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -126,10 +126,10 @@ index 75e3a58e7ca617a439f8705a77233b9f284f59db..90f6bd199dff90278c882428f807a34f
    constexpr intptr_t asInt() const {
      intptr_t R = 0;
 diff --git a/llvm/include/llvm/ADT/PointerUnion.h b/llvm/include/llvm/ADT/PointerUnion.h
-index 550127237249245cddb19f004e117e20430b6a1b..0cf78ec62e9767f9d45bf02f02aefcb406f5b115 100644
+index 52cb12168f9b7ec0e2a3d45a4df2be9fd61c11cc..a5586c90034edd458e4cc09e5e50de9744ab90f6 100644
 --- a/llvm/include/llvm/ADT/PointerUnion.h
 +++ b/llvm/include/llvm/ADT/PointerUnion.h
-@@ -49,7 +49,7 @@ class PointerUnionMembers;
+@@ -135,7 +135,7 @@ class PointerUnionMembers;
  template <typename Derived, int Idx> class PointerUnionMembers<Derived, Idx> {
  protected:
    detail::PunnedPointer<void *> Val;
@@ -138,7 +138,7 @@ index 550127237249245cddb19f004e117e20430b6a1b..0cf78ec62e9767f9d45bf02f02aefcb4
  
    template <typename To, typename From, typename Enable>
    friend struct ::llvm::CastInfo;
-@@ -63,7 +63,7 @@ class PointerUnionMembers<Derived, Idx, Type, Types...>
+@@ -149,7 +149,7 @@ class PointerUnionMembers<Derived, Idx, Type, Types...>
  
  public:
    using Base::Base;
@@ -147,7 +147,7 @@ index 550127237249245cddb19f004e117e20430b6a1b..0cf78ec62e9767f9d45bf02f02aefcb4
  
    PointerUnionMembers(Type V) { this->Val = Derived::encode(V); }
  
-@@ -138,8 +138,8 @@ class PointerUnion
+@@ -270,8 +270,8 @@ class PointerUnion
    }
  
  public:

@@ -1,4 +1,4 @@
-From f362cbbb99f654ce59aa93ee2406a8fe10367fca Mon Sep 17 00:00:00 2001
+From 37a5c41d72c3aac4e79d2862ff287074552ecba8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 29/35] [libunwind][Test][Cygwin] Make test runnable for Cygwin
@@ -13,7 +13,7 @@ Subject: [PATCH 29/35] [libunwind][Test][Cygwin] Make test runnable for Cygwin
  create mode 100644 libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 
 diff --git a/libunwind/CMakeLists.txt b/libunwind/CMakeLists.txt
-index fbef71f3f74467571e71cc0fde2a1a94c0c13f35..74c215a0110021a13fec324e521a787211d697ae 100644
+index 9679d2b684ff205a103d67d04b2a3a5768592dcd..5858a2a735b001df5139b423c1bdb5b2b3b4c6c1 100644
 --- a/libunwind/CMakeLists.txt
 +++ b/libunwind/CMakeLists.txt
 @@ -78,6 +78,12 @@ if(MINGW)

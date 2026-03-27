@@ -1,4 +1,4 @@
-From 5a4a71a79849a1a7d4e8ff84334c23b220573053 Mon Sep 17 00:00:00 2001
+From 60763b4353b7cdd0fc93ffbae72d03f4544482e8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 2/6] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -46,7 +46,7 @@ index 381e2e4b28abd0384692dce0cc330ce00228933b..9017c700f0fbec2a10a75fc75a27f75f
  else()
    set(COMPILER_RT_HAS_PROFILE FALSE)
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index e64e6b70366e4aa201076bbfb6d857dd080ba839..d1821bf496962317a9bb0dadde4877867fe9a663 100644
+index c83488bd3ed57719c2f74ec6e0a230da9eb52b20..107767be4774425c00b6cd4e86cf8f0fcffc0fa0 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -100,7 +100,7 @@ index e64e6b70366e4aa201076bbfb6d857dd080ba839..d1821bf496962317a9bb0dadde487786
      set(i386_SOURCES
        ${i386_SOURCES}
        i386/chkstk.S
-@@ -630,7 +632,7 @@ set(arm_min_SOURCES
+@@ -633,7 +635,7 @@ set(arm_min_SOURCES
    ${arm_EABI_SOURCES}
  )
  
@@ -109,7 +109,7 @@ index e64e6b70366e4aa201076bbfb6d857dd080ba839..d1821bf496962317a9bb0dadde487786
    set(arm_SOURCES
      arm/aeabi_idivmod.S
      arm/aeabi_ldivmod.S
-@@ -741,7 +743,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
+@@ -744,7 +746,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
    endforeach(size)
  endforeach(pat)
  
@@ -132,18 +132,18 @@ index 681abda0188ac957b1927aa3413387a3cbe7f560..9b88a10c976cf4cac2b9aac79ffabdf4
  #else
    return (uintptr_t)V;
 diff --git a/compiler-rt/lib/profile/InstrProfilingPlatformOther.c b/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
-index f5d1c74f1011532f19c25cbb395edccc0e07217a..a83c5d867e4da9da699a94f9946fc839c266c56a 100644
+index 205bba1060c3bd64f5b84516fa4a94393c754c9a..d1de581e70d7de7d292ef960f94c178c227131ba 100644
 --- a/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
 +++ b/compiler-rt/lib/profile/InstrProfilingPlatformOther.c
 @@ -16,7 +16,7 @@
- #if !defined(__APPLE__) && !defined(__linux__) && !defined(__FreeBSD__) &&     \
-     !defined(__Fuchsia__) && !(defined(__sun__) && defined(__svr4__)) &&       \
-     !defined(__NetBSD__) && !defined(_WIN32) && !defined(_AIX) &&              \
--    !defined(__wasm__) && !defined(__HAIKU__) &&                               \
-+    !defined(__wasm__) && !defined(__HAIKU__) && !defined(__CYGWIN__) &&       \
-     !defined(COMPILER_RT_PROFILE_BAREMETAL)
+ #if (!defined(__APPLE__) && !defined(__linux__) && !defined(__FreeBSD__) &&    \
+      !defined(__Fuchsia__) && !(defined(__sun__) && defined(__svr4__)) &&      \
+      !defined(__NetBSD__) && !defined(_WIN32) && !defined(_AIX) &&             \
+-     !defined(__wasm__) && !defined(__HAIKU__) &&                              \
++     !defined(__wasm__) && !defined(__HAIKU__) && !defined(__CYGWIN__) &&      \
+      !defined(COMPILER_RT_PROFILE_BAREMETAL)) ||                               \
+     defined(__NVPTX__)
  
- #include <stdlib.h>
 diff --git a/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c b/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c
 index d1b347e861411872b6d48a2dfdd082e0c1df0b7f..3dde4a25e68f55282b557dfe422909144b689731 100644
 --- a/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c

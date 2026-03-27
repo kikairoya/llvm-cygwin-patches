@@ -1,4 +1,4 @@
-From 9068d32493ca444ad77b23786a54ed1b4984aa4a Mon Sep 17 00:00:00 2001
+From 7988d35b69638b69796dea514069d7586c86012f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:31 +0900
 Subject: [PATCH 17/34] specialize nested

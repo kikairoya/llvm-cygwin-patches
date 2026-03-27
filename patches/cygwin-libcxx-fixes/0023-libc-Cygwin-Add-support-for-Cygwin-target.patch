@@ -1,4 +1,4 @@
-From 1d36c58b52879e78d6dd7a0427e68d61d23af0de Mon Sep 17 00:00:00 2001
+From e0d83dd2a634e10e584fdfd3197c780d71fa8d2c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 23/35] [libc++][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 23/35] [libc++][Cygwin] Add support for Cygwin target
  6 files changed, 47 insertions(+), 6 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index e1620f91a453c4b91dd1f7f2a95eac2ffb892b35..255afe18e872847fb92b123318073d801e590f53 100644
+index f54c20370c18f49963c88aaec021aa03814e99b2..a3185575e6cbb9fb9a82bb9a65869bc6cfaa1a57 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
 @@ -279,7 +279,7 @@ if (LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY
@@ -25,7 +25,7 @@ index e1620f91a453c4b91dd1f7f2a95eac2ffb892b35..255afe18e872847fb92b123318073d80
    set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE ON)
  else()
    set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE OFF)
-@@ -324,7 +324,7 @@ option(LIBCXX_ENABLE_PEDANTIC "Compile with pedantic enabled." OFF)
+@@ -325,7 +325,7 @@ option(LIBCXX_ENABLE_PEDANTIC "Compile with pedantic enabled." OFF)
  option(LIBCXX_ENABLE_WERROR "Fail and stop if a warning is triggered." OFF)
  
  set(LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT OFF)
@@ -34,7 +34,7 @@ index e1620f91a453c4b91dd1f7f2a95eac2ffb892b35..255afe18e872847fb92b123318073d80
    set(LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT ON)
  endif()
  option(LIBCXX_HERMETIC_STATIC_LIBRARY
-@@ -516,6 +516,10 @@ function(cxx_add_basic_build_flags target)
+@@ -539,6 +539,10 @@ function(cxx_add_basic_build_flags target)
      target_compile_options(${target} PRIVATE -std=c++26)
    endif()
  
@@ -45,7 +45,7 @@ index e1620f91a453c4b91dd1f7f2a95eac2ffb892b35..255afe18e872847fb92b123318073d80
    # When building the dylib, don't warn for unavailable aligned allocation
    # functions based on the deployment target -- they are always available
    # because they are provided by the dylib itself with the exception of z/OS.
-@@ -694,6 +698,22 @@ function(cxx_link_system_libraries target)
+@@ -717,6 +721,22 @@ function(cxx_link_system_libraries target)
    if (MINGW)
      target_link_libraries(${target} PRIVATE "${MINGW_LIBRARIES}")
    endif()
@@ -68,7 +68,7 @@ index e1620f91a453c4b91dd1f7f2a95eac2ffb892b35..255afe18e872847fb92b123318073d80
  
    if (MSVC)
      if ((NOT CMAKE_MSVC_RUNTIME_LIBRARY AND uppercase_CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-@@ -784,6 +804,8 @@ elseif (RUNTIMES_USE_LIBC STREQUAL "newlib")
+@@ -808,6 +828,8 @@ elseif (RUNTIMES_USE_LIBC STREQUAL "newlib")
    config_define(1 _LIBCPP_LIBC_NEWLIB)
  elseif (RUNTIMES_USE_LIBC STREQUAL "llvm-libc")
    config_define(1 _LIBCPP_LIBC_LLVM_LIBC)
@@ -100,7 +100,7 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 9cb98bbb593411eb7136daa1af254ffddc1f9e01..82e7e50e65ce93f02f6d2a6ef76daf4f139e67d7 100644
+index 942b0a9dbefa33adae7234d9419af73b8d7727c4..a6830d5ee71ff645a2dd682cb4573e20b21a691d 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
 @@ -90,6 +90,10 @@
@@ -114,7 +114,7 @@ index 9cb98bbb593411eb7136daa1af254ffddc1f9e01..82e7e50e65ce93f02f6d2a6ef76daf4f
  #  else
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 0
  #    define _LIBCPP_HAS_BITSCAN64 0
-@@ -382,6 +386,7 @@ typedef __char32_t char32_t;
+@@ -383,6 +387,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \
@@ -123,7 +123,7 @@ index 9cb98bbb593411eb7136daa1af254ffddc1f9e01..82e7e50e65ce93f02f6d2a6ef76daf4f
  // clang-format on
  #      undef _LIBCPP_HAS_THREAD_API_PTHREAD
 diff --git a/libcxx/include/__configuration/attributes.h b/libcxx/include/__configuration/attributes.h
-index 7322995701ba29bf705cc69ebe3c0a321baad2db..b78269ff4fa8af07600090cde62979d144cba316 100644
+index 39683b7688d760956adb62c31919f21b51b54dc5..a38b960bf702f1d701d34568592c10e90b24e643 100644
 --- a/libcxx/include/__configuration/attributes.h
 +++ b/libcxx/include/__configuration/attributes.h
 @@ -54,13 +54,14 @@

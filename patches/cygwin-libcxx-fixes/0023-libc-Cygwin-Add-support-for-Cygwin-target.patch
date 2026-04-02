@@ -1,4 +1,4 @@
-From e0d83dd2a634e10e584fdfd3197c780d71fa8d2c Mon Sep 17 00:00:00 2001
+From 0e8d3b3293a05450e05dd39bc82b489f8ba84791 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 23/35] [libc++][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 23/35] [libc++][Cygwin] Add support for Cygwin target
  6 files changed, 47 insertions(+), 6 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index f54c20370c18f49963c88aaec021aa03814e99b2..a3185575e6cbb9fb9a82bb9a65869bc6cfaa1a57 100644
+index 845240d1b894c1d4ee42b885e8d5d9e3d5e7dd57..4404203c81436de11b8e454cbe8a41dee5a0de39 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
 @@ -279,7 +279,7 @@ if (LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY
@@ -34,7 +34,7 @@ index f54c20370c18f49963c88aaec021aa03814e99b2..a3185575e6cbb9fb9a82bb9a65869bc6
    set(LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT ON)
  endif()
  option(LIBCXX_HERMETIC_STATIC_LIBRARY
-@@ -539,6 +539,10 @@ function(cxx_add_basic_build_flags target)
+@@ -540,6 +540,10 @@ function(cxx_add_basic_build_flags target)
      target_compile_options(${target} PRIVATE -std=c++26)
    endif()
  
@@ -45,7 +45,7 @@ index f54c20370c18f49963c88aaec021aa03814e99b2..a3185575e6cbb9fb9a82bb9a65869bc6
    # When building the dylib, don't warn for unavailable aligned allocation
    # functions based on the deployment target -- they are always available
    # because they are provided by the dylib itself with the exception of z/OS.
-@@ -717,6 +721,22 @@ function(cxx_link_system_libraries target)
+@@ -718,6 +722,22 @@ function(cxx_link_system_libraries target)
    if (MINGW)
      target_link_libraries(${target} PRIVATE "${MINGW_LIBRARIES}")
    endif()
@@ -68,7 +68,7 @@ index f54c20370c18f49963c88aaec021aa03814e99b2..a3185575e6cbb9fb9a82bb9a65869bc6
  
    if (MSVC)
      if ((NOT CMAKE_MSVC_RUNTIME_LIBRARY AND uppercase_CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-@@ -808,6 +828,8 @@ elseif (RUNTIMES_USE_LIBC STREQUAL "newlib")
+@@ -809,6 +829,8 @@ elseif (RUNTIMES_USE_LIBC STREQUAL "newlib")
    config_define(1 _LIBCPP_LIBC_NEWLIB)
  elseif (RUNTIMES_USE_LIBC STREQUAL "llvm-libc")
    config_define(1 _LIBCPP_LIBC_LLVM_LIBC)

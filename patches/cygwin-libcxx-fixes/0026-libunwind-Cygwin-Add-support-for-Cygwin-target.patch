@@ -1,4 +1,4 @@
-From f2f4fcc4e5acd71aa17fff6f184d7e72da873a6c Mon Sep 17 00:00:00 2001
+From b690af6d4d277dc5ff4fc1bd1a557a41f4b37b62 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 26/35] [libunwind][Cygwin] Add support for Cygwin target

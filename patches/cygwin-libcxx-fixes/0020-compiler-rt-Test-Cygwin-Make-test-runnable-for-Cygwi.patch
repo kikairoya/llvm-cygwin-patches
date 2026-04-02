@@ -1,4 +1,4 @@
-From 2fa7398b4c0403899ec2720de91711ff75b7d2fa Mon Sep 17 00:00:00 2001
+From 5d85f8a2e570e9943ce63a72fbc872057899bcac Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 20/35] [compiler-rt][Test][Cygwin] Make test runnable for
@@ -13,7 +13,7 @@ Subject: [PATCH 20/35] [compiler-rt][Test][Cygwin] Make test runnable for
  5 files changed, 15 insertions(+), 3 deletions(-)
 
 diff --git a/compiler-rt/test/CMakeLists.txt b/compiler-rt/test/CMakeLists.txt
-index dd99fe327b51145f39ee998abae50ba6f370fa69..e673fd67846974772031da6d8b0f5f07eaf2491d 100644
+index a1cda7f93382fd2c4170e32d09d47c853cdc9092..d9eeb475ebb42b0aac77d05133f5912949434563 100644
 --- a/compiler-rt/test/CMakeLists.txt
 +++ b/compiler-rt/test/CMakeLists.txt
 @@ -79,7 +79,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)

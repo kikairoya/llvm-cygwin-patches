@@ -1,0 +1,116 @@
+From 7a151c0e4665f003cb0d4bd04dc44fd39324d98d Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 28 Mar 2026 12:34:01 +0900
+Subject: [PATCH 14/51] pretest
+
+---
+ clang/test/CodeGenCXX/dllexport.cpp | 35 ++++++++++++++++++++++++++
+ clang/test/CodeGenCXX/dllimport.cpp | 39 +++++++++++++++++++++++++++++
+ 2 files changed, 74 insertions(+)
+
+diff --git a/clang/test/CodeGenCXX/dllexport.cpp b/clang/test/CodeGenCXX/dllexport.cpp
+index a34a87c5b9f2146e71dc1ff7ab9b0024185c4faa..87f4ef64c2f526df9b3886de275c2919e24c71f1 100644
+--- a/clang/test/CodeGenCXX/dllexport.cpp
++++ b/clang/test/CodeGenCXX/dllexport.cpp
+@@ -805,6 +805,41 @@ USEMEMFUNC(ImplicitInstantiationExportedExplicitInstantiationDefExportedTemplate
+ // G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN69ImplicitInstantiationExportedExplicitInstantiationDefExportedTemplateIiE1fEv
+ // C32-DAG: define weak_odr dso_local void @_ZN69ImplicitInstantiationExportedExplicitInstantiationDefExportedTemplateIiE1fEv
+ 
++template <typename T> struct ExplicitInstantiationAfterMemberSpecialization { void f(){} void g(){} void h(){} };
++template <> void ExplicitInstantiationAfterMemberSpecialization<int>::g() {}
++// M32-DAG: define dso_local x86_thiscallcc void @"?g@?$ExplicitInstantiationAfterMemberSpecialization@H@@QAEXXZ"
++// G32-DAG: define dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1gEv
++// C32-DAG: define dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1gEv
++template struct __declspec(dllexport) ExplicitInstantiationAfterMemberSpecialization<int>;
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<int>, f);
++// M32-DAG: define weak_odr dso_local dllexport x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@H@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1fEv
++
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<long>, h);
++// M32-DAG: define weak_odr dso_local dllexport x86_thiscallcc void @"?h@?$ExplicitInstantiationAfterMemberSpecialization@J@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1hEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1hEv
++template struct __declspec(dllexport) ExplicitInstantiationAfterMemberSpecialization<long>;
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<long>, f);
++// M32-DAG: define weak_odr dso_local dllexport x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@J@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1fEv
++
++template <> void ExplicitInstantiationAfterMemberSpecialization<short>::g() {}
++// M32-DAG: define dso_local x86_thiscallcc void @"?g@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
++// G32-DAG: define dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1gEv
++// C32-DAG: define dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1gEv
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<short>, h);
++// M32-DAG: define weak_odr dso_local dllexport x86_thiscallcc void @"?h@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1hEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1hEv
++template struct __declspec(dllexport) ExplicitInstantiationAfterMemberSpecialization<short>;
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<short>, f);
++// M32-DAG: define weak_odr dso_local dllexport x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1fEv
++
+ namespace { struct InternalLinkageType {}; }
+ struct __declspec(dllexport) PR23308 {
+   void f(InternalLinkageType*);
+diff --git a/clang/test/CodeGenCXX/dllimport.cpp b/clang/test/CodeGenCXX/dllimport.cpp
+index ed1c72c5185d3cd4f573822f0f7497b5834f5930..d0dca72e681bca2d07663c678a7ccddcd92024d6 100644
+--- a/clang/test/CodeGenCXX/dllimport.cpp
++++ b/clang/test/CodeGenCXX/dllimport.cpp
+@@ -852,6 +852,7 @@ USEMEMFUNC(ExplicitInstantiationDeclImportedDefTemplate<int>, f);
+ // M32-DAG: {{declare|define available_externally}} dllimport x86_thiscallcc ptr @"??0?$ExplicitInstantiationDeclImportedDefTemplate@H@@QAE@XZ"
+ // G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN44ExplicitInstantiationDeclImportedDefTemplateIiE1fEv
+ // C32-DAG: define weak_odr dso_local void @_ZN44ExplicitInstantiationDeclImportedDefTemplateIiE1fEv
++// PS-DAG: declare dllimport void @_ZN44ExplicitInstantiationDeclImportedDefTemplateIiE1fEv
+ 
+ template <typename T> struct __declspec(dllimport) ExplicitInstantiationDeclExportedDefImportedTemplate { void f() {} ExplicitInstantiationDeclExportedDefImportedTemplate() {} };
+ extern template struct __declspec(dllimport) ExplicitInstantiationDeclExportedDefImportedTemplate <int>;
+@@ -861,6 +862,44 @@ USEMEMFUNC(ExplicitInstantiationDeclExportedDefImportedTemplate<int>, f);
+ // M32-DAG: {{declare|define available_externally}} dllimport x86_thiscallcc void @"?f@?$ExplicitInstantiationDeclExportedDefImportedTemplate@H@@QAEXXZ"
+ // M32-DAG: {{declare|define available_externally}} dllimport x86_thiscallcc ptr @"??0?$ExplicitInstantiationDeclExportedDefImportedTemplate@H@@QAE@XZ"
+ 
++template <typename T> struct ExplicitInstantiationAfterMemberSpecialization { void f(){} void g(){} void h(){} };
++template <> void ExplicitInstantiationAfterMemberSpecialization<int>::g() {}
++// M32-DAG: define dso_local x86_thiscallcc void @"?g@?$ExplicitInstantiationAfterMemberSpecialization@H@@QAEXXZ"
++// G32-DAG: define dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1gEv
++// C32-DAG: define dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1gEv
++extern template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<int>;
++template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<int>;
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<int>, f);
++// M32-DAG: declare dso_local x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@H@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIiE1fEv
++
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<long>, h);
++// M32-DAG: declare dso_local x86_thiscallcc void @"?h@?$ExplicitInstantiationAfterMemberSpecialization@J@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1hEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1hEv
++extern template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<long>;
++template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<long>;
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<long>, f);
++// M32-DAG: declare dso_local x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@J@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIlE1fEv
++
++template <> void ExplicitInstantiationAfterMemberSpecialization<short>::g() {}
++// M32-DAG: define dso_local x86_thiscallcc void @"?g@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
++// G32-DAG: define dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1gEv
++// C32-DAG: define dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1gEv
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<short>, h);
++// M32-DAG: declare dso_local x86_thiscallcc void @"?h@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1hEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1hEv
++extern template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<short>;
++template struct __declspec(dllimport) ExplicitInstantiationAfterMemberSpecialization<short>;
++USEMEMFUNC(ExplicitInstantiationAfterMemberSpecialization<short>, f);
++// M32-DAG: declare dso_local x86_thiscallcc void @"?f@?$ExplicitInstantiationAfterMemberSpecialization@F@@QAEXXZ"
++// G32-DAG: define weak_odr dso_local x86_thiscallcc void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1fEv
++// C32-DAG: define weak_odr dso_local void @_ZN46ExplicitInstantiationAfterMemberSpecializationIsE1fEv
++
+ template <typename T> struct PR23770BaseTemplate { void f() {} };
+ template <typename T> struct PR23770DerivedTemplate : PR23770BaseTemplate<int> {};
+ extern template struct PR23770DerivedTemplate<int>;
+-- 
+2.53.0
+

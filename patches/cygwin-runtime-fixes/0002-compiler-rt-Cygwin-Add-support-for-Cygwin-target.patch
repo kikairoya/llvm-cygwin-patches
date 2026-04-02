@@ -1,4 +1,4 @@
-From 60763b4353b7cdd0fc93ffbae72d03f4544482e8 Mon Sep 17 00:00:00 2001
+From 2437fc793408953a88506a6c6220452b81c7d0b2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 2/6] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -46,7 +46,7 @@ index 381e2e4b28abd0384692dce0cc330ce00228933b..9017c700f0fbec2a10a75fc75a27f75f
  else()
    set(COMPILER_RT_HAS_PROFILE FALSE)
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index c83488bd3ed57719c2f74ec6e0a230da9eb52b20..107767be4774425c00b6cd4e86cf8f0fcffc0fa0 100644
+index 503a9aa3ff4ec0e18673993873ccc448ce452000..6d574d4d9c9ebce411852128f41ef87949621ead 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -100,7 +100,7 @@ index c83488bd3ed57719c2f74ec6e0a230da9eb52b20..107767be4774425c00b6cd4e86cf8f0f
      set(i386_SOURCES
        ${i386_SOURCES}
        i386/chkstk.S
-@@ -633,7 +635,7 @@ set(arm_min_SOURCES
+@@ -635,7 +637,7 @@ set(arm_min_SOURCES
    ${arm_EABI_SOURCES}
  )
  
@@ -109,7 +109,7 @@ index c83488bd3ed57719c2f74ec6e0a230da9eb52b20..107767be4774425c00b6cd4e86cf8f0f
    set(arm_SOURCES
      arm/aeabi_idivmod.S
      arm/aeabi_ldivmod.S
-@@ -744,7 +746,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
+@@ -746,7 +748,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
    endforeach(size)
  endforeach(pat)
  

@@ -1,0 +1,29 @@
+From 56af420642c8db7afd18acede782e14a53eb0126 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 16 Mar 2026 06:52:39 +0900
+Subject: [PATCH 30/62] make llvm/Debuginfod static
+
+---
+ llvm/lib/Debuginfod/CMakeLists.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/llvm/lib/Debuginfod/CMakeLists.txt b/llvm/lib/Debuginfod/CMakeLists.txt
+index c31481cc97f08c0328cb6560a3a9d1f8dc7677eb..9da810243216b699e7b33b37cae41eee4a1919ea 100644
+--- a/llvm/lib/Debuginfod/CMakeLists.txt
++++ b/llvm/lib/Debuginfod/CMakeLists.txt
+@@ -5,7 +5,11 @@ endif()
+ 
+ # Note: This isn't a component, since that could potentially add a libcurl
+ # dependency to libLLVM.
+-add_llvm_library(LLVMDebuginfod
++set(libtype STATIC)
++if (BUILD_SHARED_LIBS)
++  set(libtype)
++endif()
++add_llvm_library(LLVMDebuginfod ${libtype}
+   BuildIDFetcher.cpp
+   Debuginfod.cpp
+ 
+-- 
+2.53.0
+

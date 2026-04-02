@@ -1,4 +1,4 @@
-From 37a5c41d72c3aac4e79d2862ff287074552ecba8 Mon Sep 17 00:00:00 2001
+From 08a403d6b81f7b4494fe790bc15ba8e69d890557 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 29/35] [libunwind][Test][Cygwin] Make test runnable for Cygwin
@@ -13,7 +13,7 @@ Subject: [PATCH 29/35] [libunwind][Test][Cygwin] Make test runnable for Cygwin
  create mode 100644 libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 
 diff --git a/libunwind/CMakeLists.txt b/libunwind/CMakeLists.txt
-index 9679d2b684ff205a103d67d04b2a3a5768592dcd..5858a2a735b001df5139b423c1bdb5b2b3b4c6c1 100644
+index 02132f6c07fcdcf884863720ca19d1c658a530f8..ea4fbdc2921d8909b0d7ab5ba0661768f0406c94 100644
 --- a/libunwind/CMakeLists.txt
 +++ b/libunwind/CMakeLists.txt
 @@ -78,6 +78,12 @@ if(MINGW)
@@ -38,7 +38,7 @@ index 9679d2b684ff205a103d67d04b2a3a5768592dcd..5858a2a735b001df5139b423c1bdb5b2
    set(LIBUNWIND_DEFAULT_HIDE_SYMBOLS TRUE)
  else()
    set(LIBUNWIND_DEFAULT_HIDE_SYMBOLS FALSE)
-@@ -208,7 +214,7 @@ if (LIBUNWIND_ENABLE_GCS)
+@@ -209,7 +215,7 @@ if (LIBUNWIND_ENABLE_GCS)
    endif()
  endif()
  

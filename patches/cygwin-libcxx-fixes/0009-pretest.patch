@@ -1,7 +1,7 @@
-From cb243335e85b5028a3a1dfa42afac8f681afd2af Mon Sep 17 00:00:00 2001
+From a15bd758269eab86e895edf4f1a46afe03f72647 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 21:43:54 +0900
-Subject: [PATCH 09/35] pretest
+Subject: [PATCH 09/37] pretest
 
 ---
  ...t_instantiation.exclude_from_dllexport.cpp |  96 +++++++++++

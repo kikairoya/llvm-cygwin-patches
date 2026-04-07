@@ -1,0 +1,54 @@
+From 9d5bcf105e6e6123171013c0e6e77a860dcd3040 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Fri, 5 Dec 2025 20:06:12 +0900
+Subject: [PATCH 04/54] [LLVM] Prevent symbol dup for
+ GraphTraits<ModuleSummaryIndex *>::getEntryNode
+
+---
+ llvm/include/llvm/IR/ModuleSummaryIndex.h | 10 +---------
+ llvm/lib/IR/ModuleSummaryIndex.cpp        | 11 +++++++++++
+ 2 files changed, 12 insertions(+), 9 deletions(-)
+
+diff --git a/llvm/include/llvm/IR/ModuleSummaryIndex.h b/llvm/include/llvm/IR/ModuleSummaryIndex.h
+index 6859b9a2f46e6bfb3bccbb32f89cf41d0db94fee..9147bce7e7157d0bb807a62caf5ea2e760aa8085 100644
+--- a/llvm/include/llvm/IR/ModuleSummaryIndex.h
++++ b/llvm/include/llvm/IR/ModuleSummaryIndex.h
+@@ -2096,15 +2096,7 @@ template <> struct GraphTraits<ValueInfo> {
+ 
+ template <>
+ struct GraphTraits<ModuleSummaryIndex *> : public GraphTraits<ValueInfo> {
+-  static NodeRef getEntryNode(ModuleSummaryIndex *I) {
+-    std::unique_ptr<GlobalValueSummary> Root =
+-        std::make_unique<FunctionSummary>(I->calculateCallGraphRoot());
+-    GlobalValueSummaryInfo G(I->haveGVs());
+-    G.addSummary(std::move(Root));
+-    static auto P =
+-        GlobalValueSummaryMapTy::value_type(GlobalValue::GUID(0), std::move(G));
+-    return ValueInfo(I->haveGVs(), &P);
+-  }
++  LLVM_ABI static NodeRef getEntryNode(ModuleSummaryIndex *I);
+ };
+ } // end namespace llvm
+ 
+diff --git a/llvm/lib/IR/ModuleSummaryIndex.cpp b/llvm/lib/IR/ModuleSummaryIndex.cpp
+index 98876c87ef6dbd9f1b51b7970da160c1b6f08794..078b50f02a6913502453fb6680f4ef5b253eeb68 100644
+--- a/llvm/lib/IR/ModuleSummaryIndex.cpp
++++ b/llvm/lib/IR/ModuleSummaryIndex.cpp
+@@ -743,3 +743,14 @@ void ModuleSummaryIndex::exportToDot(
+ 
+   OS << "}";
+ }
++
++GraphTraits<ValueInfo>::NodeRef
++GraphTraits<ModuleSummaryIndex *>::getEntryNode(ModuleSummaryIndex *I) {
++  std::unique_ptr<GlobalValueSummary> Root =
++      std::make_unique<FunctionSummary>(I->calculateCallGraphRoot());
++  GlobalValueSummaryInfo G(I->haveGVs());
++  G.addSummary(std::move(Root));
++  static auto P =
++      GlobalValueSummaryMapTy::value_type(GlobalValue::GUID(0), std::move(G));
++  return ValueInfo(I->haveGVs(), &P);
++}
+-- 
+2.53.0
+

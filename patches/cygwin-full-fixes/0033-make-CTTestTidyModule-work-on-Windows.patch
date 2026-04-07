@@ -1,0 +1,40 @@
+From c20d74bd9a8a41687918209a5783285e5d764bb8 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 18 Jan 2026 08:07:40 +0900
+Subject: [PATCH 33/54] make CTTestTidyModule work on Windows
+
+---
+ clang-tools-extra/test/CMakeLists.txt | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
+
+diff --git a/clang-tools-extra/test/CMakeLists.txt b/clang-tools-extra/test/CMakeLists.txt
+index 22f227a891f82b45f2c5a64a07f864c861588296..8f1b13ac0e107c2f3503fb2e895d50be9178e088 100644
+--- a/clang-tools-extra/test/CMakeLists.txt
++++ b/clang-tools-extra/test/CMakeLists.txt
+@@ -59,21 +59,14 @@ foreach(dep ${LLVM_UTILS_DEPS})
+   endif()
+ endforeach()
+ 
+-if (NOT WIN32 OR NOT LLVM_LINK_LLVM_DYLIB)
++if (CLANG_PLUGIN_SUPPORT AND
++    (NOT (WIN32 OR CYGWIN) OR BUILD_SHARED_LIBS OR CLANG_LINK_CLANG_DYLIB))
+   llvm_add_library(
+       CTTestTidyModule
+       MODULE clang-tidy/CTTestTidyModule.cpp
+       PLUGIN_TOOL clang-tidy)
+-endif()
+-
+-if(TARGET CTTestTidyModule)
+     list(APPEND CLANG_TOOLS_TEST_DEPS CTTestTidyModule)
+     target_include_directories(CTTestTidyModule PUBLIC BEFORE "${CLANG_TOOLS_SOURCE_DIR}")
+-    if(CLANG_PLUGIN_SUPPORT AND (WIN32 OR CYGWIN))
+-      set(LLVM_LINK_COMPONENTS
+-        Support
+-      )
+-    endif()
+ endif()
+ 
+ add_lit_testsuite(check-clang-extra "Running clang-tools-extra/test"
+-- 
+2.53.0
+

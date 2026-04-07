@@ -1,7 +1,7 @@
-From 057f1b3b896ea80f1241d8033ed6b259fccc593b Mon Sep 17 00:00:00 2001
+From f0626d5c8a7dfedec754eb2350413edb84a7d08d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 19 Mar 2026 21:47:26 +0900
-Subject: [PATCH 04/35] update test
+Subject: [PATCH 04/37] update test
 
 ---
  clang/test/SemaCXX/dllexport.cpp | 25 +++++++++-------

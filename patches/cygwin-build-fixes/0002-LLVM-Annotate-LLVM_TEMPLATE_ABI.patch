@@ -1,0 +1,262 @@
+From cb20850899f3164b61ec8ebb963e57dab8469460 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 27 Dec 2025 09:56:41 +0900
+Subject: [PATCH 02/40] [LLVM] Annotate LLVM_TEMPLATE_ABI
+
+---
+ llvm/include/llvm/ADT/SmallVector.h           |  4 ++--
+ .../include/llvm/CodeGen/MachinePassManager.h | 10 ++++----
+ llvm/include/llvm/IR/Analysis.h               |  2 ++
+ llvm/include/llvm/IR/Dominators.h             |  2 +-
+ llvm/include/llvm/IR/PassManager.h            | 24 ++++---------------
+ llvm/include/llvm/MCA/Support.h               |  1 +
+ llvm/include/llvm/Object/XCOFFObjectFile.h    |  4 ++++
+ llvm/lib/CodeGen/MachinePassManager.cpp       |  4 +++-
+ llvm/lib/IR/Dominators.cpp                    |  2 +-
+ llvm/lib/MCA/Support.cpp                      |  2 ++
+ llvm/lib/Support/SmallVector.cpp              |  4 ++--
+ 11 files changed, 28 insertions(+), 31 deletions(-)
+
+diff --git a/llvm/include/llvm/ADT/SmallVector.h b/llvm/include/llvm/ADT/SmallVector.h
+index 23d40c3e07675d5c5cb8aa0089920ebd47cd1ccd..6c503aa7b3aa0f094e0b82c0b80fe79ad2e2e856 100644
+--- a/llvm/include/llvm/ADT/SmallVector.h
++++ b/llvm/include/llvm/ADT/SmallVector.h
+@@ -1322,9 +1322,9 @@ template <typename Out, typename R> SmallVector<Out> to_vector_of(R &&Range) {
+ }
+ 
+ // Explicit instantiations
+-extern template class llvm::SmallVectorBase<uint32_t>;
++extern template class LLVM_TEMPLATE_ABI llvm::SmallVectorBase<uint32_t>;
+ #if SIZE_MAX > UINT32_MAX
+-extern template class llvm::SmallVectorBase<uint64_t>;
++extern template class LLVM_TEMPLATE_ABI llvm::SmallVectorBase<uint64_t>;
+ #endif
+ 
+ // Provide DenseMapInfo for SmallVector of a type which has info.
+diff --git a/llvm/include/llvm/CodeGen/MachinePassManager.h b/llvm/include/llvm/CodeGen/MachinePassManager.h
+index f7b888e45a7ecd912d3f8267503874f8dfeeec39..bf331e7a7d9374732a687aa9bf9cdd4f0a72f1f1 100644
+--- a/llvm/include/llvm/CodeGen/MachinePassManager.h
++++ b/llvm/include/llvm/CodeGen/MachinePassManager.h
+@@ -108,8 +108,8 @@ template <>
+ LLVM_ABI bool MachineFunctionAnalysisManagerModuleProxy::Result::invalidate(
+     Module &M, const PreservedAnalyses &PA,
+     ModuleAnalysisManager::Invalidator &Inv);
+-extern template class InnerAnalysisManagerProxy<MachineFunctionAnalysisManager,
+-                                                Module>;
++extern template class LLVM_TEMPLATE_ABI
++    InnerAnalysisManagerProxy<MachineFunctionAnalysisManager, Module>;
+ using MachineFunctionAnalysisManagerFunctionProxy =
+     InnerAnalysisManagerProxy<MachineFunctionAnalysisManager, Function>;
+ 
+@@ -117,8 +117,8 @@ template <>
+ LLVM_ABI bool MachineFunctionAnalysisManagerFunctionProxy::Result::invalidate(
+     Function &F, const PreservedAnalyses &PA,
+     FunctionAnalysisManager::Invalidator &Inv);
+-extern template class InnerAnalysisManagerProxy<MachineFunctionAnalysisManager,
+-                                                Function>;
++extern template class LLVM_TEMPLATE_ABI
++    InnerAnalysisManagerProxy<MachineFunctionAnalysisManager, Function>;
+ 
+ extern template class LLVM_TEMPLATE_ABI
+     OuterAnalysisManagerProxy<ModuleAnalysisManager, MachineFunction>;
+@@ -225,7 +225,7 @@ createFunctionToMachineFunctionPassAdaptor(MachineFunctionPassT &&Pass) {
+ template <>
+ LLVM_ABI PreservedAnalyses PassManager<MachineFunction>::run(
+     MachineFunction &, AnalysisManager<MachineFunction> &);
+-extern template class PassManager<MachineFunction>;
++extern template class LLVM_TEMPLATE_ABI PassManager<MachineFunction>;
+ 
+ /// Convenience typedef for a pass manager over functions.
+ using MachineFunctionPassManager = PassManager<MachineFunction>;
+diff --git a/llvm/include/llvm/IR/Analysis.h b/llvm/include/llvm/IR/Analysis.h
+index 8ab70dd9ed594c501d2c2e388818a1b5b5ec84f3..5845cc0b8fed045e4bb2aaa894d027cd9806e8ed 100644
+--- a/llvm/include/llvm/IR/Analysis.h
++++ b/llvm/include/llvm/IR/Analysis.h
+@@ -19,6 +19,7 @@ namespace llvm {
+ 
+ class Function;
+ class Module;
++class MachineFunction;
+ 
+ /// A special type used by analysis passes to provide an address that
+ /// identifies that particular analysis pass type.
+@@ -59,6 +60,7 @@ template <typename IRUnitT> AnalysisSetKey AllAnalysesOn<IRUnitT>::SetKey;
+ 
+ extern template class LLVM_TEMPLATE_ABI AllAnalysesOn<Module>;
+ extern template class LLVM_TEMPLATE_ABI AllAnalysesOn<Function>;
++extern template class LLVM_TEMPLATE_ABI AllAnalysesOn<MachineFunction>;
+ 
+ /// Represents analyses that only rely on functions' control flow.
+ ///
+diff --git a/llvm/include/llvm/IR/Dominators.h b/llvm/include/llvm/IR/Dominators.h
+index d860c1453bd732894fdf817b78e71868a14c3f44..d63fa8ca99ff668c0a4d193bcc08f7a1ebce3d14 100644
+--- a/llvm/include/llvm/IR/Dominators.h
++++ b/llvm/include/llvm/IR/Dominators.h
+@@ -49,7 +49,7 @@ extern template class LLVM_TEMPLATE_ABI
+ extern template class LLVM_TEMPLATE_ABI
+     DominatorTreeBase<BasicBlock, true>; // PostDomTree
+ 
+-extern template class cfg::Update<BasicBlock *>;
++extern template class LLVM_TEMPLATE_ABI cfg::Update<BasicBlock *>;
+ 
+ namespace DomTreeBuilder {
+ using BBDomTree = DomTreeBase<BasicBlock>;
+diff --git a/llvm/include/llvm/IR/PassManager.h b/llvm/include/llvm/IR/PassManager.h
+index 4d4c4bcfe943d1e9ff2ef8b45e3a16c03cb60486..f65b503641ac988e175b8433f8ef20ac7a2baab4 100644
+--- a/llvm/include/llvm/IR/PassManager.h
++++ b/llvm/include/llvm/IR/PassManager.h
+@@ -579,7 +579,7 @@ using FunctionAnalysisManager = AnalysisManager<Function>;
+ /// Note that the proxy's result is a move-only RAII object.  The validity of
+ /// the analyses in the inner analysis manager is tied to its lifetime.
+ template <typename AnalysisManagerT, typename IRUnitT, typename... ExtraArgTs>
+-class LLVM_TEMPLATE_ABI InnerAnalysisManagerProxy
++class InnerAnalysisManagerProxy
+     : public AnalysisInfoMixin<
+           InnerAnalysisManagerProxy<AnalysisManagerT, IRUnitT>> {
+ public:
+@@ -651,21 +651,11 @@ private:
+   friend AnalysisInfoMixin<
+       InnerAnalysisManagerProxy<AnalysisManagerT, IRUnitT>>;
+ 
+-  static AnalysisKey Key;
++  static inline AnalysisKey Key{};
+ 
+   AnalysisManagerT *InnerAM;
+ };
+ 
+-// NOTE: The LLVM_ABI annotation cannot be used here because MSVC disallows
+-// storage-class specifiers on class members outside of the class declaration
+-// (C2720). LLVM_ATTRIBUTE_VISIBILITY_DEFAULT only applies to non-Windows
+-// targets so it is used instead. Without this annotation, compiling LLVM as a
+-// shared library with -fvisibility=hidden using GCC fails to export the symbol
+-// even though InnerAnalysisManagerProxy is already annotated with LLVM_ABI.
+-template <typename AnalysisManagerT, typename IRUnitT, typename... ExtraArgTs>
+-LLVM_ATTRIBUTE_VISIBILITY_DEFAULT AnalysisKey
+-    InnerAnalysisManagerProxy<AnalysisManagerT, IRUnitT, ExtraArgTs...>::Key;
+-
+ /// Provide the \c FunctionAnalysisManager to \c Module proxy.
+ using FunctionAnalysisManagerModuleProxy =
+     InnerAnalysisManagerProxy<FunctionAnalysisManager, Module>;
+@@ -679,8 +669,8 @@ LLVM_ABI bool FunctionAnalysisManagerModuleProxy::Result::invalidate(
+ 
+ // Ensure the \c FunctionAnalysisManagerModuleProxy is provided as an extern
+ // template.
+-extern template class InnerAnalysisManagerProxy<FunctionAnalysisManager,
+-                                                Module>;
++extern template class LLVM_TEMPLATE_ABI
++    InnerAnalysisManagerProxy<FunctionAnalysisManager, Module>;
+ 
+ /// An analysis over an "inner" IR unit that provides access to an
+ /// analysis manager over a "outer" IR unit.  The inner unit must be contained
+@@ -809,15 +799,11 @@ private:
+   friend AnalysisInfoMixin<
+       OuterAnalysisManagerProxy<AnalysisManagerT, IRUnitT, ExtraArgTs...>>;
+ 
+-  static AnalysisKey Key;
++  static inline AnalysisKey Key{};
+ 
+   const AnalysisManagerT *OuterAM;
+ };
+ 
+-template <typename AnalysisManagerT, typename IRUnitT, typename... ExtraArgTs>
+-AnalysisKey
+-    OuterAnalysisManagerProxy<AnalysisManagerT, IRUnitT, ExtraArgTs...>::Key;
+-
+ extern template class LLVM_TEMPLATE_ABI
+     OuterAnalysisManagerProxy<ModuleAnalysisManager, Function>;
+ /// Provide the \c ModuleAnalysisManager to \c Function proxy.
+diff --git a/llvm/include/llvm/MCA/Support.h b/llvm/include/llvm/MCA/Support.h
+index 6875787833d9362320fe027727b858eaddb1643c..eedad4d3293507fdac32afa6aa466e1d6badd3f8 100644
+--- a/llvm/include/llvm/MCA/Support.h
++++ b/llvm/include/llvm/MCA/Support.h
+@@ -42,6 +42,7 @@ public:
+ };
+ 
+ template <typename T> char InstructionError<T>::ID;
++extern template class LLVM_TEMPLATE_ABI InstructionError<MCInst>;
+ 
+ /// This class represents the number of cycles per resource (fractions of
+ /// cycles).  That quantity is managed here as a ratio, and accessed via the
+diff --git a/llvm/include/llvm/Object/XCOFFObjectFile.h b/llvm/include/llvm/Object/XCOFFObjectFile.h
+index da3538ecb3024709fbbb420fa175238d0d8c3774..33ae47dcc9c43c040bee94f0d956d3ee1daa2284 100644
+--- a/llvm/include/llvm/Object/XCOFFObjectFile.h
++++ b/llvm/include/llvm/Object/XCOFFObjectFile.h
+@@ -788,6 +788,10 @@ XCOFFObjectFile::relocations<XCOFFSectionHeader32, XCOFFRelocation32>(
+ extern template LLVM_TEMPLATE_ABI Expected<ArrayRef<XCOFFRelocation64>>
+ XCOFFObjectFile::relocations<XCOFFSectionHeader64, XCOFFRelocation64>(
+     const XCOFFSectionHeader64 &Sec) const;
++extern template LLVM_TEMPLATE_ABI Expected<ArrayRef<ExceptionSectionEntry32>>
++XCOFFObjectFile::getExceptionEntries() const;
++extern template LLVM_TEMPLATE_ABI Expected<ArrayRef<ExceptionSectionEntry64>>
++XCOFFObjectFile::getExceptionEntries() const;
+ 
+ class XCOFFSymbolRef : public SymbolRef {
+ public:
+diff --git a/llvm/lib/CodeGen/MachinePassManager.cpp b/llvm/lib/CodeGen/MachinePassManager.cpp
+index 6e445f678790353a97dd97d734b162b7dddc533b..d78bc69784aab40b20de3dcb1b00aaabfcd136e3 100644
+--- a/llvm/lib/CodeGen/MachinePassManager.cpp
++++ b/llvm/lib/CodeGen/MachinePassManager.cpp
+@@ -25,7 +25,7 @@ AnalysisKey FunctionAnalysisManagerMachineFunctionProxy::Key;
+ 
+ namespace llvm {
+ template class LLVM_EXPORT_TEMPLATE AnalysisManager<MachineFunction>;
+-template class PassManager<MachineFunction>;
++template class LLVM_EXPORT_TEMPLATE PassManager<MachineFunction>;
+ template class LLVM_EXPORT_TEMPLATE
+     InnerAnalysisManagerProxy<MachineFunctionAnalysisManager, Module>;
+ template class LLVM_EXPORT_TEMPLATE
+@@ -167,3 +167,5 @@ PreservedAnalyses llvm::getMachineFunctionPassPreservedAnalyses() {
+   PA.template preserveSet<AllAnalysesOn<Function>>();
+   return PA;
+ }
++
++template class LLVM_EXPORT_TEMPLATE llvm::AllAnalysesOn<MachineFunction>;
+diff --git a/llvm/lib/IR/Dominators.cpp b/llvm/lib/IR/Dominators.cpp
+index e11b80920e7ffb657c80b97d0fe96e7ec78ebef8..09b2c65900df9255019e2ed7ec97ba40da858296 100644
+--- a/llvm/lib/IR/Dominators.cpp
++++ b/llvm/lib/IR/Dominators.cpp
+@@ -65,7 +65,7 @@ template class LLVM_EXPORT_TEMPLATE
+ template class LLVM_EXPORT_TEMPLATE
+     llvm::DominatorTreeBase<BasicBlock, true>; // PostDomTreeBase
+ 
+-template class llvm::cfg::Update<BasicBlock *>;
++template class LLVM_EXPORT_TEMPLATE llvm::cfg::Update<BasicBlock *>;
+ 
+ template LLVM_EXPORT_TEMPLATE void
+ llvm::DomTreeBuilder::Calculate<DomTreeBuilder::BBDomTree>(
+diff --git a/llvm/lib/MCA/Support.cpp b/llvm/lib/MCA/Support.cpp
+index 45459f7a3a72b4eb98b731bedb22e151c06a47bb..d349f5933d96792a64b7163f52bd223274d05dc5 100644
+--- a/llvm/lib/MCA/Support.cpp
++++ b/llvm/lib/MCA/Support.cpp
+@@ -108,5 +108,7 @@ double computeBlockRThroughput(const MCSchedModel &SM, unsigned DispatchWidth,
+   return Max;
+ }
+ 
++template class LLVM_EXPORT_TEMPLATE InstructionError<MCInst>;
++
+ } // namespace mca
+ } // namespace llvm
+diff --git a/llvm/lib/Support/SmallVector.cpp b/llvm/lib/Support/SmallVector.cpp
+index dceea4fbc630e85a869458af8b35ee1066c5866d..ccccf226404c843cb1ca463cfa3b4a3c911bd7d7 100644
+--- a/llvm/lib/Support/SmallVector.cpp
++++ b/llvm/lib/Support/SmallVector.cpp
+@@ -164,14 +164,14 @@ void SmallVectorBase<Size_T>::grow_pod(void *FirstEl, size_t MinSize,
+   this->set_allocation_range(NewElts, NewCapacity);
+ }
+ 
+-template class llvm::SmallVectorBase<uint32_t>;
++template class LLVM_EXPORT_TEMPLATE llvm::SmallVectorBase<uint32_t>;
+ 
+ // Disable the uint64_t instantiation for 32-bit builds.
+ // Both uint32_t and uint64_t instantiations are needed for 64-bit builds.
+ // This instantiation will never be used in 32-bit builds, and will cause
+ // warnings when sizeof(Size_T) > sizeof(size_t).
+ #if SIZE_MAX > UINT32_MAX
+-template class llvm::SmallVectorBase<uint64_t>;
++template class LLVM_EXPORT_TEMPLATE llvm::SmallVectorBase<uint64_t>;
+ 
+ // Assertions to ensure this #if stays in sync with SmallVectorSizeType.
+ static_assert(sizeof(SmallVectorSizeType<char>) == sizeof(uint64_t),
+-- 
+2.53.0
+

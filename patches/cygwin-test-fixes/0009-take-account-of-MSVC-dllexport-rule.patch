@@ -1,7 +1,7 @@
-From fabb7b68921b223d6ace7ab14ca68cd2d3d0bf23 Mon Sep 17 00:00:00 2001
+From f0bda9746651446eda4551166a7ace43f26b0860 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 20 Mar 2026 18:24:43 +0900
-Subject: [PATCH 09/62] take account of MSVC dllexport rule
+Subject: [PATCH 09/65] take account of MSVC dllexport rule
 
 ---
  llvm/include/llvm/Support/Registry.h | 26 ++++++++++++++++++++++++--

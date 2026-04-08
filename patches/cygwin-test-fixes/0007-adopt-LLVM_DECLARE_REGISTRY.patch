@@ -1,0 +1,582 @@
+From 5893ea702da9c3c5647bba6c6563b3c0d8ac4005 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Fri, 3 Apr 2026 19:24:01 +0900
+Subject: [PATCH 07/61] adopt LLVM_DECLARE_REGISTRY
+
+---
+ clang-tools-extra/clang-doc/Generators.cpp           |  2 +-
+ clang-tools-extra/clang-doc/Generators.h             |  4 +---
+ clang-tools-extra/clang-tidy/ClangTidy.cpp           |  2 +-
+ clang-tools-extra/clang-tidy/ClangTidyModule.h       |  4 +---
+ clang-tools-extra/clangd/FeatureModule.cpp           |  2 +-
+ clang-tools-extra/clangd/FeatureModule.h             |  4 +---
+ clang-tools-extra/clangd/URI.cpp                     |  2 +-
+ clang-tools-extra/clangd/URI.h                       |  4 +---
+ clang-tools-extra/clangd/refactor/Tweak.cpp          |  2 +-
+ clang-tools-extra/clangd/refactor/Tweak.h            |  4 +---
+ .../include/clang-include-cleaner/IncludeSpeller.h   |  4 +---
+ .../include-cleaner/lib/IncludeSpeller.cpp           |  2 +-
+ clang/include/clang/Basic/ParsedAttrInfo.h           |  4 +---
+ .../include/clang/Frontend/FrontendPluginRegistry.h  |  4 +---
+ clang/include/clang/Lex/Preprocessor.h               |  4 +---
+ .../Core/Serialization/JSONFormat.h                  |  5 +----
+ .../Core/Serialization/SerializationFormatRegistry.h |  5 +----
+ .../Core/SummaryData/SummaryDataBuilderRegistry.h    |  2 ++
+ .../Core/WholeProgramAnalysis/AnalysisRegistry.h     |  2 ++
+ .../Tooling/CompilationDatabasePluginRegistry.h      |  5 +----
+ .../clang/Tooling/ToolExecutorPluginRegistry.h       |  5 +----
+ clang/lib/Basic/ParsedAttrInfo.cpp                   |  2 +-
+ clang/lib/Frontend/FrontendAction.cpp                |  2 +-
+ clang/lib/Lex/Preprocessor.cpp                       |  2 +-
+ .../Core/Serialization/JSONFormat/JSONFormatImpl.cpp |  2 +-
+ .../Serialization/SerializationFormatRegistry.cpp    |  2 +-
+ .../Core/SummaryData/SummaryDataBuilderRegistry.cpp  |  2 +-
+ .../Core/WholeProgramAnalysis/AnalysisRegistry.cpp   |  2 +-
+ clang/lib/Tooling/CompilationDatabase.cpp            |  2 +-
+ clang/lib/Tooling/Execution.cpp                      |  2 +-
+ .../Registries/MockSerializationFormat.cpp           |  2 +-
+ .../Registries/MockSerializationFormat.h             |  5 +----
+ .../include/flang/Frontend/FrontendPluginRegistry.h  |  4 +---
+ flang/lib/Frontend/FrontendAction.cpp                |  2 +-
+ llvm/include/llvm/CodeGen/GCMetadataPrinter.h        | 12 ++++++------
+ llvm/include/llvm/IR/GCStrategy.h                    |  4 ++--
+ llvm/lib/CodeGen/GCMetadataPrinter.cpp               |  2 +-
+ llvm/lib/IR/GCStrategy.cpp                           |  2 +-
+ 38 files changed, 46 insertions(+), 77 deletions(-)
+
+diff --git a/clang-tools-extra/clang-doc/Generators.cpp b/clang-tools-extra/clang-doc/Generators.cpp
+index e8e3cc6ea6c923aaaf07e61244974523dfcaf123..0e1b4458c54d97e6ecb0d7e70bc346704111842f 100644
+--- a/clang-tools-extra/clang-doc/Generators.cpp
++++ b/clang-tools-extra/clang-doc/Generators.cpp
+@@ -10,7 +10,7 @@
+ #include "support/File.h"
+ #include "llvm/Support/TimeProfiler.h"
+ 
+-LLVM_INSTANTIATE_REGISTRY(clang::doc::GeneratorRegistry)
++LLVM_DEFINE_REGISTRY(clang::doc::GeneratorRegistry)
+ 
+ using namespace llvm;
+ using namespace llvm::json;
+diff --git a/clang-tools-extra/clang-doc/Generators.h b/clang-tools-extra/clang-doc/Generators.h
+index 2c8108e0ad6da02c881f36ca82029e3609d297c7..43537989ecc2842555bdc63bd57b861e077b75d9 100644
+--- a/clang-tools-extra/clang-doc/Generators.h
++++ b/clang-tools-extra/clang-doc/Generators.h
+@@ -147,8 +147,6 @@ extern volatile int MDMustacheGeneratorAnchorSource;
+ } // namespace doc
+ } // namespace clang
+ 
+-namespace llvm {
+-extern template class Registry<clang::doc::Generator>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(clang::doc::GeneratorRegistry)
+ 
+ #endif // LLVM_CLANG_TOOLS_EXTRA_CLANG_DOC_GENERATOR_H
+diff --git a/clang-tools-extra/clang-tidy/ClangTidy.cpp b/clang-tools-extra/clang-tidy/ClangTidy.cpp
+index 05c8fd02fe86a6d5ba9f9cdd1686ad35ce79c2db..6f2a74d944b68ad8b01055c53ba696a0b4adcbe6 100644
+--- a/clang-tools-extra/clang-tidy/ClangTidy.cpp
++++ b/clang-tools-extra/clang-tidy/ClangTidy.cpp
+@@ -50,7 +50,7 @@ using namespace clang::driver;
+ using namespace clang::tooling;
+ using namespace llvm;
+ 
+-LLVM_INSTANTIATE_REGISTRY(clang::tidy::ClangTidyModuleRegistry)
++LLVM_DEFINE_REGISTRY(clang::tidy::ClangTidyModuleRegistry)
+ 
+ namespace clang::tidy {
+ 
+diff --git a/clang-tools-extra/clang-tidy/ClangTidyModule.h b/clang-tools-extra/clang-tidy/ClangTidyModule.h
+index 3db92c2dab98128b693a89e7979be562f13deb46..6541cae6a07822b96a20e22c8deba3693eb36f7d 100644
+--- a/clang-tools-extra/clang-tidy/ClangTidyModule.h
++++ b/clang-tools-extra/clang-tidy/ClangTidyModule.h
+@@ -100,8 +100,6 @@ using ClangTidyModuleRegistry = llvm::Registry<ClangTidyModule>;
+ 
+ } // namespace clang::tidy
+ 
+-namespace llvm {
+-extern template class Registry<clang::tidy::ClangTidyModule>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(clang::tidy::ClangTidyModuleRegistry)
+ 
+ #endif // LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_CLANGTIDYMODULE_H
+diff --git a/clang-tools-extra/clangd/FeatureModule.cpp b/clang-tools-extra/clangd/FeatureModule.cpp
+index 38461e3db4e6bd10dbbf46dde25d0462b119b480..f53f62e6902114e75c03ad571a96571ea71687d7 100644
+--- a/clang-tools-extra/clangd/FeatureModule.cpp
++++ b/clang-tools-extra/clangd/FeatureModule.cpp
+@@ -49,4 +49,4 @@ FeatureModuleSet FeatureModuleSet::fromRegistry() {
+ } // namespace clangd
+ } // namespace clang
+ 
+-LLVM_INSTANTIATE_REGISTRY(clang::clangd::FeatureModuleRegistry)
++LLVM_DEFINE_REGISTRY(clang::clangd::FeatureModuleRegistry)
+diff --git a/clang-tools-extra/clangd/FeatureModule.h b/clang-tools-extra/clangd/FeatureModule.h
+index 55ca908a6ec511616891d0c34a0dc2c15ab49e6a..c71fdc4c3a9280ed4eb4745cf666cbe60276028d 100644
+--- a/clang-tools-extra/clangd/FeatureModule.h
++++ b/clang-tools-extra/clangd/FeatureModule.h
+@@ -199,8 +199,6 @@ using FeatureModuleRegistry = llvm::Registry<FeatureModule>;
+ } // namespace clangd
+ } // namespace clang
+ 
+-namespace llvm {
+-extern template class Registry<clang::clangd::FeatureModule>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(clang::clangd::FeatureModuleRegistry)
+ 
+ #endif
+diff --git a/clang-tools-extra/clangd/URI.cpp b/clang-tools-extra/clangd/URI.cpp
+index 11d70dc917f56bf9f1c191caf3850d7ed3a4f1a8..0749bb0423447dbc62f59e0884832b6d3aa42be1 100644
+--- a/clang-tools-extra/clangd/URI.cpp
++++ b/clang-tools-extra/clangd/URI.cpp
+@@ -14,7 +14,7 @@
+ #include "llvm/Support/Path.h"
+ #include <algorithm>
+ 
+-LLVM_INSTANTIATE_REGISTRY(clang::clangd::URISchemeRegistry)
++LLVM_DEFINE_REGISTRY(clang::clangd::URISchemeRegistry)
+ 
+ namespace clang {
+ namespace clangd {
+diff --git a/clang-tools-extra/clangd/URI.h b/clang-tools-extra/clangd/URI.h
+index d4629f17551cca819038385ff585473f7b656288..2d049e68aa705e338a3a7a456f59783dfea213b9 100644
+--- a/clang-tools-extra/clangd/URI.h
++++ b/clang-tools-extra/clangd/URI.h
+@@ -133,8 +133,6 @@ typedef llvm::Registry<URIScheme> URISchemeRegistry;
+ } // namespace clangd
+ } // namespace clang
+ 
+-namespace llvm {
+-extern template class Registry<clang::clangd::URIScheme>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(clang::clangd::URISchemeRegistry)
+ 
+ #endif // LLVM_CLANG_TOOLS_EXTRA_CLANGD_URI_H
+diff --git a/clang-tools-extra/clangd/refactor/Tweak.cpp b/clang-tools-extra/clangd/refactor/Tweak.cpp
+index 840843d1bfc4b54c9529fa850221ca15413c0626..06b6b03ff41fc02960dad91d9be6002f5e35f420 100644
+--- a/clang-tools-extra/clangd/refactor/Tweak.cpp
++++ b/clang-tools-extra/clangd/refactor/Tweak.cpp
+@@ -21,7 +21,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-LLVM_INSTANTIATE_REGISTRY(llvm::Registry<clang::clangd::Tweak>)
++LLVM_DEFINE_REGISTRY(llvm::Registry<clang::clangd::Tweak>)
+ 
+ namespace clang {
+ namespace clangd {
+diff --git a/clang-tools-extra/clangd/refactor/Tweak.h b/clang-tools-extra/clangd/refactor/Tweak.h
+index 257f44a285f88a1e083f1d3582a86dc45a655bee..16a172aefe780e2eacf951f8236d2372293d6986 100644
+--- a/clang-tools-extra/clangd/refactor/Tweak.h
++++ b/clang-tools-extra/clangd/refactor/Tweak.h
+@@ -147,8 +147,6 @@ prepareTweak(StringRef ID, const Tweak::Selection &S,
+ } // namespace clangd
+ } // namespace clang
+ 
+-namespace llvm {
+-extern template class Registry<clang::clangd::Tweak>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(llvm::Registry<clang::clangd::Tweak>)
+ 
+ #endif
+diff --git a/clang-tools-extra/include-cleaner/include/clang-include-cleaner/IncludeSpeller.h b/clang-tools-extra/include-cleaner/include/clang-include-cleaner/IncludeSpeller.h
+index b07b9ed1ac25f5c9c524f9c5e2070bcf93bb3c93..89bb234f50873dbb0a5f388f24582ebfd22ae4bb 100644
+--- a/clang-tools-extra/include-cleaner/include/clang-include-cleaner/IncludeSpeller.h
++++ b/clang-tools-extra/include-cleaner/include/clang-include-cleaner/IncludeSpeller.h
+@@ -46,8 +46,6 @@ using IncludeSpellingStrategy = llvm::Registry<IncludeSpeller>;
+ std::string spellHeader(const IncludeSpeller::Input &Input);
+ } // namespace clang::include_cleaner
+ 
+-namespace llvm {
+-extern template class Registry<clang::include_cleaner::IncludeSpeller>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(clang::include_cleaner::IncludeSpellingStrategy)
+ 
+ #endif
+diff --git a/clang-tools-extra/include-cleaner/lib/IncludeSpeller.cpp b/clang-tools-extra/include-cleaner/lib/IncludeSpeller.cpp
+index d0549825d4c40a8a144c19121b3959e624a5b706..ac994b236c90b70c2c85f04d79aa59a31cc95fca 100644
+--- a/clang-tools-extra/include-cleaner/lib/IncludeSpeller.cpp
++++ b/clang-tools-extra/include-cleaner/lib/IncludeSpeller.cpp
+@@ -15,7 +15,7 @@
+ #include <memory>
+ #include <string>
+ 
+-LLVM_INSTANTIATE_REGISTRY(clang::include_cleaner::IncludeSpellingStrategy)
++LLVM_DEFINE_REGISTRY(clang::include_cleaner::IncludeSpellingStrategy)
+ 
+ namespace clang::include_cleaner {
+ namespace {
+diff --git a/clang/include/clang/Basic/ParsedAttrInfo.h b/clang/include/clang/Basic/ParsedAttrInfo.h
+index 3b5f5d3c3f92ac36eeda66e0e181bf682e08da82..561f7b63ff8093f00387e8e3f08992e767b1be04 100644
+--- a/clang/include/clang/Basic/ParsedAttrInfo.h
++++ b/clang/include/clang/Basic/ParsedAttrInfo.h
+@@ -176,8 +176,6 @@ const std::list<std::unique_ptr<ParsedAttrInfo>> &getAttributePluginInstances();
+ 
+ } // namespace clang
+ 
+-namespace llvm {
+-extern template class CLANG_TEMPLATE_ABI Registry<clang::ParsedAttrInfo>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(clang::ParsedAttrInfoRegistry)
+ 
+ #endif // LLVM_CLANG_BASIC_PARSEDATTRINFO_H
+diff --git a/clang/include/clang/Frontend/FrontendPluginRegistry.h b/clang/include/clang/Frontend/FrontendPluginRegistry.h
+index 5eea9c2fd89a32923db9ea3f6d95df4aca2ddd67..697a4c25c82f2a2c1c2e31b3ce81e561a85c7559 100644
+--- a/clang/include/clang/Frontend/FrontendPluginRegistry.h
++++ b/clang/include/clang/Frontend/FrontendPluginRegistry.h
+@@ -24,8 +24,6 @@ using FrontendPluginRegistry = llvm::Registry<PluginASTAction>;
+ 
+ } // namespace clang
+ 
+-namespace llvm {
+-extern template class CLANG_TEMPLATE_ABI Registry<clang::PluginASTAction>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(clang::FrontendPluginRegistry)
+ 
+ #endif // LLVM_CLANG_FRONTEND_FRONTENDPLUGINREGISTRY_H
+diff --git a/clang/include/clang/Lex/Preprocessor.h b/clang/include/clang/Lex/Preprocessor.h
+index c7e152a75f51f562408bef1e68b22a92fecb2e77..915be9bd5cad4405915ad36beb8049a10adba7db 100644
+--- a/clang/include/clang/Lex/Preprocessor.h
++++ b/clang/include/clang/Lex/Preprocessor.h
+@@ -3215,8 +3215,6 @@ using PragmaHandlerRegistry = llvm::Registry<PragmaHandler>;
+ 
+ } // namespace clang
+ 
+-namespace llvm {
+-extern template class CLANG_TEMPLATE_ABI Registry<clang::PragmaHandler>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(clang::PragmaHandlerRegistry)
+ 
+ #endif // LLVM_CLANG_LEX_PREPROCESSOR_H
+diff --git a/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h b/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h
+index 47b46cbe42698c456885f5a56fc6aedde94b543b..ebbd7463f3b0dde87553b84dc4975364f105214c 100644
+--- a/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h
++++ b/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h
+@@ -190,9 +190,6 @@ private:
+ 
+ } // namespace clang::ssaf
+ 
+-namespace llvm {
+-extern template class CLANG_TEMPLATE_ABI
+-    Registry<clang::ssaf::JSONFormat::FormatInfo>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(llvm::Registry<clang::ssaf::JSONFormat::FormatInfo>)
+ 
+ #endif // LLVM_CLANG_SCALABLESTATICANALYSISFRAMEWORK_CORE_SERIALIZATION_JSONFORMAT_H
+diff --git a/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.h b/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.h
+index a1955e64d5137ae93f10c62c1764d58e083edb54..281d8b1ed01d86a4434e2fe94ebbcb39ec49b4b8 100644
+--- a/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.h
++++ b/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.h
+@@ -89,9 +89,6 @@ using SerializationFormatRegistry = llvm::Registry<SerializationFormat>;
+ 
+ } // namespace clang::ssaf
+ 
+-namespace llvm {
+-extern template class CLANG_TEMPLATE_ABI
+-    Registry<clang::ssaf::SerializationFormat>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(clang::ssaf::SerializationFormatRegistry)
+ 
+ #endif // LLVM_CLANG_SCALABLESTATICANALYSISFRAMEWORK_CORE_SERIALIZATION_SERIALIZATIONFORMATREGISTRY_H
+diff --git a/clang/include/clang/ScalableStaticAnalysisFramework/Core/SummaryData/SummaryDataBuilderRegistry.h b/clang/include/clang/ScalableStaticAnalysisFramework/Core/SummaryData/SummaryDataBuilderRegistry.h
+index 630e1c298f9e166b156af6bd78158c33671798fb..a153eff950534fb40d1dac5d0f966f5568d6ac50 100644
+--- a/clang/include/clang/ScalableStaticAnalysisFramework/Core/SummaryData/SummaryDataBuilderRegistry.h
++++ b/clang/include/clang/ScalableStaticAnalysisFramework/Core/SummaryData/SummaryDataBuilderRegistry.h
+@@ -27,6 +27,8 @@
+ #include <memory>
+ #include <string>
+ 
++LLVM_DECLARE_REGISTRY(llvm::Registry<clang::ssaf::SummaryDataBuilderBase>)
++
+ namespace clang::ssaf {
+ 
+ /// Registry for SummaryDataBuilder implementations.
+diff --git a/clang/include/clang/ScalableStaticAnalysisFramework/Core/WholeProgramAnalysis/AnalysisRegistry.h b/clang/include/clang/ScalableStaticAnalysisFramework/Core/WholeProgramAnalysis/AnalysisRegistry.h
+index 44eabce6c809c249169ade13c514063c2f23d970..c1698db05abbbc7a59d4bee5df8d272d032d6a5d 100644
+--- a/clang/include/clang/ScalableStaticAnalysisFramework/Core/WholeProgramAnalysis/AnalysisRegistry.h
++++ b/clang/include/clang/ScalableStaticAnalysisFramework/Core/WholeProgramAnalysis/AnalysisRegistry.h
+@@ -41,6 +41,8 @@
+ #include <string>
+ #include <vector>
+ 
++LLVM_DECLARE_REGISTRY(llvm::Registry<clang::ssaf::AnalysisBase>)
++
+ namespace clang::ssaf {
+ 
+ /// Unified registry for SummaryAnalysis and DerivedAnalysis implementations.
+diff --git a/clang/include/clang/Tooling/CompilationDatabasePluginRegistry.h b/clang/include/clang/Tooling/CompilationDatabasePluginRegistry.h
+index e6bcac542b0ecb7e046fe11043580be39d31bb9b..e9c72deee5b2be9a8b3d5cee4ac590f4e673e116 100644
+--- a/clang/include/clang/Tooling/CompilationDatabasePluginRegistry.h
++++ b/clang/include/clang/Tooling/CompilationDatabasePluginRegistry.h
+@@ -43,9 +43,6 @@ using CompilationDatabasePluginRegistry =
+ } // namespace tooling
+ } // namespace clang
+ 
+-namespace llvm {
+-extern template class CLANG_TEMPLATE_ABI
+-    Registry<clang::tooling::CompilationDatabasePlugin>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(clang::tooling::CompilationDatabasePluginRegistry)
+ 
+ #endif // LLVM_CLANG_TOOLING_COMPILATIONDATABASEPLUGINREGISTRY_H
+diff --git a/clang/include/clang/Tooling/ToolExecutorPluginRegistry.h b/clang/include/clang/Tooling/ToolExecutorPluginRegistry.h
+index 8d54583234684e565985bf6f625dc4be1f2d0372..968276d18aa853b25f4748cc84f8330bcf1040a4 100644
+--- a/clang/include/clang/Tooling/ToolExecutorPluginRegistry.h
++++ b/clang/include/clang/Tooling/ToolExecutorPluginRegistry.h
+@@ -21,9 +21,6 @@ using ToolExecutorPluginRegistry = llvm::Registry<ToolExecutorPlugin>;
+ } // namespace tooling
+ } // namespace clang
+ 
+-namespace llvm {
+-extern template class CLANG_TEMPLATE_ABI
+-    Registry<clang::tooling::ToolExecutorPlugin>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(clang::tooling::ToolExecutorPluginRegistry)
+ 
+ #endif // LLVM_CLANG_TOOLING_TOOLEXECUTORPLUGINREGISTRY_H
+diff --git a/clang/lib/Basic/ParsedAttrInfo.cpp b/clang/lib/Basic/ParsedAttrInfo.cpp
+index d5b17b34b6e3a2ca7736ba891177e46fdbf819cf..a60f26b032c0d493f6ca9b8db8a67d913080aa35 100644
+--- a/clang/lib/Basic/ParsedAttrInfo.cpp
++++ b/clang/lib/Basic/ParsedAttrInfo.cpp
+@@ -18,7 +18,7 @@
+ 
+ using namespace clang;
+ 
+-LLVM_INSTANTIATE_REGISTRY(ParsedAttrInfoRegistry)
++LLVM_DEFINE_REGISTRY(ParsedAttrInfoRegistry)
+ 
+ static std::list<std::unique_ptr<ParsedAttrInfo>> instantiateEntries() {
+   std::list<std::unique_ptr<ParsedAttrInfo>> Instances;
+diff --git a/clang/lib/Frontend/FrontendAction.cpp b/clang/lib/Frontend/FrontendAction.cpp
+index c3d1d802dfe0441fc9bf399fbff9c3c28026fa61..9ae6bb552d26ba62673cb747411f0b847a84cab4 100644
+--- a/clang/lib/Frontend/FrontendAction.cpp
++++ b/clang/lib/Frontend/FrontendAction.cpp
+@@ -52,7 +52,7 @@
+ #include <system_error>
+ using namespace clang;
+ 
+-LLVM_INSTANTIATE_REGISTRY(FrontendPluginRegistry)
++LLVM_DEFINE_REGISTRY(FrontendPluginRegistry)
+ 
+ namespace {
+ 
+diff --git a/clang/lib/Lex/Preprocessor.cpp b/clang/lib/Lex/Preprocessor.cpp
+index c430da67c14696de826987584d21e7a7c3ac20f0..4eacf8b8b558b87e511f6eafc5606990b76a598e 100644
+--- a/clang/lib/Lex/Preprocessor.cpp
++++ b/clang/lib/Lex/Preprocessor.cpp
+@@ -79,7 +79,7 @@ using namespace clang;
+ /// Minimum distance between two check points, in tokens.
+ static constexpr unsigned CheckPointStepSize = 1024;
+ 
+-LLVM_INSTANTIATE_REGISTRY(PragmaHandlerRegistry)
++LLVM_DEFINE_REGISTRY(PragmaHandlerRegistry)
+ 
+ ExternalPreprocessorSource::~ExternalPreprocessorSource() = default;
+ 
+diff --git a/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp b/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp
+index 4072532d4972c315c1b90dcb16a981ff10962d43..15394c9ebe46f1c02f7f5eab4bb45622d4622965 100644
+--- a/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp
++++ b/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp
+@@ -13,7 +13,7 @@
+ 
+ // NOLINTNEXTLINE(misc-use-internal-linkage)
+ volatile int SSAFJSONFormatAnchorSource = 0;
+-LLVM_INSTANTIATE_REGISTRY(llvm::Registry<clang::ssaf::JSONFormat::FormatInfo>)
++LLVM_DEFINE_REGISTRY(llvm::Registry<clang::ssaf::JSONFormat::FormatInfo>)
+ 
+ static clang::ssaf::SerializationFormatRegistry::Add<clang::ssaf::JSONFormat>
+     RegisterJSONFormat("json", "JSON serialization format");
+diff --git a/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.cpp b/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.cpp
+index 0eb86f2fdee2f8217feb1c00b1b4e1c14039015b..1219635e5068d9fbf1b929d91e2b759b7c1201a0 100644
+--- a/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.cpp
++++ b/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.cpp
+@@ -12,7 +12,7 @@
+ using namespace clang;
+ using namespace ssaf;
+ 
+-LLVM_INSTANTIATE_REGISTRY(SerializationFormatRegistry)
++LLVM_DEFINE_REGISTRY(SerializationFormatRegistry)
+ 
+ bool ssaf::isFormatRegistered(llvm::StringRef FormatName) {
+   for (const auto &Entry : SerializationFormatRegistry::entries())
+diff --git a/clang/lib/ScalableStaticAnalysisFramework/Core/SummaryData/SummaryDataBuilderRegistry.cpp b/clang/lib/ScalableStaticAnalysisFramework/Core/SummaryData/SummaryDataBuilderRegistry.cpp
+index f0f2db91e6ba605f97939fc1344e4a9b92d63cd7..867290c6eac31a2a2610a8cd5f375b810a2102a7 100644
+--- a/clang/lib/ScalableStaticAnalysisFramework/Core/SummaryData/SummaryDataBuilderRegistry.cpp
++++ b/clang/lib/ScalableStaticAnalysisFramework/Core/SummaryData/SummaryDataBuilderRegistry.cpp
+@@ -12,7 +12,7 @@ using namespace clang;
+ using namespace ssaf;
+ 
+ using RegistryT = llvm::Registry<SummaryDataBuilderBase>;
+-LLVM_INSTANTIATE_REGISTRY(RegistryT)
++LLVM_DEFINE_REGISTRY(RegistryT)
+ 
+ namespace {
+ const RegistryT::entry *findEntry(llvm::StringRef Name) {
+diff --git a/clang/lib/ScalableStaticAnalysisFramework/Core/WholeProgramAnalysis/AnalysisRegistry.cpp b/clang/lib/ScalableStaticAnalysisFramework/Core/WholeProgramAnalysis/AnalysisRegistry.cpp
+index 8e1ea954d9afd72b5c74d258bcd515e51e2941f4..01a95a85b705a6177209242350d8e0ec80702242 100644
+--- a/clang/lib/ScalableStaticAnalysisFramework/Core/WholeProgramAnalysis/AnalysisRegistry.cpp
++++ b/clang/lib/ScalableStaticAnalysisFramework/Core/WholeProgramAnalysis/AnalysisRegistry.cpp
+@@ -17,7 +17,7 @@ using RegistryT = llvm::Registry<AnalysisBase>;
+ 
+ // NOLINTNEXTLINE(misc-use-internal-linkage)
+ volatile int SSAFAnalysisRegistryAnchorSource = 0;
+-LLVM_INSTANTIATE_REGISTRY(RegistryT)
++LLVM_DEFINE_REGISTRY(RegistryT)
+ 
+ std::vector<AnalysisName> &AnalysisRegistry::getAnalysisNames() {
+   static std::vector<AnalysisName> Names;
+diff --git a/clang/lib/Tooling/CompilationDatabase.cpp b/clang/lib/Tooling/CompilationDatabase.cpp
+index 4070bb81c6f741b0d32819670f5593bbfc1b08dc..039ca3b5d10bdfbb014fd2fed7d8ca08e4554bf9 100644
+--- a/clang/lib/Tooling/CompilationDatabase.cpp
++++ b/clang/lib/Tooling/CompilationDatabase.cpp
+@@ -50,7 +50,7 @@
+ using namespace clang;
+ using namespace tooling;
+ 
+-LLVM_INSTANTIATE_REGISTRY(CompilationDatabasePluginRegistry)
++LLVM_DEFINE_REGISTRY(CompilationDatabasePluginRegistry)
+ 
+ CompilationDatabase::~CompilationDatabase() = default;
+ 
+diff --git a/clang/lib/Tooling/Execution.cpp b/clang/lib/Tooling/Execution.cpp
+index d0499fa364cfeeda1c945287768d2e33a658d068..96de0225a6cc4426d6c7215fa0c32768b0fa221a 100644
+--- a/clang/lib/Tooling/Execution.cpp
++++ b/clang/lib/Tooling/Execution.cpp
+@@ -10,7 +10,7 @@
+ #include "clang/Tooling/ToolExecutorPluginRegistry.h"
+ #include "clang/Tooling/Tooling.h"
+ 
+-LLVM_INSTANTIATE_REGISTRY(clang::tooling::ToolExecutorPluginRegistry)
++LLVM_DEFINE_REGISTRY(clang::tooling::ToolExecutorPluginRegistry)
+ 
+ namespace clang {
+ namespace tooling {
+diff --git a/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.cpp b/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.cpp
+index 535b5fced0da69d6df6141347a7c2238ee633492..22293186d5b45cae2bdaaa45e323ee51a68715d5 100644
+--- a/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.cpp
++++ b/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.cpp
+@@ -30,7 +30,7 @@
+ using namespace clang;
+ using namespace ssaf;
+ 
+-LLVM_INSTANTIATE_REGISTRY(llvm::Registry<MockSerializationFormat::FormatInfo>)
++LLVM_DEFINE_REGISTRY(llvm::Registry<MockSerializationFormat::FormatInfo>)
+ 
+ MockSerializationFormat::MockSerializationFormat() {
+   for (const auto &FormatInfoEntry : llvm::Registry<FormatInfo>::entries()) {
+diff --git a/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.h b/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.h
+index 87d84c3d06c7a5cec851d549aee74295f85656ed..3d4f9737a637fbbaaeddaff9213667f48b5c3641 100644
+--- a/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.h
++++ b/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.h
+@@ -66,9 +66,6 @@ public:
+ 
+ } // namespace clang::ssaf
+ 
+-namespace llvm {
+-extern template class CLANG_TEMPLATE_ABI
+-    Registry<clang::ssaf::MockSerializationFormat::FormatInfo>;
+-} // namespace llvm
++LLVM_DECLARE_REGISTRY(llvm::Registry<clang::ssaf::MockSerializationFormat::FormatInfo>)
+ 
+ #endif // LLVM_CLANG_UNITTESTS_SCALABLESTATICANALYSISFRAMEWORK_REGISTRIES_MOCKSERIALIZATIONFORMAT_H
+diff --git a/flang/include/flang/Frontend/FrontendPluginRegistry.h b/flang/include/flang/Frontend/FrontendPluginRegistry.h
+index a8079dbfaf869391c14306f0c6fd6c22cc51a6d4..37f5cccb5314157899e763e134071b689fcce3e2 100644
+--- a/flang/include/flang/Frontend/FrontendPluginRegistry.h
++++ b/flang/include/flang/Frontend/FrontendPluginRegistry.h
+@@ -25,8 +25,6 @@ using FrontendPluginRegistry = llvm::Registry<PluginParseTreeAction>;
+ 
+ } // namespace Fortran::frontend
+ 
+-namespace llvm {
+-extern template class Registry<Fortran::frontend::PluginParseTreeAction>;
+-}
++LLVM_DECLARE_REGISTRY(Fortran::frontend::FrontendPluginRegistry)
+ 
+ #endif // FORTRAN_FRONTEND_FRONTENDPLUGINREGISTRY_H
+diff --git a/flang/lib/Frontend/FrontendAction.cpp b/flang/lib/Frontend/FrontendAction.cpp
+index 58901c600038073b2c0a4e17eaf99337a88413f3..760c1c26a5f274fbe90daacaff9e8498e90a109e 100644
+--- a/flang/lib/Frontend/FrontendAction.cpp
++++ b/flang/lib/Frontend/FrontendAction.cpp
+@@ -22,7 +22,7 @@
+ 
+ using namespace Fortran::frontend;
+ 
+-LLVM_INSTANTIATE_REGISTRY(FrontendPluginRegistry)
++LLVM_DEFINE_REGISTRY(FrontendPluginRegistry)
+ 
+ void FrontendAction::setCurrentInput(const FrontendInputFile &input) {
+   this->currentInput = input;
+diff --git a/llvm/include/llvm/CodeGen/GCMetadataPrinter.h b/llvm/include/llvm/CodeGen/GCMetadataPrinter.h
+index 9d421be8313f01cae981d3b6c378433ca4c2b8b6..5b80d85e7b79b573df27c082f67c1c1c94a7ed91 100644
+--- a/llvm/include/llvm/CodeGen/GCMetadataPrinter.h
++++ b/llvm/include/llvm/CodeGen/GCMetadataPrinter.h
+@@ -30,12 +30,6 @@ class GCStrategy;
+ class Module;
+ class StackMaps;
+ 
+-/// GCMetadataPrinterRegistry - The GC assembly printer registry uses all the
+-/// defaults from Registry.
+-using GCMetadataPrinterRegistry = Registry<GCMetadataPrinter>;
+-
+-extern template class LLVM_TEMPLATE_ABI Registry<GCMetadataPrinter>;
+-
+ /// GCMetadataPrinter - Emits GC metadata as assembly code.  Instances are
+ /// created, managed, and owned by the AsmPrinter.
+ class GCMetadataPrinter {
+@@ -69,6 +63,12 @@ public:
+   virtual bool emitStackMaps(StackMaps &SM, AsmPrinter &AP) { return false; }
+ };
+ 
++/// GCMetadataPrinterRegistry - The GC assembly printer registry uses all the
++/// defaults from Registry.
++using GCMetadataPrinterRegistry = Registry<GCMetadataPrinter>;
++
+ } // end namespace llvm
+ 
++LLVM_DECLARE_REGISTRY(GCMetadataPrinterRegistry)
++
+ #endif // LLVM_CODEGEN_GCMETADATAPRINTER_H
+diff --git a/llvm/include/llvm/IR/GCStrategy.h b/llvm/include/llvm/IR/GCStrategy.h
+index 44e46e448b3e3f18e5eed8ecdd207a495f68fcb8..8ffd4720f77767471b56cd2778fcf750942221d0 100644
+--- a/llvm/include/llvm/IR/GCStrategy.h
++++ b/llvm/include/llvm/IR/GCStrategy.h
+@@ -143,11 +143,11 @@ public:
+ /// GCMetadataPrinterRegistery as well.
+ using GCRegistry = Registry<GCStrategy>;
+ 
+-extern template class LLVM_TEMPLATE_ABI Registry<GCStrategy>;
+-
+ /// Lookup the GCStrategy object associated with the given gc name.
+ LLVM_ABI std::unique_ptr<GCStrategy> getGCStrategy(const StringRef Name);
+ 
+ } // end namespace llvm
+ 
++LLVM_DECLARE_REGISTRY(llvm::GCRegistry)
++
+ #endif // LLVM_IR_GCSTRATEGY_H
+diff --git a/llvm/lib/CodeGen/GCMetadataPrinter.cpp b/llvm/lib/CodeGen/GCMetadataPrinter.cpp
+index 500dba9aea37e3dcf0472a04cf1012c4cca7e47e..c895c0e4b9dd3aca6db270a37deab453d954b70c 100644
+--- a/llvm/lib/CodeGen/GCMetadataPrinter.cpp
++++ b/llvm/lib/CodeGen/GCMetadataPrinter.cpp
+@@ -14,7 +14,7 @@
+ 
+ using namespace llvm;
+ 
+-LLVM_INSTANTIATE_REGISTRY(GCMetadataPrinterRegistry)
++LLVM_DEFINE_REGISTRY(GCMetadataPrinterRegistry)
+ 
+ GCMetadataPrinter::GCMetadataPrinter() = default;
+ 
+diff --git a/llvm/lib/IR/GCStrategy.cpp b/llvm/lib/IR/GCStrategy.cpp
+index 67f363d26b25f4c1e1eddef87bbdf56913176105..4f25a6ba3257d45d1a5eaef1cfbf2fe2ecfab662 100644
+--- a/llvm/lib/IR/GCStrategy.cpp
++++ b/llvm/lib/IR/GCStrategy.cpp
+@@ -17,7 +17,7 @@
+ 
+ using namespace llvm;
+ 
+-LLVM_INSTANTIATE_REGISTRY(GCRegistry)
++LLVM_DEFINE_REGISTRY(GCRegistry)
+ 
+ GCStrategy::GCStrategy() = default;
+ 
+-- 
+2.53.0
+

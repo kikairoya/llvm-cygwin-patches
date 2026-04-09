@@ -1,4 +1,4 @@
-From 5893ea702da9c3c5647bba6c6563b3c0d8ac4005 Mon Sep 17 00:00:00 2001
+From 097bd0a3a79721b06caeafbad948a1a374531e46 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 07/61] adopt LLVM_DECLARE_REGISTRY
@@ -16,11 +16,12 @@ Subject: [PATCH 07/61] adopt LLVM_DECLARE_REGISTRY
  clang-tools-extra/clangd/refactor/Tweak.h            |  4 +---
  .../include/clang-include-cleaner/IncludeSpeller.h   |  4 +---
  .../include-cleaner/lib/IncludeSpeller.cpp           |  2 +-
+ .../developer-docs/HowToExtend.rst                   |  7 ++-----
  clang/include/clang/Basic/ParsedAttrInfo.h           |  4 +---
  .../include/clang/Frontend/FrontendPluginRegistry.h  |  4 +---
  clang/include/clang/Lex/Preprocessor.h               |  4 +---
- .../Core/Serialization/JSONFormat.h                  |  5 +----
- .../Core/Serialization/SerializationFormatRegistry.h |  5 +----
+ .../Core/Serialization/JSONFormat.h                  |  9 +++------
+ .../Core/Serialization/SerializationFormatRegistry.h | 12 +++---------
  .../Core/SummaryData/SummaryDataBuilderRegistry.h    |  2 ++
  .../Core/WholeProgramAnalysis/AnalysisRegistry.h     |  2 ++
  .../Tooling/CompilationDatabasePluginRegistry.h      |  5 +----
@@ -28,21 +29,21 @@ Subject: [PATCH 07/61] adopt LLVM_DECLARE_REGISTRY
  clang/lib/Basic/ParsedAttrInfo.cpp                   |  2 +-
  clang/lib/Frontend/FrontendAction.cpp                |  2 +-
  clang/lib/Lex/Preprocessor.cpp                       |  2 +-
- .../Core/Serialization/JSONFormat/JSONFormatImpl.cpp |  2 +-
+ .../Core/Serialization/JSONFormat/JSONFormatImpl.cpp |  4 ++--
  .../Serialization/SerializationFormatRegistry.cpp    |  2 +-
  .../Core/SummaryData/SummaryDataBuilderRegistry.cpp  |  2 +-
  .../Core/WholeProgramAnalysis/AnalysisRegistry.cpp   |  2 +-
  clang/lib/Tooling/CompilationDatabase.cpp            |  2 +-
  clang/lib/Tooling/Execution.cpp                      |  2 +-
  .../Registries/MockSerializationFormat.cpp           |  2 +-
- .../Registries/MockSerializationFormat.h             |  5 +----
+ .../Registries/MockSerializationFormat.h             |  6 ++----
  .../include/flang/Frontend/FrontendPluginRegistry.h  |  4 +---
  flang/lib/Frontend/FrontendAction.cpp                |  2 +-
  llvm/include/llvm/CodeGen/GCMetadataPrinter.h        | 12 ++++++------
  llvm/include/llvm/IR/GCStrategy.h                    |  4 ++--
  llvm/lib/CodeGen/GCMetadataPrinter.cpp               |  2 +-
  llvm/lib/IR/GCStrategy.cpp                           |  2 +-
- 38 files changed, 46 insertions(+), 77 deletions(-)
+ 39 files changed, 54 insertions(+), 90 deletions(-)
 
 diff --git a/clang-tools-extra/clang-doc/Generators.cpp b/clang-tools-extra/clang-doc/Generators.cpp
 index e8e3cc6ea6c923aaaf07e61244974523dfcaf123..0e1b4458c54d97e6ecb0d7e70bc346704111842f 100644
@@ -203,6 +204,31 @@ index d0549825d4c40a8a144c19121b3959e624a5b706..ac994b236c90b70c2c85f04d79aa59a3
  
  namespace clang::include_cleaner {
  namespace {
+diff --git a/clang/docs/ScalableStaticAnalysisFramework/developer-docs/HowToExtend.rst b/clang/docs/ScalableStaticAnalysisFramework/developer-docs/HowToExtend.rst
+index 7d92d7e6f2de729765db9235e4557a2aa04bff6e..e5c717bec0892272db39f1b2a0554c102721e5a8 100644
+--- a/clang/docs/ScalableStaticAnalysisFramework/developer-docs/HowToExtend.rst
++++ b/clang/docs/ScalableStaticAnalysisFramework/developer-docs/HowToExtend.rst
+@@ -109,10 +109,7 @@ Your format class must inherit from ``SerializationFormat`` and define a ``Forma
+ 
+   } // namespace clang::ssaf
+ 
+-  namespace llvm {
+-  extern template class CLANG_TEMPLATE_ABI
+-      Registry<clang::ssaf::MyFormat::FormatInfo>;
+-  } // namespace llvm
++  LLVM_DECLARE_REGISTRY(llvm::Registry<MyFormat::FormatInfo>)
+ 
+ Step 2: Register the format
+ ===========================
+@@ -131,7 +128,7 @@ Step 2: Register the format
+   static SerializationFormatRegistry::Add<MyFormat>
+       RegisterFormat("myformat", "My awesome serialization format");
+ 
+-  LLVM_INSTANTIATE_REGISTRY(llvm::Registry<MyFormat::FormatInfo>)
++  LLVM_DEFINE_REGISTRY(llvm::Registry<MyFormat::FormatInfo>)
+ 
+ The format name (``"myformat"``) is matched against the file extension in ``--ssaf-tu-summary-file=output.myformat``.
+ 
 diff --git a/clang/include/clang/Basic/ParsedAttrInfo.h b/clang/include/clang/Basic/ParsedAttrInfo.h
 index 3b5f5d3c3f92ac36eeda66e0e181bf682e08da82..561f7b63ff8093f00387e8e3f08992e767b1be04 100644
 --- a/clang/include/clang/Basic/ParsedAttrInfo.h
@@ -246,25 +272,50 @@ index c7e152a75f51f562408bef1e68b22a92fecb2e77..915be9bd5cad4405915ad36beb8049a1
  
  #endif // LLVM_CLANG_LEX_PREPROCESSOR_H
 diff --git a/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h b/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h
-index 47b46cbe42698c456885f5a56fc6aedde94b543b..ebbd7463f3b0dde87553b84dc4975364f105214c 100644
+index 43ac353a31e75eb0c9bc5fa8a5e89262b1af2a4d..ad9810eacae229305372bd0bc7ea9887ce1805f1 100644
 --- a/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h
 +++ b/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h
-@@ -190,9 +190,6 @@ private:
+@@ -217,11 +217,8 @@ private:
  
  } // namespace clang::ssaf
  
 -namespace llvm {
 -extern template class CLANG_TEMPLATE_ABI
 -    Registry<clang::ssaf::JSONFormat::FormatInfo>;
+-extern template class CLANG_TEMPLATE_ABI
+-    Registry<clang::ssaf::JSONFormat::AnalysisResultRegistry::Codec>;
 -} // namespace llvm
 +LLVM_DECLARE_REGISTRY(llvm::Registry<clang::ssaf::JSONFormat::FormatInfo>)
++LLVM_DECLARE_REGISTRY(
++    llvm::Registry<clang::ssaf::JSONFormat::AnalysisResultRegistry::Codec>)
  
  #endif // LLVM_CLANG_SCALABLESTATICANALYSISFRAMEWORK_CORE_SERIALIZATION_JSONFORMAT_H
 diff --git a/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.h b/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.h
-index a1955e64d5137ae93f10c62c1764d58e083edb54..281d8b1ed01d86a4434e2fe94ebbcb39ec49b4b8 100644
+index a1955e64d5137ae93f10c62c1764d58e083edb54..1966df170e22b2276ad0a9406d5dbe0c9a9816f4 100644
 --- a/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.h
 +++ b/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.h
-@@ -89,9 +89,6 @@ using SerializationFormatRegistry = llvm::Registry<SerializationFormat>;
+@@ -13,10 +13,7 @@
+ //
+ // Insert this code to the header file:
+ //
+-//   namespace llvm {
+-//   extern template class CLANG_TEMPLATE_ABI
+-//     Registry<clang::ssaf::MyFormat::FormatInfo>;
+-//   } // namespace llvm
++//   LLVM_DECLARE_REGISTRY(llvm::Registry<MyFormat::FormatInfo>)
+ //
+ // Insert this declaration to the MyFormat class:
+ //
+@@ -28,7 +25,7 @@
+ //   volatile int SSAFMyFormatAnchorSource = 0;
+ //   static SerializationFormatRegistry::Add<MyFormat>
+ //     RegisterFormat("MyFormat", "My awesome serialization format");
+-//   LLVM_INSTANTIATE_REGISTRY(llvm::Registry<MyFormat::FormatInfo>)
++//   LLVM_DEFINE_REGISTRY(llvm::Registry<MyFormat::FormatInfo>)
+ //
+ // Then implement the formatter for the specific analysis and register the
+ // format info for it:
+@@ -89,9 +86,6 @@ using SerializationFormatRegistry = llvm::Registry<SerializationFormat>;
  
  } // namespace clang::ssaf
  
@@ -371,18 +422,20 @@ index c430da67c14696de826987584d21e7a7c3ac20f0..4eacf8b8b558b87e511f6eafc5606990
  ExternalPreprocessorSource::~ExternalPreprocessorSource() = default;
  
 diff --git a/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp b/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp
-index 4072532d4972c315c1b90dcb16a981ff10962d43..15394c9ebe46f1c02f7f5eab4bb45622d4622965 100644
+index f1dcd752f864f6b37262e12bcadd541b38acb434..caf13758c05d545e2b9d3524c2fcdc751472d6e4 100644
 --- a/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp
 +++ b/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp
-@@ -13,7 +13,7 @@
+@@ -13,8 +13,8 @@
  
  // NOLINTNEXTLINE(misc-use-internal-linkage)
  volatile int SSAFJSONFormatAnchorSource = 0;
 -LLVM_INSTANTIATE_REGISTRY(llvm::Registry<clang::ssaf::JSONFormat::FormatInfo>)
+-LLVM_INSTANTIATE_REGISTRY(
 +LLVM_DEFINE_REGISTRY(llvm::Registry<clang::ssaf::JSONFormat::FormatInfo>)
++LLVM_DEFINE_REGISTRY(
+     llvm::Registry<clang::ssaf::JSONFormat::AnalysisResultRegistry::Codec>)
  
  static clang::ssaf::SerializationFormatRegistry::Add<clang::ssaf::JSONFormat>
-     RegisterJSONFormat("json", "JSON serialization format");
 diff --git a/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.cpp b/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.cpp
 index 0eb86f2fdee2f8217feb1c00b1b4e1c14039015b..1219635e5068d9fbf1b929d91e2b759b7c1201a0 100644
 --- a/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/SerializationFormatRegistry.cpp
@@ -449,7 +502,7 @@ index d0499fa364cfeeda1c945287768d2e33a658d068..96de0225a6cc4426d6c7215fa0c32768
  namespace clang {
  namespace tooling {
 diff --git a/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.cpp b/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.cpp
-index 535b5fced0da69d6df6141347a7c2238ee633492..22293186d5b45cae2bdaaa45e323ee51a68715d5 100644
+index 684249620e869f31bbfd439e6ab8a9a2649d680d..0ec7eb44c5755a9a194364e28a55e15019ca6e96 100644
 --- a/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.cpp
 +++ b/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.cpp
 @@ -30,7 +30,7 @@
@@ -462,10 +515,10 @@ index 535b5fced0da69d6df6141347a7c2238ee633492..22293186d5b45cae2bdaaa45e323ee51
  MockSerializationFormat::MockSerializationFormat() {
    for (const auto &FormatInfoEntry : llvm::Registry<FormatInfo>::entries()) {
 diff --git a/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.h b/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.h
-index 87d84c3d06c7a5cec851d549aee74295f85656ed..3d4f9737a637fbbaaeddaff9213667f48b5c3641 100644
+index 71acfeffca1c9628edc59e0967e1c00c3e25a414..d9b9d51507aaf1e7d25db6583c6df53aee49236f 100644
 --- a/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.h
 +++ b/clang/unittests/ScalableStaticAnalysisFramework/Registries/MockSerializationFormat.h
-@@ -66,9 +66,6 @@ public:
+@@ -71,9 +71,7 @@ public:
  
  } // namespace clang::ssaf
  
@@ -473,7 +526,8 @@ index 87d84c3d06c7a5cec851d549aee74295f85656ed..3d4f9737a637fbbaaeddaff9213667f4
 -extern template class CLANG_TEMPLATE_ABI
 -    Registry<clang::ssaf::MockSerializationFormat::FormatInfo>;
 -} // namespace llvm
-+LLVM_DECLARE_REGISTRY(llvm::Registry<clang::ssaf::MockSerializationFormat::FormatInfo>)
++LLVM_DECLARE_REGISTRY(
++    llvm::Registry<clang::ssaf::MockSerializationFormat::FormatInfo>)
  
  #endif // LLVM_CLANG_UNITTESTS_SCALABLESTATICANALYSISFRAMEWORK_REGISTRIES_MOCKSERIALIZATIONFORMAT_H
 diff --git a/flang/include/flang/Frontend/FrontendPluginRegistry.h b/flang/include/flang/Frontend/FrontendPluginRegistry.h

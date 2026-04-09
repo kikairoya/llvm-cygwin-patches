@@ -1,4 +1,4 @@
-From af15a135713e9f30d815fd325b8c21b900d5cf86 Mon Sep 17 00:00:00 2001
+From e3431814d9b14aca3ae92d9f49bf3cd380138c7b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 32/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -39,7 +39,7 @@ index a6830d5ee71ff645a2dd682cb4573e20b21a691d..01e99053dfeabb0671d54caab62be309
  #  else
  #    define _LIBCPP_HAS_C8RTOMB_MBRTOC8 0
 diff --git a/libcxx/utils/libcxx/test/features/misc.py b/libcxx/utils/libcxx/test/features/misc.py
-index 738e3d8bb207cc641e8f890cddbc4bbc7cf68c71..b079013d0d9c2b4bb9b47cf6f9261baef0c703eb 100644
+index 92b6dc352d2e176366970b5f7a207b84189655bf..b2d11c185ec09463e67b5f4495ed10ce97b95c2c 100644
 --- a/libcxx/utils/libcxx/test/features/misc.py
 +++ b/libcxx/utils/libcxx/test/features/misc.py
 @@ -133,7 +133,7 @@ features = [

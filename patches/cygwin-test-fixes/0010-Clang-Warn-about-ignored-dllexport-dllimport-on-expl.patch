@@ -1,4 +1,4 @@
-From 974d408f7cfb2fb53731f00ec0ef7e696569673e Mon Sep 17 00:00:00 2001
+From fc6f5a6c733740e1f098375138d9cd8701fd93d5 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 15 Mar 2026 18:19:23 +0900
 Subject: [PATCH 10/61] [Clang] Warn about ignored dllexport/dllimport on

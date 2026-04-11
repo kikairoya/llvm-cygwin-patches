@@ -1,32 +1,36 @@
-From 950d3be8cbba144d09789125c08c988110c66dad Mon Sep 17 00:00:00 2001
+From ebfba2d26a6c4de95bb6bf3296188612c5ab9fc8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sat, 20 Dec 2025 22:21:44 +0900
-Subject: [PATCH 27/61] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
+Date: Thu, 9 Apr 2026 19:37:48 +0900
+Subject: [PATCH 27/63] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
  LLVM_EXPORT_SYMBOLS_FOR_PLUGINS
 
 ---
- llvm/cmake/modules/AddLLVM.cmake | 41 ++++++++++++++++++++++++++++----
- 1 file changed, 37 insertions(+), 4 deletions(-)
+ llvm/cmake/modules/AddLLVM.cmake | 45 +++++++++++++++++++++++++++++---
+ 1 file changed, 41 insertions(+), 4 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index c283ad8edaa9c51237f84cbcfad755fcb6b8ba34..0dfcb41af5039f29b8d58378b98b590cb280832c 100644
+index ffac1ed82ca3cf8812f0d09605cb2e6c45d46f56..3a23bee38c2f2f6c5573d1a8d306c172ae097ba0 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
-@@ -615,6 +615,13 @@ function(llvm_add_library name)
+@@ -615,6 +615,17 @@ function(llvm_add_library name)
      if(NOT LLVM_ENABLE_PIC)
        set(ARG_DISABLE_PCH_REUSE TRUE)
      endif()
 +    if(ARG_PLUGIN_TOOL AND (WIN32 OR CYGWIN))
-+      get_target_property(plugin_tool_exporting ${ARG_PLUGIN_TOOL} ENABLE_EXPORTS)
-+      if(NOT plugin_tool_exporting)
-+        message(WARNING "PLUGIN_TOOL for ${name} is ignored -- ${ARG_PLUGIN_TOOL} is not configured as a plugin target.")
-+        set(ARG_PLUGIN_TOOL)
++      if (TARGET ${ARG_PLUGIN_TOOL})
++        get_target_property(plugin_tool_exporting ${ARG_PLUGIN_TOOL} ENABLE_EXPORTS)
++        if(NOT plugin_tool_exporting)
++          message(WARNING "PLUGIN_TOOL for ${name} is ignored -- ${ARG_PLUGIN_TOOL} is not configured as a plugin target.")
++          set(ARG_PLUGIN_TOOL)
++        endif()
++      else()
++        message(STATUS "PLUGIN_TOOL ${ARG_PLUGIN_TOOL} for ${name} is not a valid target -- assuming that will be defined later.")
 +      endif()
 +    endif()
    else()
      if(ARG_PLUGIN_TOOL)
        message(WARNING "PLUGIN_TOOL without MODULE doesn't make sense.")
-@@ -847,7 +854,7 @@ function(llvm_add_library name)
+@@ -847,7 +858,7 @@ function(llvm_add_library name)
      set(libtype PRIVATE)
    endif()
  
@@ -35,7 +39,7 @@ index c283ad8edaa9c51237f84cbcfad755fcb6b8ba34..0dfcb41af5039f29b8d58378b98b590c
      # On DLL platforms symbols are imported from the tool by linking against it.
      set(llvm_libs ${ARG_PLUGIN_TOOL})
    elseif (NOT ARG_COMPONENT_LIB)
-@@ -1523,6 +1530,21 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
+@@ -1523,6 +1534,21 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
    set_target_properties(${target} PROPERTIES INTERFACE_LINK_LIBRARIES "${other_libs}")
  endfunction()
  
@@ -57,7 +61,7 @@ index c283ad8edaa9c51237f84cbcfad755fcb6b8ba34..0dfcb41af5039f29b8d58378b98b590c
  function(export_executable_symbols target)
    if (LLVM_EXPORTED_SYMBOL_FILE)
      # The symbol file should contain the symbols we want the executable to
-@@ -1541,10 +1563,21 @@ function(export_executable_symbols target)
+@@ -1541,10 +1567,21 @@ function(export_executable_symbols target)
          CALL do_export_executable_symbols_for_plugins [[${target}]] [[${exported_symbol_file}]]
        )
      ")

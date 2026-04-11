@@ -1,7 +1,7 @@
-From 528424b3d616c6f2341edc54d9830e9db6173943 Mon Sep 17 00:00:00 2001
+From 245fa3f64ea034ea1e7d8aee0437edd342ab4a22 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 15 Mar 2026 11:19:26 +0900
-Subject: [PATCH 08/36] [Clang](NFC) Rewrite test/SemaCXX/dllimport.cpp like
+Subject: [PATCH 08/37] [Clang](NFC) Rewrite test/SemaCXX/dllimport.cpp like
  done in dllexport.cpp
 
 ---

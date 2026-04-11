@@ -1,7 +1,7 @@
-From 097bd0a3a79721b06caeafbad948a1a374531e46 Mon Sep 17 00:00:00 2001
+From 9ee6bfd32595830f9266b157f0944669ea09a65a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
-Subject: [PATCH 07/50] adopt LLVM_DECLARE_REGISTRY
+Subject: [PATCH 07/52] adopt LLVM_DECLARE_REGISTRY
 
 ---
  clang-tools-extra/clang-doc/Generators.cpp           |  2 +-
@@ -46,7 +46,7 @@ Subject: [PATCH 07/50] adopt LLVM_DECLARE_REGISTRY
  39 files changed, 54 insertions(+), 90 deletions(-)
 
 diff --git a/clang-tools-extra/clang-doc/Generators.cpp b/clang-tools-extra/clang-doc/Generators.cpp
-index e8e3cc6ea6c923aaaf07e61244974523dfcaf123..0e1b4458c54d97e6ecb0d7e70bc346704111842f 100644
+index 854f09b9b4a82c9f520669169b1c9415fb9617a7..53df28f79caac78a66e9dd7ae78cff003b99c69a 100644
 --- a/clang-tools-extra/clang-doc/Generators.cpp
 +++ b/clang-tools-extra/clang-doc/Generators.cpp
 @@ -10,7 +10,7 @@
@@ -59,7 +59,7 @@ index e8e3cc6ea6c923aaaf07e61244974523dfcaf123..0e1b4458c54d97e6ecb0d7e70bc34670
  using namespace llvm;
  using namespace llvm::json;
 diff --git a/clang-tools-extra/clang-doc/Generators.h b/clang-tools-extra/clang-doc/Generators.h
-index 2c8108e0ad6da02c881f36ca82029e3609d297c7..43537989ecc2842555bdc63bd57b861e077b75d9 100644
+index 8562e3dfa99d8406c2f6b1e35ef67c560b7a01f5..65de29892e12ec989e2e61d16b8642e53dddab72 100644
 --- a/clang-tools-extra/clang-doc/Generators.h
 +++ b/clang-tools-extra/clang-doc/Generators.h
 @@ -147,8 +147,6 @@ extern volatile int MDMustacheGeneratorAnchorSource;

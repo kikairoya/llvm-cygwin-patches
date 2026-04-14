@@ -1,7 +1,7 @@
 From cec79c2db5c0a6fcdeea711898f2efbe776f237c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:29:58 +0900
-Subject: [PATCH 14/52] [Clang] Let an explicit specialization not to prevent
+Subject: [PATCH 14/53] [Clang] Let an explicit specialization not to prevent
  dllexport/dllimport-ing following explicit instantiation
 
 ---

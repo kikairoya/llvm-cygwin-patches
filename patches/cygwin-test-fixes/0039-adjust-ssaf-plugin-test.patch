@@ -1,0 +1,38 @@
+From 346e5b3d20fd20b6d8f491aa5bcc51461ffcdc1d Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 14 Apr 2026 21:09:52 +0900
+Subject: [PATCH 39/64] adjust ssaf-plugin test
+
+---
+ .../lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt | 3 ++-
+ clang/test/CMakeLists.txt                                      | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt b/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt
+index b77ffc49c0f9f8a4863392499b32161f78e7eaa2..e5b204c14a772faf80f4d29664ce4da64e666476 100644
+--- a/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt
++++ b/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt
+@@ -1,4 +1,5 @@
+-if(CLANG_PLUGIN_SUPPORT AND LLVM_ENABLE_PLUGINS AND NOT WIN32)
++if(CLANG_PLUGIN_SUPPORT AND LLVM_ENABLE_PLUGINS AND
++    (NOT (WIN32 OR CYGWIN) OR LLVM_EXPORT_SYMBOLS_FOR_PLUGINS))
+   # Plugins must never bring LLVM or Clang libraries in statically.
+   # clang-ssaf-analyzer already loads clangScalableStaticAnalysisFrameworkCore
+   # and LLVM into the process; a second static copy would produce duplicate
+diff --git a/clang/test/CMakeLists.txt b/clang/test/CMakeLists.txt
+index cb1f34d2e49bc671b11c79f89c18d8041efb98e1..427ff51a900a1e14e81490766551561bc2b6abf9 100644
+--- a/clang/test/CMakeLists.txt
++++ b/clang/test/CMakeLists.txt
+@@ -207,7 +207,8 @@ if(CLANG_ENABLE_STATIC_ANALYZER)
+   endif()
+ endif()
+ 
+-if(CLANG_PLUGIN_SUPPORT AND LLVM_ENABLE_PLUGINS AND NOT WIN32)
++if(CLANG_PLUGIN_SUPPORT AND LLVM_ENABLE_PLUGINS AND
++    (NOT (WIN32 OR CYGWIN) OR LLVM_EXPORT_SYMBOLS_FOR_PLUGINS))
+   list(APPEND CLANG_TEST_DEPS
+     SSAFExamplePlugin
+     )
+-- 
+2.53.0
+

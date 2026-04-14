@@ -1,7 +1,7 @@
 From 4d603a4a65ee762fcc7c71b9e719b14e87a261c2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:59:32 +0900
-Subject: [PATCH 02/63] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
+Subject: [PATCH 02/64] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
 
 ---
  .../FlowSensitive/CachedConstAccessorsLattice.h     | 13 +++++++++++++

@@ -1,0 +1,25 @@
+From bcacc1c989e9c5c59532980f522a23df77e4fa11 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sat, 14 Jun 2025 08:15:58 +0900
+Subject: [PATCH 43/64] [LLVM-Tools][Cygwin] Enable LTO component
+
+---
+ llvm/tools/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/llvm/tools/CMakeLists.txt b/llvm/tools/CMakeLists.txt
+index b9c5a79849ec8f1b89ecf9d42dd3fde5aacfdb7b..00632845d1e4df3e205ca93f35e650dda88dd5ce 100644
+--- a/llvm/tools/CMakeLists.txt
++++ b/llvm/tools/CMakeLists.txt
+@@ -17,7 +17,7 @@ if(NOT LLVM_USE_INTEL_JITEVENTS )
+   set(LLVM_TOOL_LLVM_JITLISTENER_BUILD Off)
+ endif()
+ 
+-if(CYGWIN OR NOT LLVM_ENABLE_PIC)
++if(NOT LLVM_ENABLE_PIC)
+   set(LLVM_TOOL_LTO_BUILD Off)
+ endif()
+ 
+-- 
+2.53.0
+

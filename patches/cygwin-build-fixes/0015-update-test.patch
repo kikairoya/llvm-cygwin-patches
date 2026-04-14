@@ -1,7 +1,7 @@
 From def543ddf0561dd46a02cb0908f852b72b66851e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 19:00:48 +0900
-Subject: [PATCH 15/37] update test
+Subject: [PATCH 15/38] update test
 
 ---
  clang/test/CodeGenCXX/dllimport.cpp           |  6 ++---

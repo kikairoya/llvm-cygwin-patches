@@ -1,4 +1,4 @@
-From 50713bdadfaba0f7048d75cebd7d758459dcabe5 Mon Sep 17 00:00:00 2001
+From a44f0bde883434b4998bdb8b84d27fe6898427cd Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:34:49 +0900
 Subject: [PATCH 24/37] [compiler-rt][Test][Cygwin] Diverge expected result for
@@ -72,7 +72,7 @@ index a1b99b492aa4fd881e3d63ba3eb871ce58d3c71c..afb05d5d63e4b646c9534cc0ea8fd2b1
  // RUN: %clang_pgogen=%t.profdir -o %t -O2 %s
  // RUN: %run %t
 diff --git a/compiler-rt/test/profile/instrprof-merge-entry-cover.c b/compiler-rt/test/profile/instrprof-merge-entry-cover.c
-index a99458898392f5a6e5dbc25d1d0930996dce6ff5..d5b6d23cec4d1e31d3265689d3db54f4b53ed099 100644
+index 5856773c09f1bdb7e545bedfa251e3dba4c248a6..999ca2fac218c8a07b43d44f2d951c89bfa209ad 100644
 --- a/compiler-rt/test/profile/instrprof-merge-entry-cover.c
 +++ b/compiler-rt/test/profile/instrprof-merge-entry-cover.c
 @@ -3,7 +3,7 @@
@@ -85,7 +85,7 @@ index a99458898392f5a6e5dbc25d1d0930996dce6ff5..d5b6d23cec4d1e31d3265689d3db54f4
  #include "profile_test.h"
  #include <stdint.h>
 diff --git a/compiler-rt/test/profile/instrprof-merge.c b/compiler-rt/test/profile/instrprof-merge.c
-index 8be1016da873e53a9abd8dbe3f8c6e9f25081d47..4d7d2e43f38a621ca959f91575627b055061e9b2 100644
+index a94708919dabad530129d84cfb31edf9d369fd11..c41c46a976bcf5e1b49f6db884a06eac1722f065 100644
 --- a/compiler-rt/test/profile/instrprof-merge.c
 +++ b/compiler-rt/test/profile/instrprof-merge.c
 @@ -3,7 +3,7 @@

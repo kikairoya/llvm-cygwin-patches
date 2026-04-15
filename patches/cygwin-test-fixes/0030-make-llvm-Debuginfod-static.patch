@@ -1,4 +1,4 @@
-From 6b9cbceb5f91475219a36e703c73c41c2aa5771d Mon Sep 17 00:00:00 2001
+From 3127e3b89cf2d02dc70638fee55f136f06f8bd3b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 16 Mar 2026 06:52:39 +0900
 Subject: [PATCH 30/64] make llvm/Debuginfod static
@@ -8,7 +8,7 @@ Subject: [PATCH 30/64] make llvm/Debuginfod static
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/llvm/lib/Debuginfod/CMakeLists.txt b/llvm/lib/Debuginfod/CMakeLists.txt
-index c31481cc97f08c0328cb6560a3a9d1f8dc7677eb..9da810243216b699e7b33b37cae41eee4a1919ea 100644
+index 5b3403b961a4ccf5c50e2f3f39ce882903fe5b43..204f3fbf2b7f4a32bd16912e2a7581970e4a8fc2 100644
 --- a/llvm/lib/Debuginfod/CMakeLists.txt
 +++ b/llvm/lib/Debuginfod/CMakeLists.txt
 @@ -5,7 +5,11 @@ endif()

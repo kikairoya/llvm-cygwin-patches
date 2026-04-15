@@ -1,4 +1,4 @@
-From 4d603a4a65ee762fcc7c71b9e719b14e87a261c2 Mon Sep 17 00:00:00 2001
+From aaf40d6684687e867cb1ce0d82e93eb4686475e6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:59:32 +0900
 Subject: [PATCH 02/64] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
@@ -101,10 +101,10 @@ index 683bb958c9f9b948fcbfdf5339ca7d69899c935f..5d6ba6f539c6f30fafa395bbe73a36e9
  // GraphTraits specializations for function basic block graphs (CFGs)
  //===--------------------------------------------------------------------===//
 diff --git a/llvm/lib/CodeGen/MachineFunction.cpp b/llvm/lib/CodeGen/MachineFunction.cpp
-index a2dd9c425370cf43d1ce42c833d4392b4c09d831..1947a7c116dc3eb9d8506d48ee05b2c085543dca 100644
+index f74ebf2d2c52b160033ac5795780ce63d2e19ec2..7b0cb9a4620de6637ec2e95bf2b9d8c8f71305d8 100644
 --- a/llvm/lib/CodeGen/MachineFunction.cpp
 +++ b/llvm/lib/CodeGen/MachineFunction.cpp
-@@ -1332,6 +1332,8 @@ void MachineFunction::setUseDebugInstrRef(bool Use) {
+@@ -1338,6 +1338,8 @@ void MachineFunction::setUseDebugInstrRef(bool Use) {
  // Use one million as a high / reserved number.
  const unsigned MachineFunction::DebugOperandMemNumber = 1000000;
  

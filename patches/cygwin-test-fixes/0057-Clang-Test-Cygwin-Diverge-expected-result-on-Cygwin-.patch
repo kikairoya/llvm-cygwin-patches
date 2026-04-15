@@ -1,6 +1,6 @@
-From 735b6b82d3b69c15d1d54e5b5308411542b3bb93 Mon Sep 17 00:00:00 2001
+From 2d8222a417536e953b605c44697edee4b9651a17 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sat, 11 Oct 2025 17:38:33 +0900
+Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
  host
 
@@ -19,9 +19,10 @@ Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
  clang/test/Driver/mingw-sysroot.cpp               |  2 +-
  clang/test/Driver/riscv32-toolchain.c             |  2 +-
  clang/test/Driver/riscv64-toolchain.c             |  2 +-
+ clang/test/Driver/serenity.cpp                    |  2 +-
  clang/test/Modules/inferred-framework-case.m      |  2 +-
  clang/test/lit.cfg.py                             |  5 +++--
- 16 files changed, 39 insertions(+), 21 deletions(-)
+ 17 files changed, 40 insertions(+), 22 deletions(-)
 
 diff --git a/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c b/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c
 index ccfdc1a1c6cfa9417c28e6abccafb08d9fe42d0e..5567ec1ab0e43c83ec6f5da8bea7d8b1d7da07d6 100644
@@ -225,6 +226,16 @@ index 378f3d9db7bad25c7072315ae0bf4b68d23481b4..1f3f7a2791822705525cde4d08bbdb9f
  // A basic clang -cc1 command-line, and simple environment check.
  
  // RUN: %clang -### %s --target=riscv64 \
+diff --git a/clang/test/Driver/serenity.cpp b/clang/test/Driver/serenity.cpp
+index 09b8cb90679bfe20ac5d2ed7b9970192c711e250..e4ab75845d5314ffc1f7d9c781f7699b4c0f7c25 100644
+--- a/clang/test/Driver/serenity.cpp
++++ b/clang/test/Driver/serenity.cpp
+@@ -1,4 +1,4 @@
+-// UNSUPPORTED: system-windows
++// UNSUPPORTED: system-windows, system-cygwin
+ 
+ /// Check default header and linker paths for each supported triple.
+ // RUN: %clang -### %s --target=x86_64-unknown-serenity --sysroot=%S/Inputs/serenity_tree \
 diff --git a/clang/test/Modules/inferred-framework-case.m b/clang/test/Modules/inferred-framework-case.m
 index 64828b5cdd86827664016db622a73261406535b8..172df10d8084af8f52dfaaf23c1f8f3e2d93da76 100644
 --- a/clang/test/Modules/inferred-framework-case.m
@@ -239,10 +250,10 @@ index 64828b5cdd86827664016db622a73261406535b8..172df10d8084af8f52dfaaf23c1f8f3e
  @import MOdule; // expected-error{{module 'MOdule' not found}}
  @import Module;
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 3b0b3092d424e7238d572235ce9fcaab9f712524..f4101e275c4ed3059c7a70d9ac69ef223da7e1c9 100644
+index 4de86f555bcb8af3875596d0c3678f8a8c0c069a..80ea19854c002d5212e8e75b23153b88ef38aa43 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -316,7 +316,8 @@ if config.clang_default_cxx_stdlib != "":
+@@ -320,7 +320,8 @@ if config.clang_default_cxx_stdlib != "":
      )
  
  # As of 2011.08, crash-recovery tests still do not pass on FreeBSD.
@@ -252,7 +263,7 @@ index 3b0b3092d424e7238d572235ce9fcaab9f712524..f4101e275c4ed3059c7a70d9ac69ef22
      config.available_features.add("crash-recovery")
  
  # ANSI escape sequences in non-dumb terminal
-@@ -370,7 +371,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
+@@ -374,7 +375,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
  
  # [PR18856] Depends to remove opened file. On win32, a file could be removed
  # only if all handles were closed.

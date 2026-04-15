@@ -1,4 +1,4 @@
-From 9db6d3bbac982d0a83d2990ddf710d8c22b5468e Mon Sep 17 00:00:00 2001
+From 21371fa8a3c9457862273f2ea1e26452a2296839 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 24 Jan 2026 10:23:54 +0900
 Subject: [PATCH 06/38] [clangd] Prevent symbol dup for DenseMapInfo<SymbolID>

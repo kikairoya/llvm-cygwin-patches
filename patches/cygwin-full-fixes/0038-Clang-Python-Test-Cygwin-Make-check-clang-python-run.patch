@@ -1,4 +1,4 @@
-From 27a8afeeeaee70288d1a86199d6566ae8118596d Mon Sep 17 00:00:00 2001
+From 66b8cfa4eed7bfae34462d4de0b842cab1d2a438 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 9 Jul 2025 21:23:51 +0900
 Subject: [PATCH 38/53] [Clang-Python][Test][Cygwin] Make check-clang-python
@@ -30,7 +30,7 @@ index 21fe6fb79793fe1856c2c2c52050a9ce404d7613..9acbda6a3a4321847b27d258201eaca2
      DEPENDS libclang
      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 diff --git a/clang/tools/libclang/CMakeLists.txt b/clang/tools/libclang/CMakeLists.txt
-index 5fdfc474332f78dfd6bfcac752ec13a3a8f1f86c..71d5e4f693867847421794a8720723f1cc854a55 100644
+index 38f577499dd22e8753df9b4e7dc1b68c1a2e8286..f2367b89fa630c7f7c23286421a89319ff91b263 100644
 --- a/clang/tools/libclang/CMakeLists.txt
 +++ b/clang/tools/libclang/CMakeLists.txt
 @@ -160,15 +160,22 @@ if(ENABLE_STATIC)

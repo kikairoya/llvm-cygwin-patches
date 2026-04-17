@@ -1,4 +1,4 @@
-From ed3e2d79f64799baa7730832b37cb54baf5c7778 Mon Sep 17 00:00:00 2001
+From 6f77727badc2a84f1286e863ec49a5763ec80942 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 9 Apr 2026 19:37:48 +0900
 Subject: [PATCH 27/64] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without

@@ -1,4 +1,4 @@
-From 2d8222a417536e953b605c44697edee4b9651a17 Mon Sep 17 00:00:00 2001
+From 8047ac6d6cc7adc973fb07903a5ebbd9f9f26ecf Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -227,7 +227,7 @@ index 378f3d9db7bad25c7072315ae0bf4b68d23481b4..1f3f7a2791822705525cde4d08bbdb9f
  
  // RUN: %clang -### %s --target=riscv64 \
 diff --git a/clang/test/Driver/serenity.cpp b/clang/test/Driver/serenity.cpp
-index 09b8cb90679bfe20ac5d2ed7b9970192c711e250..e4ab75845d5314ffc1f7d9c781f7699b4c0f7c25 100644
+index 9fefaaa9b6e529a48570f1c02076f25298ee1b25..b6f0cbdbaec62ab5fe9b6577daa9ce43c3ae492a 100644
 --- a/clang/test/Driver/serenity.cpp
 +++ b/clang/test/Driver/serenity.cpp
 @@ -1,4 +1,4 @@

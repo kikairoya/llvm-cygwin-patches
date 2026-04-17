@@ -1,4 +1,4 @@
-From eec565f524d8765735df5bc8f355737cc3db8e42 Mon Sep 17 00:00:00 2001
+From 65c4c514061188874f050ec80754e1b0294ab0ac Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 07/64] adopt LLVM_DECLARE_REGISTRY
@@ -258,10 +258,10 @@ index 5eea9c2fd89a32923db9ea3f6d95df4aca2ddd67..697a4c25c82f2a2c1c2e31b3ce81e561
  
  #endif // LLVM_CLANG_FRONTEND_FRONTENDPLUGINREGISTRY_H
 diff --git a/clang/include/clang/Lex/Preprocessor.h b/clang/include/clang/Lex/Preprocessor.h
-index c7e152a75f51f562408bef1e68b22a92fecb2e77..915be9bd5cad4405915ad36beb8049a10adba7db 100644
+index 8830294ea1658d407919b9b5d36cb8d2082b54be..0b2d8191022556edc020bc5aa2a4c7497449296f 100644
 --- a/clang/include/clang/Lex/Preprocessor.h
 +++ b/clang/include/clang/Lex/Preprocessor.h
-@@ -3215,8 +3215,6 @@ using PragmaHandlerRegistry = llvm::Registry<PragmaHandler>;
+@@ -3206,8 +3206,6 @@ using PragmaHandlerRegistry = llvm::Registry<PragmaHandler>;
  
  } // namespace clang
  
@@ -409,7 +409,7 @@ index c3d1d802dfe0441fc9bf399fbff9c3c28026fa61..9ae6bb552d26ba62673cb747411f0b84
  namespace {
  
 diff --git a/clang/lib/Lex/Preprocessor.cpp b/clang/lib/Lex/Preprocessor.cpp
-index c430da67c14696de826987584d21e7a7c3ac20f0..4eacf8b8b558b87e511f6eafc5606990b76a598e 100644
+index b08459632aacb9f817db9543de3fce8111e997b7..def4cb4e2b472ee6c43a8322903423a74d9d18c2 100644
 --- a/clang/lib/Lex/Preprocessor.cpp
 +++ b/clang/lib/Lex/Preprocessor.cpp
 @@ -79,7 +79,7 @@ using namespace clang;

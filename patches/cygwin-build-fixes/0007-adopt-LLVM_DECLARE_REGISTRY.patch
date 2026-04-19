@@ -1,4 +1,4 @@
-From 65c4c514061188874f050ec80754e1b0294ab0ac Mon Sep 17 00:00:00 2001
+From ce441136999f564c0ef9e9621ffd1ba211134d35 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 07/38] adopt LLVM_DECLARE_REGISTRY
@@ -272,10 +272,10 @@ index 8830294ea1658d407919b9b5d36cb8d2082b54be..0b2d8191022556edc020bc5aa2a4c749
  
  #endif // LLVM_CLANG_LEX_PREPROCESSOR_H
 diff --git a/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h b/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h
-index 43ac353a31e75eb0c9bc5fa8a5e89262b1af2a4d..ad9810eacae229305372bd0bc7ea9887ce1805f1 100644
+index b0126a1abac9fe9296ebe493c4b62e01d265114c..9f538c373e4918465d5b89b8471e7ebe46084261 100644
 --- a/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h
 +++ b/clang/include/clang/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat.h
-@@ -217,11 +217,8 @@ private:
+@@ -228,11 +228,8 @@ private:
  
  } // namespace clang::ssaf
  
@@ -422,7 +422,7 @@ index b08459632aacb9f817db9543de3fce8111e997b7..def4cb4e2b472ee6c43a8322903423a7
  ExternalPreprocessorSource::~ExternalPreprocessorSource() = default;
  
 diff --git a/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp b/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp
-index f1dcd752f864f6b37262e12bcadd541b38acb434..caf13758c05d545e2b9d3524c2fcdc751472d6e4 100644
+index 8db7480e683f59b6ea43cd4cdbfb23faa7271213..5d8d11dd47ea45e6cd8ab6328c66de5f41017c20 100644
 --- a/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp
 +++ b/clang/lib/ScalableStaticAnalysisFramework/Core/Serialization/JSONFormat/JSONFormatImpl.cpp
 @@ -13,8 +13,8 @@

@@ -1,4 +1,4 @@
-From c9bfdbe4c05215c88e89c5c02169c256a571a0ad Mon Sep 17 00:00:00 2001
+From 0ad8370b50b599adb8efc19e4fc636c2fb9fa14e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 2/6] [compiler-rt][Cygwin] Add support for Cygwin target

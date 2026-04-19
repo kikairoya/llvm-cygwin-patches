@@ -1,4 +1,4 @@
-From e76e21871e20cfa9682c7a1ce549ce39a334d2e8 Mon Sep 17 00:00:00 2001
+From a3b8615211edf073d398372fd620b80fb2890992 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:31 +0900
 Subject: [PATCH 19/64] specialize nested
@@ -9,7 +9,7 @@ Subject: [PATCH 19/64] specialize nested
  2 files changed, 51 insertions(+), 8 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index cf977d3182015fc69005e855615dc218609e7510..2d768bf2c4e81effceb76f76c79d8f56a2f107ab 100644
+index 056878b1c6064eb46eac430cc2575eab0c122685..53e95f8873752657fb8978c94b5dc5039cac7c08 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6657,6 +6657,9 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {

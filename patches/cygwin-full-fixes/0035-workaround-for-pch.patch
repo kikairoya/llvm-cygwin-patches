@@ -1,4 +1,4 @@
-From fddb37c800403acf4b304e7cff7a845b941ac211 Mon Sep 17 00:00:00 2001
+From 725fa725c8c505c7bf59044702bc66f3b04c905d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 11 Apr 2026 17:49:01 +0900
 Subject: [PATCH 35/53] workaround for pch

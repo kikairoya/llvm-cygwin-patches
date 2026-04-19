@@ -1,4 +1,4 @@
-From 8047ac6d6cc7adc973fb07903a5ebbd9f9f26ecf Mon Sep 17 00:00:00 2001
+From 8a3f1ccb2cf408a7d2d8ffa135889cdb4a7eeda1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -177,17 +177,17 @@ index aae330bd3f6de405ce84c845717df809574a8859..0002b9907cfc4fe6981125b415018d5b
  // The linker wrapper should output .hipfb files directly without using -r option.
  
 diff --git a/clang/test/Driver/linux-ld.c b/clang/test/Driver/linux-ld.c
-index 2c9d3a6ec3f90136d650a00ebf29b3d1df648ef6..baa5c9e48c96eb92a6b8f950eff07ee601be41c0 100644
+index 8de1988d606cfbd8daea4aea8c17db8877af42e8..bae92e45cd8ab7b181f2f7cc176712d0af84d650 100644
 --- a/clang/test/Driver/linux-ld.c
 +++ b/clang/test/Driver/linux-ld.c
 @@ -1,4 +1,4 @@
 -// UNSUPPORTED: system-windows
 +// UNSUPPORTED: system-windows, system-cygwin
- // General tests that ld invocations on Linux targets sane. Note that we use
- // sysroot to make these tests independent of the host system.
- //
+ /// Tests for Linux toolchain discovery and start/end-file selection in
+ /// gnutools::Linker::ConstructJob: crt*.o selection, -L search paths, multilib,
+ /// -m elf_* per triple, --hash-style per target, -lgcc chains, and per-triple
 diff --git a/clang/test/Driver/loongarch-toolchain.c b/clang/test/Driver/loongarch-toolchain.c
-index cfd53152b7e6ed932b9ee7a316fe17666385b485..7fea4bb1455f3916f0d8881f2d5ea3af9229c83f 100644
+index 54a2519e0a70df4d3ba3a4cb72a925004f9dda73..70bedc18c3b13ead3537439e7b379f8a1712459a 100644
 --- a/clang/test/Driver/loongarch-toolchain.c
 +++ b/clang/test/Driver/loongarch-toolchain.c
 @@ -1,4 +1,4 @@
@@ -227,7 +227,7 @@ index 378f3d9db7bad25c7072315ae0bf4b68d23481b4..1f3f7a2791822705525cde4d08bbdb9f
  
  // RUN: %clang -### %s --target=riscv64 \
 diff --git a/clang/test/Driver/serenity.cpp b/clang/test/Driver/serenity.cpp
-index 9fefaaa9b6e529a48570f1c02076f25298ee1b25..b6f0cbdbaec62ab5fe9b6577daa9ce43c3ae492a 100644
+index 16291b250b70497e6339bb124d993f7a402835a9..3ac95beeb8ca7913cd728a4db8d01bc51c6e783e 100644
 --- a/clang/test/Driver/serenity.cpp
 +++ b/clang/test/Driver/serenity.cpp
 @@ -1,4 +1,4 @@

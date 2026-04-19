@@ -1,4 +1,4 @@
-From 57babe244d0b4efb65203f5355858b7dbb225937 Mon Sep 17 00:00:00 2001
+From 680e11ceeffbbad192d3c2203ca0cf48bc2e6e7d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 16 Mar 2026 06:52:39 +0900
 Subject: [PATCH 30/64] make llvm/Debuginfod static

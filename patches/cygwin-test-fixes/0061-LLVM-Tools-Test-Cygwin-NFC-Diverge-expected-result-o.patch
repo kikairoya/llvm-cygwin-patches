@@ -1,4 +1,4 @@
-From e308c926f7af4d8ba6972e79a38fb4481187fd8e Mon Sep 17 00:00:00 2001
+From b5a5a5e41c41ecada5b4d7fad7c075d1de943e50 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 18:02:39 +0900
 Subject: [PATCH 61/64] [LLVM-Tools][Test][Cygwin](NFC) Diverge expected result
@@ -103,15 +103,15 @@ index 02e9b93f5376f08d5e01755dae88aa100b7e143d..87d60f6f402cb54b2f644ee380ded70e
  # RUN: rm -f %t
  # RUN: touch %t
 diff --git a/llvm/test/tools/llvm-objcopy/ELF/strip-preserve-atime.test b/llvm/test/tools/llvm-objcopy/ELF/strip-preserve-atime.test
-index f8942a8d81e2b4c128b0051831fca75078739d71..23bf16894e8a6c259df6dd754abf9ea13fb16d81 100644
+index c08580f32ecfdf625eef2cb461e9ca68cfb1d055..3b9f37fb499def937327096530b91a74e375f75b 100644
 --- a/llvm/test/tools/llvm-objcopy/ELF/strip-preserve-atime.test
 +++ b/llvm/test/tools/llvm-objcopy/ELF/strip-preserve-atime.test
 @@ -3,7 +3,7 @@
  # Windows: the last access time is disabled by default in the OS
  # This test is also known to fail on Mac (and possibly elsewhere) when Crowdstrike is installed;
  # please make use of the LIT_XFAIL environment variable on such machines.
--# UNSUPPORTED: system-netbsd, system-windows, system-darwin
-+# UNSUPPORTED: system-netbsd, system-windows, system-darwin, system-cygwin
+-# UNSUPPORTED: system-netbsd, system-windows
++# UNSUPPORTED: system-netbsd, system-windows, system-cygwin
  
  # Preserve dates when stripping to an output file.
  # RUN: yaml2obj %s -o %t.1.o

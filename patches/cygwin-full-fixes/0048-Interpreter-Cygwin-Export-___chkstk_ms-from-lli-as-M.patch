@@ -1,4 +1,4 @@
-From ffad028a353c15579100ef3aecefb5cd54fd694b Mon Sep 17 00:00:00 2001
+From 30d9a04e8951f1a71849ebefcc93d1f8dc8916a8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 May 2025 22:37:15 +0900
 Subject: [PATCH 48/53] [Interpreter][Cygwin] Export ___chkstk_ms from lli as

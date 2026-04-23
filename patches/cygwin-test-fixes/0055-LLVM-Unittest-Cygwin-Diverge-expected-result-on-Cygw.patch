@@ -1,4 +1,4 @@
-From a42989e7126ca60e27530bf51bfb358809838e06 Mon Sep 17 00:00:00 2001
+From afc06bedf6d4b8853b2b6857b65feb65e35919e6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Mar 2026 20:30:47 +0900
 Subject: [PATCH 55/64] [LLVM][Unittest][Cygwin] Diverge expected result on
@@ -62,10 +62,10 @@ index fca2d298c460eb9a5380386d96e6f7d730402ec4..76e202df0656f3628a863d71382e7dcc
  
    llvm::SmallString<128> RspOpt;
 diff --git a/llvm/unittests/Support/Path.cpp b/llvm/unittests/Support/Path.cpp
-index 114eaa2a5cc6c199d7c56240a5e46b2f46873991..22de1a7e0fe4d10ee904088ae4fbce830d65fd44 100644
+index b196dc1d5452b248e21c3a009d72271aef7dc67c..76786239fb7958f0f3dd661df44764ed7f7aec19 100644
 --- a/llvm/unittests/Support/Path.cpp
 +++ b/llvm/unittests/Support/Path.cpp
-@@ -2519,7 +2519,7 @@ TEST_F(FileSystemTest, permissions) {
+@@ -2529,7 +2529,7 @@ TEST_F(FileSystemTest, permissions) {
  
    EXPECT_EQ(fs::setPermissions(TempPath, fs::all_perms), NoError);
    EXPECT_TRUE(CheckPermissions(fs::all_all));

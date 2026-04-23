@@ -1,4 +1,4 @@
-From 2a54e7dd7c72e85711124ef6989366bb9b19f03a Mon Sep 17 00:00:00 2001
+From 425c934bf5d306331a98ffce189045ea692936e5 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:30:26 +0900
 Subject: [PATCH 18/64] [Clang][MinGW] Instantiate nested classes by enclosing
@@ -85,10 +85,10 @@ index e0aee6558ae3da054425cfdf52e94d275a3aa456..83e476d671ae5ae45bf107272e901e12
              TSK != TSK_ExplicitInstantiationDefinition) {
            if (auto *CD = dyn_cast<CXXConstructorDecl>(MD);
 diff --git a/clang/lib/Sema/SemaTemplateInstantiate.cpp b/clang/lib/Sema/SemaTemplateInstantiate.cpp
-index 59d4fde6ada64cd48866f31de293499807419763..83b3eef43060f91407a279f4e40b4143b5cfde94 100644
+index 8dfe33f8684bdb00a67d7ef3b745f3da8466c5c6..49eeb569f328663f5fd0dfbab69bdf5bb2a22a8e 100644
 --- a/clang/lib/Sema/SemaTemplateInstantiate.cpp
 +++ b/clang/lib/Sema/SemaTemplateInstantiate.cpp
-@@ -4264,6 +4264,7 @@ Sema::InstantiateClassMembers(SourceLocation PointOfInstantiation,
+@@ -4266,6 +4266,7 @@ Sema::InstantiateClassMembers(SourceLocation PointOfInstantiation,
          continue;
  
        if (Context.getTargetInfo().getTriple().isOSWindows() &&

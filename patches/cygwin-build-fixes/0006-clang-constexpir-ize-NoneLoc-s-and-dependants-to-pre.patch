@@ -1,4 +1,4 @@
-From 0e434d7558637aad4b55948d85a1a476dd5eabf6 Mon Sep 17 00:00:00 2001
+From eb9cc59c43941a7a011a89c89329974f8f1b9874 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/38] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -15,7 +15,7 @@ Subject: [PATCH 06/38] [clang] constexpir-ize `NoneLoc`s and dependants to
  7 files changed, 21 insertions(+), 18 deletions(-)
 
 diff --git a/clang/include/clang/AST/DeclTemplate.h b/clang/include/clang/AST/DeclTemplate.h
-index a4a1bb9c13c79f826c96fa7969c59d36b9f5321e..a30ec5a76e22b7fdb4940eec9639c1ca659b9037 100644
+index 9fb41c87da732abfaeeaf4269ffdbbb1107b7b76..d6312543fa8a94fecb17510372a21bb9ad8080d1 100644
 --- a/clang/include/clang/AST/DeclTemplate.h
 +++ b/clang/include/clang/AST/DeclTemplate.h
 @@ -1234,7 +1234,7 @@ public:

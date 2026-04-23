@@ -1,4 +1,4 @@
-From 694df7d09c5c5e9cff10eee4287b4445c51cbf65 Mon Sep 17 00:00:00 2001
+From f77ed144e3251da7e8c37fe4dc0257d2f806db70 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Sep 2025 18:23:48 +0900
 Subject: [PATCH 37/53] [cmake][Clang][Cygwin] Set output name explicitly when

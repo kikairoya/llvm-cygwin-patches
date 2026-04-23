@@ -1,4 +1,4 @@
-From 4d31faeb01fa069e4752c60aab2da197a066d0e8 Mon Sep 17 00:00:00 2001
+From 2007e15442827a47aa5c5d36707d66c2856f39b3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 May 2025 12:04:02 +0900
 Subject: [PATCH 56/64] [JIT][Test][Cygwin] Diverge expected result
@@ -100,7 +100,7 @@ index 9a822fc7ed55654339252523d066568d1e89dc7c..d7898170739ae8cd602b0be2efd4ae75
  
  @o = common global i32 0, align 4
 diff --git a/llvm/test/lit.cfg.py b/llvm/test/lit.cfg.py
-index af704d67b91f2c9b0032014e2dd4dd11286cf270..97972b05b2121250f46e5129627984a3673080ba 100644
+index 704151e0228e4e07c2f8418db28aab020f2ca30b..34569ae581d83816e26b00c4829bb00aa06d3070 100644
 --- a/llvm/test/lit.cfg.py
 +++ b/llvm/test/lit.cfg.py
 @@ -725,7 +725,7 @@ def host_unwind_supports_jit():

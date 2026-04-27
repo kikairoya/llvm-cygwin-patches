@@ -1,4 +1,4 @@
-From 750536500ea1eab1124a2a9b818fd4fe34ac4fbf Mon Sep 17 00:00:00 2001
+From d988251496cc0c5fe38b9b5fca6166345a82062c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 21:20:11 +0900
 Subject: [PATCH 33/64] [Clang-tools] Add an option
@@ -97,5 +97,5 @@ index f7d7012cf7272ee004bd89668312c88f3e129d93..27361784eafaaf8eb6038a644e84779e
 +  DISABLE_CLANG_LINK_CLANG_DYLIB
 +  clangBasic)
 -- 
-2.53.0
+2.54.0
 

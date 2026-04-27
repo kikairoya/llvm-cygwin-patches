@@ -1,4 +1,4 @@
-From 0ec887d8fa169901cd84ff0127345b566b6ec90e Mon Sep 17 00:00:00 2001
+From fe32093090acc2db563047406bd7f33e4fdf5435 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 21:40:48 +0900
 Subject: [PATCH 59/64] [LLD][Test][Cygwin] Make test pass on Cygwin host
@@ -62,5 +62,5 @@ index fbf6b43a11dfeb7df9ead0958e09f95cfed6bcec..e1255f904ca1bb48a35df7070dda72d6
  MSVC stamps uppercase references in OBJ directives, thus ensure that passing lowercase 'libcmt' and 'oldnames' to /nodefaultlib works.
  # RUN: lld-link %S/Inputs/precomp.obj %S/Inputs/precomp-a.obj %S/Inputs/precomp-b.obj /nodefaultlib:libcmt /nodefaultlib:oldnames /entry:main /debug /pdb:%t.pdb /out:%t.exe /opt:ref /opt:icf
 -- 
-2.53.0
+2.54.0
 

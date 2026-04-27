@@ -1,4 +1,4 @@
-From 283130b8115c1f03b37e0ba8010b1dc452bc6992 Mon Sep 17 00:00:00 2001
+From c00fcc527b8abe4cabce34e61128e3c94398cf6e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:56:10 +0900
 Subject: [PATCH 36/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -4548,12 +4548,12 @@ index ff44096bf717171d53f444e48cdd38f068019481..b60cc85734d9ff2b5f582abdfc5ef716
  #include <stdlib.h>
  #include <string>
 diff --git a/libcxx/utils/libcxx/test/features/platform.py b/libcxx/utils/libcxx/test/features/platform.py
-index 820dd75ae21e860551d4b89086878e8c6ae6f9ff..6887466ff491b0fe24ad629eb4b49d31f352a753 100644
+index da47f70378d941966bbb333d9cb9f65e7d584887..18ad39ab7aad336b8bae925f3aee939ad3d6efc2 100644
 --- a/libcxx/utils/libcxx/test/features/platform.py
 +++ b/libcxx/utils/libcxx/test/features/platform.py
-@@ -110,6 +110,10 @@ features = [
-         name="LIBCXX-NVPTX-FIXME",
-         when=lambda cfg: "__NVPTX__" in compilerMacros(cfg),
+@@ -114,6 +114,10 @@ features = [
+         name="LLVM-LIBC-FIXME",
+         when=lambda cfg: "__LLVM_LIBC__" in compilerMacros(cfg),
      ),
 +    Feature(
 +        name="LIBCXX-CYGWIN-FIXME",
@@ -4563,5 +4563,5 @@ index 820dd75ae21e860551d4b89086878e8c6ae6f9ff..6887466ff491b0fe24ad629eb4b49d31
  
  # Add features representing the build host platform name.
 -- 
-2.53.0
+2.54.0
 

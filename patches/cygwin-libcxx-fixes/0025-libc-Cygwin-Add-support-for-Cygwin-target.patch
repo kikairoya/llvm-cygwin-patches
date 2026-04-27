@@ -1,4 +1,4 @@
-From b391661782893220144a73161e3d5ca60bd8705a Mon Sep 17 00:00:00 2001
+From e67c680fe9c7925c0a5cc01013f15b344a88bf12 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 25/37] [libc++][Cygwin] Add support for Cygwin target
@@ -100,10 +100,10 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 942b0a9dbefa33adae7234d9419af73b8d7727c4..a6830d5ee71ff645a2dd682cb4573e20b21a691d 100644
+index 6cf96523272366d8d847f68af64b375808ef3f30..f7ae16d9bc5cd3f71ebd56e3ea101e3f83ac9698 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -90,6 +90,10 @@
+@@ -92,6 +92,10 @@
  #      define _LIBCPP_HAS_BITSCAN64 0
  #    endif
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 1
@@ -114,7 +114,7 @@ index 942b0a9dbefa33adae7234d9419af73b8d7727c4..a6830d5ee71ff645a2dd682cb4573e20
  #  else
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 0
  #    define _LIBCPP_HAS_BITSCAN64 0
-@@ -383,6 +387,7 @@ typedef __char32_t char32_t;
+@@ -301,6 +305,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \
@@ -172,5 +172,5 @@ index ddd99d8aaf206fd8e87190a0205add560983f63f..27a22379c05f9da87ea895ef35c1524e
  using StatVFS = struct statvfs;
  using ModeT   = ::mode_t;
 -- 
-2.53.0
+2.54.0
 

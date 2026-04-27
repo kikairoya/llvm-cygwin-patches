@@ -1,4 +1,4 @@
-From ab06b4cfd0efa66e8ee92a07147c2cc6d5af74dc Mon Sep 17 00:00:00 2001
+From 5a9c6cb2d888e5d1f37312b72959dd0c0405d39f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 22/37] [compiler-rt][Test][Cygwin] Make test runnable for
@@ -84,5 +84,5 @@ index df7f11e2b286b60c7c99ff88b267ffb4cb4d54a2..9b128ed44b19dc64dae41881c3829252
      config.unsupported = True
  
 -- 
-2.53.0
+2.54.0
 

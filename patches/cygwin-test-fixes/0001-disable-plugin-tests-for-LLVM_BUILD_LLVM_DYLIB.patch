@@ -1,4 +1,4 @@
-From 48d41019a0266dc2cc3305988a5c4691aa67dcc0 Mon Sep 17 00:00:00 2001
+From 19cd87a8412e56e808d9d149cbff07d190359fc6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 9 Nov 2025 20:59:22 +0900
 Subject: [PATCH 01/64] disable plugin tests for LLVM_BUILD_LLVM_DYLIB
@@ -35,5 +35,5 @@ index 941e18efc1a52aa91f0f9bdd76a4e7833c1937c9..679e4b4b3f8436e9c1caafd1f5422a9d
    add_llvm_library(InlineOrderPlugin MODULE BUILDTREE_ONLY
      InlineOrderPlugin.cpp
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 0b53e342deed43fb09744dc7ad83c9bf2d8b8bc0 Mon Sep 17 00:00:00 2001
+From 333970f9c677f1ce98cf3215087abec013104622 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 08/38] adopt LLVM_DECLARE_REGISTRY
@@ -632,5 +632,5 @@ index 67f363d26b25f4c1e1eddef87bbdf56913176105..4f25a6ba3257d45d1a5eaef1cfbf2fe2
  GCStrategy::GCStrategy() = default;
  
 -- 
-2.53.0
+2.54.0
 

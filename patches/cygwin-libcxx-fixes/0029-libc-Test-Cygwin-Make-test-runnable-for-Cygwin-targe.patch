@@ -1,4 +1,4 @@
-From 30dc576e8d3ec51017ade6baaadfdd9fb3a27297 Mon Sep 17 00:00:00 2001
+From d43a3f34bbb5a7889dc44c36a262ef82fc15b1a8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 29/37] [libc++][Test][Cygwin] Make test runnable for Cygwin
@@ -79,10 +79,10 @@ index 28661049d6e85c25547d2c63a53d89d31592f679..732de92f8b3b24c5f7ca23ab168b0fbe
  # The Android headers don't appear to be compatible with modules yet
  # UNSUPPORTED: LIBCXX-ANDROID-FIXME
 diff --git a/libcxx/test/libcxx/system_reserved_names.gen.py b/libcxx/test/libcxx/system_reserved_names.gen.py
-index aaede220531d255e98e6d6f69d4f3d19ccb88afe..766b44e2e752d069a2e7d1653298a48c9b30fe27 100644
+index bb0bbeb1caf8291a71bcf7c3bc345ba6c48dd919..7fd2b459d3353cb817fe557f79e52c5b7330950c 100644
 --- a/libcxx/test/libcxx/system_reserved_names.gen.py
 +++ b/libcxx/test/libcxx/system_reserved_names.gen.py
-@@ -122,7 +122,7 @@ for header in public_headers:
+@@ -115,7 +115,7 @@ for header in public_headers:
  #endif
  
  // Newlib & picolibc use __input as a parameter name of a64l & l64a
@@ -91,7 +91,7 @@ index aaede220531d255e98e6d6f69d4f3d19ccb88afe..766b44e2e752d069a2e7d1653298a48c
  # define __input SYSTEM_RESERVED_NAME
  #endif
  #define __output SYSTEM_RESERVED_NAME
-@@ -177,8 +177,10 @@ for header in public_headers:
+@@ -170,8 +170,10 @@ for header in public_headers:
  #define Xs SYSTEM_RESERVED_NAME
  
  // The classic Windows min/max macros
@@ -102,7 +102,7 @@ index aaede220531d255e98e6d6f69d4f3d19ccb88afe..766b44e2e752d069a2e7d1653298a48c
  
  // Test to make sure curses has no conflicting macros with the standard library
  #define move SYSTEM_RESERVED_NAME
-@@ -202,8 +204,10 @@ for header in public_headers:
+@@ -195,8 +197,10 @@ for header in public_headers:
  // Make sure we don't swallow the definition of the macros we push/pop
  #define STRINGIFY_IMPL(x) #x
  #define STRINGIFY(x) STRINGIFY_IMPL(x)
@@ -114,7 +114,7 @@ index aaede220531d255e98e6d6f69d4f3d19ccb88afe..766b44e2e752d069a2e7d1653298a48c
  static_assert(__builtin_strcmp(STRINGIFY(erase), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
  static_assert(__builtin_strcmp(STRINGIFY(refresh), STRINGIFY(SYSTEM_RESERVED_NAME)) == 0, "");
 diff --git a/libcxx/utils/libcxx/test/features/platform.py b/libcxx/utils/libcxx/test/features/platform.py
-index db9d3931da7fff16631984eb63cbc592889049b6..820dd75ae21e860551d4b89086878e8c6ae6f9ff 100644
+index 5ce4b4a090e4960830778fe7d47bb77e525a70d8..da47f70378d941966bbb333d9cb9f65e7d584887 100644
 --- a/libcxx/utils/libcxx/test/features/platform.py
 +++ b/libcxx/utils/libcxx/test/features/platform.py
 @@ -29,6 +29,7 @@ def _getAndroidDeviceApi(cfg):
@@ -126,5 +126,5 @@ index db9d3931da7fff16631984eb63cbc592889049b6..820dd75ae21e860551d4b89086878e8c
          name="windows-dll",
          when=lambda cfg: "_WIN32" in compilerMacros(cfg)
 -- 
-2.53.0
+2.54.0
 

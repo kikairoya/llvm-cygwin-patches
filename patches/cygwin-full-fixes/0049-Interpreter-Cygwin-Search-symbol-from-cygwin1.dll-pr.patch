@@ -1,4 +1,4 @@
-From 006accfd68dadc1e2081ed8f2094daa4c5a047aa Mon Sep 17 00:00:00 2001
+From d0c3ff3d8ab2824fb46b564f6c79024d0d081972 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 24 May 2025 16:22:47 +0900
 Subject: [PATCH 49/53] [Interpreter][Cygwin] Search symbol from cygwin1.dll
@@ -45,5 +45,5 @@ index b6f8e38a66122fc2d56245afdbb9fdc4b33b4f13..c4e9b934fb1c8467ab66a083d163156f
  }
  
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From a0860545d23c4042c56dfc21c0677dd1abbf5d38 Mon Sep 17 00:00:00 2001
+From 419f67f2f28ee2bc5495d82ea9ed711a1bac0f1c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:55:10 +0900
 Subject: [PATCH 53/64] [llvm-config] Fix for BUILD_SHARED_LIBS to use import
@@ -48,5 +48,5 @@ index 24ea264419af4a5be8c994e0ae98aca3738e77b1..3ce655ed40acba1811ac8b45d91d2595
      SharedExt = "dylib";
      SharedVersionedExt = LLVM_DYLIB_VERSION ".dylib";
 -- 
-2.53.0
+2.54.0
 

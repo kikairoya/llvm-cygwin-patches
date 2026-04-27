@@ -1,4 +1,4 @@
-From 393a4d361e21c876af30c6d9b25478fc0ba27de8 Mon Sep 17 00:00:00 2001
+From bd16cfe61de51e6e7865526c6d59ebd917617e27 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 12:52:48 +0900
 Subject: [PATCH 19/37] add mingw abilist
@@ -2075,5 +2075,5 @@ index 0000000000000000000000000000000000000000..f00162d65724e115a5949930b77b92f7
 +{'is_defined': True, 'name': '__cxa_vec_new3', 'type': ''}
 \ No newline at end of file
 -- 
-2.53.0
+2.54.0
 

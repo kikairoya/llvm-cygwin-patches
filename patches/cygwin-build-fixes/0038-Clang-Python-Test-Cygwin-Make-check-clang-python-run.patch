@@ -1,4 +1,4 @@
-From db3c69e0e35e6c52f89356b8ea4b3e44cd216c75 Mon Sep 17 00:00:00 2001
+From fe2e12e9494040bbf8793595b561e1599bbb5029 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 9 Jul 2025 21:23:51 +0900
 Subject: [PATCH 38/38] [Clang-Python][Test][Cygwin] Make check-clang-python
@@ -62,5 +62,5 @@ index 38f577499dd22e8753df9b4e7dc1b68c1a2e8286..f2367b89fa630c7f7c23286421a89319
      if(LLVM_VERSIONED_DYLIB_NAME_ON_DARWIN)
        set_target_properties(libclang PROPERTIES
 -- 
-2.53.0
+2.54.0
 

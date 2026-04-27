@@ -1,4 +1,4 @@
-From b2da1451460f522f7e1328433ac331ddfd50cabb Mon Sep 17 00:00:00 2001
+From d2eae34b57e8cccced365ade6431773148acafb2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 24 Jan 2026 10:23:54 +0900
 Subject: [PATCH 07/64] [clangd] Prevent symbol dup for DenseMapInfo<SymbolID>
@@ -41,5 +41,5 @@ index e8aa462e96c177ab0972667f33b66f888e990177..34aa5eac24497206c59388bfb249fdab
    static unsigned getHashValue(const clang::clangd::SymbolID &Sym) {
      return hash_value(Sym);
 -- 
-2.53.0
+2.54.0
 

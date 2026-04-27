@@ -1,4 +1,4 @@
-From 3342361b30442638b12a6b4ea124678155de4314 Mon Sep 17 00:00:00 2001
+From 58c56de90b5fe3d74c189aea7dd2a8a6e216c006 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 23 Dec 2025 06:56:25 +0900
 Subject: [PATCH 37/37] [libcxxabi][Test][Cygwin] Diverge expected result for
@@ -37,5 +37,5 @@ index e852ab592292f44c2a18f0e4effb20a3314d8dad..f4de509fa117722458ef144e5272567a
  #include <exception>
  #include <stdlib.h>
 -- 
-2.53.0
+2.54.0
 

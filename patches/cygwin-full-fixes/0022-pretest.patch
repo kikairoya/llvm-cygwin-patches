@@ -1,4 +1,4 @@
-From ead7242790061a75234f9d25f4ecc70ba44fba8a Mon Sep 17 00:00:00 2001
+From e250cd507f93393b32203b60a54e3be5a1e811d9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 4 Apr 2026 18:34:39 +0900
 Subject: [PATCH 22/53] pretest
@@ -49,5 +49,5 @@ index 0000000000000000000000000000000000000000..de9b6fe38fd119721cbf3491c3d5e78c
 +inline void ImportedClass::InlineOutclassDefFunc() {}
 +inline void ImportedClass::LaterInlineOutclassDefFunc() {} // gnu-warning{{'ImportedClass::LaterInlineOutclassDefFunc' redeclared inline; 'dllimport' attribute ignored}}
 -- 
-2.53.0
+2.54.0
 

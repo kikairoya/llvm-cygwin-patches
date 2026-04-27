@@ -1,4 +1,4 @@
-From 2c378f3a9ddad9d3e063c1e05ffb0c4ebc676bab Mon Sep 17 00:00:00 2001
+From ff20cd428d3d14062931849cf3d96d9ec73d1795 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 28/37] [libunwind][Cygwin] Add support for Cygwin target
@@ -60,7 +60,7 @@ index b1775d3a3decc76e1a0916fead1aafbc6fa0fb51..94dda313cc4b6640a4a772e871152480
  #include <ntverp.h>
  #endif
 diff --git a/libunwind/src/AddressSpace.hpp b/libunwind/src/AddressSpace.hpp
-index 52477b16b355aa2c513c95ceb26ad67567be55f5..52d7e62bc55c0e6c088ddac2809581dc0c0fb75d 100644
+index 3711189f57b1d115c82811b18017b56d74284e2c..a62034fae3df51629a8f100f9a39bbfe24dfe320 100644
 --- a/libunwind/src/AddressSpace.hpp
 +++ b/libunwind/src/AddressSpace.hpp
 @@ -24,11 +24,12 @@
@@ -240,7 +240,7 @@ index ff92c9e0a844ab861ae410591c0280e6d56d35f7..32849ef8b1984f95327d2ee668cc21f3
    // In case of this is frame of signal handler, the IP saved in the signal
    // handler points to first non-executed instruction, while FDE/CIE expects IP
 diff --git a/libunwind/src/UnwindRegistersRestore.S b/libunwind/src/UnwindRegistersRestore.S
-index 76a80344034f7175e08a189e42a2dc2592845735..8fc6c81f0adbe22df9741888974ad2b920036930 100644
+index 8f84f4d456a355627d65ea833a27f5febd9f0e5d..4101a861529a85a5b7059bf13c4dc28c2e0f8e12 100644
 --- a/libunwind/src/UnwindRegistersRestore.S
 +++ b/libunwind/src/UnwindRegistersRestore.S
 @@ -79,7 +79,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
@@ -262,7 +262,7 @@ index 76a80344034f7175e08a189e42a2dc2592845735..8fc6c81f0adbe22df9741888974ad2b9
    movdqu 192(%rdi),%xmm1
    movdqu 208(%rdi),%xmm2
 diff --git a/libunwind/src/UnwindRegistersSave.S b/libunwind/src/UnwindRegistersSave.S
-index f988fd461def170a20b8cb2828533fb32191e84d..956c79fc509978040ec1a989f90989b64b55224a 100644
+index ca9a97b18e764e24eac484399d1a2d829a9371e7..7302a4d4183db323fb9678efe4377b4c00801815 100644
 --- a/libunwind/src/UnwindRegistersSave.S
 +++ b/libunwind/src/UnwindRegistersSave.S
 @@ -121,7 +121,7 @@ DEFINE_LIBUNWIND_FUNCTION("#__unw_getcontext")
@@ -380,5 +380,5 @@ index 7545bf906c22541c7510e167996245b289530abb..351033c2c41f32e82499d6670466261f
  #undef NDEBUG
  #include <assert.h>
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From ad729198ca399f0ad75bb947dc7d6dc62f042f39 Mon Sep 17 00:00:00 2001
+From af67253d54fc458c9429573a4b12e9e9d976477a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 15 Sep 2025 18:35:37 +0900
 Subject: [PATCH 23/37] [compiler-rt][Test][Cygwin] Fix environmental
@@ -364,5 +364,5 @@ index 714e4513bc20ff4f0bdeadb2ca6fa259866a7b28..1df6a58e8a664af974c94e18359b4ad1
 +// NOGC:   T {{_Z10|\?}}discarded{{.*}}
 +// GC-NOT: T {{_Z10|\?}}discarded{{.*}}
 -- 
-2.53.0
+2.54.0
 

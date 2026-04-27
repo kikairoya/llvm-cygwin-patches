@@ -1,4 +1,4 @@
-From 7e535ae330198c42278ef5cd9aab515e35e28fb0 Mon Sep 17 00:00:00 2001
+From 30f071b324cff35b8b78d7011670a076d0e728e0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 16 Mar 2026 06:52:39 +0900
 Subject: [PATCH 31/64] make llvm/Debuginfod static
@@ -25,5 +25,5 @@ index 5b3403b961a4ccf5c50e2f3f39ce882903fe5b43..204f3fbf2b7f4a32bd16912e2a758197
    Debuginfod.cpp
  
 -- 
-2.53.0
+2.54.0
 

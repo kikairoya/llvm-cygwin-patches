@@ -1,4 +1,4 @@
-From eb9cc59c43941a7a011a89c89329974f8f1b9874 Mon Sep 17 00:00:00 2001
+From 5a83651bd3f8de8b815f9e5c695e86fa8b309469 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/38] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -185,5 +185,5 @@ index 2a176b4f2cf7b181a4100b3bd8e08f1544614bcf..ed6137ab0fe3622ac4bfd593272b5390
  
    /// Entry - A cache entry containing interference information for all aliases
 -- 
-2.53.0
+2.54.0
 

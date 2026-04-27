@@ -1,4 +1,4 @@
-From 1dc93064a29ac0820429febbb02619d736d99ac5 Mon Sep 17 00:00:00 2001
+From 2a23ade12347ce34690dd200bd5329fc69ab8fe3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 12:34:01 +0900
 Subject: [PATCH 13/53] pretest
@@ -112,5 +112,5 @@ index ed1c72c5185d3cd4f573822f0f7497b5834f5930..d0dca72e681bca2d07663c678a7ccddc
  template <typename T> struct PR23770DerivedTemplate : PR23770BaseTemplate<int> {};
  extern template struct PR23770DerivedTemplate<int>;
 -- 
-2.53.0
+2.54.0
 

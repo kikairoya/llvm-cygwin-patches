@@ -1,4 +1,4 @@
-From c02fb4de9cca2e9c436a1f122d04bda320216577 Mon Sep 17 00:00:00 2001
+From 800459115ac9dfed1da3e34c75d15d307a4b2f61 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 May 2025 22:37:15 +0900
 Subject: [PATCH 48/64] [Interpreter][Cygwin] Export ___chkstk_ms from lli as
@@ -22,5 +22,5 @@ index 3047addb0aae28ede5807ce7feddcc4e242965a5..60a6bfb173732ff113c2de98d6d8c372
  // require compiling with -fms-extensions.
  #if defined(__i386__)
 -- 
-2.53.0
+2.54.0
 

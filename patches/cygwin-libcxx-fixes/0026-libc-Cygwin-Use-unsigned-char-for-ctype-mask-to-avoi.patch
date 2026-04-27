@@ -1,4 +1,4 @@
-From 039e7234ea57f9a15c631e022564792d59be214d Mon Sep 17 00:00:00 2001
+From bd01d49d5983412367c291e5f265e77994dc8c65 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:30:56 +0900
 Subject: [PATCH 26/37] [libc++][Cygwin] Use unsigned char for ctype mask to
@@ -42,5 +42,5 @@ index 4d5e681e2556acb8e80ae461d8f9383ace9aad07..503f9c3e01230cd8d4efe8b674fd1fbb
    // Newlib has a 257-entry table in ctype_.c, where (char)0 starts at [1].
    return _ctype_ + 1;
 -- 
-2.53.0
+2.54.0
 

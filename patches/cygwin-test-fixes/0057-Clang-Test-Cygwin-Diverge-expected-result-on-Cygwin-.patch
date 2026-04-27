@@ -1,4 +1,4 @@
-From 4209d8f15174d72b347c329140b073b6e5bdb2c3 Mon Sep 17 00:00:00 2001
+From 36f524142d234feff2e1c30b95b1d6aeb6202980 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -227,7 +227,7 @@ index 378f3d9db7bad25c7072315ae0bf4b68d23481b4..1f3f7a2791822705525cde4d08bbdb9f
  
  // RUN: %clang -### %s --target=riscv64 \
 diff --git a/clang/test/Driver/serenity.cpp b/clang/test/Driver/serenity.cpp
-index 16291b250b70497e6339bb124d993f7a402835a9..3ac95beeb8ca7913cd728a4db8d01bc51c6e783e 100644
+index db734e3cbaf717672c7c74fbfa427274805cefab..77a26f919cae22636cbde0806c08ebaddd77b639 100644
 --- a/clang/test/Driver/serenity.cpp
 +++ b/clang/test/Driver/serenity.cpp
 @@ -1,4 +1,4 @@
@@ -250,7 +250,7 @@ index 64828b5cdd86827664016db622a73261406535b8..172df10d8084af8f52dfaaf23c1f8f3e
  @import MOdule; // expected-error{{module 'MOdule' not found}}
  @import Module;
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 3fd74770fe094f2755f9895bfcdd3f663044c9b2..0968caa9714fb43d857f134c7b8f5b36e8ae363b 100644
+index 6c22271b3f8b047b18b1fb581b43f7db4240add9..1c952fe4542c27f81c94a84646a8b5ed4cacdf97 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
 @@ -322,7 +322,8 @@ if config.clang_default_cxx_stdlib != "":
@@ -273,5 +273,5 @@ index 3fd74770fe094f2755f9895bfcdd3f663044c9b2..0968caa9714fb43d857f134c7b8f5b36
  
  # Features
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 670d258175aaaa4ad0aee97a6958059b9bb61bc5 Mon Sep 17 00:00:00 2001
+From 89f1703f34345f6c8f568de8c012222f741f2859 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 Jan 2026 08:07:40 +0900
 Subject: [PATCH 30/53] make CTTestTidyModule work on Windows
@@ -36,5 +36,5 @@ index 22f227a891f82b45f2c5a64a07f864c861588296..8f1b13ac0e107c2f3503fb2e895d50be
  
  add_lit_testsuite(check-clang-extra "Running clang-tools-extra/test"
 -- 
-2.53.0
+2.54.0
 

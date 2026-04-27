@@ -1,4 +1,4 @@
-From 770da1701cb863d9c1b3b1174361f5acf8d64184 Mon Sep 17 00:00:00 2001
+From 25fc524b0408322302084f2e8c6a2cf05339ef5b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 24 Dec 2025 07:07:07 +0900
 Subject: [PATCH 34/53] [Clangd] Make clangDaemonTweaks to use
@@ -42,5 +42,5 @@ index 1d6e38088ad67a415667ee1f6bf30062f8d8cbf5..82cec568561eaf83607729aa40ea9935
 -  ClangDriverOptions
    )
 -- 
-2.53.0
+2.54.0
 

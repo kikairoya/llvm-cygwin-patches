@@ -1,4 +1,4 @@
-From 170957f7273b55dfee895214ab224ebe6868a949 Mon Sep 17 00:00:00 2001
+From 3c425c6c4eb160398800cea7b912854b875aeffe Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 9 Apr 2026 19:37:48 +0900
 Subject: [PATCH 28/64] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
@@ -87,5 +87,5 @@ index ffac1ed82ca3cf8812f0d09605cb2e6c45d46f56..3a23bee38c2f2f6c5573d1a8d306c172
      # CMake doesn't set CMAKE_EXE_EXPORTS_${lang}_FLAG on Solaris, so
      # ENABLE_EXPORTS has no effect.  While Solaris ld defaults to -rdynamic
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From b1374d451aed95abe7593166ad2552fb94ec28ad Mon Sep 17 00:00:00 2001
+From 9cca004e6eb665344456c327eaa9f91464b1e3a8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 22:57:01 +0900
 Subject: [PATCH 60/64] [LLD][Test][Cygwin] Diverge expected result
@@ -57,5 +57,5 @@ index 77bf700837dfb8f9aecc262dd34e183b9ef3f939..6697c6868282896338914a1c38bb2d8a
  ;
  ; CHECK: define hidden void @main()
 -- 
-2.53.0
+2.54.0
 

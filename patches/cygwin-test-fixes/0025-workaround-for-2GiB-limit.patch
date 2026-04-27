@@ -1,4 +1,4 @@
-From 2d63362c26f52911af769bbcfcce323edf823a82 Mon Sep 17 00:00:00 2001
+From 12a2af5f67da9312ecffd26f8348c73ec936d87b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 21 Sep 2025 09:57:11 +0900
 Subject: [PATCH 25/64] workaround for 2GiB limit
@@ -39,5 +39,5 @@ index 66b396b53cb55b728eeb4eb9531c1d0ca4f7e3dc..62c8f215dc98cea3b20e7e066752e7f0
  if(NOT WIN32)
    add_subdirectory(ExceptionTests)
 -- 
-2.53.0
+2.54.0
 

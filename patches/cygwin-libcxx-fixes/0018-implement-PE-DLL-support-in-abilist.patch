@@ -1,4 +1,4 @@
-From e62c2bd9806412be93694d7500868bf5b149b94b Mon Sep 17 00:00:00 2001
+From d0aee1194ac27e8c74cf0743964596d2091ad630 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 12:52:40 +0900
 Subject: [PATCH 18/37] implement PE DLL support in abilist
@@ -108,5 +108,5 @@ index dbc886f29ddea3c2caf870f67a523ca6728fd1cb..65e9f0df9118c996be2f01b99de6be7c
  
  def extract_or_load(filename):
 -- 
-2.53.0
+2.54.0
 

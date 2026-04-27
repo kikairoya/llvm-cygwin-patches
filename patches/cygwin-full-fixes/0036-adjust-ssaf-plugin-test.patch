@@ -1,4 +1,4 @@
-From ed2dac7b4997667f4e41c1dac1332fc83b9189c9 Mon Sep 17 00:00:00 2001
+From 6c1fcfe2e75e7f2f158d2d58dd62b1cd7cd77ed8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 14 Apr 2026 21:09:52 +0900
 Subject: [PATCH 36/53] adjust ssaf-plugin test
@@ -46,5 +46,5 @@ index cb1f34d2e49bc671b11c79f89c18d8041efb98e1..dca0573b827f2b58f3b72e5d7de02e2d
      SSAFExamplePlugin
      )
 -- 
-2.53.0
+2.54.0
 

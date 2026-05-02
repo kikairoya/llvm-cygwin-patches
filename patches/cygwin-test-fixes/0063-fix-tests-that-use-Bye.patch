@@ -1,4 +1,4 @@
-From c4d585262f8119333e224045b8a317d104a6220d Mon Sep 17 00:00:00 2001
+From 12f1eb0c6bd3eae78891269eabd11393bb52d4e3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:44:20 +0900
 Subject: [PATCH 63/64] fix tests that use Bye
@@ -40,10 +40,10 @@ index a87e36c7c725c87c602f9a5c912f37e7721aaecb..e19334502a2f3710b3493d38c84e6986
  // XFAIL: target={{.*}}-aix{{.*}}
  // CHECK-INACTIVE-NOT: Bye
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 1c952fe4542c27f81c94a84646a8b5ed4cacdf97..53f4f0acb3476e8989251632658a2429bf95d034 100644
+index 6fb866f140268a727d63e8913ac3b61545583e5d..c66b03ba0bdee01f3f27323f6626837b58b442f3 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -307,6 +307,9 @@ if "aarch64" in config.host_arch:
+@@ -310,6 +310,9 @@ if "aarch64" in config.host_arch:
  if not (config.build_shared_libs or config.link_llvm_dylib or config.link_clang_dylib):
      config.available_features.add("static-libs")
  
@@ -80,10 +80,10 @@ index 3941d5f7d49f24cfa3618fcbe6684bc3b61a7d21..31a8e24f768dde81610e54701e69008a
      SimplifyCFG.cpp
      DEPENDS
 diff --git a/llvm/test/CMakeLists.txt b/llvm/test/CMakeLists.txt
-index a027cd754135c240dad760bfb47f3785c3f476ca..011f435b1b6696b00bbbbffca367136a5a099de8 100644
+index 54094b02604f954071c94a92cc9670c9d94e745c..e1b98eed30a646cd9c1c1bd9a40ff469374348e3 100644
 --- a/llvm/test/CMakeLists.txt
 +++ b/llvm/test/CMakeLists.txt
-@@ -204,7 +204,7 @@ if(LLVM_INCLUDE_EXAMPLES)
+@@ -205,7 +205,7 @@ if(LLVM_INCLUDE_EXAMPLES)
        LLJITWithRemoteDebugging
        )
    endif()

@@ -1,4 +1,4 @@
-From bd01d49d5983412367c291e5f265e77994dc8c65 Mon Sep 17 00:00:00 2001
+From e656de19c43144822ee7ad9592d076ee8df4d8d1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:30:56 +0900
 Subject: [PATCH 26/37] [libc++][Cygwin] Use unsigned char for ctype mask to
@@ -10,10 +10,10 @@ Subject: [PATCH 26/37] [libc++][Cygwin] Use unsigned char for ctype mask to
  2 files changed, 8 insertions(+)
 
 diff --git a/libcxx/include/__locale b/libcxx/include/__locale
-index 5b1787451fb2594e105554be2b8fda6d008ede6e..866e810915bd9f628c74faefde5ae1c04db66902 100644
+index 8b6b48ccd6b598caf59215c533af2b59481f62a3..0bfa52842991ad2a85f3d847eaf82406d2a97562 100644
 --- a/libcxx/include/__locale
 +++ b/libcxx/include/__locale
-@@ -389,8 +389,13 @@ public:
+@@ -392,8 +392,13 @@ public:
    static const mask blank        = _ISBLANK;
    static const mask __regex_word = 0x8000;
  #  elif _LIBCPP_LIBC_NEWLIB

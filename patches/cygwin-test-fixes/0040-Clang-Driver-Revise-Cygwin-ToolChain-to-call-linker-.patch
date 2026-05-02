@@ -1,4 +1,4 @@
-From f462b46838e3771694d24122e97bacf18bd8ee98 Mon Sep 17 00:00:00 2001
+From 5c34632c136f4bd6e4df5aecf772c354829a9fc4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 20:09:56 +0900
 Subject: [PATCH 40/64] [Clang][Driver] Revise Cygwin ToolChain to call linker

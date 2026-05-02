@@ -1,4 +1,4 @@
-From d0085513785e4b2462181a40bf4f3ea89c26ac10 Mon Sep 17 00:00:00 2001
+From a166ca3094f168e78743baa9f8fc535d70166eee Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 20/37] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 20/37] [compiler-rt][Cygwin] Add support for Cygwin target
  6 files changed, 30 insertions(+), 14 deletions(-)
 
 diff --git a/compiler-rt/cmake/config-ix.cmake b/compiler-rt/cmake/config-ix.cmake
-index 82104c8caffd1d8384e25301befa1cf94979b7a1..23d88a7df67a247959df0262c13e231a6c38112c 100644
+index 9909783d7bb57209fd15358cbcdc1366f74ca965..05c7c1e176320ee59184753a5b4f7dfa349a741d 100644
 --- a/compiler-rt/cmake/config-ix.cmake
 +++ b/compiler-rt/cmake/config-ix.cmake
 @@ -66,6 +66,19 @@ if (C_SUPPORTS_NODEFAULTLIBS_FLAG)
@@ -36,7 +36,7 @@ index 82104c8caffd1d8384e25301befa1cf94979b7a1..23d88a7df67a247959df0262c13e231a
    if (NOT TARGET unwind)
      # Don't check for a library named unwind, if there's a target with that name within
      # the same build.
-@@ -853,7 +866,7 @@ else()
+@@ -846,7 +859,7 @@ else()
  endif()
  
  if (PROFILE_SUPPORTED_ARCH AND NOT LLVM_USE_SANITIZER AND

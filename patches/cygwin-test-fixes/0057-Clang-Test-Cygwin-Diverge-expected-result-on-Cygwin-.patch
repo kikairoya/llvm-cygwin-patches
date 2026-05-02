@@ -1,4 +1,4 @@
-From 36f524142d234feff2e1c30b95b1d6aeb6202980 Mon Sep 17 00:00:00 2001
+From 357b20886bd2811e1601b84126ffaaa8a29d6939 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -250,10 +250,10 @@ index 64828b5cdd86827664016db622a73261406535b8..172df10d8084af8f52dfaaf23c1f8f3e
  @import MOdule; // expected-error{{module 'MOdule' not found}}
  @import Module;
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 6c22271b3f8b047b18b1fb581b43f7db4240add9..1c952fe4542c27f81c94a84646a8b5ed4cacdf97 100644
+index 4a007694695437363ba659a9f9e8d76f8bc24f9d..6fb866f140268a727d63e8913ac3b61545583e5d 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -322,7 +322,8 @@ if config.clang_default_cxx_stdlib != "":
+@@ -325,7 +325,8 @@ if config.clang_default_cxx_stdlib != "":
      )
  
  # As of 2011.08, crash-recovery tests still do not pass on FreeBSD.
@@ -263,7 +263,7 @@ index 6c22271b3f8b047b18b1fb581b43f7db4240add9..1c952fe4542c27f81c94a84646a8b5ed
      config.available_features.add("crash-recovery")
  
  # ANSI escape sequences in non-dumb terminal
-@@ -376,7 +377,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
+@@ -379,7 +380,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
  
  # [PR18856] Depends to remove opened file. On win32, a file could be removed
  # only if all handles were closed.

@@ -1,7 +1,7 @@
-From 062102c2e70061c773f28d91d1099bf094f82e4c Mon Sep 17 00:00:00 2001
+From 45f26c98b1341a299c0d356f460ac98ced3e6df9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:30:26 +0900
-Subject: [PATCH 18/53] [Clang][MinGW] Instantiate nested classes by enclosing
+Subject: [PATCH 18/54] [Clang][MinGW] Instantiate nested classes by enclosing
  template's explicit instantiation declaration
 
 In-code comment says "explicit instantiation decl of the outer class
@@ -85,10 +85,10 @@ index 11fd450ac2b68ee01b818e995cb9d4a5c2c4a825..3712dd4a7b7ecbe7a3b5c00cb95c4951
              TSK != TSK_ExplicitInstantiationDefinition) {
            if (auto *CD = dyn_cast<CXXConstructorDecl>(MD);
 diff --git a/clang/lib/Sema/SemaTemplateInstantiate.cpp b/clang/lib/Sema/SemaTemplateInstantiate.cpp
-index f9dcd8b24b7830384acd2fa3d751fc4a64f719e5..68b0499c14016a059836e8bf3e2618daa9543c52 100644
+index c0a2c9f747bc492f3cadf4694a266b5cc5fc9769..d725d4a6f5f29b8dcc2fb8204424560c694c9ce1 100644
 --- a/clang/lib/Sema/SemaTemplateInstantiate.cpp
 +++ b/clang/lib/Sema/SemaTemplateInstantiate.cpp
-@@ -4268,6 +4268,7 @@ Sema::InstantiateClassMembers(SourceLocation PointOfInstantiation,
+@@ -4269,6 +4269,7 @@ Sema::InstantiateClassMembers(SourceLocation PointOfInstantiation,
          continue;
  
        if (Context.getTargetInfo().getTriple().isOSWindows() &&

@@ -1,19 +1,19 @@
-From 07b49c1ef6fed5f525116455b5a4d2d77f2430f7 Mon Sep 17 00:00:00 2001
+From 188fa484cf7aa5b46cfecc3bd83cb3c80ffa0692 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 12:52:48 +0900
 Subject: [PATCH 19/37] add mingw abilist
 
 ---
- ...bcxxabi.v1.stable.exceptions.nonew.abilist | 2059 +++++++++++++++++
- 1 file changed, 2059 insertions(+)
+ ...bcxxabi.v1.stable.exceptions.nonew.abilist | 2077 +++++++++++++++++
+ 1 file changed, 2077 insertions(+)
  create mode 100644 libcxx/lib/abi/x86_64-w64-windows-gnu.libcxxabi.v1.stable.exceptions.nonew.abilist
 
 diff --git a/libcxx/lib/abi/x86_64-w64-windows-gnu.libcxxabi.v1.stable.exceptions.nonew.abilist b/libcxx/lib/abi/x86_64-w64-windows-gnu.libcxxabi.v1.stable.exceptions.nonew.abilist
 new file mode 100644
-index 0000000000000000000000000000000000000000..f00162d65724e115a5949930b77b92f7c95ae076
+index 0000000000000000000000000000000000000000..3492d31ce1a9565ce0204bb71538c1b171871ec8
 --- /dev/null
 +++ b/libcxx/lib/abi/x86_64-w64-windows-gnu.libcxxabi.v1.stable.exceptions.nonew.abilist
-@@ -0,0 +1,2059 @@
+@@ -0,0 +1,2077 @@
 +{'is_defined': True, 'name': '_ZN10__cxxabiv116__enum_type_infoD0Ev', 'type': ''}
 +{'is_defined': True, 'name': '_ZN10__cxxabiv116__enum_type_infoD1Ev', 'type': ''}
 +{'is_defined': True, 'name': '_ZN10__cxxabiv116__enum_type_infoD2Ev', 'type': ''}
@@ -652,11 +652,19 @@ index 0000000000000000000000000000000000000000..f00162d65724e115a5949930b77b92f7
 +{'is_defined': True, 'name': '_ZNSt3__110to_wstringEy', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__111__call_onceERVmPvPFvS2_E', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__111__money_getIcE13__gather_infoEbRKNS_6localeERNS_10money_base7patternERcS8_RNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEESF_SF_SF_Ri', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__111__money_getIcEaSEOS1_', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__111__money_getIcEaSERKS1_', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__111__money_getIwE13__gather_infoEbRKNS_6localeERNS_10money_base7patternERwS8_RNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERNS9_IwNSA_IwEENSC_IwEEEESJ_SJ_Ri', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__111__money_getIwEaSEOS1_', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__111__money_getIwEaSERKS1_', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__111__money_putIcE13__gather_infoEbbRKNS_6localeERNS_10money_base7patternERcS8_RNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEESF_SF_Ri', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__111__money_putIcE8__formatEPcRS2_S3_jPKcS5_RKNS_5ctypeIcEEbRKNS_10money_base7patternEccRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEESL_SL_i', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__111__money_putIcEaSEOS1_', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__111__money_putIcEaSERKS1_', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__111__money_putIwE13__gather_infoEbbRKNS_6localeERNS_10money_base7patternERwS8_RNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERNS9_IwNSA_IwEENSC_IwEEEESJ_Ri', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__111__money_putIwE8__formatEPwRS2_S3_jPKwS5_RKNS_5ctypeIwEEbRKNS_10money_base7patternEwwRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERKNSE_IwNSF_IwEENSH_IwEEEESQ_i', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__111__money_putIwEaSEOS1_', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__111__money_putIwEaSERKS1_', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__111regex_errorC1ENS_15regex_constants10error_typeE', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__111regex_errorC2ENS_15regex_constants10error_typeE', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__111regex_errorD0Ev', 'type': ''}
@@ -1627,14 +1635,22 @@ index 0000000000000000000000000000000000000000..f00162d65724e115a5949930b77b92f7
 +{'is_defined': True, 'name': '_ZNSt3__19__num_getIcE17__stage2_int_prepERNS_8ios_baseEPcRc', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19__num_getIcE19__stage2_float_loopEcRbRcPcRS4_ccRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEPjRSE_RjS4_', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19__num_getIcE19__stage2_float_prepERNS_8ios_baseEPcRcS5_', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__19__num_getIcEaSEOS1_', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__19__num_getIcEaSERKS1_', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19__num_getIwE17__stage2_int_loopEwiPcRS2_RjwRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEPjRSD_Pw', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19__num_getIwE17__stage2_int_prepERNS_8ios_baseEPwRw', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19__num_getIwE19__stage2_float_loopEwRbRcPcRS4_wwRKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEPjRSE_RjPw', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19__num_getIwE19__stage2_float_prepERNS_8ios_baseEPwRwS5_', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__19__num_getIwEaSEOS1_', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__19__num_getIwEaSERKS1_', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19__num_putIcE21__widen_and_group_intEPcS2_S2_S2_RS2_S3_RKNS_6localeE', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19__num_putIcE23__widen_and_group_floatEPcS2_S2_S2_RS2_S3_RKNS_6localeE', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__19__num_putIcEaSEOS1_', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__19__num_putIcEaSERKS1_', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19__num_putIwE21__widen_and_group_intEPcS2_S2_PwRS3_S4_RKNS_6localeE', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19__num_putIwE23__widen_and_group_floatEPcS2_S2_PwRS3_S4_RKNS_6localeE', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__19__num_putIwEaSEOS1_', 'type': ''}
++{'is_defined': True, 'name': '_ZNSt3__19__num_putIwEaSERKS1_', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEE7copyfmtERKS3_', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEED0Ev', 'type': ''}
 +{'is_defined': True, 'name': '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEED1Ev', 'type': ''}
@@ -1933,6 +1949,8 @@ index 0000000000000000000000000000000000000000..f00162d65724e115a5949930b77b92f7
 +{'is_defined': True, 'name': '_ZTVNSt3__120__codecvt_utf8_utf16IDiEE', 'type': ''}
 +{'is_defined': True, 'name': '_ZTVNSt3__120__codecvt_utf8_utf16IDsEE', 'type': ''}
 +{'is_defined': True, 'name': '_ZTVNSt3__120__codecvt_utf8_utf16IwEE', 'type': ''}
++{'is_defined': True, 'name': '_ZTVNSt3__120__time_get_c_storageIcEE', 'type': ''}
++{'is_defined': True, 'name': '_ZTVNSt3__120__time_get_c_storageIwEE', 'type': ''}
 +{'is_defined': True, 'name': '_ZTVNSt3__13pmr15memory_resourceE', 'type': ''}
 +{'is_defined': True, 'name': '_ZTVNSt3__13pmr25monotonic_buffer_resourceE', 'type': ''}
 +{'is_defined': True, 'name': '_ZTVNSt3__13pmr26synchronized_pool_resourceE', 'type': ''}

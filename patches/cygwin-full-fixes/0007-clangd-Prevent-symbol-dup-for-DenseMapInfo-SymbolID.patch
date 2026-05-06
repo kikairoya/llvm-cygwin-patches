@@ -1,7 +1,7 @@
-From 6304d31cfc2f4d31428273fc2ea17a60be0d81a1 Mon Sep 17 00:00:00 2001
+From c2b9f40b48efbe9ed0a8d4354581e3e45aeddf54 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 24 Jan 2026 10:23:54 +0900
-Subject: [PATCH 07/53] [clangd] Prevent symbol dup for DenseMapInfo<SymbolID>
+Subject: [PATCH 07/54] [clangd] Prevent symbol dup for DenseMapInfo<SymbolID>
 
 Make member functions and their callees constexpr.
 ---

@@ -1,7 +1,7 @@
-From 2235d2c7ce8006a0d74b8c7a3944b3b8a95c8564 Mon Sep 17 00:00:00 2001
+From 50f047a57e526a23b3661e67d7fbbb8952076e7a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 21:20:11 +0900
-Subject: [PATCH 33/53] [Clang-tools] Add an option
+Subject: [PATCH 33/54] [Clang-tools] Add an option
  `DIABLE_CLANG_LINK_CLANG_DYLIB` to `clang_target_link_libraries`
 
 ---
@@ -70,10 +70,10 @@ index 846fa952ba58d2782ae073e1cabb493b70b219d6..36a82901b12d42822997694ccb38de51
    ${CLANG_NVLINK_WRAPPER_LIB_DEPS}
    )
 diff --git a/clang/tools/clang-sycl-linker/CMakeLists.txt b/clang/tools/clang-sycl-linker/CMakeLists.txt
-index 43c1c27e67f55fc9a214570adb7bf22c503bd5f4..460a94c654d24ea20f06cf4346399659877e23b2 100644
+index a2104084dad877dfb27b699d88227ca56f575869..07f83962b1cb3a99d649fc65619a2580d7db24c6 100644
 --- a/clang/tools/clang-sycl-linker/CMakeLists.txt
 +++ b/clang/tools/clang-sycl-linker/CMakeLists.txt
-@@ -34,7 +34,8 @@ set(CLANG_SYCL_LINKER_LIB_DEPS
+@@ -35,7 +35,8 @@ set(CLANG_SYCL_LINKER_LIB_DEPS
    clangBasic
    )
  

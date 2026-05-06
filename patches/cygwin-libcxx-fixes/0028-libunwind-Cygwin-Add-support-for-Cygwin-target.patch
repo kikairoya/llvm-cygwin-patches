@@ -1,4 +1,4 @@
-From 0df1fce9d4455327c03ef141e53249f1f407e1c7 Mon Sep 17 00:00:00 2001
+From 317ce1f6456a30c077ecbb99e442493251688c3b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 28/37] [libunwind][Cygwin] Add support for Cygwin target
@@ -126,10 +126,10 @@ index 6e947039fb0d52f1b388a7a1236790ce83e169a4..dfe4ebee49e5844c2d20d95356eb2ed7
      NOT (CXX_SUPPORTS_FNO_EXCEPTIONS_FLAG AND
           CXX_SUPPORTS_FUNWIND_TABLES_FLAG))
 diff --git a/libunwind/src/Registers.hpp b/libunwind/src/Registers.hpp
-index a7684e2624e75f8c21175c1c8ab88358d36a828b..805045d845844b3c820dc9ff06562ea68b2fd918 100644
+index c88422a6d5f4fbbcb34d9a94e2ea20c776e4a40f..cafb89c9d910847fdaf78a821d52e81df447a787 100644
 --- a/libunwind/src/Registers.hpp
 +++ b/libunwind/src/Registers.hpp
-@@ -347,12 +347,12 @@ private:
+@@ -350,12 +350,12 @@ private:
      uint64_t __cs;
      uint64_t __fs;
      uint64_t __gs;
@@ -144,7 +144,7 @@ index a7684e2624e75f8c21175c1c8ab88358d36a828b..805045d845844b3c820dc9ff06562ea6
    v128 _xmm[16];
  #endif
  };
-@@ -568,7 +568,7 @@ inline void Registers_x86_64::setFloatRegister(int, double) {
+@@ -571,7 +571,7 @@ inline void Registers_x86_64::setFloatRegister(int, double) {
  }
  
  inline bool Registers_x86_64::validVectorRegister(int regNum) const {
@@ -153,7 +153,7 @@ index a7684e2624e75f8c21175c1c8ab88358d36a828b..805045d845844b3c820dc9ff06562ea6
    if (regNum < UNW_X86_64_XMM0)
      return false;
    if (regNum > UNW_X86_64_XMM15)
-@@ -581,7 +581,7 @@ inline bool Registers_x86_64::validVectorRegister(int regNum) const {
+@@ -584,7 +584,7 @@ inline bool Registers_x86_64::validVectorRegister(int regNum) const {
  }
  
  inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
@@ -162,7 +162,7 @@ index a7684e2624e75f8c21175c1c8ab88358d36a828b..805045d845844b3c820dc9ff06562ea6
    assert(validVectorRegister(regNum));
    return _xmm[regNum - UNW_X86_64_XMM0];
  #else
-@@ -591,7 +591,7 @@ inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
+@@ -594,7 +594,7 @@ inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
  }
  
  inline void Registers_x86_64::setVectorRegister(int regNum, v128 value) {

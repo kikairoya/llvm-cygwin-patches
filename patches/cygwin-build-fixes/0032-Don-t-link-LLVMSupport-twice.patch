@@ -1,7 +1,7 @@
-From d651f792237baed665a080dd42eed478b3060ea0 Mon Sep 17 00:00:00 2001
+From 5b37f7d2d566ea0496c1adb873617141e2452da8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Dec 2025 22:40:42 +0900
-Subject: [PATCH 32/39] Don't link LLVMSupport twice
+Subject: [PATCH 32/38] Don't link LLVMSupport twice
 
 ---
  clang-tools-extra/clangd/benchmarks/CMakeLists.txt | 1 -

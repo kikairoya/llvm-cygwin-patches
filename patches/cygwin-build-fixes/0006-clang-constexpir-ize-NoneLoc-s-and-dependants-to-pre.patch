@@ -1,7 +1,7 @@
-From cd86a31c7fe24775c10a84be50a7116199290f42 Mon Sep 17 00:00:00 2001
+From 5b35aaefd09986f511d28e477390ff0317cfb900 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
-Subject: [PATCH 06/39] [clang] constexpir-ize `NoneLoc`s and dependants to
+Subject: [PATCH 06/38] [clang] constexpir-ize `NoneLoc`s and dependants to
  prevent symbol dup
 
 ---
@@ -68,10 +68,10 @@ index c0db55ea92cd56f2abaa516c19da068b2f0fc1ce..b48e038e52719888516436ff837f5c09
    TemplateArgumentLoc(const TemplateArgument &Argument,
                        TemplateArgumentLocInfo Opaque)
 diff --git a/llvm/include/llvm/ADT/FunctionExtras.h b/llvm/include/llvm/ADT/FunctionExtras.h
-index 807a2e769999c8caca5cb9edc97c8ddccf88b694..a82870673b0a839eaaad1a0248db44019916a239 100644
+index f853bbf7d976d3afe7766a518de634df0db40ce9..bd2b5589d1e7a950068dac43b18b4e72ac05949f 100644
 --- a/llvm/include/llvm/ADT/FunctionExtras.h
 +++ b/llvm/include/llvm/ADT/FunctionExtras.h
-@@ -132,7 +132,7 @@ protected:
+@@ -131,7 +131,7 @@ protected:
    // pointer in a struct or a pointer to a static struct of the call, move, and
    // destroy pointers.
    using CallbackPointerUnionT =
@@ -80,7 +80,7 @@ index 807a2e769999c8caca5cb9edc97c8ddccf88b694..a82870673b0a839eaaad1a0248db4401
  
    // The main storage buffer. This will either have a pointer to out-of-line
    // storage or an inline buffer storing the callable.
-@@ -164,15 +164,17 @@ protected:
+@@ -163,15 +163,17 @@ protected:
    bool isInlineStorage() const { return CallbackAndInlineFlag.getInt(); }
  
    bool isTrivialCallback() const {
@@ -102,7 +102,7 @@ index 807a2e769999c8caca5cb9edc97c8ddccf88b694..a82870673b0a839eaaad1a0248db4401
    }
  
    CallPtrT getCallPtr() const {
-@@ -231,7 +233,7 @@ protected:
+@@ -230,7 +232,7 @@ protected:
    // here and each instance will contain a pointer to it.
    // Wrap in a struct to avoid https://gcc.gnu.org/PR71954
    template <typename CallableT, typename CalledAs> struct CallbacksHolder {
@@ -159,7 +159,7 @@ index 52cb12168f9b7ec0e2a3d45a4df2be9fd61c11cc..a5586c90034edd458e4cc09e5e50de97
    using Base::operator=;
  
 diff --git a/llvm/include/llvm/CodeGen/SlotIndexes.h b/llvm/include/llvm/CodeGen/SlotIndexes.h
-index 6d897e427cf7961fd8e48a9df9bedb1196770ddd..269878cbaa0b32bc3a12250420fa196959562edf 100644
+index 5b40bd26a991c90b31c115a5a27d87b0c3c5ace9..29011e7013dd8538ff9309d2525cfcdef4f760ad 100644
 --- a/llvm/include/llvm/CodeGen/SlotIndexes.h
 +++ b/llvm/include/llvm/CodeGen/SlotIndexes.h
 @@ -116,7 +116,7 @@ class raw_ostream;

@@ -1,7 +1,7 @@
-From 97160167737edc835765ae4a210e9c17ee947aad Mon Sep 17 00:00:00 2001
+From afca7a728ac3b9f989d345aa86b9c06981a66a38 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 9 Apr 2026 19:37:48 +0900
-Subject: [PATCH 28/39] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
+Subject: [PATCH 28/38] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
  LLVM_EXPORT_SYMBOLS_FOR_PLUGINS
 
 ---

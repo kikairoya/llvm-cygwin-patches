@@ -1,13 +1,14 @@
-From f367fcf9d9f059a2ac5544c09ff3839757246a75 Mon Sep 17 00:00:00 2001
+From a338c6a054c883abbd7cb78aaf6ab90a3d522c3d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 14 Apr 2026 21:09:52 +0900
-Subject: [PATCH 36/54] adjust ssaf-plugin test
+Subject: [PATCH 36/53] adjust ssaf-plugin test
 
 ---
  .../lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt  | 2 +-
+ clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test        | 2 ++
  .../Analysis/Scalable/ssaf-format/WPASuite/with-plugin.test     | 2 ++
  clang/test/CMakeLists.txt                                       | 2 +-
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ 4 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt b/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt
 index b77ffc49c0f9f8a4863392499b32161f78e7eaa2..f3d41914b767698f309693561150fec7a28b9b0b 100644
@@ -19,6 +20,19 @@ index b77ffc49c0f9f8a4863392499b32161f78e7eaa2..f3d41914b767698f309693561150fec7
    # Plugins must never bring LLVM or Clang libraries in statically.
    # clang-ssaf-analyzer already loads clangScalableStaticAnalysisFrameworkCore
    # and LLVM into the process; a second static copy would produce duplicate
+diff --git a/clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test b/clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test
+index 0abdcef15a4499063cd29a30a60e8f0d00f74ad8..09e214669409fbe86bba77484b30690ba067038c 100644
+--- a/clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test
++++ b/clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test
+@@ -1,6 +1,8 @@
+ // Tests for clang-ssaf-analyzer that require plugin support.
+ 
+ // REQUIRES: plugins
++// UNSUPPORTED: system-windows
++// UNSUPPORTED: system-cygwin
+ 
+ // RUN: rm -rf %t
+ // RUN: mkdir -p %t
 diff --git a/clang/test/Analysis/Scalable/ssaf-format/WPASuite/with-plugin.test b/clang/test/Analysis/Scalable/ssaf-format/WPASuite/with-plugin.test
 index b0a419842e80d298048fa20f6b01497d8ae5d440..40a8b0a19913093cf7efdf2a34153ff9e972b3be 100644
 --- a/clang/test/Analysis/Scalable/ssaf-format/WPASuite/with-plugin.test

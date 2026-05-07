@@ -1,7 +1,7 @@
-From 7c95f51656e6d9da08b19b51860114ed501e26d0 Mon Sep 17 00:00:00 2001
+From b5c6cfef913d4ead733bf75f7ac5e95286dd4043 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
-Subject: [PATCH 02/54] [LLVM] Annotate LLVM_TEMPLATE_ABI
+Subject: [PATCH 02/53] [LLVM] Annotate LLVM_TEMPLATE_ABI
 
 ---
  llvm/include/llvm/ADT/SmallVector.h           |  4 ++--
@@ -34,7 +34,7 @@ index 7f63b569643df9eddd64a360722951a022b8cfc7..324297084f25646b47ce09165308ca62
  
  // Provide DenseMapInfo for SmallVector of a type which has info.
 diff --git a/llvm/include/llvm/CodeGen/MachinePassManager.h b/llvm/include/llvm/CodeGen/MachinePassManager.h
-index f7b888e45a7ecd912d3f8267503874f8dfeeec39..bf331e7a7d9374732a687aa9bf9cdd4f0a72f1f1 100644
+index f200d56b9487235d9898c46c9326daed81afef93..ff8e86ad3321b050b4b20c17b9551575744ff9f6 100644
 --- a/llvm/include/llvm/CodeGen/MachinePassManager.h
 +++ b/llvm/include/llvm/CodeGen/MachinePassManager.h
 @@ -108,8 +108,8 @@ template <>
@@ -59,7 +59,7 @@ index f7b888e45a7ecd912d3f8267503874f8dfeeec39..bf331e7a7d9374732a687aa9bf9cdd4f
  
  extern template class LLVM_TEMPLATE_ABI
      OuterAnalysisManagerProxy<ModuleAnalysisManager, MachineFunction>;
-@@ -225,7 +225,7 @@ createFunctionToMachineFunctionPassAdaptor(MachineFunctionPassT &&Pass) {
+@@ -223,7 +223,7 @@ createFunctionToMachineFunctionPassAdaptor(MachineFunctionPassT &&Pass) {
  template <>
  LLVM_ABI PreservedAnalyses PassManager<MachineFunction>::run(
      MachineFunction &, AnalysisManager<MachineFunction> &);
@@ -89,7 +89,7 @@ index 8ab70dd9ed594c501d2c2e388818a1b5b5ec84f3..5845cc0b8fed045e4bb2aaa894d027cd
  /// Represents analyses that only rely on functions' control flow.
  ///
 diff --git a/llvm/include/llvm/IR/Dominators.h b/llvm/include/llvm/IR/Dominators.h
-index d860c1453bd732894fdf817b78e71868a14c3f44..d63fa8ca99ff668c0a4d193bcc08f7a1ebce3d14 100644
+index 4ee3c81b55712ca668f92a57f1be6ced673ae443..3a7ab84fa405b868913bd9faa216eca668a1ba00 100644
 --- a/llvm/include/llvm/IR/Dominators.h
 +++ b/llvm/include/llvm/IR/Dominators.h
 @@ -49,7 +49,7 @@ extern template class LLVM_TEMPLATE_ABI
@@ -102,10 +102,10 @@ index d860c1453bd732894fdf817b78e71868a14c3f44..d63fa8ca99ff668c0a4d193bcc08f7a1
  namespace DomTreeBuilder {
  using BBDomTree = DomTreeBase<BasicBlock>;
 diff --git a/llvm/include/llvm/IR/PassManager.h b/llvm/include/llvm/IR/PassManager.h
-index 4d4c4bcfe943d1e9ff2ef8b45e3a16c03cb60486..f65b503641ac988e175b8433f8ef20ac7a2baab4 100644
+index 7d9254e7d8e98c182707004529f9be1f7053040b..1bd49f90b957bddfe76813a3fa10cc36fde84dad 100644
 --- a/llvm/include/llvm/IR/PassManager.h
 +++ b/llvm/include/llvm/IR/PassManager.h
-@@ -579,7 +579,7 @@ using FunctionAnalysisManager = AnalysisManager<Function>;
+@@ -602,7 +602,7 @@ using FunctionAnalysisManager = AnalysisManager<Function>;
  /// Note that the proxy's result is a move-only RAII object.  The validity of
  /// the analyses in the inner analysis manager is tied to its lifetime.
  template <typename AnalysisManagerT, typename IRUnitT, typename... ExtraArgTs>
@@ -114,7 +114,7 @@ index 4d4c4bcfe943d1e9ff2ef8b45e3a16c03cb60486..f65b503641ac988e175b8433f8ef20ac
      : public AnalysisInfoMixin<
            InnerAnalysisManagerProxy<AnalysisManagerT, IRUnitT>> {
  public:
-@@ -651,21 +651,11 @@ private:
+@@ -674,21 +674,11 @@ private:
    friend AnalysisInfoMixin<
        InnerAnalysisManagerProxy<AnalysisManagerT, IRUnitT>>;
  
@@ -137,7 +137,7 @@ index 4d4c4bcfe943d1e9ff2ef8b45e3a16c03cb60486..f65b503641ac988e175b8433f8ef20ac
  /// Provide the \c FunctionAnalysisManager to \c Module proxy.
  using FunctionAnalysisManagerModuleProxy =
      InnerAnalysisManagerProxy<FunctionAnalysisManager, Module>;
-@@ -679,8 +669,8 @@ LLVM_ABI bool FunctionAnalysisManagerModuleProxy::Result::invalidate(
+@@ -702,8 +692,8 @@ LLVM_ABI bool FunctionAnalysisManagerModuleProxy::Result::invalidate(
  
  // Ensure the \c FunctionAnalysisManagerModuleProxy is provided as an extern
  // template.
@@ -148,7 +148,7 @@ index 4d4c4bcfe943d1e9ff2ef8b45e3a16c03cb60486..f65b503641ac988e175b8433f8ef20ac
  
  /// An analysis over an "inner" IR unit that provides access to an
  /// analysis manager over a "outer" IR unit.  The inner unit must be contained
-@@ -809,15 +799,11 @@ private:
+@@ -832,15 +822,11 @@ private:
    friend AnalysisInfoMixin<
        OuterAnalysisManagerProxy<AnalysisManagerT, IRUnitT, ExtraArgTs...>>;
  

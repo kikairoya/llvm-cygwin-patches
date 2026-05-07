@@ -1,7 +1,7 @@
-From 45488c5ea3f084ec0707acf39c8b31fb838b980c Mon Sep 17 00:00:00 2001
+From d51320285d1948bc85bb65a9cfcd1fffc8e97506 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 19:02:44 +0900
-Subject: [PATCH 27/39] [LLVM] Support EXPORT_SYMBOLS_FOR_PLUGINS with shared
+Subject: [PATCH 27/38] [LLVM] Support EXPORT_SYMBOLS_FOR_PLUGINS with shared
  or dylib builds
 
 Resolve the incompatibilities of EXPORT_SYMBOLS_FOR_PLUGINS with

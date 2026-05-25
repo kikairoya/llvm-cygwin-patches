@@ -1,4 +1,4 @@
-From f4727f5acc2e00beb962d2f75dc8bba90664c0a2 Mon Sep 17 00:00:00 2001
+From 3b0e62eabd625cb5b4617771b83ce4d3e66db4db Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 14 Jun 2025 08:15:58 +0900
 Subject: [PATCH 43/64] [LLVM-Tools][Cygwin] Enable LTO component
@@ -8,7 +8,7 @@ Subject: [PATCH 43/64] [LLVM-Tools][Cygwin] Enable LTO component
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/llvm/tools/CMakeLists.txt b/llvm/tools/CMakeLists.txt
-index b9c5a79849ec8f1b89ecf9d42dd3fde5aacfdb7b..00632845d1e4df3e205ca93f35e650dda88dd5ce 100644
+index 0710d54fad22a999347d79ef5047c68650798c1e..2276a8af1f7c314a9493979439528a5d86d84344 100644
 --- a/llvm/tools/CMakeLists.txt
 +++ b/llvm/tools/CMakeLists.txt
 @@ -17,7 +17,7 @@ if(NOT LLVM_USE_INTEL_JITEVENTS )

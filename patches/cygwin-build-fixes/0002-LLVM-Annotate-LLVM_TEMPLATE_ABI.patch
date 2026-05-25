@@ -1,4 +1,4 @@
-From b5c6cfef913d4ead733bf75f7ac5e95286dd4043 Mon Sep 17 00:00:00 2001
+From 93a12ab7f6792a0e91d59cc1e812db9bc8e28d8e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
 Subject: [PATCH 02/38] [LLVM] Annotate LLVM_TEMPLATE_ABI
@@ -18,10 +18,10 @@ Subject: [PATCH 02/38] [LLVM] Annotate LLVM_TEMPLATE_ABI
  11 files changed, 28 insertions(+), 31 deletions(-)
 
 diff --git a/llvm/include/llvm/ADT/SmallVector.h b/llvm/include/llvm/ADT/SmallVector.h
-index 7f63b569643df9eddd64a360722951a022b8cfc7..324297084f25646b47ce09165308ca629e3f4bbb 100644
+index 3d655daea471b0f897dfab11b590fa2315e1011e..0658e30b27cc35c178a62dc03586114e930386af 100644
 --- a/llvm/include/llvm/ADT/SmallVector.h
 +++ b/llvm/include/llvm/ADT/SmallVector.h
-@@ -1340,9 +1340,9 @@ template <typename Out, typename R> SmallVector<Out> to_vector_of(R &&Range) {
+@@ -1342,9 +1342,9 @@ template <typename Out, typename R> SmallVector<Out> to_vector_of(R &&Range) {
  }
  
  // Explicit instantiations
@@ -102,7 +102,7 @@ index 4ee3c81b55712ca668f92a57f1be6ced673ae443..3a7ab84fa405b868913bd9faa216eca6
  namespace DomTreeBuilder {
  using BBDomTree = DomTreeBase<BasicBlock>;
 diff --git a/llvm/include/llvm/IR/PassManager.h b/llvm/include/llvm/IR/PassManager.h
-index 7d9254e7d8e98c182707004529f9be1f7053040b..1bd49f90b957bddfe76813a3fa10cc36fde84dad 100644
+index 22e02853bc56782c30843766318175825f2b89f8..a6417b771de948e7b514467ae32902849dec3859 100644
 --- a/llvm/include/llvm/IR/PassManager.h
 +++ b/llvm/include/llvm/IR/PassManager.h
 @@ -602,7 +602,7 @@ using FunctionAnalysisManager = AnalysisManager<Function>;

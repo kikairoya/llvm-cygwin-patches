@@ -1,7 +1,7 @@
-From 50c894ace75279a8dee75c78a157b761c31eeb87 Mon Sep 17 00:00:00 2001
+From 2c89cade80879f0731a578387e5ad5f65f599761 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
-Subject: [PATCH 09/64] adopt LLVM_DECLARE_REGISTRY
+Subject: [PATCH 08/38] adopt LLVM_DECLARE_REGISTRY
 
 ---
  clang-tools-extra/clang-doc/Generators.cpp           |  2 +-
@@ -35,7 +35,7 @@ Subject: [PATCH 09/64] adopt LLVM_DECLARE_REGISTRY
  28 files changed, 34 insertions(+), 60 deletions(-)
 
 diff --git a/clang-tools-extra/clang-doc/Generators.cpp b/clang-tools-extra/clang-doc/Generators.cpp
-index 854f09b9b4a82c9f520669169b1c9415fb9617a7..53df28f79caac78a66e9dd7ae78cff003b99c69a 100644
+index 5ff1a5c0a4eb24e7a07e146e824550f4d8efb151..8ae534718fe17f0fe3a7c878a833fa94a2ee4e4d 100644
 --- a/clang-tools-extra/clang-doc/Generators.cpp
 +++ b/clang-tools-extra/clang-doc/Generators.cpp
 @@ -10,7 +10,7 @@
@@ -48,10 +48,10 @@ index 854f09b9b4a82c9f520669169b1c9415fb9617a7..53df28f79caac78a66e9dd7ae78cff00
  using namespace llvm;
  using namespace llvm::json;
 diff --git a/clang-tools-extra/clang-doc/Generators.h b/clang-tools-extra/clang-doc/Generators.h
-index 8562e3dfa99d8406c2f6b1e35ef67c560b7a01f5..65de29892e12ec989e2e61d16b8642e53dddab72 100644
+index fc7fdb515ee4fa5a970122c55e8c347fce664df2..1c514adf01ff25f4a72f23a6049d4c5728df3bb1 100644
 --- a/clang-tools-extra/clang-doc/Generators.h
 +++ b/clang-tools-extra/clang-doc/Generators.h
-@@ -147,8 +147,6 @@ extern volatile int MDMustacheGeneratorAnchorSource;
+@@ -149,8 +149,6 @@ extern volatile int MDMustacheGeneratorAnchorSource;
  } // namespace doc
  } // namespace clang
  
@@ -222,10 +222,10 @@ index 5eea9c2fd89a32923db9ea3f6d95df4aca2ddd67..697a4c25c82f2a2c1c2e31b3ce81e561
  
  #endif // LLVM_CLANG_FRONTEND_FRONTENDPLUGINREGISTRY_H
 diff --git a/clang/include/clang/Lex/Preprocessor.h b/clang/include/clang/Lex/Preprocessor.h
-index 8830294ea1658d407919b9b5d36cb8d2082b54be..0b2d8191022556edc020bc5aa2a4c7497449296f 100644
+index 8b684e85eb1c175810cc60107937b6d747f60c44..055e7c8d4cd0219c6fcdaa64bbfc40f73d5243d2 100644
 --- a/clang/include/clang/Lex/Preprocessor.h
 +++ b/clang/include/clang/Lex/Preprocessor.h
-@@ -3206,8 +3206,6 @@ using PragmaHandlerRegistry = llvm::Registry<PragmaHandler>;
+@@ -3193,8 +3193,6 @@ using PragmaHandlerRegistry = llvm::Registry<PragmaHandler>;
  
  } // namespace clang
  
@@ -279,7 +279,7 @@ index d5b17b34b6e3a2ca7736ba891177e46fdbf819cf..a60f26b032c0d493f6ca9b8db8a67d91
  static std::list<std::unique_ptr<ParsedAttrInfo>> instantiateEntries() {
    std::list<std::unique_ptr<ParsedAttrInfo>> Instances;
 diff --git a/clang/lib/Frontend/FrontendAction.cpp b/clang/lib/Frontend/FrontendAction.cpp
-index 3bb1375fc5b77321d82f1a1dcfa6c19501e667fe..e8e24ee8820f9751585216ffa349cf30753bea51 100644
+index 7754861fabaf00f3229cce0f5005171603232be9..1646585e1f831d2395d3dd0f100862f738a24f2c 100644
 --- a/clang/lib/Frontend/FrontendAction.cpp
 +++ b/clang/lib/Frontend/FrontendAction.cpp
 @@ -52,7 +52,7 @@
@@ -292,7 +292,7 @@ index 3bb1375fc5b77321d82f1a1dcfa6c19501e667fe..e8e24ee8820f9751585216ffa349cf30
  namespace {
  
 diff --git a/clang/lib/Lex/Preprocessor.cpp b/clang/lib/Lex/Preprocessor.cpp
-index b08459632aacb9f817db9543de3fce8111e997b7..def4cb4e2b472ee6c43a8322903423a74d9d18c2 100644
+index 1e21b4a94cea3c2ec57a65b3d90c59c4171a0426..28f456837ad4c07c98f98f25c23059e0ed1fd99b 100644
 --- a/clang/lib/Lex/Preprocessor.cpp
 +++ b/clang/lib/Lex/Preprocessor.cpp
 @@ -79,7 +79,7 @@ using namespace clang;

@@ -1,4 +1,4 @@
-From e99de08d67ac6556a541175364667555ec03bd94 Mon Sep 17 00:00:00 2001
+From 8591d08a92e5cb9aa664045983666ca2a5a105c6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:56:10 +0900
 Subject: [PATCH 36/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -365,12 +365,12 @@ index 078b4a6fefb7e1789086f429c02d814bf5a724b2..fd9eb59b9eb55b1091f4a917337d3267
  #else
              assert(v[6] == wchar_t(-1));
 diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp
-index 0f2c81a805282c150c660ab0b35c876f0e01da66..843c5e2e5f4983c5e5720211020e29aac73cd92f 100644
+index 4b767fae871fa77991f9d3589702d72b537ec9d6..cf6d4312e6eeb3349b5d85a13875c0ed8e4abc4c 100644
 --- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp
-@@ -17,6 +17,9 @@
+@@ -16,6 +16,9 @@
+ // Bionic has minimal locale support, investigate this later.
  // XFAIL: LIBCXX-ANDROID-FIXME
- // XFAIL: FROZEN-CXX03-HEADERS-FIXME
  
 +// Cygwin's locale slightly differs from others
 +// XFAIL: LIBCXX-CYGWIN-FIXME
@@ -379,12 +379,12 @@ index 0f2c81a805282c150c660ab0b35c876f0e01da66..843c5e2e5f4983c5e5720211020e29aa
  
  #include <locale>
 diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp
-index 9770912da9dcf54c080382e187325cd46b3eb494..006d29d3c53022e3fa27db924b8b72cbb9d31620 100644
+index 1c8710a008f27f2b93543787eac8f051ed03a176..89b9b2a1fb80b8da2285c5fa4ff3a7cd19b16d41 100644
 --- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp
-@@ -18,6 +18,9 @@
- 
- // XFAIL: FROZEN-CXX03-HEADERS-FIXME
+@@ -16,6 +16,9 @@
+ // Bionic has minimal locale support, investigate this later.
+ // XFAIL: LIBCXX-ANDROID-FIXME
  
 +// Cygwin's locale slightly differs from others
 +// XFAIL: LIBCXX-CYGWIN-FIXME

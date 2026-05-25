@@ -1,4 +1,4 @@
-From b89835b7c5372663613e7c4c016608218118f543 Mon Sep 17 00:00:00 2001
+From ccdb9221b53ba77cb514ae9d444b0cf114e01b92 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 21 Sep 2025 09:57:11 +0900
 Subject: [PATCH 25/64] workaround for 2GiB limit
@@ -9,10 +9,10 @@ Subject: [PATCH 25/64] workaround for 2GiB limit
  2 files changed, 8 insertions(+)
 
 diff --git a/clang/unittests/CMakeLists.txt b/clang/unittests/CMakeLists.txt
-index 2ae0906dd1571ddb38b4144305656529677a4538..a26b47ad4872842abdf300214be947dd339bf707 100644
+index 71c7a6842fed2e2bc8d7118456c2d92d31783b77..ee19e2129a5bb4be5f58b9fcc119d0c869fcf839 100644
 --- a/clang/unittests/CMakeLists.txt
 +++ b/clang/unittests/CMakeLists.txt
-@@ -128,6 +128,10 @@ add_distinct_clang_unittest(AllClangUnitTests
+@@ -129,6 +129,10 @@ add_distinct_clang_unittest(AllClangUnitTests
    ${LLVM_COMPONENTS}
  )
  

@@ -1,4 +1,4 @@
-From 5ac0e8f9f68ad6ff4bfc3e645c37cc8346878154 Mon Sep 17 00:00:00 2001
+From 3140c19ad2a8e44858e83548e6f169c4793d6a70 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 15 Mar 2026 18:19:23 +0900
 Subject: [PATCH 11/53] [Clang] Warn about ignored dllexport/dllimport on
@@ -10,7 +10,7 @@ Subject: [PATCH 11/53] [Clang] Warn about ignored dllexport/dllimport on
  2 files changed, 69 insertions(+), 36 deletions(-)
 
 diff --git a/clang/include/clang/Basic/DiagnosticSemaKinds.td b/clang/include/clang/Basic/DiagnosticSemaKinds.td
-index c69b2ce3648f8bb1564c7fcf76107ea0746a6584..83837336caedee20ddc7834686ff6e0b7691362a 100644
+index dbe6cb2c3a41c89247fb27124143d475ea2780f1..573d8094a8f05e0f73a0ae8fdb64a06c64a803c7 100644
 --- a/clang/include/clang/Basic/DiagnosticSemaKinds.td
 +++ b/clang/include/clang/Basic/DiagnosticSemaKinds.td
 @@ -3816,6 +3816,9 @@ def warn_dllimport_dropped_from_inline_function : Warning<
@@ -34,10 +34,10 @@ index c69b2ce3648f8bb1564c7fcf76107ea0746a6584..83837336caedee20ddc7834686ff6e0b
    "explicit instantiation declaration should not be 'dllexport'">,
    InGroup<DllexportExplicitInstantiationDecl>;
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index 8c6ae204d6d19d70a8ace6e6b2345747f4f85474..234a9b07aa0ca4de04459222b683eb1b8968a897 100644
+index 5667cf53fee0b51e27a4a54b8f2bbfe1a2f802ed..9aa60555ef8b3e6fd087fda606bf21c0ca57efba 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
-@@ -10278,23 +10278,32 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10279,23 +10279,32 @@ DeclResult Sema::ActOnExplicitInstantiation(
                                         ? TSK_ExplicitInstantiationDefinition
                                         : TSK_ExplicitInstantiationDeclaration;
  
@@ -77,7 +77,7 @@ index 8c6ae204d6d19d70a8ace6e6b2345747f4f85474..234a9b07aa0ca4de04459222b683eb1b
      }
    }
  
-@@ -10302,20 +10311,11 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10303,20 +10312,11 @@ DeclResult Sema::ActOnExplicitInstantiation(
    // instantiation declarations for most purposes.
    bool DLLImportExplicitInstantiationDef = false;
    if (TSK == TSK_ExplicitInstantiationDefinition &&
@@ -100,7 +100,7 @@ index 8c6ae204d6d19d70a8ace6e6b2345747f4f85474..234a9b07aa0ca4de04459222b683eb1b
        TSK = TSK_ExplicitInstantiationDeclaration;
        DLLImportExplicitInstantiationDef = true;
      }
-@@ -10347,28 +10347,30 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10348,28 +10348,30 @@ DeclResult Sema::ActOnExplicitInstantiation(
        Context.getTargetInfo().getTriple().isOSCygMing()) {
      // Check for dllexport class template instantiation definitions in MinGW
      // mode, if a previous declaration of the instantiation was seen.
@@ -144,7 +144,7 @@ index 8c6ae204d6d19d70a8ace6e6b2345747f4f85474..234a9b07aa0ca4de04459222b683eb1b
      }
    }
  
-@@ -10440,7 +10442,10 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10441,7 +10443,10 @@ DeclResult Sema::ActOnExplicitInstantiation(
    Specialization->setTemplateKeywordLoc(TemplateLoc);
    Specialization->setBraceRange(SourceRange());
  
@@ -156,7 +156,7 @@ index 8c6ae204d6d19d70a8ace6e6b2345747f4f85474..234a9b07aa0ca4de04459222b683eb1b
    ProcessDeclAttributeList(S, Specialization, Attr);
    ProcessAPINotes(Specialization);
  
-@@ -10476,11 +10481,12 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10477,11 +10482,12 @@ DeclResult Sema::ActOnExplicitInstantiation(
    ClassTemplateSpecializationDecl *Def
      = cast_or_null<ClassTemplateSpecializationDecl>(
                                                Specialization->getDefinition());
@@ -171,7 +171,7 @@ index 8c6ae204d6d19d70a8ace6e6b2345747f4f85474..234a9b07aa0ca4de04459222b683eb1b
      MarkVTableUsed(TemplateNameLoc, Specialization, true);
      Specialization->setPointOfInstantiation(Def->getPointOfInstantiation());
    }
-@@ -10508,13 +10514,16 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10509,13 +10515,16 @@ DeclResult Sema::ActOnExplicitInstantiation(
          A->setInherited(true);
          Def->addAttr(A);
          dllExportImportClassTemplateSpecialization(*this, Def);
@@ -190,7 +190,7 @@ index 8c6ae204d6d19d70a8ace6e6b2345747f4f85474..234a9b07aa0ca4de04459222b683eb1b
      if (Old_TSK == TSK_ImplicitInstantiation && NewlyDLLExported &&
          Context.getTargetInfo().shouldDLLImportComdatSymbols()) {
        // An explicit instantiation definition can add a dll attribute to a
-@@ -10532,6 +10541,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10533,6 +10542,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
        assert(Def == Specialization &&
               "Def and Specialization should match for implicit instantiation");
        dllExportImportClassTemplateSpecialization(*this, Def);
@@ -198,7 +198,7 @@ index 8c6ae204d6d19d70a8ace6e6b2345747f4f85474..234a9b07aa0ca4de04459222b683eb1b
      }
  
      // In MinGW mode, export the template instantiation if the declaration
-@@ -10540,6 +10550,23 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10541,6 +10551,23 @@ DeclResult Sema::ActOnExplicitInstantiation(
          Context.getTargetInfo().getTriple().isOSCygMing() &&
          PrevDecl->hasAttr<DLLExportAttr>()) {
        dllExportImportClassTemplateSpecialization(*this, Def);

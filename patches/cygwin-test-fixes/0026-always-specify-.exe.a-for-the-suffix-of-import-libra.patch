@@ -1,4 +1,4 @@
-From 66aedb1cef0a4dec01680b1ea187fd42e11c0e2a Mon Sep 17 00:00:00 2001
+From 01d2492a9225b16cba6bba2a10d9ee1324690249 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 9 Nov 2025 21:00:27 +0900
 Subject: [PATCH 26/64] always specify `.exe.a` for the suffix of import
@@ -10,7 +10,7 @@ needs for LLVM_BUILD_LLVM_DYLIB
  1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index 28858db434f91a30f2da14b438336c828b5e8085..beb358f6089158d146115c12877a777d10234ee4 100644
+index e8a1b8b948b5a96fea1442a2d29fa69103de6f55..8070ea1bb41a61171366f3f447b92dd787042ba8 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
 @@ -1217,6 +1217,14 @@ macro(add_llvm_executable name)

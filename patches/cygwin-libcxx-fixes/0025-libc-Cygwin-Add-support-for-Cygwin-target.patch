@@ -1,4 +1,4 @@
-From 0db82e2102ea4a7910d5145810937f4b8052a2c0 Mon Sep 17 00:00:00 2001
+From 351fd587c73112d4790ff12d879245fdc27c5472 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 25/37] [libc++][Cygwin] Add support for Cygwin target
@@ -100,10 +100,10 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 6cf96523272366d8d847f68af64b375808ef3f30..f7ae16d9bc5cd3f71ebd56e3ea101e3f83ac9698 100644
+index a34c6ee502bb245c1390a7d96b054b71ecc2d3f2..029e8ee9f8e2f172fe69419c2740944cfe4d326c 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -92,6 +92,10 @@
+@@ -89,6 +89,10 @@
  #      define _LIBCPP_HAS_BITSCAN64 0
  #    endif
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 1
@@ -114,7 +114,7 @@ index 6cf96523272366d8d847f68af64b375808ef3f30..f7ae16d9bc5cd3f71ebd56e3ea101e3f
  #  else
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 0
  #    define _LIBCPP_HAS_BITSCAN64 0
-@@ -301,6 +305,7 @@ typedef __char32_t char32_t;
+@@ -298,6 +302,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \
@@ -123,10 +123,10 @@ index 6cf96523272366d8d847f68af64b375808ef3f30..f7ae16d9bc5cd3f71ebd56e3ea101e3f
  // clang-format on
  #      undef _LIBCPP_HAS_THREAD_API_PTHREAD
 diff --git a/libcxx/include/__configuration/attributes.h b/libcxx/include/__configuration/attributes.h
-index 39683b7688d760956adb62c31919f21b51b54dc5..a38b960bf702f1d701d34568592c10e90b24e643 100644
+index cc828466482fdb80dd11993de70284476360407a..7d66ae4b7291140e66b972f8fe147f7ac558058b 100644
 --- a/libcxx/include/__configuration/attributes.h
 +++ b/libcxx/include/__configuration/attributes.h
-@@ -54,13 +54,14 @@
+@@ -55,13 +55,14 @@
  #    define _LIBCPP_CRT_FUNC
  #  endif
  

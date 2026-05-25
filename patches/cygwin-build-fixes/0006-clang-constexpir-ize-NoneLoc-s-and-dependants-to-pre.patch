@@ -1,4 +1,4 @@
-From 5b35aaefd09986f511d28e477390ff0317cfb900 Mon Sep 17 00:00:00 2001
+From d691ec81fe2650c37726dc264d7847e4b43839a1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/38] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -15,10 +15,10 @@ Subject: [PATCH 06/38] [clang] constexpir-ize `NoneLoc`s and dependants to
  7 files changed, 21 insertions(+), 18 deletions(-)
 
 diff --git a/clang/include/clang/AST/DeclTemplate.h b/clang/include/clang/AST/DeclTemplate.h
-index 9fb41c87da732abfaeeaf4269ffdbbb1107b7b76..d6312543fa8a94fecb17510372a21bb9ad8080d1 100644
+index 6ca9d67af0710d6609c6d2fbd3646016e9e4c6ca..bfd4415c67cc2427cf0b3ee369802ed0302b3ab7 100644
 --- a/clang/include/clang/AST/DeclTemplate.h
 +++ b/clang/include/clang/AST/DeclTemplate.h
-@@ -1234,7 +1234,7 @@ public:
+@@ -1227,7 +1227,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -27,7 +27,7 @@ index 9fb41c87da732abfaeeaf4269ffdbbb1107b7b76..d6312543fa8a94fecb17510372a21bb9
      return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
    }
  
-@@ -1437,7 +1437,7 @@ public:
+@@ -1430,7 +1430,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -36,7 +36,7 @@ index 9fb41c87da732abfaeeaf4269ffdbbb1107b7b76..d6312543fa8a94fecb17510372a21bb9
      return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
    }
  
-@@ -1721,7 +1721,7 @@ public:
+@@ -1712,7 +1712,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {

@@ -1,4 +1,4 @@
-From 6e676ae98d2621fc0211cd8cb46c6641506885da Mon Sep 17 00:00:00 2001
+From 4978de47b5f95e6db071230e46ac6d84f990b346 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 19:00:48 +0900
 Subject: [PATCH 16/64] update test
@@ -11,7 +11,7 @@ Subject: [PATCH 16/64] update test
  4 files changed, 33 insertions(+), 40 deletions(-)
 
 diff --git a/clang/test/CodeGenCXX/dllimport.cpp b/clang/test/CodeGenCXX/dllimport.cpp
-index d0dca72e681bca2d07663c678a7ccddcd92024d6..11a7c54b91aacef6736e50ff90ec03e5b28e2c78 100644
+index 301b9f96b95b98f35d9ff4c8304680c98d548bc1..0312c51c6f2f04ee07539b71a6c4a48a6692018a 100644
 --- a/clang/test/CodeGenCXX/dllimport.cpp
 +++ b/clang/test/CodeGenCXX/dllimport.cpp
 @@ -870,9 +870,9 @@ template <> void ExplicitInstantiationAfterMemberSpecialization<int>::g() {}

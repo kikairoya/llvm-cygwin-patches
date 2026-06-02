@@ -1,4 +1,4 @@
-From c68c98022056cef2376973d60bf425d371abdab8 Mon Sep 17 00:00:00 2001
+From 37a45685b629b1ab8517b8621c906e901924d515 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Mar 2026 20:30:47 +0900
 Subject: [PATCH 55/64] [LLVM][Unittest][Cygwin] Diverge expected result on
@@ -46,10 +46,10 @@ index 7357a976f5f50387d01ca4b3b0d271780fa400c4..44ad63ca5ab593931fde6c8372f125c9
  static void writeToLog(OnDiskCASLogger *Logger, int NumOpens, int NumEntries) {
    StringRef Path = "/fake_cas/index";
 diff --git a/llvm/unittests/Support/CommandLineTest.cpp b/llvm/unittests/Support/CommandLineTest.cpp
-index f2effbdddfbbf6f342f0e0494e3330b5d322bea0..388f7a126c335ea77702329824a649527559a701 100644
+index 8d4fd8e375ab79f23b9017f25ca984010ab85db2..aef7b73b512b20a449d9d97199d291526b8e6f4c 100644
 --- a/llvm/unittests/Support/CommandLineTest.cpp
 +++ b/llvm/unittests/Support/CommandLineTest.cpp
-@@ -942,7 +942,11 @@ TEST(CommandLineTest, ResponseFileWindows) {
+@@ -946,7 +946,11 @@ TEST(CommandLineTest, ResponseFileWindows) {
  
    // Create response file.
    TempFile ResponseFile("resp-", ".txt",
@@ -62,10 +62,10 @@ index f2effbdddfbbf6f342f0e0494e3330b5d322bea0..388f7a126c335ea77702329824a64952
  
    llvm::SmallString<128> RspOpt;
 diff --git a/llvm/unittests/Support/Path.cpp b/llvm/unittests/Support/Path.cpp
-index bb825a1b1e65ce49c4a40690af89027d912c0d1c..472cfb431e372005534169f70c68e8c190164e98 100644
+index b63ab426bb080c048d2183ba2bb5778e0359e9ca..ed5aeddd976edd9bd16b17fe162e5e41e7a8daae 100644
 --- a/llvm/unittests/Support/Path.cpp
 +++ b/llvm/unittests/Support/Path.cpp
-@@ -2530,7 +2530,7 @@ TEST_F(FileSystemTest, permissions) {
+@@ -2563,7 +2563,7 @@ TEST_F(FileSystemTest, permissions) {
  
    EXPECT_EQ(fs::setPermissions(TempPath, fs::all_perms), NoError);
    EXPECT_TRUE(CheckPermissions(fs::all_all));

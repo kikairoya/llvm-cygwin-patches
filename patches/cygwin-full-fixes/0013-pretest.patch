@@ -1,4 +1,4 @@
-From 50e040bb9624f6e80d82273f89e43ba61c512016 Mon Sep 17 00:00:00 2001
+From 5e7d9a0f1195046ff2a0bc5e950b2558ce77c1dc Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 12:34:01 +0900
 Subject: [PATCH 13/53] pretest
@@ -9,7 +9,7 @@ Subject: [PATCH 13/53] pretest
  2 files changed, 74 insertions(+)
 
 diff --git a/clang/test/CodeGenCXX/dllexport.cpp b/clang/test/CodeGenCXX/dllexport.cpp
-index a34a87c5b9f2146e71dc1ff7ab9b0024185c4faa..87f4ef64c2f526df9b3886de275c2919e24c71f1 100644
+index 898d2965eff9d0ad448ab8c53398a6ca2a2bc918..2ac6bcc4da248f38bc4f8cdc15c2eabc6a213fc3 100644
 --- a/clang/test/CodeGenCXX/dllexport.cpp
 +++ b/clang/test/CodeGenCXX/dllexport.cpp
 @@ -805,6 +805,41 @@ USEMEMFUNC(ImplicitInstantiationExportedExplicitInstantiationDefExportedTemplate
@@ -55,7 +55,7 @@ index a34a87c5b9f2146e71dc1ff7ab9b0024185c4faa..87f4ef64c2f526df9b3886de275c2919
  struct __declspec(dllexport) PR23308 {
    void f(InternalLinkageType*);
 diff --git a/clang/test/CodeGenCXX/dllimport.cpp b/clang/test/CodeGenCXX/dllimport.cpp
-index ed1c72c5185d3cd4f573822f0f7497b5834f5930..d0dca72e681bca2d07663c678a7ccddcd92024d6 100644
+index 86fe7561f4c4e6542105d927e6a03de700ec4eec..301b9f96b95b98f35d9ff4c8304680c98d548bc1 100644
 --- a/clang/test/CodeGenCXX/dllimport.cpp
 +++ b/clang/test/CodeGenCXX/dllimport.cpp
 @@ -852,6 +852,7 @@ USEMEMFUNC(ExplicitInstantiationDeclImportedDefTemplate<int>, f);

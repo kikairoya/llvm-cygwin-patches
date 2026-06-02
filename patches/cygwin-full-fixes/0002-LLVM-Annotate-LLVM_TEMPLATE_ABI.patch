@@ -1,4 +1,4 @@
-From 93a12ab7f6792a0e91d59cc1e812db9bc8e28d8e Mon Sep 17 00:00:00 2001
+From df239375a7cb54934e3f512ae39014eaca7fe0b3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
 Subject: [PATCH 02/53] [LLVM] Annotate LLVM_TEMPLATE_ABI
@@ -89,7 +89,7 @@ index 8ab70dd9ed594c501d2c2e388818a1b5b5ec84f3..5845cc0b8fed045e4bb2aaa894d027cd
  /// Represents analyses that only rely on functions' control flow.
  ///
 diff --git a/llvm/include/llvm/IR/Dominators.h b/llvm/include/llvm/IR/Dominators.h
-index 4ee3c81b55712ca668f92a57f1be6ced673ae443..3a7ab84fa405b868913bd9faa216eca668a1ba00 100644
+index 7ea06ddccdc5d825ecc2fae77fe3e6b6d96c1d7d..d1e308c1a2f0b455df26432ed26aca22fb46f33e 100644
 --- a/llvm/include/llvm/IR/Dominators.h
 +++ b/llvm/include/llvm/IR/Dominators.h
 @@ -49,7 +49,7 @@ extern template class LLVM_TEMPLATE_ABI

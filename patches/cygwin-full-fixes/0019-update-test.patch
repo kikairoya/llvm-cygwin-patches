@@ -1,4 +1,4 @@
-From df3b0d8d3ab2cc8992cc3274074aaee6badab7ff Mon Sep 17 00:00:00 2001
+From 064e99651e2e5a0e43c3986fcf0f5aaf9aed509e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 19 Mar 2026 21:48:00 +0900
 Subject: [PATCH 19/53] update test
@@ -11,7 +11,7 @@ Subject: [PATCH 19/53] update test
  4 files changed, 68 insertions(+), 72 deletions(-)
 
 diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
-index 6f39b2745c5151c08b7541b6671159ac6c81c6eb..64f5da7ee46df8d5d913f61cfb0b8b6a891c0c79 100644
+index 4254beeb8c739d6ebaa753557a520c7d82449345..2e3f06a8a491d704e95ad3a072cf69a91e8798c5 100644
 --- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
 +++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
 @@ -54,7 +54,7 @@ template struct __declspec(dllexport) BasicCase<WithExportTag>;
@@ -33,7 +33,7 @@ index 6f39b2745c5151c08b7541b6671159ac6c81c6eb..64f5da7ee46df8d5d913f61cfb0b8b6a
  void useExportWholeTemplate() {
    ExportWholeTemplate<NoAttrTag>().excludedMethod();
 diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
-index 9d9f0038083f9083209c85eb18129ffe445acbf2..f15c7b378b71636c103475bf730b2d360b5f0434 100644
+index f38046688f174040c4565d49a2e29cd71913731b..758535d3d55c6f1b5c6fd14e173ea7331602b21a 100644
 --- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
 +++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
 @@ -74,7 +74,7 @@ void useBaseCase() {

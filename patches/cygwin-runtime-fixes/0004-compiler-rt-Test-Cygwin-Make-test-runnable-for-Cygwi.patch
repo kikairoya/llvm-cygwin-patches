@@ -1,4 +1,4 @@
-From b5877df87e9a10364d4ad87ece5d7744ea419f05 Mon Sep 17 00:00:00 2001
+From ed2324251fff073628c2d65ce2a26435b4c5dff0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 4/6] [compiler-rt][Test][Cygwin] Make test runnable for Cygwin
@@ -13,12 +13,12 @@ Subject: [PATCH 4/6] [compiler-rt][Test][Cygwin] Make test runnable for Cygwin
  5 files changed, 15 insertions(+), 3 deletions(-)
 
 diff --git a/compiler-rt/test/CMakeLists.txt b/compiler-rt/test/CMakeLists.txt
-index a1cda7f93382fd2c4170e32d09d47c853cdc9092..d9eeb475ebb42b0aac77d05133f5912949434563 100644
+index 3fab82518e75f50d408a5f322d8f586f16138748..e6bf78d4d49ef37781911991d2b35fbcc0120a0b 100644
 --- a/compiler-rt/test/CMakeLists.txt
 +++ b/compiler-rt/test/CMakeLists.txt
-@@ -79,7 +79,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)
+@@ -132,7 +132,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)
    if(COMPILER_RT_BUILD_BUILTINS OR COMPILER_RT_TEST_EXTERNAL_BUILTINS)
-     add_subdirectory(builtins)
+     compiler_rt_test_runtime(builtins NO_COMPILER_RT_HAS_GUARD)
    endif()
 -  if(COMPILER_RT_BUILD_SANITIZERS)
 +  if(COMPILER_RT_BUILD_SANITIZERS AND COMPILER_RT_HAS_SANITIZER_COMMON)

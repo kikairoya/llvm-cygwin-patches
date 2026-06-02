@@ -1,4 +1,4 @@
-From 2c89cade80879f0731a578387e5ad5f65f599761 Mon Sep 17 00:00:00 2001
+From ff6c32ec72dff26764e1c049ce00260c5a9edbc3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 08/38] adopt LLVM_DECLARE_REGISTRY
@@ -345,7 +345,7 @@ index a8079dbfaf869391c14306f0c6fd6c22cc51a6d4..37f5cccb5314157899e763e134071b68
  
  #endif // FORTRAN_FRONTEND_FRONTENDPLUGINREGISTRY_H
 diff --git a/flang/lib/Frontend/FrontendAction.cpp b/flang/lib/Frontend/FrontendAction.cpp
-index 58901c600038073b2c0a4e17eaf99337a88413f3..760c1c26a5f274fbe90daacaff9e8498e90a109e 100644
+index 7d201881cbba7797d5ee92b0a251f1ce69e9f6f7..17782dbfaeec76bc8f36809b8ae1993bc586ac05 100644
 --- a/flang/lib/Frontend/FrontendAction.cpp
 +++ b/flang/lib/Frontend/FrontendAction.cpp
 @@ -22,7 +22,7 @@
@@ -358,7 +358,7 @@ index 58901c600038073b2c0a4e17eaf99337a88413f3..760c1c26a5f274fbe90daacaff9e8498
  void FrontendAction::setCurrentInput(const FrontendInputFile &input) {
    this->currentInput = input;
 diff --git a/llvm/include/llvm/CodeGen/GCMetadataPrinter.h b/llvm/include/llvm/CodeGen/GCMetadataPrinter.h
-index 9d421be8313f01cae981d3b6c378433ca4c2b8b6..5b80d85e7b79b573df27c082f67c1c1c94a7ed91 100644
+index bde45d6f10f3fadfdefd9ca03c76a3bffe432a00..73fbb7adfaf890fe4d04aea8b838f5e9c6094d1e 100644
 --- a/llvm/include/llvm/CodeGen/GCMetadataPrinter.h
 +++ b/llvm/include/llvm/CodeGen/GCMetadataPrinter.h
 @@ -30,12 +30,6 @@ class GCStrategy;
@@ -373,7 +373,7 @@ index 9d421be8313f01cae981d3b6c378433ca4c2b8b6..5b80d85e7b79b573df27c082f67c1c1c
 -
  /// GCMetadataPrinter - Emits GC metadata as assembly code.  Instances are
  /// created, managed, and owned by the AsmPrinter.
- class GCMetadataPrinter {
+ class LLVM_ABI GCMetadataPrinter {
 @@ -69,6 +63,12 @@ public:
    virtual bool emitStackMaps(StackMaps &SM, AsmPrinter &AP) { return false; }
  };

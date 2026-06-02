@@ -1,4 +1,4 @@
-From 3602ecb05aee2049e703a4c8faa6432cd6c6276c Mon Sep 17 00:00:00 2001
+From 20c6180c23f2c08e659971a79def42134fdffabe Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:59:32 +0900
 Subject: [PATCH 03/53] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
@@ -80,7 +80,7 @@ index 9e0fd8122c89055af9d2bb6528df80fdb8d524da..1ad39c70e4dfa21605f5cad7df667b32
  
  namespace clang {
 diff --git a/llvm/include/llvm/CodeGen/MachineFunction.h b/llvm/include/llvm/CodeGen/MachineFunction.h
-index d620ae5137ebaa3eb411eec8e689fb3fabc1ce07..99da1bdabf3c4da52d732d5ad013817d7415b664 100644
+index bd796fee2226f6e9d77e05025778bfb11cba9690..fc7abee8d890903c6f2a208b01ddb5367c7d2416 100644
 --- a/llvm/include/llvm/CodeGen/MachineFunction.h
 +++ b/llvm/include/llvm/CodeGen/MachineFunction.h
 @@ -17,6 +17,7 @@
@@ -91,7 +91,7 @@ index d620ae5137ebaa3eb411eec8e689fb3fabc1ce07..99da1bdabf3c4da52d732d5ad013817d
  #include "llvm/ADT/ArrayRef.h"
  #include "llvm/ADT/DenseMap.h"
  #include "llvm/ADT/GraphTraits.h"
-@@ -1511,6 +1512,8 @@ public:
+@@ -1515,6 +1516,8 @@ public:
    }
  };
  
@@ -101,10 +101,10 @@ index d620ae5137ebaa3eb411eec8e689fb3fabc1ce07..99da1bdabf3c4da52d732d5ad013817d
  // GraphTraits specializations for function basic block graphs (CFGs)
  //===--------------------------------------------------------------------===//
 diff --git a/llvm/lib/CodeGen/MachineFunction.cpp b/llvm/lib/CodeGen/MachineFunction.cpp
-index edf448aee6922e67463019a049f1e5659c1f307a..2b3b45b9cf15a11a4bb11cffe91e9bf1eb24a9a1 100644
+index 49d8a19e5d126cd55d429c68b6bd4075fdda78a4..3c2c0c9ffc3b29bfd653cc0546be95822c637ca5 100644
 --- a/llvm/lib/CodeGen/MachineFunction.cpp
 +++ b/llvm/lib/CodeGen/MachineFunction.cpp
-@@ -1344,6 +1344,8 @@ void MachineFunction::setUseDebugInstrRef(bool Use) {
+@@ -1354,6 +1354,8 @@ void MachineFunction::setUseDebugInstrRef(bool Use) {
  // Use one million as a high / reserved number.
  const unsigned MachineFunction::DebugOperandMemNumber = 1000000;
  

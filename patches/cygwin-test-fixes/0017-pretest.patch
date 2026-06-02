@@ -1,4 +1,4 @@
-From 5ed717d7f1ef34e4a9fef2b122ad2ecb127cb48c Mon Sep 17 00:00:00 2001
+From 23ac9be1081af16ab33b33055126d1e5da2bf48c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 21:43:54 +0900
 Subject: [PATCH 17/64] pretest
@@ -11,7 +11,7 @@ Subject: [PATCH 17/64] pretest
  4 files changed, 430 insertions(+)
 
 diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
-index 7048d32feb9e39e5a9b24edd84f1eb8cd8433169..6f39b2745c5151c08b7541b6671159ac6c81c6eb 100644
+index bacbbd9a33b4d28043e6371a39b3432f7cf86411..4254beeb8c739d6ebaa753557a520c7d82449345 100644
 --- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
 +++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllexport.cpp
 @@ -31,6 +31,20 @@ struct BasicCase {
@@ -173,7 +173,7 @@ index 7048d32feb9e39e5a9b24edd84f1eb8cd8433169..6f39b2745c5151c08b7541b6671159ac
  
  // Interaction with VTables.
 diff --git a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
-index 05e0a6efadf7bc614f66d505abebf113bb79b0fe..9d9f0038083f9083209c85eb18129ffe445acbf2 100644
+index f9cb2df30b0f89b85c242c7fe2f6c183f0966552..f38046688f174040c4565d49a2e29cd71913731b 100644
 --- a/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
 +++ b/clang/test/CodeGenCXX/attr-exclude_from_explicit_instantiation.exclude_from_dllimport.cpp
 @@ -32,6 +32,24 @@ struct BasicCase {

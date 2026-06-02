@@ -1,27 +1,27 @@
-From b14f2b7c63094dea726273328205c98c04034a02 Mon Sep 17 00:00:00 2001
+From 47eb2c0c5bcac86d78d37d437355dce70ff143b8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
  host
 
 ---
- clang/test/CodeGen/2007-06-18-SextAttrAggregate.c |  2 +-
- clang/test/Driver/DTLTO/dtlto.c                   | 10 ++++++----
- clang/test/Driver/DTLTO/ps5-dtlto.c               | 13 ++++++++-----
- clang/test/Driver/HLSL/metal-converter.hlsl       |  4 ++++
- clang/test/Driver/clang-offload-bundler.c         |  2 +-
- clang/test/Driver/dxc_dxv_path.hlsl               |  4 ++++
- clang/test/Driver/env.c                           |  4 ++--
- clang/test/Driver/hip-version.hip                 |  1 +
- clang/test/Driver/linker-wrapper-hip-no-rdc.c     |  3 +++
- clang/test/Driver/linux-ld.c                      |  2 +-
- clang/test/Driver/loongarch-toolchain.c           |  2 +-
- clang/test/Driver/mingw-sysroot.cpp               |  2 +-
- clang/test/Driver/riscv32-toolchain.c             |  2 +-
- clang/test/Driver/riscv64-toolchain.c             |  2 +-
- clang/test/Driver/serenity.cpp                    |  2 +-
- clang/test/Modules/inferred-framework-case.m      |  2 +-
- clang/test/lit.cfg.py                             |  5 +++--
+ clang/test/CodeGen/2007-06-18-SextAttrAggregate.c   |  2 +-
+ clang/test/Driver/DTLTO/dtlto.c                     | 10 ++++++----
+ clang/test/Driver/DTLTO/ps5-dtlto.c                 | 13 ++++++++-----
+ clang/test/Driver/HLSL/metal-converter.hlsl         |  4 ++++
+ clang/test/Driver/dxc_dxv_path.hlsl                 |  4 ++++
+ clang/test/Driver/env.c                             |  4 ++--
+ clang/test/Driver/hip-version.hip                   |  1 +
+ clang/test/Driver/linux-ld.c                        |  2 +-
+ clang/test/Driver/loongarch-toolchain.c             |  2 +-
+ clang/test/Driver/mingw-sysroot.cpp                 |  2 +-
+ clang/test/Driver/riscv32-toolchain.c               |  2 +-
+ clang/test/Driver/riscv64-toolchain.c               |  2 +-
+ clang/test/Driver/serenity.cpp                      |  2 +-
+ clang/test/Modules/inferred-framework-case.m        |  2 +-
+ .../linker-wrapper-hip-no-rdc.c                     |  3 +++
+ .../test/OffloadTools/clang-offload-bundler/basic.c |  2 +-
+ clang/test/lit.cfg.py                               |  5 +++--
  17 files changed, 40 insertions(+), 22 deletions(-)
 
 diff --git a/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c b/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c
@@ -114,17 +114,6 @@ index 77d3d0864af7760ce1feba8ac7fcf019c4b27683..35284360b79adabb2dacb4106e89af6a
  // RUN: mkdir -p %t.dir
  // RUN: echo "dxv" > %t.dir/dxv && chmod 754 %t.dir/dxv
  
-diff --git a/clang/test/Driver/clang-offload-bundler.c b/clang/test/Driver/clang-offload-bundler.c
-index 6466e1870dc98e38426d3e6bde3479bc82cdbeab..70ac8b0e6a3c620b9032cd5c54b78b978fcd4097 100644
---- a/clang/test/Driver/clang-offload-bundler.c
-+++ b/clang/test/Driver/clang-offload-bundler.c
-@@ -1,5 +1,5 @@
- // REQUIRES: x86-registered-target
--// UNSUPPORTED: target={{.*}}-macosx{{.*}}, target={{.*}}-darwin{{.*}}, target={{.*}}-aix{{.*}}, target={{.*}}-zos{{.*}}
-+// UNSUPPORTED: target={{.*}}-macosx{{.*}}, target={{.*}}-darwin{{.*}}, target={{.*}}-aix{{.*}}, target={{.*}}-zos{{.*}}, target={{.*}}-cyg{{.*}}
- 
- //
- // Generate all the types of files we can bundle.
 diff --git a/clang/test/Driver/dxc_dxv_path.hlsl b/clang/test/Driver/dxc_dxv_path.hlsl
 index eab135c9ef3e800434f03ab73e4c5f39632b1819..78ab207e9c3e8c724a1c1b2e58e58ac07fc22c6f 100644
 --- a/clang/test/Driver/dxc_dxv_path.hlsl
@@ -162,20 +151,6 @@ index ccefedf816d457452717e9418ce9723046e2e674..76dfa4078c4b1fcbd09cf1012bc19bcc
  
  // RUN: %clang -v --rocm-path=%S/Inputs/rocm 2>&1 \
  // RUN:   | FileCheck -check-prefixes=FOUND %s
-diff --git a/clang/test/Driver/linker-wrapper-hip-no-rdc.c b/clang/test/Driver/linker-wrapper-hip-no-rdc.c
-index aae330bd3f6de405ce84c845717df809574a8859..0002b9907cfc4fe6981125b415018d5be8602eff 100644
---- a/clang/test/Driver/linker-wrapper-hip-no-rdc.c
-+++ b/clang/test/Driver/linker-wrapper-hip-no-rdc.c
-@@ -1,6 +1,9 @@
- // REQUIRES: amdgpu-registered-target
- // REQUIRES: lld
- 
-+// clang-linker-wrapper doesn't work when LLD_DEFAULT_LD_LLD_IS_MINGW=ON
-+// UNSUPPORTED: system-cygwin
-+
- // Test HIP non-RDC linker wrapper behavior with new offload driver.
- // The linker wrapper should output .hipfb files directly without using -r option.
- 
 diff --git a/clang/test/Driver/linux-ld.c b/clang/test/Driver/linux-ld.c
 index 8de1988d606cfbd8daea4aea8c17db8877af42e8..bae92e45cd8ab7b181f2f7cc176712d0af84d650 100644
 --- a/clang/test/Driver/linux-ld.c
@@ -249,11 +224,36 @@ index 64828b5cdd86827664016db622a73261406535b8..172df10d8084af8f52dfaaf23c1f8f3e
  
  @import MOdule; // expected-error{{module 'MOdule' not found}}
  @import Module;
+diff --git a/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c b/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
+index aae330bd3f6de405ce84c845717df809574a8859..0002b9907cfc4fe6981125b415018d5be8602eff 100644
+--- a/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
++++ b/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
+@@ -1,6 +1,9 @@
+ // REQUIRES: amdgpu-registered-target
+ // REQUIRES: lld
+ 
++// clang-linker-wrapper doesn't work when LLD_DEFAULT_LD_LLD_IS_MINGW=ON
++// UNSUPPORTED: system-cygwin
++
+ // Test HIP non-RDC linker wrapper behavior with new offload driver.
+ // The linker wrapper should output .hipfb files directly without using -r option.
+ 
+diff --git a/clang/test/OffloadTools/clang-offload-bundler/basic.c b/clang/test/OffloadTools/clang-offload-bundler/basic.c
+index 6466e1870dc98e38426d3e6bde3479bc82cdbeab..70ac8b0e6a3c620b9032cd5c54b78b978fcd4097 100644
+--- a/clang/test/OffloadTools/clang-offload-bundler/basic.c
++++ b/clang/test/OffloadTools/clang-offload-bundler/basic.c
+@@ -1,5 +1,5 @@
+ // REQUIRES: x86-registered-target
+-// UNSUPPORTED: target={{.*}}-macosx{{.*}}, target={{.*}}-darwin{{.*}}, target={{.*}}-aix{{.*}}, target={{.*}}-zos{{.*}}
++// UNSUPPORTED: target={{.*}}-macosx{{.*}}, target={{.*}}-darwin{{.*}}, target={{.*}}-aix{{.*}}, target={{.*}}-zos{{.*}}, target={{.*}}-cyg{{.*}}
+ 
+ //
+ // Generate all the types of files we can bundle.
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 4a007694695437363ba659a9f9e8d76f8bc24f9d..6fb866f140268a727d63e8913ac3b61545583e5d 100644
+index 17e318ba9d2823ce6f8897c7c715ed3ca3c8b713..102917aa671f01ead904803b740c4c4d3ac50219 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -325,7 +325,8 @@ if config.clang_default_cxx_stdlib != "":
+@@ -333,7 +333,8 @@ if config.clang_default_cxx_stdlib != "":
      )
  
  # As of 2011.08, crash-recovery tests still do not pass on FreeBSD.
@@ -263,7 +263,7 @@ index 4a007694695437363ba659a9f9e8d76f8bc24f9d..6fb866f140268a727d63e8913ac3b615
      config.available_features.add("crash-recovery")
  
  # ANSI escape sequences in non-dumb terminal
-@@ -379,7 +380,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
+@@ -387,7 +388,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
  
  # [PR18856] Depends to remove opened file. On win32, a file could be removed
  # only if all handles were closed.

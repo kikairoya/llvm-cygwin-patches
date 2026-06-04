@@ -1,4 +1,4 @@
-From 47eb2c0c5bcac86d78d37d437355dce70ff143b8 Mon Sep 17 00:00:00 2001
+From 92b8007a62c809398862b1295d24ec6bb9f59961 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -225,7 +225,7 @@ index 64828b5cdd86827664016db622a73261406535b8..172df10d8084af8f52dfaaf23c1f8f3e
  @import MOdule; // expected-error{{module 'MOdule' not found}}
  @import Module;
 diff --git a/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c b/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
-index aae330bd3f6de405ce84c845717df809574a8859..0002b9907cfc4fe6981125b415018d5be8602eff 100644
+index 5c5b7b1eabfab2a9be9458233e15a67cba048668..e2c599bb1e0a2dd23038f42572dc7b3fe02ab744 100644
 --- a/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
 +++ b/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
 @@ -1,6 +1,9 @@

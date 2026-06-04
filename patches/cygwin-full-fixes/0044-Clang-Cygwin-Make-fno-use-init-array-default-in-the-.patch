@@ -1,4 +1,4 @@
-From 7b922ebd117936cc58d6279ef11b924f3547440a Mon Sep 17 00:00:00 2001
+From f30c3ce9e6a83eabe2f30d60a66854a2895e2d9f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Oct 2025 13:01:49 +0900
 Subject: [PATCH 44/53] [Clang][Cygwin] Make -fno-use-init-array default in the
@@ -12,7 +12,7 @@ Aligning with MinGW. Without this, boost/serialization/test/test_singleton.cpp f
  3 files changed, 13 insertions(+)
 
 diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
-index 83547ccdc9abe2866d0fe5fc0160de84e41c9f30..95457cfb1f693ef8f998505b4e1624661b952841 100644
+index fab67d5d63eb476add3364e439d38e2314f97e3a..ecff9c400e1ede73b535eba7b17ee522bb268916 100644
 --- a/clang/lib/Driver/ToolChains/Cygwin.cpp
 +++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
 @@ -112,6 +112,14 @@ void Cygwin::AddClangSystemIncludeArgs(const ArgList &DriverArgs,

@@ -1,4 +1,4 @@
-From a27e70ee3457c0278883ad6b4be336093ea8d8c5 Mon Sep 17 00:00:00 2001
+From e016255a04fe65612a89cc0a5d43900410d12b3c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/53] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -112,7 +112,7 @@ index f853bbf7d976d3afe7766a518de634df0db40ce9..bd2b5589d1e7a950068dac43b18b4e72
        // callbacks.
        if constexpr (std::is_trivially_move_constructible_v<CallableT> &&
 diff --git a/llvm/include/llvm/ADT/PointerIntPair.h b/llvm/include/llvm/ADT/PointerIntPair.h
-index 75e3a58e7ca617a439f8705a77233b9f284f59db..90f6bd199dff90278c882428f807a34fa825a404 100644
+index db6714ffcfe91ed448f9955a938530a27e6c2a1d..ffdf0f3c3dbbd32f0d0a4cb188e857b1c251a7b5 100644
 --- a/llvm/include/llvm/ADT/PointerIntPair.h
 +++ b/llvm/include/llvm/ADT/PointerIntPair.h
 @@ -34,7 +34,8 @@ template <typename Ptr> struct PunnedPointer {
@@ -126,7 +126,7 @@ index 75e3a58e7ca617a439f8705a77233b9f284f59db..90f6bd199dff90278c882428f807a34f
    constexpr intptr_t asInt() const {
      intptr_t R = 0;
 diff --git a/llvm/include/llvm/ADT/PointerUnion.h b/llvm/include/llvm/ADT/PointerUnion.h
-index 52cb12168f9b7ec0e2a3d45a4df2be9fd61c11cc..a5586c90034edd458e4cc09e5e50de9744ab90f6 100644
+index 15565ee3ff51aeb3f4a39b7130f9fb660906b9f6..c9e8806d62579dde74ef592911fddd43d0dd8d0f 100644
 --- a/llvm/include/llvm/ADT/PointerUnion.h
 +++ b/llvm/include/llvm/ADT/PointerUnion.h
 @@ -135,7 +135,7 @@ class PointerUnionMembers;

@@ -1,4 +1,4 @@
-From b23a05aec7e1b96fa5c796d79f41f8877b63a00c Mon Sep 17 00:00:00 2001
+From e7f67a34f2dd526b4ed8e5755dc82196fbc472d9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 20:09:56 +0900
 Subject: [PATCH 40/53] [Clang][Driver] Revise Cygwin ToolChain to call linker
@@ -30,9 +30,13 @@ Co-authored-by: kikairoya <kikairoya@gmail.com>
 adopt HIPRuntimes changes
 
 Co-authored-by: kikairoya <kikairoya@gmail.com>
+
+adopt the handling of the LTO options changes
+
+Co-authored-by: kikairoya <kikairoya@gmail.com>
 ---
  clang/lib/Driver/ToolChain.cpp                |   2 +
- clang/lib/Driver/ToolChains/Cygwin.cpp        | 301 ++++++++++++++++++
+ clang/lib/Driver/ToolChains/Cygwin.cpp        | 300 ++++++++++++++++++
  clang/lib/Driver/ToolChains/Cygwin.h          |  18 ++
  .../usr/lib/gcc/i686-pc-msys/10/crtend.o      |   0
  .../usr/lib/gcc/x86_64-pc-cygwin/10/crtend.o  |   0
@@ -40,7 +44,7 @@ Co-authored-by: kikairoya <kikairoya@gmail.com>
  .../usr/lib/gcc/i686-pc-cygwin/10/crtend.o    |   0
  .../usr/lib/gcc/x86_64-pc-msys/10/crtend.o    |   0
  clang/test/Driver/cygwin.cpp                  |  69 +++-
- 9 files changed, 378 insertions(+), 12 deletions(-)
+ 9 files changed, 377 insertions(+), 12 deletions(-)
  create mode 100644 clang/test/Driver/Inputs/basic_cross_cygwin_tree/usr/lib/gcc/i686-pc-msys/10/crtend.o
  create mode 100644 clang/test/Driver/Inputs/basic_cross_cygwin_tree/usr/lib/gcc/x86_64-pc-cygwin/10/crtend.o
  create mode 100644 clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/crt0.o
@@ -48,7 +52,7 @@ Co-authored-by: kikairoya <kikairoya@gmail.com>
  create mode 100644 clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/gcc/x86_64-pc-msys/10/crtend.o
 
 diff --git a/clang/lib/Driver/ToolChain.cpp b/clang/lib/Driver/ToolChain.cpp
-index 511eb3757456b68b02840993f7719593c641db6a..561634be2f47fbc2eb989704ef44e8626bc2ab41 100644
+index ccfc022f7942702cf3c4128cb4181f470f3867d7..ae283946c7d000811036ce5be128d727615d897f 100644
 --- a/clang/lib/Driver/ToolChain.cpp
 +++ b/clang/lib/Driver/ToolChain.cpp
 @@ -827,6 +827,8 @@ static StringRef getArchNameForCompilerRTLib(const ToolChain &TC,
@@ -61,7 +65,7 @@ index 511eb3757456b68b02840993f7719593c641db6a..561634be2f47fbc2eb989704ef44e862
    switch (Triple.getOS()) {
    case llvm::Triple::FreeBSD:
 diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
-index 55438125ce0f136e63ff2a81608af176a24fd590..83547ccdc9abe2866d0fe5fc0160de84e41c9f30 100644
+index 55438125ce0f136e63ff2a81608af176a24fd590..fab67d5d63eb476add3364e439d38e2314f97e3a 100644
 --- a/clang/lib/Driver/ToolChains/Cygwin.cpp
 +++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
 @@ -9,6 +9,7 @@
@@ -89,7 +93,7 @@ index 55438125ce0f136e63ff2a81608af176a24fd590..83547ccdc9abe2866d0fe5fc0160de84
    addPathIfExists(D, SysRoot + "/usr/lib/w32api", Paths);
  }
  
-@@ -107,3 +111,300 @@ void Cygwin::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
+@@ -107,3 +111,299 @@ void Cygwin::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
    addExternCSystemInclude(DriverArgs, CC1Args, SysRoot + "/usr/include");
    addExternCSystemInclude(DriverArgs, CC1Args, SysRoot + "/usr/include/w32api");
  }
@@ -247,9 +251,8 @@ index 55438125ce0f136e63ff2a81608af176a24fd590..83547ccdc9abe2866d0fe5fc0160de84
 +
 +  ToolChain.AddFilePathLibArgs(Args, CmdArgs);
 +
-+  if (D.isUsingLTO())
-+    tools::addLTOOptions(ToolChain, Args, CmdArgs, Output, Inputs,
-+                         D.getLTOMode() == LTOK_Thin);
++  if (auto LTO = ToolChain.getLTOMode(Args); LTO != LTOK_None)
++    tools::addLTOOptions(ToolChain, Args, CmdArgs, Output, Inputs, LTO == LTOK_Thin);
 +
 +  if (Args.hasArg(options::OPT_Z_Xlinker__no_demangle))
 +    CmdArgs.push_back("--no-demangle");

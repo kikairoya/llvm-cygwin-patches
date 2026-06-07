@@ -1,7 +1,7 @@
-From e016255a04fe65612a89cc0a5d43900410d12b3c Mon Sep 17 00:00:00 2001
+From eb06be2fde2c3c856a745c8360d79d2b7f060624 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
-Subject: [PATCH 06/64] [clang] constexpir-ize `NoneLoc`s and dependants to
+Subject: [PATCH 06/63] [clang] constexpir-ize `NoneLoc`s and dependants to
  prevent symbol dup
 
 ---
@@ -15,10 +15,10 @@ Subject: [PATCH 06/64] [clang] constexpir-ize `NoneLoc`s and dependants to
  7 files changed, 21 insertions(+), 18 deletions(-)
 
 diff --git a/clang/include/clang/AST/DeclTemplate.h b/clang/include/clang/AST/DeclTemplate.h
-index 4f5a4e1b7b8a6ed16d048c4965495ec1b98a0838..ac49d49fc85904856f91b2eef72c9a2983c58774 100644
+index 672648c3fc03c50950b64a34de1bec9ee0aa0e8a..23982db95e2e30f1f6830d8a6b41816783b9cabb 100644
 --- a/clang/include/clang/AST/DeclTemplate.h
 +++ b/clang/include/clang/AST/DeclTemplate.h
-@@ -1227,7 +1227,7 @@ public:
+@@ -1235,7 +1235,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -27,7 +27,7 @@ index 4f5a4e1b7b8a6ed16d048c4965495ec1b98a0838..ac49d49fc85904856f91b2eef72c9a29
      return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
    }
  
-@@ -1430,7 +1430,7 @@ public:
+@@ -1438,7 +1438,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -36,7 +36,7 @@ index 4f5a4e1b7b8a6ed16d048c4965495ec1b98a0838..ac49d49fc85904856f91b2eef72c9a29
      return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
    }
  
-@@ -1712,7 +1712,7 @@ public:
+@@ -1720,7 +1720,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -112,7 +112,7 @@ index f853bbf7d976d3afe7766a518de634df0db40ce9..bd2b5589d1e7a950068dac43b18b4e72
        // callbacks.
        if constexpr (std::is_trivially_move_constructible_v<CallableT> &&
 diff --git a/llvm/include/llvm/ADT/PointerIntPair.h b/llvm/include/llvm/ADT/PointerIntPair.h
-index db6714ffcfe91ed448f9955a938530a27e6c2a1d..ffdf0f3c3dbbd32f0d0a4cb188e857b1c251a7b5 100644
+index c2db63382e13fc0e96d27cc11219ce28eddae3f0..da98e13cc417b6711fb421539158a57297247885 100644
 --- a/llvm/include/llvm/ADT/PointerIntPair.h
 +++ b/llvm/include/llvm/ADT/PointerIntPair.h
 @@ -34,7 +34,8 @@ template <typename Ptr> struct PunnedPointer {
@@ -126,7 +126,7 @@ index db6714ffcfe91ed448f9955a938530a27e6c2a1d..ffdf0f3c3dbbd32f0d0a4cb188e857b1
    constexpr intptr_t asInt() const {
      intptr_t R = 0;
 diff --git a/llvm/include/llvm/ADT/PointerUnion.h b/llvm/include/llvm/ADT/PointerUnion.h
-index 15565ee3ff51aeb3f4a39b7130f9fb660906b9f6..c9e8806d62579dde74ef592911fddd43d0dd8d0f 100644
+index 93caf86e965b5fd2e08e0214f17062b68abf151a..dbbe005967fb2073948ec481f73e3649e86eceb2 100644
 --- a/llvm/include/llvm/ADT/PointerUnion.h
 +++ b/llvm/include/llvm/ADT/PointerUnion.h
 @@ -135,7 +135,7 @@ class PointerUnionMembers;

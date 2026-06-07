@@ -1,0 +1,38 @@
+From 8461a5d461363818eaacc8764d9cec268dd9a199 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 30 Mar 2026 18:56:01 +0900
+Subject: [PATCH 22/63] adjust
+ diag::warn_dllimport_dropped_from_inline_function
+
+---
+ clang/lib/Sema/SemaDecl.cpp | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaDecl.cpp b/clang/lib/Sema/SemaDecl.cpp
+index 694067bea9e488d35066cbc12b295047ca3a0217..59b0d62ece65ce922effdc5068d89b9d690549b2 100644
+--- a/clang/lib/Sema/SemaDecl.cpp
++++ b/clang/lib/Sema/SemaDecl.cpp
+@@ -7378,14 +7378,16 @@ static void checkDLLAttributeRedeclaration(Sema &S, NamedDecl *OldDecl,
+       OldDecl->dropAttr<DLLImportAttr>();
+       NewDecl->dropAttr<DLLImportAttr>();
+     }
+-  } else if (IsInline && OldImportAttr && !IsMicrosoftABI) {
++  } else if (IsInline && OldImportAttr &&
++             (!IsMicrosoftABI || !S.getLangOpts().DllExportInlines)) {
+     // In MinGW, seeing a function declared inline drops the dllimport
+     // attribute.
+     OldDecl->dropAttr<DLLImportAttr>();
+     NewDecl->dropAttr<DLLImportAttr>();
+-    S.Diag(NewDecl->getLocation(),
+-           diag::warn_dllimport_dropped_from_inline_function)
+-        << NewDecl << OldImportAttr;
++    if (!OldImportAttr->isInherited())
++      S.Diag(NewDecl->getLocation(),
++             diag::warn_dllimport_dropped_from_inline_function)
++          << NewDecl << OldImportAttr;
+   }
+ 
+   // A specialization of a class template member function is processed here
+-- 
+2.54.0
+

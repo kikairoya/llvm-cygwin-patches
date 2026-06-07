@@ -1,4 +1,4 @@
-From 4d9bf8bb9d34965fe678f82d601577801bd1bdeb Mon Sep 17 00:00:00 2001
+From e5bf29a72e49e92b4b1a89dbe0d3413a08026116 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 25/37] [libc++][Cygwin] Add support for Cygwin target
@@ -100,7 +100,7 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index a6e94b6ff70eadf3558518d09656ac9262b15b23..85be8d262c0d053a573155d230c774c2c3cde79b 100644
+index 9172166b16b87d02b7668d939da2cda80fb0c5b4..a9da4eed0e7a960bd5f44027954d18712b847c20 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
 @@ -89,6 +89,10 @@

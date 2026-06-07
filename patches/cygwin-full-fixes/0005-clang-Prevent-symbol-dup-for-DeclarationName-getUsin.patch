@@ -1,7 +1,7 @@
-From a7079e888259f68254fc31db0437675f8dac4403 Mon Sep 17 00:00:00 2001
+From e2b2a680b6c22fe15917af8567aeb326a730068c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:03:35 +0900
-Subject: [PATCH 05/53] [clang] Prevent symbol dup for
+Subject: [PATCH 05/52] [clang] Prevent symbol dup for
  DeclarationName::getUsingDirectiveName
 
 ---
@@ -10,7 +10,7 @@ Subject: [PATCH 05/53] [clang] Prevent symbol dup for
  2 files changed, 9 insertions(+), 7 deletions(-)
 
 diff --git a/clang/include/clang/AST/DeclarationName.h b/clang/include/clang/AST/DeclarationName.h
-index 2cd7efcae50885a9d6a0d553a4db7883b6b59e4b..3983a60158a6692838507f2bd209a33efba9ea88 100644
+index 5121b561288c033bfe03591f8908e739d90fd1b1..d0030ebe4e749aa4bc081c256a87aebcfc8a5d48 100644
 --- a/clang/include/clang/AST/DeclarationName.h
 +++ b/clang/include/clang/AST/DeclarationName.h
 @@ -19,10 +19,10 @@

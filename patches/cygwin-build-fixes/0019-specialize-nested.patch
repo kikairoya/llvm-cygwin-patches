@@ -1,0 +1,134 @@
+From 8a9348b4cd7690d11373063d0329bf57d31cef45 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 24 Mar 2026 07:34:31 +0900
+Subject: [PATCH 19/37] specialize nested
+
+---
+ clang/lib/Sema/SemaDeclCXX.cpp  |  3 ++
+ clang/lib/Sema/SemaTemplate.cpp | 56 ++++++++++++++++++++++++++++-----
+ 2 files changed, 51 insertions(+), 8 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
+index c0f29906e7f4c4b4799fc1acf1a86c79474775eb..ccb52f4b61e28497abcb766fe1da302634cfba7b 100644
+--- a/clang/lib/Sema/SemaDeclCXX.cpp
++++ b/clang/lib/Sema/SemaDeclCXX.cpp
+@@ -6675,6 +6675,9 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+             cast<InheritableAttr>(ClassAttr->clone(getASTContext()));
+         NewAttr->setInherited(true);
+         Member->addAttr(NewAttr);
++        if (MemberTSK == TSK_ExplicitInstantiationDeclaration ||
++            MemberTSK == TSK_ExplicitInstantiationDefinition)
++          checkClassLevelDLLAttribute(RD);
+       }
+       continue;
+     }
+diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
+index ccbc8ce3f7777ec2818ec78cbb10e839c5b25bdc..f14883a92f08d53a7e953705d54b96ee0236ff1a 100644
+--- a/clang/lib/Sema/SemaTemplate.cpp
++++ b/clang/lib/Sema/SemaTemplate.cpp
+@@ -10206,8 +10206,8 @@ static bool ScopeSpecifierHasTemplateId(const CXXScopeSpec &SS) {
+ 
+ /// Make a dllexport or dllimport attr on a class template specialization take
+ /// effect.
+-static void dllExportImportClassTemplateSpecialization(
+-    Sema &S, ClassTemplateSpecializationDecl *Def) {
++static void dllExportImportClassTemplateSpecialization(Sema &S,
++                                                       CXXRecordDecl *Def) {
+   auto *A = cast_or_null<InheritableAttr>(getDLLAttr(Def));
+   assert(A && "dllExportImportClassTemplateSpecialization called "
+               "on Def without dllexport or dllimport");
+@@ -10514,21 +10514,23 @@ DeclResult Sema::ActOnExplicitInstantiation(
+     }
+ 
+     if ((NewlyDLLExported && PreviouslyDLLImported) ||
+-        (NewlyDLLImported && PreviouslyDLLExported))
++        (NewlyDLLImported && PreviouslyDLLExported) ||
++        (!NewlyDLLExported && !NewlyDLLImported))
+       ShouldIgnoreDLLAttr = true;
+ 
+     // Set the template specialization kind. Make sure it is set before
+     // instantiating the members which will trigger ASTConsumer callbacks.
+     Specialization->setTemplateSpecializationKind(TSK);
+ 
++    SmallVector<CXXRecordDecl *, 4> NestedClasses{Specialization};
+     // An explicit instantiation can add a dll attribute to a template with a
+     // previous implicit instantiation.
+-    if (!ShouldIgnoreDLLAttr && (NewlyDLLExported || NewlyDLLImported)) {
++    if (!ShouldIgnoreDLLAttr) {
+       // For the dllimport attribute, we ignore it if any implicitly instantiate
+       // member is already odr-used, to prevent the codegen for the method call
+       // will not respect the dllimport, while it will with cl.
+-      bool MemberAlreadyUsed =
+-          NewlyDLLImported && llvm::any_of(Def->decls(), [](Decl *Member) {
++      static constexpr auto isUsedImplicitlyInstantiatedMember =
++          [](Decl *Member) {
+             if (Member->hasAttr<ExcludeFromExplicitInstantiationAttr>())
+               return false;
+             auto *VD = dyn_cast<VarDecl>(Member);
+@@ -10537,9 +10539,36 @@ DeclResult Sema::ActOnExplicitInstantiation(
+                              : MD ? MD->getTemplateSpecializationKind()
+                                   : TSK_Undeclared;
+             return MemberTSK == TSK_ImplicitInstantiation && Member->isUsed();
+-          });
+-
++          };
++
++      bool MemberAlreadyUsed = false;
++      if (Context.getTargetInfo().getTriple().isOSCygMing()) {
++        // Apply to nested classes recursively in MinGW mode only.
++        for (size_t i = 0; i < NestedClasses.size() && !MemberAlreadyUsed;
++             ++i) {
++          CXXRecordDecl *Class = NestedClasses[i];
++          for (Decl *Member : Class->decls()) {
++            if (Member->hasAttr<ExcludeFromExplicitInstantiationAttr>())
++              continue;
++            if (NewlyDLLImported) {
++              MemberAlreadyUsed = isUsedImplicitlyInstantiatedMember(Member);
++              if (MemberAlreadyUsed)
++                break;
++            }
++            if (auto *NestedRD = dyn_cast<CXXRecordDecl>(Member);
++                NestedRD && NestedRD->hasDefinition() &&
++                NestedRD->getTemplateSpecializationKind() ==
++                    TSK_ImplicitInstantiation)
++              NestedClasses.push_back(NestedRD);
++          }
++        }
++      } else {
++        MemberAlreadyUsed =
++            NewlyDLLImported &&
++            llvm::any_of(Def->decls(), isUsedImplicitlyInstantiatedMember);
++      }
+       if (MemberAlreadyUsed) {
++        ShouldIgnoreDLLAttr = true;
+         if (Context.getTargetInfo().getTriple().isOSCygMing() &&
+             TSK == TSK_ExplicitInstantiationDeclaration && NewlyDLLImported) {
+           // In MinGW mode, all undefined symbols are also searched from DLLs
+@@ -10555,6 +10584,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
+               << /*implicit|explicit=*/0;
+         }
+       } else {
++        NestedClasses.erase(NestedClasses.begin());
+         dllExportImportClassTemplateSpecialization(*this, Specialization);
+         if (Def != Specialization) {
+           if (!getDLLAttr(Def)) {
+@@ -10569,6 +10599,16 @@ DeclResult Sema::ActOnExplicitInstantiation(
+     }
+ 
+     InstantiateClassTemplateSpecializationMembers(TemplateNameLoc, Def, TSK);
++    if (!ShouldIgnoreDLLAttr) {
++      for (CXXRecordDecl *RD : NestedClasses) {
++        if (getDLLAttr(RD)) {
++          // Affect DLLAttr to nested classes which was implicitly instantiated
++          // before.
++          RD->setTemplateSpecializationKind(TSK);
++          dllExportImportClassTemplateSpecialization(*this, RD);
++        }
++      }
++    }
+   } else {
+ 
+     // Set the template specialization kind.
+-- 
+2.54.0
+

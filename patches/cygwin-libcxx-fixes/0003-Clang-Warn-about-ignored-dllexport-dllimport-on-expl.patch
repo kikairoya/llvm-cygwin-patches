@@ -1,4 +1,4 @@
-From 48834f8bb5b5703c8c9c6ee6e8c4da64a571899d Mon Sep 17 00:00:00 2001
+From ead373975c2d9682d0f68458d2b4899badabb661 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 15 Mar 2026 18:19:23 +0900
 Subject: [PATCH 03/37] [Clang] Warn about ignored dllexport/dllimport on
@@ -10,7 +10,7 @@ Subject: [PATCH 03/37] [Clang] Warn about ignored dllexport/dllimport on
  2 files changed, 69 insertions(+), 36 deletions(-)
 
 diff --git a/clang/include/clang/Basic/DiagnosticSemaKinds.td b/clang/include/clang/Basic/DiagnosticSemaKinds.td
-index 4e3585b7b8191d55fee60c1e9576a99a2f6820e5..c13741c0a120252c92cbe2d6cc520d6d91c33d4d 100644
+index d3e2d616a8b8068cf2abf58e367a40a7b0ecd6ea..7e8a0c9761b6e71f4448024b0f3810ed107ce576 100644
 --- a/clang/include/clang/Basic/DiagnosticSemaKinds.td
 +++ b/clang/include/clang/Basic/DiagnosticSemaKinds.td
 @@ -3820,6 +3820,9 @@ def warn_dllimport_dropped_from_inline_function : Warning<

@@ -1,7 +1,7 @@
-From 9e7b75b70a31707f00d5d5d74783433ce709f2fc Mon Sep 17 00:00:00 2001
+From e4cdf870f659a4d8bed00504f0ff0f5488c5e1b6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 9 Jul 2025 21:23:51 +0900
-Subject: [PATCH 37/52] [Clang-Python][Test][Cygwin] Make check-clang-python
+Subject: [PATCH 40/63] [Clang-Python][Test][Cygwin] Make check-clang-python
  runnable
 
 ---

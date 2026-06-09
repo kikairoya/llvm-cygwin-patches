@@ -1,4 +1,4 @@
-From 219cc7be32a17393f56f363d5fdbff2de6ae37be Mon Sep 17 00:00:00 2001
+From 696d23cc6adba962492dbe843f301c508ec76672 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 21:20:11 +0900
 Subject: [PATCH 32/37] [Clang-tools] Add an option
@@ -56,10 +56,10 @@ index 0c2dea328f856291694426a1a1e6b33435c0a50e..62400e6d3c01246e4b7930ce9a780edd
    )
  
 diff --git a/clang/tools/clang-nvlink-wrapper/CMakeLists.txt b/clang/tools/clang-nvlink-wrapper/CMakeLists.txt
-index 8df5e4294755f4f90a2ded5d8d5e97558d4595f4..e99839d27d98aabed02d115dc64bc2add937ad6e 100644
+index 846fa952ba58d2782ae073e1cabb493b70b219d6..36a82901b12d42822997694ccb38de518557e06f 100644
 --- a/clang/tools/clang-nvlink-wrapper/CMakeLists.txt
 +++ b/clang/tools/clang-nvlink-wrapper/CMakeLists.txt
-@@ -37,7 +37,8 @@ set(CLANG_NVLINK_WRAPPER_LIB_DEPS
+@@ -36,7 +36,8 @@ set(CLANG_NVLINK_WRAPPER_LIB_DEPS
    clangBasic
    )
  
@@ -70,10 +70,10 @@ index 8df5e4294755f4f90a2ded5d8d5e97558d4595f4..e99839d27d98aabed02d115dc64bc2ad
    ${CLANG_NVLINK_WRAPPER_LIB_DEPS}
    )
 diff --git a/clang/tools/clang-sycl-linker/CMakeLists.txt b/clang/tools/clang-sycl-linker/CMakeLists.txt
-index 84f24603ea87dcb1f8b458a9392411ea20f69497..2d5f9ad4d2e8d963a732dd6ddb9ce15f5f6eb4fe 100644
+index a2104084dad877dfb27b699d88227ca56f575869..07f83962b1cb3a99d649fc65619a2580d7db24c6 100644
 --- a/clang/tools/clang-sycl-linker/CMakeLists.txt
 +++ b/clang/tools/clang-sycl-linker/CMakeLists.txt
-@@ -36,7 +36,8 @@ set(CLANG_SYCL_LINKER_LIB_DEPS
+@@ -35,7 +35,8 @@ set(CLANG_SYCL_LINKER_LIB_DEPS
    clangBasic
    )
  

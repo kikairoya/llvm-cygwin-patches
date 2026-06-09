@@ -1,7 +1,7 @@
-From a26e30025bb2474e65eaf839571bedf6c16cb048 Mon Sep 17 00:00:00 2001
+From 0d7575241ebb04a5d7218732cf642bafdab5d4d2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Feb 2026 19:54:03 +0900
-Subject: [PATCH 40/63] don't use Cygwin provided stdatomic.h
+Subject: [PATCH 37/52] don't use Cygwin provided stdatomic.h
 
 ---
  clang/lib/Headers/stdatomic.h | 1 +

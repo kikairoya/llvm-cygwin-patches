@@ -1,4 +1,4 @@
-From 2291f98d1d3d2c60e4c623edbd639fc1a24aa529 Mon Sep 17 00:00:00 2001
+From 32a2a22f797e964b73ed3885bc5036e1cb46004c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 56/63] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -250,7 +250,7 @@ index 6466e1870dc98e38426d3e6bde3479bc82cdbeab..70ac8b0e6a3c620b9032cd5c54b78b97
  //
  // Generate all the types of files we can bundle.
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 17e318ba9d2823ce6f8897c7c715ed3ca3c8b713..102917aa671f01ead904803b740c4c4d3ac50219 100644
+index fbf92e500975f8dccc685354cd5e3e3e50b482ed..1a862c22d7b9a5e6cf224931988b58fe39046793 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
 @@ -333,7 +333,8 @@ if config.clang_default_cxx_stdlib != "":

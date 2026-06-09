@@ -1,4 +1,4 @@
-From 5f1661a1b53433a07a9512d1c296a9d333efcd82 Mon Sep 17 00:00:00 2001
+From de1983aac8c2fe33d024be64257d1eab7182aa02 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 14 Apr 2026 21:09:52 +0900
 Subject: [PATCH 35/37] adjust ssaf-plugin test
@@ -6,9 +6,11 @@ Subject: [PATCH 35/37] adjust ssaf-plugin test
 ---
  .../lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt  | 2 +-
  clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test        | 2 ++
+ .../Analysis/Scalable/ssaf-format/TUSummary/round-trip.test     | 2 ++
+ .../Analysis/Scalable/ssaf-format/TUSummary/summary-data.test   | 2 ++
  .../Analysis/Scalable/ssaf-format/WPASuite/with-plugin.test     | 2 ++
  clang/test/CMakeLists.txt                                       | 2 +-
- 4 files changed, 6 insertions(+), 2 deletions(-)
+ 6 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt b/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt
 index b77ffc49c0f9f8a4863392499b32161f78e7eaa2..f3d41914b767698f309693561150fec7a28b9b0b 100644
@@ -33,6 +35,32 @@ index 0abdcef15a4499063cd29a30a60e8f0d00f74ad8..09e214669409fbe86bba77484b30690b
  
  // RUN: rm -rf %t
  // RUN: mkdir -p %t
+diff --git a/clang/test/Analysis/Scalable/ssaf-format/TUSummary/round-trip.test b/clang/test/Analysis/Scalable/ssaf-format/TUSummary/round-trip.test
+index 0e59cc25057a370fcf2a315f35d55b6a0ba400b9..deacd1ddabd5ad3dc41c16770cbc6b718d1c9568 100644
+--- a/clang/test/Analysis/Scalable/ssaf-format/TUSummary/round-trip.test
++++ b/clang/test/Analysis/Scalable/ssaf-format/TUSummary/round-trip.test
+@@ -2,6 +2,8 @@
+ // diff the result against the original.
+ 
+ // REQUIRES: plugins
++// UNSUPPORTED: system-windows
++// UNSUPPORTED: system-cygwin
+ 
+ // RUN: rm -rf %t
+ // RUN: mkdir -p %t
+diff --git a/clang/test/Analysis/Scalable/ssaf-format/TUSummary/summary-data.test b/clang/test/Analysis/Scalable/ssaf-format/TUSummary/summary-data.test
+index 2c1d9fac270adca91f2ca6939cd2756672e77f95..47d04cd348d51e7e337f4760baf767356d08f47c 100644
+--- a/clang/test/Analysis/Scalable/ssaf-format/TUSummary/summary-data.test
++++ b/clang/test/Analysis/Scalable/ssaf-format/TUSummary/summary-data.test
+@@ -2,6 +2,8 @@
+ // PairsEntitySummary plugin error tests that exercise the same parsing path.
+ 
+ // REQUIRES: plugins
++// UNSUPPORTED: system-windows
++// UNSUPPORTED: system-cygwin
+ 
+ // ============================================================================
+ // entitySummaryFromJSON() / encodingDataMapEntryFromJSON() errors
 diff --git a/clang/test/Analysis/Scalable/ssaf-format/WPASuite/with-plugin.test b/clang/test/Analysis/Scalable/ssaf-format/WPASuite/with-plugin.test
 index b0a419842e80d298048fa20f6b01497d8ae5d440..40a8b0a19913093cf7efdf2a34153ff9e972b3be 100644
 --- a/clang/test/Analysis/Scalable/ssaf-format/WPASuite/with-plugin.test

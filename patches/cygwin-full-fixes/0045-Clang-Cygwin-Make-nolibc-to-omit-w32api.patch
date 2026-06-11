@@ -1,4 +1,4 @@
-From 928eb1abe61453bddb0df7f041fbfdf20e34d596 Mon Sep 17 00:00:00 2001
+From 9a20a2bedfde3fefe5573cde39fd43f8c8604230 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 9 Apr 2026 19:11:20 +0900
 Subject: [PATCH 45/52] [Clang][Cygwin] Make `-nolibc` to omit w32api
@@ -9,7 +9,7 @@ However, -lcygwin is still linked, since it is the Cygwin.
  1 file changed, 9 insertions(+), 10 deletions(-)
 
 diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
-index ecff9c400e1ede73b535eba7b17ee522bb268916..9e1a83836653dde692dc4fe920bfdfc8c5f49e42 100644
+index e4bee70abe0b4ffae10cbd4c0252e9b110a14a14..f4d6c401a4efc6a65aa1b88182a18f4a1b05c230 100644
 --- a/clang/lib/Driver/ToolChains/Cygwin.cpp
 +++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
 @@ -372,19 +372,18 @@ void cygwin::Linker::ConstructJob(Compilation &C, const JobAction &JA,

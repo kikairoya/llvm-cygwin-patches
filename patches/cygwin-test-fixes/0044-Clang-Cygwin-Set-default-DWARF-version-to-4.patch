@@ -1,4 +1,4 @@
-From 69eb72da95006da26c80738689e6eccde831d248 Mon Sep 17 00:00:00 2001
+From a46aebd684fc1ab51efd738c4ab806e0247f1f84 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 4 Jan 2026 21:53:48 +0900
 Subject: [PATCH 44/63] [Clang][Cygwin] Set default DWARF version to 4
@@ -8,12 +8,12 @@ Subject: [PATCH 44/63] [Clang][Cygwin] Set default DWARF version to 4
  1 file changed, 2 insertions(+)
 
 diff --git a/clang/lib/Driver/ToolChains/Cygwin.h b/clang/lib/Driver/ToolChains/Cygwin.h
-index 75e57945c0688f5381785014a516803e3a66302b..0678c96e8d360f65cd6da563004e1fbae7b976cb 100644
+index a597de8f992711e42617e4da9073d1a59e7fb7e5..b81793e3d5e29b126e0ba300c8982146927dedb3 100644
 --- a/clang/lib/Driver/ToolChains/Cygwin.h
 +++ b/clang/lib/Driver/ToolChains/Cygwin.h
-@@ -32,6 +32,8 @@ public:
-                              llvm::opt::ArgStringList &CC1Args,
-                              Action::OffloadKind DeviceOffloadKind) const override;
+@@ -34,6 +34,8 @@ public:
+                         llvm::StringRef BoundArch,
+                         Action::OffloadKind DeviceOffloadKind) const override;
  
 +  unsigned GetDefaultDwarfVersion() const override { return 4; }
 +

@@ -1,4 +1,4 @@
-From eab35cabcdad72f4f73fde21918e769242972c5f Mon Sep 17 00:00:00 2001
+From 2ee55fa9a4897b5f523b44f6223d6fe34ad42ada Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:44:20 +0900
 Subject: [PATCH 62/63] fix tests that use Bye
@@ -40,10 +40,10 @@ index a87e36c7c725c87c602f9a5c912f37e7721aaecb..e19334502a2f3710b3493d38c84e6986
  // XFAIL: target={{.*}}-aix{{.*}}
  // CHECK-INACTIVE-NOT: Bye
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 1a862c22d7b9a5e6cf224931988b58fe39046793..7b1748371595ccc3782ef7c050d226ba5bea5133 100644
+index ba51a5cb1f8ddf51a0ec708d41c6a1d578ee436b..2e2abc01bc27a5cd756b6d6e4b47a339ffe4fd59 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -318,6 +318,9 @@ if "aarch64" in config.host_arch:
+@@ -322,6 +322,9 @@ if "aarch64" in config.host_arch:
  if not (config.build_shared_libs or config.link_llvm_dylib or config.link_clang_dylib):
      config.available_features.add("static-libs")
  

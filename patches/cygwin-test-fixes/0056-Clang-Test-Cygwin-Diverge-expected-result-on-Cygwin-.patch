@@ -1,4 +1,4 @@
-From 32a2a22f797e964b73ed3885bc5036e1cb46004c Mon Sep 17 00:00:00 2001
+From 4b959fc521fc1d5101c44821045b884af6c790ac Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 56/63] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -225,7 +225,7 @@ index 64828b5cdd86827664016db622a73261406535b8..172df10d8084af8f52dfaaf23c1f8f3e
  @import MOdule; // expected-error{{module 'MOdule' not found}}
  @import Module;
 diff --git a/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c b/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
-index 5c5b7b1eabfab2a9be9458233e15a67cba048668..e2c599bb1e0a2dd23038f42572dc7b3fe02ab744 100644
+index 80ac493825aad4e24e7bab2a1de0b95ca72c9c11..c7a7da98c85932154bf42339b7f746add3271c38 100644
 --- a/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
 +++ b/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
 @@ -1,6 +1,9 @@
@@ -250,10 +250,10 @@ index 6466e1870dc98e38426d3e6bde3479bc82cdbeab..70ac8b0e6a3c620b9032cd5c54b78b97
  //
  // Generate all the types of files we can bundle.
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index fbf92e500975f8dccc685354cd5e3e3e50b482ed..1a862c22d7b9a5e6cf224931988b58fe39046793 100644
+index dc0d87f0a29a110d043dff1b8efb9296603eced8..ba51a5cb1f8ddf51a0ec708d41c6a1d578ee436b 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -333,7 +333,8 @@ if config.clang_default_cxx_stdlib != "":
+@@ -337,7 +337,8 @@ if config.clang_default_cxx_stdlib != "":
      )
  
  # As of 2011.08, crash-recovery tests still do not pass on FreeBSD.
@@ -263,7 +263,7 @@ index fbf92e500975f8dccc685354cd5e3e3e50b482ed..1a862c22d7b9a5e6cf224931988b58fe
      config.available_features.add("crash-recovery")
  
  # ANSI escape sequences in non-dumb terminal
-@@ -387,7 +388,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
+@@ -391,7 +392,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
  
  # [PR18856] Depends to remove opened file. On win32, a file could be removed
  # only if all handles were closed.

@@ -1,4 +1,4 @@
-From 02e566a6032a244c356c1b9dadbf6f78e556b13d Mon Sep 17 00:00:00 2001
+From f1d8c4ece4ac55087e45467ba9c516f897b5e3e3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 2 Nov 2025 12:52:40 +0900
 Subject: [PATCH 18/37] implement PE DLL support in abilist

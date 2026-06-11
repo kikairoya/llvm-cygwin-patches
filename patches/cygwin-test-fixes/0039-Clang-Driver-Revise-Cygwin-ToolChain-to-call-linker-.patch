@@ -1,7 +1,7 @@
-From b0892dfe5d0d041f3ec922199719a625901468b0 Mon Sep 17 00:00:00 2001
+From a6a66efeb9c1d6da8d0769e30f07cc3f109dc4e7 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 20:09:56 +0900
-Subject: [PATCH 35/63] [Clang][Driver] Revise Cygwin ToolChain to call linker
+Subject: [PATCH 39/63] [Clang][Driver] Revise Cygwin ToolChain to call linker
  directly
 
 ...so that libc++, compiler-rt, and libunwind can be used by the
@@ -52,10 +52,10 @@ Co-authored-by: kikairoya <kikairoya@gmail.com>
  create mode 100644 clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/gcc/x86_64-pc-msys/10/crtend.o
 
 diff --git a/clang/lib/Driver/ToolChain.cpp b/clang/lib/Driver/ToolChain.cpp
-index ccfc022f7942702cf3c4128cb4181f470f3867d7..ae283946c7d000811036ce5be128d727615d897f 100644
+index fc4bcfc2fe8657e0c9fbbcb84fb0f7a3ce94a843..96a59b2c9b7290b423099aec8301877d14b75020 100644
 --- a/clang/lib/Driver/ToolChain.cpp
 +++ b/clang/lib/Driver/ToolChain.cpp
-@@ -827,6 +827,8 @@ static StringRef getArchNameForCompilerRTLib(const ToolChain &TC,
+@@ -828,6 +828,8 @@ static StringRef getArchNameForCompilerRTLib(const ToolChain &TC,
  StringRef ToolChain::getOSLibName() const {
    if (Triple.isOSDarwin())
      return "darwin";

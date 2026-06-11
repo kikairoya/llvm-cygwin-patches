@@ -1,4 +1,4 @@
-From 302b15c12dd4f36722842c1d3d064a2e996ff996 Mon Sep 17 00:00:00 2001
+From 8a5e3386e791bc1082ed6e4005c2fc2441913ed8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 2/6] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 2/6] [compiler-rt][Cygwin] Add support for Cygwin target
  6 files changed, 30 insertions(+), 14 deletions(-)
 
 diff --git a/compiler-rt/cmake/config-ix.cmake b/compiler-rt/cmake/config-ix.cmake
-index 2610abcd984fcb369e122b5822cf2c5a483161b1..045031bc8ca44334ff299242239b403e6af3b742 100644
+index 083f1c98d0f169da99d28fafbe808b4c4e5a7fdc..83c9ea5cbd3fc73c70ad53fc4f8b2f5502a8d2b7 100644
 --- a/compiler-rt/cmake/config-ix.cmake
 +++ b/compiler-rt/cmake/config-ix.cmake
 @@ -66,6 +66,19 @@ if (C_SUPPORTS_NODEFAULTLIBS_FLAG)
@@ -46,7 +46,7 @@ index 2610abcd984fcb369e122b5822cf2c5a483161b1..045031bc8ca44334ff299242239b403e
  else()
    set(COMPILER_RT_HAS_PROFILE FALSE)
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index 1646b7077d7d18bda75ed5d26e48ef288980ff92..6b939ea53046e5e11924f414e645997aac307cc6 100644
+index 9a0ca3bad018806deb018d540f00395885a1aa01..7193ed4f46baa0ac541fdb02d91766aae5a60833 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -100,7 +100,7 @@ index 1646b7077d7d18bda75ed5d26e48ef288980ff92..6b939ea53046e5e11924f414e645997a
      set(i386_SOURCES
        ${i386_SOURCES}
        i386/chkstk.S
-@@ -671,7 +673,7 @@ set(arm_min_SOURCES
+@@ -679,7 +681,7 @@ set(arm_min_SOURCES
    ${arm_EABI_SOURCES}
  )
  
@@ -109,7 +109,7 @@ index 1646b7077d7d18bda75ed5d26e48ef288980ff92..6b939ea53046e5e11924f414e645997a
    set(arm_SOURCES
      arm/aeabi_idivmod.S
      arm/aeabi_ldivmod.S
-@@ -782,7 +784,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
+@@ -790,7 +792,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
    endforeach(size)
  endforeach(pat)
  

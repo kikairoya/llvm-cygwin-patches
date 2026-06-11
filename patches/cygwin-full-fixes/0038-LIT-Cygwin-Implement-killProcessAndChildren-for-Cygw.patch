@@ -1,4 +1,4 @@
-From cda606dc8f857f27b3b749382b330e0b73f8ed64 Mon Sep 17 00:00:00 2001
+From ca6b9ac12e9b4d8c710c539336d847ca948e5743 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 14:11:39 +0900
 Subject: [PATCH 38/52] [LIT][Cygwin] Implement killProcessAndChildren for

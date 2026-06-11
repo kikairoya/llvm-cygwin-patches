@@ -1,4 +1,4 @@
-From 63e529bca7a5af96fb49935689f812a025647f99 Mon Sep 17 00:00:00 2001
+From baa38329fae5c4e46a5af2d88fbbebd3a72d2b80 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 14 Apr 2026 21:09:52 +0900
 Subject: [PATCH 35/37] adjust ssaf-plugin test
@@ -6,11 +6,12 @@ Subject: [PATCH 35/37] adjust ssaf-plugin test
 ---
  .../lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt  | 2 +-
  clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test        | 2 ++
+ .../Analysis/Scalable/ssaf-format/LUSummary/round-trip.test     | 2 ++
  .../Analysis/Scalable/ssaf-format/TUSummary/round-trip.test     | 2 ++
  .../Analysis/Scalable/ssaf-format/TUSummary/summary-data.test   | 2 ++
  .../Analysis/Scalable/ssaf-format/WPASuite/with-plugin.test     | 2 ++
  clang/test/CMakeLists.txt                                       | 2 +-
- 6 files changed, 10 insertions(+), 2 deletions(-)
+ 7 files changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt b/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt
 index b77ffc49c0f9f8a4863392499b32161f78e7eaa2..f3d41914b767698f309693561150fec7a28b9b0b 100644
@@ -28,6 +29,19 @@ index 0abdcef15a4499063cd29a30a60e8f0d00f74ad8..09e214669409fbe86bba77484b30690b
 +++ b/clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test
 @@ -1,6 +1,8 @@
  // Tests for clang-ssaf-analyzer that require plugin support.
+ 
+ // REQUIRES: plugins
++// UNSUPPORTED: system-windows
++// UNSUPPORTED: system-cygwin
+ 
+ // RUN: rm -rf %t
+ // RUN: mkdir -p %t
+diff --git a/clang/test/Analysis/Scalable/ssaf-format/LUSummary/round-trip.test b/clang/test/Analysis/Scalable/ssaf-format/LUSummary/round-trip.test
+index 6761ec436fd7f6b8f83836b68b5e33e072fe4693..3c123ebd4a227dc9cc3b6430bae5eb4a9b21a52f 100644
+--- a/clang/test/Analysis/Scalable/ssaf-format/LUSummary/round-trip.test
++++ b/clang/test/Analysis/Scalable/ssaf-format/LUSummary/round-trip.test
+@@ -2,6 +2,8 @@
+ // diff the result against the original.
  
  // REQUIRES: plugins
 +// UNSUPPORTED: system-windows

@@ -1,4 +1,4 @@
-From b6d9494e17f876b9e8a8d9bad14e0b5f768862f9 Mon Sep 17 00:00:00 2001
+From eac159284bc0498ce2e65f1233e1c41d96b9a666 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
 Subject: [PATCH 02/37] [LLVM] Annotate LLVM_TEMPLATE_ABI

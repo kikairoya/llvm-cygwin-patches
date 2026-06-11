@@ -1,4 +1,4 @@
-From 96c27be0c681bb8292be971a7adc717f9f764b2f Mon Sep 17 00:00:00 2001
+From 114ab3fd79eee2611d2fad25548cbae1e01a4489 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 10 Jun 2025 21:42:25 +0900
 Subject: [PATCH 41/52] [LIT][Cygwin] Don't add `-gnu` to make Itanium ABI

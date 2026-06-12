@@ -1,17 +1,18 @@
-From baa38329fae5c4e46a5af2d88fbbebd3a72d2b80 Mon Sep 17 00:00:00 2001
+From 55a6ee212405f490395885345fddc9f287f5a21c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Tue, 14 Apr 2026 21:09:52 +0900
+Date: Fri, 12 Jun 2026 20:51:31 +0900
 Subject: [PATCH 35/63] adjust ssaf-plugin test
 
 ---
  .../lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt  | 2 +-
  clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test        | 2 ++
  .../Analysis/Scalable/ssaf-format/LUSummary/round-trip.test     | 2 ++
+ .../Analysis/Scalable/ssaf-format/LUSummary/summary-data.test   | 2 ++
  .../Analysis/Scalable/ssaf-format/TUSummary/round-trip.test     | 2 ++
  .../Analysis/Scalable/ssaf-format/TUSummary/summary-data.test   | 2 ++
  .../Analysis/Scalable/ssaf-format/WPASuite/with-plugin.test     | 2 ++
  clang/test/CMakeLists.txt                                       | 2 +-
- 7 files changed, 12 insertions(+), 2 deletions(-)
+ 8 files changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt b/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt
 index b77ffc49c0f9f8a4863392499b32161f78e7eaa2..f3d41914b767698f309693561150fec7a28b9b0b 100644
@@ -49,6 +50,19 @@ index 6761ec436fd7f6b8f83836b68b5e33e072fe4693..3c123ebd4a227dc9cc3b6430bae5eb4a
  
  // RUN: rm -rf %t
  // RUN: mkdir -p %t
+diff --git a/clang/test/Analysis/Scalable/ssaf-format/LUSummary/summary-data.test b/clang/test/Analysis/Scalable/ssaf-format/LUSummary/summary-data.test
+index dcf6a31f5c50441c3213132fadf0ddb619aa4995..816e68a236a7b532f5c3b176e22d76abb98348f6 100644
+--- a/clang/test/Analysis/Scalable/ssaf-format/LUSummary/summary-data.test
++++ b/clang/test/Analysis/Scalable/ssaf-format/LUSummary/summary-data.test
+@@ -2,6 +2,8 @@
+ // PairsEntitySummary plugin error tests that exercise the same parsing path.
+ 
+ // REQUIRES: plugins
++// UNSUPPORTED: system-windows
++// UNSUPPORTED: system-cygwin
+ 
+ // ============================================================================
+ // readLUSummary() errors
 diff --git a/clang/test/Analysis/Scalable/ssaf-format/TUSummary/round-trip.test b/clang/test/Analysis/Scalable/ssaf-format/TUSummary/round-trip.test
 index 0e59cc25057a370fcf2a315f35d55b6a0ba400b9..deacd1ddabd5ad3dc41c16770cbc6b718d1c9568 100644
 --- a/clang/test/Analysis/Scalable/ssaf-format/TUSummary/round-trip.test

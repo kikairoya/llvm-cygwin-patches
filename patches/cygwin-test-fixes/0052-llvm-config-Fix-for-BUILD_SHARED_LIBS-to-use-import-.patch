@@ -1,4 +1,4 @@
-From d56ae364078ce32cb41a8eaa2527f9a5b1121ce6 Mon Sep 17 00:00:00 2001
+From a6ff6799d3ae86860c0ba32daeda11ec648075c6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:55:10 +0900
 Subject: [PATCH 52/63] [llvm-config] Fix for BUILD_SHARED_LIBS to use import
@@ -9,7 +9,7 @@ Subject: [PATCH 52/63] [llvm-config] Fix for BUILD_SHARED_LIBS to use import
  1 file changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/llvm/tools/llvm-config/llvm-config.cpp b/llvm/tools/llvm-config/llvm-config.cpp
-index 24ea264419af4a5be8c994e0ae98aca3738e77b1..3ce655ed40acba1811ac8b45d91d2595f8525d67 100644
+index 76aa9f82eb0a7706248ac176af11ffa5681c3ec6..ca88cc06496752441280bef113d96a5b4c6ffda8 100644
 --- a/llvm/tools/llvm-config/llvm-config.cpp
 +++ b/llvm/tools/llvm-config/llvm-config.cpp
 @@ -384,18 +384,18 @@ int main(int argc, char **argv) {

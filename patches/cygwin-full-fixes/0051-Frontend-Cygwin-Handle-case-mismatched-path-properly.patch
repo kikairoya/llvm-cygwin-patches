@@ -1,4 +1,4 @@
-From 0779388048ca1b73471dc9492929645a8a03e93f Mon Sep 17 00:00:00 2001
+From a865af744bcf98e59a28e03baff56aa8649246a0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 2 May 2025 23:16:55 +0900
 Subject: [PATCH 51/52] [Frontend][Cygwin] Handle case-mismatched path properly
@@ -14,7 +14,7 @@ using Win32API.
  2 files changed, 37 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Frontend/DependencyFile.cpp b/clang/lib/Frontend/DependencyFile.cpp
-index d56e17f14e9bc840862ccb6cb84b29ee94d3747f..0893978d87e12417ca79217a0b5247453ecbe6bc 100644
+index 00f4a54269cfa349497078e6305099954cd3d006..67c656a8bf0616dc45f7021f75354c6e60a002cd 100644
 --- a/clang/lib/Frontend/DependencyFile.cpp
 +++ b/clang/lib/Frontend/DependencyFile.cpp
 @@ -199,7 +199,7 @@ void DependencyCollector::maybeAddDependency(StringRef Filename,

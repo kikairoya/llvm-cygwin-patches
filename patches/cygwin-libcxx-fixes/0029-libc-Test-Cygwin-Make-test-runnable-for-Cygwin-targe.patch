@@ -1,4 +1,4 @@
-From 0d10b16e997cfd4b4d4b00a2df1c85dc8a4f7442 Mon Sep 17 00:00:00 2001
+From 65e2348732cb3dcb6ab8a5944efc2cd2ffa3a8f8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 29/37] [libc++][Test][Cygwin] Make test runnable for Cygwin
@@ -67,7 +67,7 @@ index 0000000000000000000000000000000000000000..7e4953b3fd240ef18153dd508c680bd1
 +    lit_config
 +)
 diff --git a/libcxx/test/extensions/clang/clang_modules_include.gen.py b/libcxx/test/extensions/clang/clang_modules_include.gen.py
-index 28661049d6e85c25547d2c63a53d89d31592f679..732de92f8b3b24c5f7ca23ab168b0fbed3859e86 100644
+index ed058cd908511722b20869a21cf0feecddd3fc61..ec9513a6e72a141eb5fe77e888c7ccaa564d5348 100644
 --- a/libcxx/test/extensions/clang/clang_modules_include.gen.py
 +++ b/libcxx/test/extensions/clang/clang_modules_include.gen.py
 @@ -20,6 +20,7 @@
@@ -79,10 +79,10 @@ index 28661049d6e85c25547d2c63a53d89d31592f679..732de92f8b3b24c5f7ca23ab168b0fbe
  # The Android headers don't appear to be compatible with modules yet
  # UNSUPPORTED: LIBCXX-ANDROID-FIXME
 diff --git a/libcxx/test/libcxx/system_reserved_names.gen.py b/libcxx/test/libcxx/system_reserved_names.gen.py
-index bb0bbeb1caf8291a71bcf7c3bc345ba6c48dd919..7fd2b459d3353cb817fe557f79e52c5b7330950c 100644
+index aaaa385409be4077bf2ad474af34313365bd6ece..5df1cb13cfbcf0efdff1ae9bbfccc659c9e684bd 100644
 --- a/libcxx/test/libcxx/system_reserved_names.gen.py
 +++ b/libcxx/test/libcxx/system_reserved_names.gen.py
-@@ -115,7 +115,7 @@ for header in public_headers:
+@@ -113,7 +113,7 @@ for header in public_headers:
  #endif
  
  // Newlib & picolibc use __input as a parameter name of a64l & l64a
@@ -91,7 +91,7 @@ index bb0bbeb1caf8291a71bcf7c3bc345ba6c48dd919..7fd2b459d3353cb817fe557f79e52c5b
  # define __input SYSTEM_RESERVED_NAME
  #endif
  #define __output SYSTEM_RESERVED_NAME
-@@ -170,8 +170,10 @@ for header in public_headers:
+@@ -168,8 +168,10 @@ for header in public_headers:
  #define Xs SYSTEM_RESERVED_NAME
  
  // The classic Windows min/max macros
@@ -102,7 +102,7 @@ index bb0bbeb1caf8291a71bcf7c3bc345ba6c48dd919..7fd2b459d3353cb817fe557f79e52c5b
  
  // Test to make sure curses has no conflicting macros with the standard library
  #define move SYSTEM_RESERVED_NAME
-@@ -195,8 +197,10 @@ for header in public_headers:
+@@ -193,8 +195,10 @@ for header in public_headers:
  // Make sure we don't swallow the definition of the macros we push/pop
  #define STRINGIFY_IMPL(x) #x
  #define STRINGIFY(x) STRINGIFY_IMPL(x)

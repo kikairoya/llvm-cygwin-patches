@@ -1,4 +1,4 @@
-From 55a6ee212405f490395885345fddc9f287f5a21c Mon Sep 17 00:00:00 2001
+From e6462b96eead52a5ea674aed69fe418dc0585c3d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 12 Jun 2026 20:51:31 +0900
 Subject: [PATCH 35/52] adjust ssaf-plugin test

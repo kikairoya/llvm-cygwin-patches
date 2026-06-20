@@ -1,4 +1,4 @@
-From 3b02068b8048cb7ec1fe42a5c2262fc31f8f5a82 Mon Sep 17 00:00:00 2001
+From a8dbfb9fe056dc76ab410aa2632f6f889924541c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Dec 2025 22:40:42 +0900
 Subject: [PATCH 31/52] Don't link LLVMSupport twice

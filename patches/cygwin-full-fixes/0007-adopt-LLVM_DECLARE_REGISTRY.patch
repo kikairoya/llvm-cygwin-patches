@@ -1,4 +1,4 @@
-From c3f060f87589a3988a6845532ddf10253d0a4f91 Mon Sep 17 00:00:00 2001
+From 2efa49571a5e92ed1e11b68f4cf69e9a2b5b0d34 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 07/52] adopt LLVM_DECLARE_REGISTRY

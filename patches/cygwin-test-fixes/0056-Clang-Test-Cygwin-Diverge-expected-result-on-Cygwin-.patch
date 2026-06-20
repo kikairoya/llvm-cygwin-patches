@@ -1,4 +1,4 @@
-From c7065588dd07849297b392bc4d14f69132da0474 Mon Sep 17 00:00:00 2001
+From c441a3cce5e6a480c13d6de88bcd2126d9eb74be Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 56/63] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -21,8 +21,8 @@ Subject: [PATCH 56/63] [Clang][Test][Cygwin] Diverge expected result on Cygwin
  clang/test/Modules/inferred-framework-case.m        |  2 +-
  .../linker-wrapper-hip-no-rdc.c                     |  3 +++
  .../test/OffloadTools/clang-offload-bundler/basic.c |  2 +-
- clang/test/lit.cfg.py                               |  5 +++--
- 17 files changed, 40 insertions(+), 22 deletions(-)
+ clang/test/lit.cfg.py                               |  7 +++++--
+ 17 files changed, 42 insertions(+), 22 deletions(-)
 
 diff --git a/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c b/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c
 index ccfdc1a1c6cfa9417c28e6abccafb08d9fe42d0e..5567ec1ab0e43c83ec6f5da8bea7d8b1d7da07d6 100644
@@ -140,7 +140,7 @@ index d1267c02178889940d0a8d909a71bc6e0b68049c..ab17513e5de22f963b04f56563c76451
  // RUN: bash -c env | grep LD_LIBRARY_PATH | sed -ne 's/^.*=//p' | tr -d '\n' > %t.ld_library_path
  // The PATH variable is heavily used when trying to find a linker.
 diff --git a/clang/test/Driver/hip-version.hip b/clang/test/Driver/hip-version.hip
-index ccefedf816d457452717e9418ce9723046e2e674..76dfa4078c4b1fcbd09cf1012bc19bcc01467a82 100644
+index 9d5833142fe9dccbc1cff5d6eae027b0977d396a..0aa2896f079215a5bbba52d4770a103834abf2fb 100644
 --- a/clang/test/Driver/hip-version.hip
 +++ b/clang/test/Driver/hip-version.hip
 @@ -1,6 +1,7 @@
@@ -250,20 +250,22 @@ index 6466e1870dc98e38426d3e6bde3479bc82cdbeab..70ac8b0e6a3c620b9032cd5c54b78b97
  //
  // Generate all the types of files we can bundle.
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index dc0d87f0a29a110d043dff1b8efb9296603eced8..ba51a5cb1f8ddf51a0ec708d41c6a1d578ee436b 100644
+index f7b3a77266cb8322a699388be0e21504b9ade569..9d9290d040d7905f39e4cd9d5fd3712f65004c82 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -337,7 +337,8 @@ if config.clang_default_cxx_stdlib != "":
+@@ -336,7 +336,10 @@ if config.clang_default_cxx_stdlib != "":
+         "default-cxx-stdlib={}".format(config.clang_default_cxx_stdlib)
      )
  
- # As of 2011.08, crash-recovery tests still do not pass on FreeBSD.
--if platform.system() not in ["FreeBSD"]:
+-config.available_features.add("crash-recovery")
++
 +# Cygwin has instability about crashing
-+if platform.system() not in ["FreeBSD"] and sys.platform not in ["cygwin"]:
-     config.available_features.add("crash-recovery")
++if sys.platform != "cygwin":
++    config.available_features.add("crash-recovery")
  
  # ANSI escape sequences in non-dumb terminal
-@@ -391,7 +392,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
+ if platform.system() not in ["Windows"]:
+@@ -389,7 +392,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
  
  # [PR18856] Depends to remove opened file. On win32, a file could be removed
  # only if all handles were closed.

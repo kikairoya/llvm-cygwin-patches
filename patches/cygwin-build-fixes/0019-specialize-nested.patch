@@ -1,4 +1,4 @@
-From eef24f972d79fc1d96e6bbe01872819e5b5f69cc Mon Sep 17 00:00:00 2001
+From 82ca5dbc733966afaddb8027ef2da77d4b696638 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:31 +0900
 Subject: [PATCH 19/37] specialize nested
@@ -23,7 +23,7 @@ index 6f36387ae4fc739e404bb6abe724e8b8031e9a6d..8fa33b135c14c5cbbb58c4a140a92b1b
        continue;
      }
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index b5de8d843fd9b44c3de201c4abd07a1c6204f771..4fb5f05b0762202016dc8ba00c42cb1c7c4fc09f 100644
+index 0edd03120ecc92eb79832957789cfdf7ff0e71d2..49216f5146e7a64cea01b748942c99f99977f508 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
 @@ -10195,8 +10195,8 @@ static bool ScopeSpecifierHasTemplateId(const CXXScopeSpec &SS) {

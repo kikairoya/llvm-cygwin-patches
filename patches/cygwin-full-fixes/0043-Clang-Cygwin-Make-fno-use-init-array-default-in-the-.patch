@@ -1,4 +1,4 @@
-From 50600827b79d76eb485ae0d0c708972c68be677a Mon Sep 17 00:00:00 2001
+From cbc9d2f5d9a38a546f7f8fdf77372d14115739de Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Oct 2025 13:01:49 +0900
 Subject: [PATCH 43/52] [Clang][Cygwin] Make -fno-use-init-array default in the
@@ -12,7 +12,7 @@ Aligning with MinGW. Without this, boost/serialization/test/test_singleton.cpp f
  3 files changed, 15 insertions(+)
 
 diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
-index fab67d5d63eb476add3364e439d38e2314f97e3a..e4bee70abe0b4ffae10cbd4c0252e9b110a14a14 100644
+index fab67d5d63eb476add3364e439d38e2314f97e3a..145cdba09957b2b53fcf543a4fa84f2ae0af69bf 100644
 --- a/clang/lib/Driver/ToolChains/Cygwin.cpp
 +++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
 @@ -112,6 +112,14 @@ void Cygwin::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
@@ -20,7 +20,7 @@ index fab67d5d63eb476add3364e439d38e2314f97e3a..e4bee70abe0b4ffae10cbd4c0252e9b1
  }
  
 +void Cygwin::addClangTargetOptions(
-+    const ArgList &DriverArgs, ArgStringList &CC1Args, StringRef BoundArch,
++    const ArgList &DriverArgs, ArgStringList &CC1Args, BoundArch BA,
 +    Action::OffloadKind DeviceOffloadKind) const {
 +  if (!DriverArgs.hasFlag(options::OPT_fuse_init_array,
 +                          options::OPT_fno_use_init_array, false))
@@ -31,7 +31,7 @@ index fab67d5d63eb476add3364e439d38e2314f97e3a..e4bee70abe0b4ffae10cbd4c0252e9b1
                                    const InputInfo &Output,
                                    const InputInfoList &Inputs,
 diff --git a/clang/lib/Driver/ToolChains/Cygwin.h b/clang/lib/Driver/ToolChains/Cygwin.h
-index 0701d41a6360812817bace61bd24b1e9c6fc0270..a597de8f992711e42617e4da9073d1a59e7fb7e5 100644
+index 0701d41a6360812817bace61bd24b1e9c6fc0270..9a1b096f8127d4d26c6ebcdbea12abed73bb21ce 100644
 --- a/clang/lib/Driver/ToolChains/Cygwin.h
 +++ b/clang/lib/Driver/ToolChains/Cygwin.h
 @@ -28,6 +28,12 @@ public:
@@ -41,7 +41,7 @@ index 0701d41a6360812817bace61bd24b1e9c6fc0270..a597de8f992711e42617e4da9073d1a5
 +  void
 +  addClangTargetOptions(const llvm::opt::ArgList &DriverArgs,
 +                        llvm::opt::ArgStringList &CC1Args,
-+                        llvm::StringRef BoundArch,
++                        BoundArch BA,
 +                        Action::OffloadKind DeviceOffloadKind) const override;
 +
  protected:

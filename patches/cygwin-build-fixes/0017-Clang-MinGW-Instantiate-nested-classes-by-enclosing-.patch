@@ -1,4 +1,4 @@
-From 4c32d100d2bff012c0c4543aca9b570ee8b0bbc2 Mon Sep 17 00:00:00 2001
+From 56d19954534b3f75ebc465f5d240525016216aaa Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:30:26 +0900
 Subject: [PATCH 17/37] [Clang][MinGW] Instantiate nested classes by enclosing
@@ -26,7 +26,7 @@ inherit to the nested class.
  2 files changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index f085f25a798eeb095efa0aff05895148071e9296..6f36387ae4fc739e404bb6abe724e8b8031e9a6d 100644
+index 605d22ad0b4f5453ec9e93a87586ed4db59a6561..954daf4422bfdd2c527606dbe3b0b1b3572760ee 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6605,12 +6605,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
@@ -85,10 +85,10 @@ index f085f25a798eeb095efa0aff05895148071e9296..6f36387ae4fc739e404bb6abe724e8b8
              TSK != TSK_ExplicitInstantiationDefinition) {
            if (auto *CD = dyn_cast<CXXConstructorDecl>(MD);
 diff --git a/clang/lib/Sema/SemaTemplateInstantiate.cpp b/clang/lib/Sema/SemaTemplateInstantiate.cpp
-index 427b634a92e46c3f6c9bd03f73cdb58b412ad180..56752d875cbb643763141c90f77cafe4d6d051ac 100644
+index a77ea5fd3dfff32cd0531b6f3a9b1d292d68a665..959c9ea4ca6693e6a4fcc5ae20e18ad42f33c0c2 100644
 --- a/clang/lib/Sema/SemaTemplateInstantiate.cpp
 +++ b/clang/lib/Sema/SemaTemplateInstantiate.cpp
-@@ -4248,6 +4248,7 @@ Sema::InstantiateClassMembers(SourceLocation PointOfInstantiation,
+@@ -4258,6 +4258,7 @@ Sema::InstantiateClassMembers(SourceLocation PointOfInstantiation,
          continue;
  
        if (Context.getTargetInfo().getTriple().isOSWindows() &&

@@ -1,7 +1,7 @@
-From cbc9d2f5d9a38a546f7f8fdf77372d14115739de Mon Sep 17 00:00:00 2001
+From ac5490a7c6b4f39c6fcfb96d891ab4aaa0788a9a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Oct 2025 13:01:49 +0900
-Subject: [PATCH 43/52] [Clang][Cygwin] Make -fno-use-init-array default in the
+Subject: [PATCH 43/53] [Clang][Cygwin] Make -fno-use-init-array default in the
  driver
 
 Aligning with MinGW. Without this, boost/serialization/test/test_singleton.cpp fails.

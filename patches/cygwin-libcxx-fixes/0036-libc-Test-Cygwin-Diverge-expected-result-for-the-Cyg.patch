@@ -1,6 +1,6 @@
-From 357537796746030e297ccc6c6a4d1face19862ec Mon Sep 17 00:00:00 2001
+From e9c90bf2a0bda0d380452cf3d3fb2bf92ff5c651 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sat, 7 Jun 2025 17:56:10 +0900
+Date: Mon, 29 Jun 2026 00:53:37 +0900
 Subject: [PATCH 36/37] [libc++][Test][Cygwin] Diverge expected result for the
  Cygwin target (part 5/5 - locale)
 
@@ -37,6 +37,7 @@ Subject: [PATCH 36/37] [libc++][Test][Cygwin] Diverge expected result for the
  .../strings/string.conversions/stod.pass.cpp  |  3 ++
  .../strings/string.conversions/stof.pass.cpp  |  3 ++
  .../strings/string.conversions/stold.pass.cpp |  3 ++
+ .../environment.pass.cpp                      |  2 +-
  .../thread.thread.id/format.functions.tests.h |  2 +-
  .../thread.thread.id/format.pass.cpp          |  2 +-
  .../time.cal.md.nonmembers/ostream.pass.cpp   |  3 ++
@@ -69,7 +70,7 @@ Subject: [PATCH 36/37] [libc++][Test][Cygwin] Diverge expected result for the
  libcxx/test/support/locale_helpers.h          |  8 ++--
  libcxx/test/support/platform_support.h        |  7 +++
  libcxx/utils/libcxx/test/features/platform.py |  4 ++
- 64 files changed, 186 insertions(+), 51 deletions(-)
+ 65 files changed, 187 insertions(+), 52 deletions(-)
 
 diff --git a/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp b/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
 index 88672851f7b6b2cc55e601bf72344ba8d4668fdd..5530d62f8d73d400fe52fc2764b39e4c32a907d2 100644
@@ -393,7 +394,7 @@ index 1c8710a008f27f2b93543787eac8f051ed03a176..89b9b2a1fb80b8da2285c5fa4ff3a7cd
  
  #include <locale>
 diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp
-index e7f0f29e87742a5c15c78f4ae627eed1fe7a5030..73d4ea11dec2ed01e13b056e8c6b17c4b7df451a 100644
+index 0cc0a075d13fa097f0f9918006f474a811fef743..5209a604846832879a9397d8d653a3a0b4f31926 100644
 --- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp
 @@ -9,6 +9,9 @@
@@ -407,10 +408,10 @@ index e7f0f29e87742a5c15c78f4ae627eed1fe7a5030..73d4ea11dec2ed01e13b056e8c6b17c4
  // REQUIRES: locale.fr_FR.UTF-8
  // REQUIRES: locale.ru_RU.UTF-8
 diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp
-index e9528147dfe62a63fd4ea97fd03a27e1ab372393..8e4928cb8f3cb80b06e21e737e6761e3f8ce169d 100644
+index 1225f70966847d121c60c940aac6108df00a62fd..6170a71b8be236c7f9b1d31b7326b4b0e580f84f 100644
 --- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp
-@@ -193,7 +193,7 @@ int main(int, char**)
+@@ -191,7 +191,7 @@ int main(int, char**)
      {
          Fnt f(LOCALE_zh_CN_UTF_8, 1);
          std::money_base::pattern p = f.neg_format();
@@ -419,7 +420,7 @@ index e9528147dfe62a63fd4ea97fd03a27e1ab372393..8e4928cb8f3cb80b06e21e737e6761e3
          assert_symbol_sign_none_value(p);
  #else
          assert_sign_symbol_none_value(p);
-@@ -212,7 +212,7 @@ int main(int, char**)
+@@ -210,7 +210,7 @@ int main(int, char**)
      {
          Fwt f(LOCALE_zh_CN_UTF_8, 1);
          std::money_base::pattern p = f.neg_format();
@@ -469,10 +470,10 @@ index be2f5585d06977d40ae295e2bb8d75d29fb4af0e..6c19bca92b10e63180340dafc833572a
  #else
          assert(f.negative_sign() == L"-");
 diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp
-index 11832a7d89278818edf35181697a7f92473f230c..530c98ff111a98551bae03a890116ec425cee30a 100644
+index 2db6b353b7114f1229206417cbb14401de1c849c..86fa7e62e4567aa84d0564f773046b24a695a5b3 100644
 --- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp
-@@ -193,7 +193,7 @@ int main(int, char**)
+@@ -191,7 +191,7 @@ int main(int, char**)
      {
          Fnt f(LOCALE_zh_CN_UTF_8, 1);
          std::money_base::pattern p = f.pos_format();
@@ -481,7 +482,7 @@ index 11832a7d89278818edf35181697a7f92473f230c..530c98ff111a98551bae03a890116ec4
          assert_symbol_sign_none_value(p);
  #else
          assert_sign_symbol_none_value(p);
-@@ -212,7 +212,7 @@ int main(int, char**)
+@@ -210,7 +210,7 @@ int main(int, char**)
      {
          Fwt f(LOCALE_zh_CN_UTF_8, 1);
          std::money_base::pattern p = f.pos_format();
@@ -545,30 +546,30 @@ index de90bde417ec6a8599f12170020064b995cf0fd0..5e8284eeffa8ea4e88f5ddcc5c9a39a7
  
  // REQUIRES: locale.en_US.UTF-8
 diff --git a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp
-index 11ec75469c70467c04c3d766849e87a630a7f30e..d2fe407393cf46941a246568dd90044f7ef6df52 100644
+index b9c613956d1ddddac40e580381e10ad11af54b17..7453955a49ce726a0dd44ec62c63c74bc75458e5 100644
 --- a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp
-@@ -60,7 +60,7 @@ int main(int, char**)
+@@ -58,7 +58,7 @@ int main(int, char**)
      }
      {
          std::locale l(LOCALE_fr_FR_UTF_8);
--#if defined(TEST_HAS_GLIBC) || defined(_WIN32) || defined(_AIX) || defined(__APPLE__)
-+#if defined(TEST_HAS_GLIBC) || defined(WINLOCALE) || defined(_AIX) || defined(__APPLE__)
+-#if defined(TEST_HAS_GLIBC) || defined(_WIN32) || defined(_AIX) || defined(__APPLE__) || defined(__FreeBSD__)
++#if defined(TEST_HAS_GLIBC) || defined(WINLOCALE) || defined(_AIX) || defined(__APPLE__) || defined(__FreeBSD__)
          const char* const group = "\3";
  #else
          const char* const group = "\x7f";
 diff --git a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp
-index 53f2c8554f3d7b2f60ba83412ff55040418a12b6..90def3ffba5d73d8dd1b6c9d503dc706a64829f8 100644
+index 8074c889bab4ccb93259fabc724dbb535075307d..6f0d9a1d31aab47432661694c647d0537b13a0b1 100644
 --- a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp
 +++ b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp
-@@ -66,8 +66,8 @@ int main(int, char**)
+@@ -64,8 +64,8 @@ int main(int, char**)
          // The below tests work around GLIBC's use of U202F as LC_NUMERIC thousands_sep.
          std::locale l(LOCALE_fr_FR_UTF_8);
          {
--#if defined(_CS_GNU_LIBC_VERSION) || defined(_WIN32) || defined(_AIX) || defined(__APPLE__)
--            const char sep = ' ';
-+#if defined(_CS_GNU_LIBC_VERSION) || defined(WINLOCALE) || defined(_AIX) || defined(__APPLE__)
-+          const char sep = ' ';
+-#if defined(_CS_GNU_LIBC_VERSION) || defined(_WIN32) || defined(_AIX) || defined(__APPLE__) || defined(__FreeBSD__)
+-          const char sep = ' ';
++#if defined(_CS_GNU_LIBC_VERSION) || defined(WINLOCALE) || defined(_AIX) || defined(__APPLE__) || defined(__FreeBSD__)
++            const char sep = ' ';
  #else
              const char sep = ',';
  #endif
@@ -617,6 +618,19 @@ index ef756982ee9a03657cde0f12380af50b1ca5bf45..6da72c9f60595a4ab5a420f71913d85b
      } catch (const std::invalid_argument&) {
        assert(idx == 0);
      }
+diff --git a/libcxx/test/std/text/text_encoding/text_encoding.members/environment.pass.cpp b/libcxx/test/std/text/text_encoding/text_encoding.members/environment.pass.cpp
+index 8907f72b55140bdc59525e1ab809671136643e68..6e6238adc7658ecb19a1ad7e13f6b7a7bc4d477f 100644
+--- a/libcxx/test/std/text/text_encoding/text_encoding.members/environment.pass.cpp
++++ b/libcxx/test/std/text/text_encoding/text_encoding.members/environment.pass.cpp
+@@ -28,7 +28,7 @@
+ 
+ int main(int, char**) {
+   auto check_env = []() {
+-#if defined(__ANDROID__)
++#if defined(__ANDROID__) || defined(__CYGWIN__)
+     constexpr std::text_encoding::id expected_id = std::text_encoding::UTF8;
+ #elif defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+     constexpr std::text_encoding::id expected_id = std::text_encoding::ASCII;
 diff --git a/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.functions.tests.h b/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.functions.tests.h
 index f55f0e2af8cb2c516e121ee2c4f3f19697128380..4be9557450835b77e5b294a84891ed08d5fa5395 100644
 --- a/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.functions.tests.h
@@ -1022,7 +1036,7 @@ index 6ea05c9f2a216bb58273ece6ada442201c906675..bfc2200314a351a953307c360728873b
  // REQUIRES: locale.ja_JP.UTF-8
  
 diff --git a/libcxx/test/support/locale_helpers.h b/libcxx/test/support/locale_helpers.h
-index 3cec7397e3d7e547becaddbf834ea346788567c9..32190076e4d2685a1425569e948d8925794ffa40 100644
+index bd29fd2a85111229f7719dde8b6920ed3981aa40..b45ca9dc7a6529270544d4653df68b43a05c799d 100644
 --- a/libcxx/test/support/locale_helpers.h
 +++ b/libcxx/test/support/locale_helpers.h
 @@ -42,7 +42,7 @@ std::wstring convert_thousands_sep(std::wstring const& in, wchar_t sep) {
@@ -1059,7 +1073,7 @@ index 3cec7397e3d7e547becaddbf834ea346788567c9..32190076e4d2685a1425569e948d8925
 -#if defined(_WIN32)
 +#if defined(_WIN32) || defined(__CYGWIN__)
    return MKSTR("\u00A5"); // U+00A5 YEN SIGN
- #elif defined(__APPLE__)
+ #elif defined(__APPLE__) || defined(__FreeBSD__)
    if (__builtin_available(macOS 15.4, *)) {
 diff --git a/libcxx/test/support/platform_support.h b/libcxx/test/support/platform_support.h
 index ff44096bf717171d53f444e48cdd38f068019481..b60cc85734d9ff2b5f582abdfc5ef7169c9f3d1d 100644

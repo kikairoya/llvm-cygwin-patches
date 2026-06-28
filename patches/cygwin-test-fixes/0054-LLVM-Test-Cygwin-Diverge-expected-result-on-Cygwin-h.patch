@@ -1,7 +1,7 @@
-From fb81649a937df251d0c1447d2c31f5d391d48643 Mon Sep 17 00:00:00 2001
+From 2c0b2ae0b0aa02ce060c1e4c38a6655e75aa9ca7 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Dec 2025 22:22:52 +0900
-Subject: [PATCH 53/63] [LLVM][Test][Cygwin] Diverge expected result on Cygwin
+Subject: [PATCH 54/64] [LLVM][Test][Cygwin] Diverge expected result on Cygwin
  host
 
 ---

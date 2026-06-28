@@ -1,4 +1,4 @@
-From b7f3460d838f2bc2e7de16a85664d02f90394b9a Mon Sep 17 00:00:00 2001
+From cba2e3a2df17b295b2d0e96e2473fb35eb086dd8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 25/37] [libc++][Cygwin] Add support for Cygwin target
@@ -100,11 +100,11 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 9172166b16b87d02b7668d939da2cda80fb0c5b4..a9da4eed0e7a960bd5f44027954d18712b847c20 100644
+index 3f271ff5047672ab814e3473abc86a6f6a164554..6fc7bc424dd91317fcfa6fed00d3d20a4a2077e3 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -89,6 +89,10 @@
- #      define _LIBCPP_HAS_BITSCAN64 0
+@@ -53,6 +53,10 @@
+ #      define _LIBCPP_MSVCRT // Using Microsoft's C Runtime library
  #    endif
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 1
 +#  elif defined(__CYGWIN__)
@@ -113,8 +113,8 @@ index 9172166b16b87d02b7668d939da2cda80fb0c5b4..a9da4eed0e7a960bd5f44027954d1871
 +#    define _LIBCPP_HAS_BITSCAN64 1
  #  else
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 0
- #    define _LIBCPP_HAS_BITSCAN64 0
-@@ -298,6 +302,7 @@ typedef __char32_t char32_t;
+ #  endif // defined(_WIN32)
+@@ -219,6 +223,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \
@@ -123,7 +123,7 @@ index 9172166b16b87d02b7668d939da2cda80fb0c5b4..a9da4eed0e7a960bd5f44027954d1871
  // clang-format on
  #      undef _LIBCPP_HAS_THREAD_API_PTHREAD
 diff --git a/libcxx/include/__configuration/attributes.h b/libcxx/include/__configuration/attributes.h
-index cc828466482fdb80dd11993de70284476360407a..7d66ae4b7291140e66b972f8fe147f7ac558058b 100644
+index c543ba9cb9e25b3b5d6e034b0a1f655adafaad7e..77b26002dc3fe020b8b0232a8db789865618495e 100644
 --- a/libcxx/include/__configuration/attributes.h
 +++ b/libcxx/include/__configuration/attributes.h
 @@ -55,13 +55,14 @@
@@ -144,7 +144,7 @@ index cc828466482fdb80dd11993de70284476360407a..7d66ae4b7291140e66b972f8fe147f7a
  #      define _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS
  #    else
 diff --git a/libcxx/include/__configuration/platform.h b/libcxx/include/__configuration/platform.h
-index 644fe1724e42edecc6d252c583e44d28d83c797f..4232cbba106e68eae1ab1931b3c777c0d89b08e7 100644
+index ebd638e663215d9d440bbc625c1e6e4c91339f4d..06f106915f31cdb84563542b77a3ee5e4be0a471 100644
 --- a/libcxx/include/__configuration/platform.h
 +++ b/libcxx/include/__configuration/platform.h
 @@ -20,7 +20,7 @@

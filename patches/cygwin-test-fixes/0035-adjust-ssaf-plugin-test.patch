@@ -1,10 +1,10 @@
-From c2e465269f3b0f65008d1460a27601d904e9155a Mon Sep 17 00:00:00 2001
+From 492c7dc65d7b63a16e5fdcd9615d8919912b9519 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 12 Jun 2026 20:51:31 +0900
-Subject: [PATCH 35/63] adjust ssaf-plugin test
+Subject: [PATCH 35/64] adjust ssaf-plugin test
 
 ---
- .../lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt  | 2 +-
+ clang/lib/ScalableStaticAnalysis/Plugins/CMakeLists.txt         | 2 +-
  clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test        | 2 ++
  .../Analysis/Scalable/ssaf-format/LUSummary/round-trip.test     | 2 ++
  .../Analysis/Scalable/ssaf-format/LUSummary/summary-data.test   | 2 ++
@@ -14,15 +14,15 @@ Subject: [PATCH 35/63] adjust ssaf-plugin test
  clang/test/CMakeLists.txt                                       | 2 +-
  8 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt b/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt
-index b77ffc49c0f9f8a4863392499b32161f78e7eaa2..f3d41914b767698f309693561150fec7a28b9b0b 100644
---- a/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt
-+++ b/clang/lib/ScalableStaticAnalysisFramework/Plugins/CMakeLists.txt
+diff --git a/clang/lib/ScalableStaticAnalysis/Plugins/CMakeLists.txt b/clang/lib/ScalableStaticAnalysis/Plugins/CMakeLists.txt
+index a6af1e64e0ac30a989a4c79e51f2feacb36742d7..557eb71683d665768a78e5028a4f98f8ea3c2331 100644
+--- a/clang/lib/ScalableStaticAnalysis/Plugins/CMakeLists.txt
++++ b/clang/lib/ScalableStaticAnalysis/Plugins/CMakeLists.txt
 @@ -1,4 +1,4 @@
 -if(CLANG_PLUGIN_SUPPORT AND LLVM_ENABLE_PLUGINS AND NOT WIN32)
 +if(CLANG_PLUGIN_SUPPORT AND LLVM_ENABLE_PLUGINS AND NOT (WIN32 OR CYGWIN))
    # Plugins must never bring LLVM or Clang libraries in statically.
-   # clang-ssaf-analyzer already loads clangScalableStaticAnalysisFrameworkCore
+   # clang-ssaf-analyzer already loads clangScalableStaticAnalysisCore
    # and LLVM into the process; a second static copy would produce duplicate
 diff --git a/clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test b/clang/test/Analysis/Scalable/ssaf-analyzer/analyzer.test
 index 0abdcef15a4499063cd29a30a60e8f0d00f74ad8..09e214669409fbe86bba77484b30690ba067038c 100644

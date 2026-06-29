@@ -1,4 +1,4 @@
-From 27665e1f5b69cccad604d831e7c325e9b8249a93 Mon Sep 17 00:00:00 2001
+From 554e5919513946d476640dfdcd5e59bd1676b0b7 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 15 Mar 2026 18:19:23 +0900
 Subject: [PATCH 03/37] [Clang] Warn about ignored dllexport/dllimport on
@@ -10,10 +10,10 @@ Subject: [PATCH 03/37] [Clang] Warn about ignored dllexport/dllimport on
  2 files changed, 69 insertions(+), 36 deletions(-)
 
 diff --git a/clang/include/clang/Basic/DiagnosticSemaKinds.td b/clang/include/clang/Basic/DiagnosticSemaKinds.td
-index 7e20630708312583f2556aeff5fc87b0bba0030b..9fccb6a18f13de3884259a831fe833386c324fc6 100644
+index 7360c9bbab60aae24504104743a4cbdcc4282d37..5211e1c8e5863fc2e3ddc7406d9636667d435083 100644
 --- a/clang/include/clang/Basic/DiagnosticSemaKinds.td
 +++ b/clang/include/clang/Basic/DiagnosticSemaKinds.td
-@@ -3829,6 +3829,9 @@ def warn_dllimport_dropped_from_inline_function : Warning<
+@@ -3830,6 +3830,9 @@ def warn_dllimport_dropped_from_inline_function : Warning<
  def warn_nothrow_attribute_ignored : Warning<"'nothrow' attribute conflicts with"
    " exception specification; attribute ignored">,
    InGroup<IgnoredAttributes>;
@@ -23,7 +23,7 @@ index 7e20630708312583f2556aeff5fc87b0bba0030b..9fccb6a18f13de3884259a831fe83338
  def warn_dllattr_ignored_exclusion_takes_precedence : Warning<
    "%0 attribute ignored; %1 takes precedence">,
    InGroup<IgnoredAttributes>;
-@@ -3952,6 +3955,9 @@ def err_attribute_dllimport_static_field_definition : Error<
+@@ -3953,6 +3956,9 @@ def err_attribute_dllimport_static_field_definition : Error<
  def warn_attribute_dllimport_static_field_definition : Warning<
    "definition of dllimport static field">,
    InGroup<DiagGroup<"dllimport-static-field-def">>;
@@ -34,10 +34,10 @@ index 7e20630708312583f2556aeff5fc87b0bba0030b..9fccb6a18f13de3884259a831fe83338
    "explicit instantiation declaration should not be 'dllexport'">,
    InGroup<DllexportExplicitInstantiationDecl>;
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index 556fa716d61e734e056c53c9983565b238c65124..d10b75afa6e640452749a77f093ceb192f171db2 100644
+index 544bb2795a4621a480ce1256592a781d851c7d88..958a13f5f3875de906a56cb1a565568a45dbbdcc 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
-@@ -10261,23 +10261,32 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10269,23 +10269,32 @@ DeclResult Sema::ActOnExplicitInstantiation(
                                         ? TSK_ExplicitInstantiationDefinition
                                         : TSK_ExplicitInstantiationDeclaration;
  
@@ -77,7 +77,7 @@ index 556fa716d61e734e056c53c9983565b238c65124..d10b75afa6e640452749a77f093ceb19
      }
    }
  
-@@ -10285,20 +10294,11 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10293,20 +10302,11 @@ DeclResult Sema::ActOnExplicitInstantiation(
    // instantiation declarations for most purposes.
    bool DLLImportExplicitInstantiationDef = false;
    if (TSK == TSK_ExplicitInstantiationDefinition &&
@@ -100,7 +100,7 @@ index 556fa716d61e734e056c53c9983565b238c65124..d10b75afa6e640452749a77f093ceb19
        TSK = TSK_ExplicitInstantiationDeclaration;
        DLLImportExplicitInstantiationDef = true;
      }
-@@ -10330,28 +10330,30 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10338,28 +10338,30 @@ DeclResult Sema::ActOnExplicitInstantiation(
        Context.getTargetInfo().getTriple().isOSCygMing()) {
      // Check for dllexport class template instantiation definitions in MinGW
      // mode, if a previous declaration of the instantiation was seen.
@@ -144,7 +144,7 @@ index 556fa716d61e734e056c53c9983565b238c65124..d10b75afa6e640452749a77f093ceb19
      }
    }
  
-@@ -10423,7 +10425,10 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10431,7 +10433,10 @@ DeclResult Sema::ActOnExplicitInstantiation(
    Specialization->setTemplateKeywordLoc(TemplateLoc);
    Specialization->setBraceRange(SourceRange());
  
@@ -156,7 +156,7 @@ index 556fa716d61e734e056c53c9983565b238c65124..d10b75afa6e640452749a77f093ceb19
    ProcessDeclAttributeList(S, Specialization, Attr);
    ProcessAPINotes(Specialization);
  
-@@ -10459,11 +10464,12 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10467,11 +10472,12 @@ DeclResult Sema::ActOnExplicitInstantiation(
    ClassTemplateSpecializationDecl *Def
      = cast_or_null<ClassTemplateSpecializationDecl>(
                                                Specialization->getDefinition());
@@ -171,7 +171,7 @@ index 556fa716d61e734e056c53c9983565b238c65124..d10b75afa6e640452749a77f093ceb19
      MarkVTableUsed(TemplateNameLoc, Specialization, true);
      Specialization->setPointOfInstantiation(Def->getPointOfInstantiation());
    }
-@@ -10491,13 +10497,16 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10499,13 +10505,16 @@ DeclResult Sema::ActOnExplicitInstantiation(
          A->setInherited(true);
          Def->addAttr(A);
          dllExportImportClassTemplateSpecialization(*this, Def);
@@ -190,7 +190,7 @@ index 556fa716d61e734e056c53c9983565b238c65124..d10b75afa6e640452749a77f093ceb19
      if (Old_TSK == TSK_ImplicitInstantiation && NewlyDLLExported &&
          Context.getTargetInfo().shouldDLLImportComdatSymbols()) {
        // An explicit instantiation definition can add a dll attribute to a
-@@ -10515,6 +10524,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10523,6 +10532,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
        assert(Def == Specialization &&
               "Def and Specialization should match for implicit instantiation");
        dllExportImportClassTemplateSpecialization(*this, Def);
@@ -198,7 +198,7 @@ index 556fa716d61e734e056c53c9983565b238c65124..d10b75afa6e640452749a77f093ceb19
      }
  
      // In MinGW mode, export the template instantiation if the declaration
-@@ -10523,6 +10533,23 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10531,6 +10541,23 @@ DeclResult Sema::ActOnExplicitInstantiation(
          Context.getTargetInfo().getTriple().isOSCygMing() &&
          PrevDecl->hasAttr<DLLExportAttr>()) {
        dllExportImportClassTemplateSpecialization(*this, Def);

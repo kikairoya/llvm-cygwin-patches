@@ -1,4 +1,4 @@
-From 9cccb2e75bbe6a7562a15932b2afe3e9c772cb88 Mon Sep 17 00:00:00 2001
+From 68001e05f7e1b6ab044f74bb54410f6714e67a36 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
 Subject: [PATCH 02/53] [LLVM] Annotate LLVM_TEMPLATE_ABI
@@ -34,7 +34,7 @@ index 134c74bfd48d0b02f603db5ff5945426b2fddf86..40175feed5516fbc70c05c10c5381508
  
  // Provide DenseMapInfo for SmallVector of a type which has info.
 diff --git a/llvm/include/llvm/CodeGen/MachinePassManager.h b/llvm/include/llvm/CodeGen/MachinePassManager.h
-index f200d56b9487235d9898c46c9326daed81afef93..ff8e86ad3321b050b4b20c17b9551575744ff9f6 100644
+index 936e80e88192c8ab06eef8ac69edae93d1ce46cd..97a9533996432822d3e8b8c5b354498c04cdbe08 100644
 --- a/llvm/include/llvm/CodeGen/MachinePassManager.h
 +++ b/llvm/include/llvm/CodeGen/MachinePassManager.h
 @@ -108,8 +108,8 @@ template <>

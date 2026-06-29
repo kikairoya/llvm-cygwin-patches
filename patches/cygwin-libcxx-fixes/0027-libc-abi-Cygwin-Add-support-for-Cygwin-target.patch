@@ -1,4 +1,4 @@
-From 46ec19b5067d87207a2a7ea8449ea0e7365dc37f Mon Sep 17 00:00:00 2001
+From 54ae352148ec3fa879e5c45770681e5ae4346391 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 27/37] [libc++abi][Cygwin] Add support for Cygwin target
@@ -13,10 +13,10 @@ Subject: [PATCH 27/37] [libc++abi][Cygwin] Add support for Cygwin target
  6 files changed, 39 insertions(+), 23 deletions(-)
 
 diff --git a/libcxxabi/CMakeLists.txt b/libcxxabi/CMakeLists.txt
-index e1a1587fb628394556be1388aa83a8a6d1a41f86..ee831cb34d65a00bcea26397100f8c4aefc9f6b0 100644
+index d9ab9c494c06394ca482988b2c47abb360dac528..85988b6795ffb4bcd14088d5aeccd93a59431e8f 100644
 --- a/libcxxabi/CMakeLists.txt
 +++ b/libcxxabi/CMakeLists.txt
-@@ -140,7 +140,7 @@ if (NOT LIBCXXABI_ENABLE_SHARED AND NOT LIBCXXABI_ENABLE_STATIC)
+@@ -161,7 +161,7 @@ if (NOT LIBCXXABI_ENABLE_SHARED AND NOT LIBCXXABI_ENABLE_STATIC)
  endif()
  
  set(LIBCXXABI_HERMETIC_STATIC_LIBRARY_DEFAULT OFF)
@@ -25,7 +25,7 @@ index e1a1587fb628394556be1388aa83a8a6d1a41f86..ee831cb34d65a00bcea26397100f8c4a
    set(LIBCXXABI_HERMETIC_STATIC_LIBRARY_DEFAULT ON)
  endif()
  option(LIBCXXABI_HERMETIC_STATIC_LIBRARY
-@@ -409,7 +409,7 @@ if (LLVM_ENABLE_MODULES)
+@@ -430,7 +430,7 @@ if (LLVM_ENABLE_MODULES)
  endif()
  
  set(LIBCXXABI_HAS_UNDEFINED_SYMBOLS OFF)
@@ -125,7 +125,7 @@ index ff0d5d2aef47cf904b71953c700f55a03f9c7083..817681a08af9bb8d00d62085307999c0
  // https://sourceware.org/glibc/wiki/Destructor%20support%20for%20thread_local%20variables
  extern _LIBCXXABI_FUNC_VIS int __cxa_thread_atexit(void (*)(void *), void *,
 diff --git a/libcxxabi/src/CMakeLists.txt b/libcxxabi/src/CMakeLists.txt
-index 88ae36e8310fd265ec6c4baaf6fcf07c287bb3b8..53b799c61008f41f4a65b6c1c0a536a29e5060e4 100644
+index c6652a831a4adf8a06232c56a24b9747f4799ee5..a09a82b204ded350a0d7db49b0c98bb951b1f727 100644
 --- a/libcxxabi/src/CMakeLists.txt
 +++ b/libcxxabi/src/CMakeLists.txt
 @@ -36,7 +36,7 @@ else()

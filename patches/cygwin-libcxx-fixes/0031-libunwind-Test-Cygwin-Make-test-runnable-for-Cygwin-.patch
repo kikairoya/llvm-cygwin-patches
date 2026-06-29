@@ -1,4 +1,4 @@
-From a6398100d8492d7a926d4bddb6666226e3376389 Mon Sep 17 00:00:00 2001
+From 70f83d074955f876bf1b2d94ced413cc1f62a985 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 31/37] [libunwind][Test][Cygwin] Make test runnable for Cygwin
@@ -13,10 +13,10 @@ Subject: [PATCH 31/37] [libunwind][Test][Cygwin] Make test runnable for Cygwin
  create mode 100644 libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 
 diff --git a/libunwind/CMakeLists.txt b/libunwind/CMakeLists.txt
-index 02132f6c07fcdcf884863720ca19d1c658a530f8..ea4fbdc2921d8909b0d7ab5ba0661768f0406c94 100644
+index 7f9c757bbd212415c90dfe21dccd5a33e14d2a56..b0c1aa231ffa7adfb68f3f93f8a394511803dfae 100644
 --- a/libunwind/CMakeLists.txt
 +++ b/libunwind/CMakeLists.txt
-@@ -78,6 +78,12 @@ if(MINGW)
+@@ -86,6 +86,12 @@ if(MINGW)
    else()
      set(LIBUNWIND_DEFAULT_TEST_CONFIG "llvm-libunwind-static-mingw.cfg.in")
    endif()
@@ -29,7 +29,7 @@ index 02132f6c07fcdcf884863720ca19d1c658a530f8..ea4fbdc2921d8909b0d7ab5ba0661768
  elseif (LIBUNWIND_ENABLE_SHARED)
    set(LIBUNWIND_DEFAULT_TEST_CONFIG "llvm-libunwind-shared.cfg.in")
  else()
-@@ -101,7 +107,7 @@ if (LIBUNWIND_ENABLE_CET AND MSVC)
+@@ -109,7 +115,7 @@ if (LIBUNWIND_ENABLE_CET AND MSVC)
    message(FATAL_ERROR "libunwind CET support is not available for MSVC!")
  endif()
  
@@ -38,7 +38,7 @@ index 02132f6c07fcdcf884863720ca19d1c658a530f8..ea4fbdc2921d8909b0d7ab5ba0661768
    set(LIBUNWIND_DEFAULT_HIDE_SYMBOLS TRUE)
  else()
    set(LIBUNWIND_DEFAULT_HIDE_SYMBOLS FALSE)
-@@ -209,7 +215,7 @@ if (LIBUNWIND_ENABLE_GCS)
+@@ -230,7 +236,7 @@ if (LIBUNWIND_ENABLE_GCS)
    endif()
  endif()
  

@@ -1,4 +1,4 @@
-From b72f5143bff6340516cfd165a2569ce860cb5b79 Mon Sep 17 00:00:00 2001
+From 79b68f11c7a5fd491b2c118da70f4ca810d27edf Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:31 +0900
 Subject: [PATCH 19/37] specialize nested
@@ -9,7 +9,7 @@ Subject: [PATCH 19/37] specialize nested
  2 files changed, 51 insertions(+), 8 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 954daf4422bfdd2c527606dbe3b0b1b3572760ee..8d846cf9a23da14a8e7988852b973131f524f7ea 100644
+index 2a80538247f98d0433bc2f0f5419ddc101ff6013..ba0433df777752ea88302d6e29badbf9e1317161 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6675,6 +6675,9 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
@@ -23,10 +23,10 @@ index 954daf4422bfdd2c527606dbe3b0b1b3572760ee..8d846cf9a23da14a8e7988852b973131
        continue;
      }
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index 0edd03120ecc92eb79832957789cfdf7ff0e71d2..49216f5146e7a64cea01b748942c99f99977f508 100644
+index bf3450c29d491d424879ad4851f881b1452eee3c..eabeb595bf521f2f7027eb4e7027f792ab43cc59 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
-@@ -10195,8 +10195,8 @@ static bool ScopeSpecifierHasTemplateId(const CXXScopeSpec &SS) {
+@@ -10203,8 +10203,8 @@ static bool ScopeSpecifierHasTemplateId(const CXXScopeSpec &SS) {
  
  /// Make a dllexport or dllimport attr on a class template specialization take
  /// effect.
@@ -37,7 +37,7 @@ index 0edd03120ecc92eb79832957789cfdf7ff0e71d2..49216f5146e7a64cea01b748942c99f9
    auto *A = cast_or_null<InheritableAttr>(getDLLAttr(Def));
    assert(A && "dllExportImportClassTemplateSpecialization called "
                "on Def without dllexport or dllimport");
-@@ -10507,21 +10507,23 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10515,21 +10515,23 @@ DeclResult Sema::ActOnExplicitInstantiation(
      }
  
      if ((NewlyDLLExported && PreviouslyDLLImported) ||
@@ -65,7 +65,7 @@ index 0edd03120ecc92eb79832957789cfdf7ff0e71d2..49216f5146e7a64cea01b748942c99f9
              if (Member->hasAttr<ExcludeFromExplicitInstantiationAttr>())
                return false;
              auto *VD = dyn_cast<VarDecl>(Member);
-@@ -10530,9 +10532,36 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10538,9 +10540,36 @@ DeclResult Sema::ActOnExplicitInstantiation(
                               : MD ? MD->getTemplateSpecializationKind()
                                    : TSK_Undeclared;
              return MemberTSK == TSK_ImplicitInstantiation && Member->isUsed();
@@ -104,7 +104,7 @@ index 0edd03120ecc92eb79832957789cfdf7ff0e71d2..49216f5146e7a64cea01b748942c99f9
          if (Context.getTargetInfo().getTriple().isOSCygMing() &&
              TSK == TSK_ExplicitInstantiationDeclaration && NewlyDLLImported) {
            // In MinGW mode, all undefined symbols are also searched from DLLs
-@@ -10548,6 +10577,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10556,6 +10585,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
                << /*implicit|explicit=*/0;
          }
        } else {
@@ -112,7 +112,7 @@ index 0edd03120ecc92eb79832957789cfdf7ff0e71d2..49216f5146e7a64cea01b748942c99f9
          dllExportImportClassTemplateSpecialization(*this, Specialization);
          if (Def != Specialization) {
            if (!getDLLAttr(Def)) {
-@@ -10562,6 +10592,16 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10570,6 +10600,16 @@ DeclResult Sema::ActOnExplicitInstantiation(
      }
  
      InstantiateClassTemplateSpecializationMembers(TemplateNameLoc, Def, TSK);

@@ -1,4 +1,4 @@
-From 816675ddebcefccea90c8560e3611c8aab8fb9c2 Mon Sep 17 00:00:00 2001
+From c7493af2c1031d91eee2f07274968a0022e34ab0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 32/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -11,10 +11,10 @@ Subject: [PATCH 32/37] [libc++][Test][Cygwin] Diverge expected result for the
  3 files changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index c4b853d4b9352d2bb4d02e6cbf4ab2f849307106..d82253a5fb98094bd396163156e4da707018a15f 100644
+index 64f3b5645ab0cd66696b53bcfdbb6562e58af62e..61dbe748c341dd8804bb9fe70dddd959477ec323 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
-@@ -570,7 +570,9 @@ function(cxx_add_basic_build_flags target)
+@@ -591,7 +591,9 @@ function(cxx_add_basic_build_flags target)
  
    # Build with -fsized-deallocation, which is default in recent versions of Clang.
    # TODO(LLVM 21): This can be dropped once we only support Clang >= 19.

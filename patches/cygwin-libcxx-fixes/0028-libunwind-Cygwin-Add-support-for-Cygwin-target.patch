@@ -1,4 +1,4 @@
-From 03be7fa160af29c556c255033b7dacd19177e5e3 Mon Sep 17 00:00:00 2001
+From 7eb1ee8f355a7a6f5c21848941613518af233ea9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 28/37] [libunwind][Cygwin] Add support for Cygwin target
@@ -8,7 +8,7 @@ Subject: [PATCH 28/37] [libunwind][Cygwin] Add support for Cygwin target
  libunwind/include/libunwind.h          |  2 +-
  libunwind/include/unwind.h             |  3 ++-
  libunwind/src/AddressSpace.hpp         | 20 ++++++++++++--------
- libunwind/src/CMakeLists.txt           |  3 +++
+ libunwind/src/CMakeLists.txt           |  2 ++
  libunwind/src/Registers.hpp            | 10 +++++-----
  libunwind/src/Unwind-seh.cpp           |  4 ++--
  libunwind/src/UnwindCursor.hpp         | 14 ++++++++------
@@ -17,7 +17,7 @@ Subject: [PATCH 28/37] [libunwind][Cygwin] Add support for Cygwin target
  libunwind/src/assembly.h               | 10 ++++++++--
  libunwind/src/config.h                 |  8 ++++++--
  libunwind/test/signal_frame.pass.cpp   |  1 +
- 13 files changed, 53 insertions(+), 32 deletions(-)
+ 13 files changed, 52 insertions(+), 32 deletions(-)
 
 diff --git a/libunwind/include/__libunwind_config.h b/libunwind/include/__libunwind_config.h
 index a1179c73c5906b2df9bb3973cd7918ad1f42b28a..1fd2696c0486c559b3979d7367807089131cf4b4 100644
@@ -112,19 +112,18 @@ index 3711189f57b1d115c82811b18017b56d74284e2c..a62034fae3df51629a8f100f9a39bbfe
    // for us.
    (void)targetAddr;
 diff --git a/libunwind/src/CMakeLists.txt b/libunwind/src/CMakeLists.txt
-index 6e947039fb0d52f1b388a7a1236790ce83e169a4..dfe4ebee49e5844c2d20d95356eb2ed75b9414ba 100644
+index 57e780afb90b280f651d13c3ecb9c45cec1c75ba..f22f257666fbd7680eed94b8bf4b10eab3f19764 100644
 --- a/libunwind/src/CMakeLists.txt
 +++ b/libunwind/src/CMakeLists.txt
-@@ -89,6 +89,9 @@ add_link_flags_if(CXX_SUPPORTS_UNWINDLIB_EQ_NONE_FLAG --unwindlib=none)
+@@ -88,6 +88,8 @@ add_link_flags_if(CXX_SUPPORTS_UNWINDLIB_EQ_NONE_FLAG --unwindlib=none)
+ 
  # MINGW_LIBRARIES is defined in config-ix.cmake
  add_library_flags_if(MINGW "${MINGW_LIBRARIES}")
- 
 +# CYGWIN_LIBRARIES is defined in config-ix.cmake
 +add_library_flags_if(CYGWIN "${CYGWIN_LIBRARIES}")
-+
- if (LIBUNWIND_ENABLE_SHARED AND
+ 
+ if (LIBUNWIND_ENABLE_SHARED AND LIBUNWIND_SUPPORTS_SHARED_LIBRARY AND
      NOT (CXX_SUPPORTS_FNO_EXCEPTIONS_FLAG AND
-          CXX_SUPPORTS_FUNWIND_TABLES_FLAG))
 diff --git a/libunwind/src/Registers.hpp b/libunwind/src/Registers.hpp
 index c88422a6d5f4fbbcb34d9a94e2ea20c776e4a40f..cafb89c9d910847fdaf78a821d52e81df447a787 100644
 --- a/libunwind/src/Registers.hpp

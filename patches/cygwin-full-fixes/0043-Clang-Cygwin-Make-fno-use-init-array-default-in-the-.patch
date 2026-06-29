@@ -1,4 +1,4 @@
-From ac5490a7c6b4f39c6fcfb96d891ab4aaa0788a9a Mon Sep 17 00:00:00 2001
+From d8b86bb895b7c4de298bc2b5fce2e2ef5c83f3ca Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Oct 2025 13:01:49 +0900
 Subject: [PATCH 43/53] [Clang][Cygwin] Make -fno-use-init-array default in the

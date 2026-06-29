@@ -1,4 +1,4 @@
-From 6bd580bc0e211bec86ad2891b797e6b4bb5dcbbf Mon Sep 17 00:00:00 2001
+From ec4ef68318ba2259c8cfa1cd036325823594e8d7 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 07/53] adopt LLVM_DECLARE_REGISTRY
@@ -62,7 +62,7 @@ index fc7fdb515ee4fa5a970122c55e8c347fce664df2..1c514adf01ff25f4a72f23a6049d4c57
  
  #endif // LLVM_CLANG_TOOLS_EXTRA_CLANG_DOC_GENERATOR_H
 diff --git a/clang-tools-extra/clang-tidy/ClangTidy.cpp b/clang-tools-extra/clang-tidy/ClangTidy.cpp
-index 05c8fd02fe86a6d5ba9f9cdd1686ad35ce79c2db..6f2a74d944b68ad8b01055c53ba696a0b4adcbe6 100644
+index 24cbd0940226d27024a778d5086c4837347ba19c..15074375159c42a3556494b5acfbf22b3e2efeba 100644
 --- a/clang-tools-extra/clang-tidy/ClangTidy.cpp
 +++ b/clang-tools-extra/clang-tidy/ClangTidy.cpp
 @@ -50,7 +50,7 @@ using namespace clang::driver;
@@ -279,7 +279,7 @@ index d5b17b34b6e3a2ca7736ba891177e46fdbf819cf..a60f26b032c0d493f6ca9b8db8a67d91
  static std::list<std::unique_ptr<ParsedAttrInfo>> instantiateEntries() {
    std::list<std::unique_ptr<ParsedAttrInfo>> Instances;
 diff --git a/clang/lib/Frontend/FrontendAction.cpp b/clang/lib/Frontend/FrontendAction.cpp
-index 7754861fabaf00f3229cce0f5005171603232be9..1646585e1f831d2395d3dd0f100862f738a24f2c 100644
+index 55e387738462259a8f8ab6d924272d46b2d24606..7aa045d39e7c23a47a3c4894c9c1bfefba9ee2f8 100644
 --- a/clang/lib/Frontend/FrontendAction.cpp
 +++ b/clang/lib/Frontend/FrontendAction.cpp
 @@ -52,7 +52,7 @@
@@ -292,7 +292,7 @@ index 7754861fabaf00f3229cce0f5005171603232be9..1646585e1f831d2395d3dd0f100862f7
  namespace {
  
 diff --git a/clang/lib/Lex/Preprocessor.cpp b/clang/lib/Lex/Preprocessor.cpp
-index c69d084d6514f714285243fe545422e8b052b3e3..9110c3689db92d073250d589c43a1c6c8f79e36a 100644
+index 41bc52174afd8dc9a853629c8cf893d943d2ed26..a6bce3d3b4b1f7fef28df9f5cf2d2e1224e2b850 100644
 --- a/clang/lib/Lex/Preprocessor.cpp
 +++ b/clang/lib/Lex/Preprocessor.cpp
 @@ -79,7 +79,7 @@ using namespace clang;

@@ -1,4 +1,4 @@
-From ec4ef68318ba2259c8cfa1cd036325823594e8d7 Mon Sep 17 00:00:00 2001
+From 783c428d6076c9ac5d04a06dc3dd92f81c12e2fc Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 07/64] adopt LLVM_DECLARE_REGISTRY
@@ -24,15 +24,15 @@ Subject: [PATCH 07/64] adopt LLVM_DECLARE_REGISTRY
  clang/lib/Basic/ParsedAttrInfo.cpp                   |  2 +-
  clang/lib/Frontend/FrontendAction.cpp                |  2 +-
  clang/lib/Lex/Preprocessor.cpp                       |  2 +-
- clang/lib/Tooling/CompilationDatabase.cpp            |  2 +-
- clang/lib/Tooling/Execution.cpp                      |  2 +-
+ clang/lib/Tooling/CompilationDatabase.cpp            |  3 +--
+ clang/lib/Tooling/Execution.cpp                      |  4 ++--
  .../include/flang/Frontend/FrontendPluginRegistry.h  |  4 +---
  flang/lib/Frontend/FrontendAction.cpp                |  2 +-
  llvm/include/llvm/CodeGen/GCMetadataPrinter.h        | 12 ++++++------
  llvm/include/llvm/IR/GCStrategy.h                    |  4 ++--
  llvm/lib/CodeGen/GCMetadataPrinter.cpp               |  2 +-
  llvm/lib/IR/GCStrategy.cpp                           |  2 +-
- 28 files changed, 34 insertions(+), 60 deletions(-)
+ 28 files changed, 35 insertions(+), 62 deletions(-)
 
 diff --git a/clang-tools-extra/clang-doc/Generators.cpp b/clang-tools-extra/clang-doc/Generators.cpp
 index 5ff1a5c0a4eb24e7a07e146e824550f4d8efb151..8ae534718fe17f0fe3a7c878a833fa94a2ee4e4d 100644
@@ -266,67 +266,70 @@ index 8d54583234684e565985bf6f625dc4be1f2d0372..968276d18aa853b25f4748cc84f8330b
  
  #endif // LLVM_CLANG_TOOLING_TOOLEXECUTORPLUGINREGISTRY_H
 diff --git a/clang/lib/Basic/ParsedAttrInfo.cpp b/clang/lib/Basic/ParsedAttrInfo.cpp
-index d5b17b34b6e3a2ca7736ba891177e46fdbf819cf..a60f26b032c0d493f6ca9b8db8a67d913080aa35 100644
+index 4c82fad98478f0f2786fc1fb919204fb4136fcad..cbd703b93765b644c4e273e86b8bcbd44e268e91 100644
 --- a/clang/lib/Basic/ParsedAttrInfo.cpp
 +++ b/clang/lib/Basic/ParsedAttrInfo.cpp
-@@ -18,7 +18,7 @@
+@@ -19,7 +19,7 @@
  
  using namespace clang;
  
--LLVM_INSTANTIATE_REGISTRY(ParsedAttrInfoRegistry)
-+LLVM_DEFINE_REGISTRY(ParsedAttrInfoRegistry)
+-LLVM_INSTANTIATE_REGISTRY_EX(CLANG_ABI_EXPORT, ParsedAttrInfoRegistry)
++LLVM_DEFINE_REGISTRY_EX(CLANG_ABI_EXPORT, ParsedAttrInfoRegistry)
  
  static std::list<std::unique_ptr<ParsedAttrInfo>> instantiateEntries() {
    std::list<std::unique_ptr<ParsedAttrInfo>> Instances;
 diff --git a/clang/lib/Frontend/FrontendAction.cpp b/clang/lib/Frontend/FrontendAction.cpp
-index 55e387738462259a8f8ab6d924272d46b2d24606..7aa045d39e7c23a47a3c4894c9c1bfefba9ee2f8 100644
+index 3c4bc0577fbc17673963ad41d588cea7b79fb791..ebb62fb4a9d865ed31f68f09405554931ae2790f 100644
 --- a/clang/lib/Frontend/FrontendAction.cpp
 +++ b/clang/lib/Frontend/FrontendAction.cpp
-@@ -52,7 +52,7 @@
+@@ -53,7 +53,7 @@
  #include <system_error>
  using namespace clang;
  
--LLVM_INSTANTIATE_REGISTRY(FrontendPluginRegistry)
-+LLVM_DEFINE_REGISTRY(FrontendPluginRegistry)
+-LLVM_INSTANTIATE_REGISTRY_EX(CLANG_ABI_EXPORT, FrontendPluginRegistry)
++LLVM_DEFINE_REGISTRY_EX(CLANG_ABI_EXPORT, FrontendPluginRegistry)
  
  namespace {
  
 diff --git a/clang/lib/Lex/Preprocessor.cpp b/clang/lib/Lex/Preprocessor.cpp
-index 41bc52174afd8dc9a853629c8cf893d943d2ed26..a6bce3d3b4b1f7fef28df9f5cf2d2e1224e2b850 100644
+index 1625d5918e8f5e01b0ff2d3b5bf66e1f613a50fb..1842cbaafe15ce41cf0c180ce29b42de7216d04d 100644
 --- a/clang/lib/Lex/Preprocessor.cpp
 +++ b/clang/lib/Lex/Preprocessor.cpp
-@@ -79,7 +79,7 @@ using namespace clang;
+@@ -80,7 +80,7 @@ using namespace clang;
  /// Minimum distance between two check points, in tokens.
  static constexpr unsigned CheckPointStepSize = 1024;
  
--LLVM_INSTANTIATE_REGISTRY(PragmaHandlerRegistry)
-+LLVM_DEFINE_REGISTRY(PragmaHandlerRegistry)
+-LLVM_INSTANTIATE_REGISTRY_EX(CLANG_ABI_EXPORT, PragmaHandlerRegistry)
++LLVM_DEFINE_REGISTRY_EX(CLANG_ABI_EXPORT, PragmaHandlerRegistry)
  
  ExternalPreprocessorSource::~ExternalPreprocessorSource() = default;
  
 diff --git a/clang/lib/Tooling/CompilationDatabase.cpp b/clang/lib/Tooling/CompilationDatabase.cpp
-index 51079b4dcd54397827bed6018eae4c98f67729cd..a0cd70229ea9e04464e73ab6346597ce3ec716e0 100644
+index 77d19ac8975cc23f22c374e121b75424c5b9a332..bdb4a29ed4901da6476bfede304f0867e41484ca 100644
 --- a/clang/lib/Tooling/CompilationDatabase.cpp
 +++ b/clang/lib/Tooling/CompilationDatabase.cpp
-@@ -50,7 +50,7 @@
+@@ -51,8 +51,7 @@
  using namespace clang;
  using namespace tooling;
  
--LLVM_INSTANTIATE_REGISTRY(CompilationDatabasePluginRegistry)
-+LLVM_DEFINE_REGISTRY(CompilationDatabasePluginRegistry)
+-LLVM_INSTANTIATE_REGISTRY_EX(CLANG_ABI_EXPORT,
+-                             CompilationDatabasePluginRegistry)
++LLVM_DEFINE_REGISTRY_EX(CLANG_ABI_EXPORT, CompilationDatabasePluginRegistry)
  
  CompilationDatabase::~CompilationDatabase() = default;
  
 diff --git a/clang/lib/Tooling/Execution.cpp b/clang/lib/Tooling/Execution.cpp
-index d0499fa364cfeeda1c945287768d2e33a658d068..96de0225a6cc4426d6c7215fa0c32768b0fa221a 100644
+index f5d5896e2c918e7348d9a29c72d680f10cb0ec4a..10f347d221d5af474a9664ee30b9d4abcdebf8a1 100644
 --- a/clang/lib/Tooling/Execution.cpp
 +++ b/clang/lib/Tooling/Execution.cpp
-@@ -10,7 +10,7 @@
+@@ -11,8 +11,8 @@
  #include "clang/Tooling/ToolExecutorPluginRegistry.h"
  #include "clang/Tooling/Tooling.h"
  
--LLVM_INSTANTIATE_REGISTRY(clang::tooling::ToolExecutorPluginRegistry)
-+LLVM_DEFINE_REGISTRY(clang::tooling::ToolExecutorPluginRegistry)
+-LLVM_INSTANTIATE_REGISTRY_EX(CLANG_ABI_EXPORT,
+-                             clang::tooling::ToolExecutorPluginRegistry)
++LLVM_DEFINE_REGISTRY_EX(CLANG_ABI_EXPORT,
++                        clang::tooling::ToolExecutorPluginRegistry)
  
  namespace clang {
  namespace tooling {

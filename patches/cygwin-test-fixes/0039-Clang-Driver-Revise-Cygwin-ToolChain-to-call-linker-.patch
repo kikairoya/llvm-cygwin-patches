@@ -1,7 +1,7 @@
-From 6c7e00823c4b384321e2c4cb0732aa6ad4bcd760 Mon Sep 17 00:00:00 2001
+From b1c5657ce5e64f9be569c3eb367d75b01bf514c9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 20:09:56 +0900
-Subject: [PATCH 38/53] [Clang][Driver] Revise Cygwin ToolChain to call linker
+Subject: [PATCH 39/64] [Clang][Driver] Revise Cygwin ToolChain to call linker
  directly
 
 ...so that libc++, compiler-rt, and libunwind can be used by the
@@ -52,7 +52,7 @@ Co-authored-by: kikairoya <kikairoya@gmail.com>
  create mode 100644 clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/gcc/x86_64-pc-msys/10/crtend.o
 
 diff --git a/clang/lib/Driver/ToolChain.cpp b/clang/lib/Driver/ToolChain.cpp
-index 726c8a6ad229a2be58d658da0fd75ce7f5b6beb7..0453ec605fb8285ee3d8096c0221d048881000f3 100644
+index 21d2fbef59fc6a961b98800fdeaecba8214d53bf..e97b758719845b6c1e4f4caf714e7f737c1d07ad 100644
 --- a/clang/lib/Driver/ToolChain.cpp
 +++ b/clang/lib/Driver/ToolChain.cpp
 @@ -852,6 +852,8 @@ static StringRef getArchNameForCompilerRTLib(const ToolChain &TC,

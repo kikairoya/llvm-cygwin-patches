@@ -1,4 +1,4 @@
-From 1a31622fb953783fbcd5b7cc5796de65db56169d Mon Sep 17 00:00:00 2001
+From 756feecf5926048727a7f6d394e1cc8d0148e02e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 20/37] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -145,7 +145,7 @@ index 205bba1060c3bd64f5b84516fa4a94393c754c9a..d1de581e70d7de7d292ef960f94c178c
      defined(__NVPTX__)
  
 diff --git a/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c b/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c
-index 128d73c1d54a131f4267e07ed3039e75f4daf4fc..e7e302706b579bb4e16456d3aa85b980814dfa05 100644
+index a0582d6645b7fc9066b9980be3cc70a195c36664..3afd4341d34b426c3e1279718ae64f45f26b0ad0 100644
 --- a/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c
 +++ b/compiler-rt/lib/profile/InstrProfilingPlatformWindows.c
 @@ -7,11 +7,12 @@
@@ -163,7 +163,7 @@ index 128d73c1d54a131f4267e07ed3039e75f4daf4fc..e7e302706b579bb4e16456d3aa85b980
  #if defined(_MSC_VER)
  /* Merge read-write sections into .data. */
 diff --git a/compiler-rt/lib/profile/InstrProfilingWriter.c b/compiler-rt/lib/profile/InstrProfilingWriter.c
-index 2c459acd39af0e0d9b7a98a3b4c4b9bbe56cda14..983f10a011598027836ec481bf503d458b5a013f 100644
+index 3021e3b3cfc31b01b158b69b6997e3a179845cf3..e92fe2a390279b1b7e685d977ea34887e601cd8b 100644
 --- a/compiler-rt/lib/profile/InstrProfilingWriter.c
 +++ b/compiler-rt/lib/profile/InstrProfilingWriter.c
 @@ -323,7 +323,7 @@ COMPILER_RT_VISIBILITY int lprofWriteDataImpl(

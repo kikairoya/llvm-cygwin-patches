@@ -1,4 +1,4 @@
-From 4166f789263769b59e2d9f8d37c350da5d118d3a Mon Sep 17 00:00:00 2001
+From 8752c1e2f091329a78aa5f1e0bf5d81e5ab066a1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -152,7 +152,7 @@ index 9d5833142fe9dccbc1cff5d6eae027b0977d396a..0aa2896f079215a5bbba52d4770a1038
  // RUN: %clang -v --rocm-path=%S/Inputs/rocm 2>&1 \
  // RUN:   | FileCheck -check-prefixes=FOUND %s
 diff --git a/clang/test/Driver/linux-ld.c b/clang/test/Driver/linux-ld.c
-index 8de1988d606cfbd8daea4aea8c17db8877af42e8..bae92e45cd8ab7b181f2f7cc176712d0af84d650 100644
+index 8380d93dfe9742476171c492dd3112019bc21ae5..584412ecaf6b06db4b8aac0e26866495daf4b6b1 100644
 --- a/clang/test/Driver/linux-ld.c
 +++ b/clang/test/Driver/linux-ld.c
 @@ -1,4 +1,4 @@
@@ -225,7 +225,7 @@ index 64828b5cdd86827664016db622a73261406535b8..172df10d8084af8f52dfaaf23c1f8f3e
  @import MOdule; // expected-error{{module 'MOdule' not found}}
  @import Module;
 diff --git a/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c b/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
-index 80ac493825aad4e24e7bab2a1de0b95ca72c9c11..c7a7da98c85932154bf42339b7f746add3271c38 100644
+index aae330bd3f6de405ce84c845717df809574a8859..0002b9907cfc4fe6981125b415018d5be8602eff 100644
 --- a/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
 +++ b/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
 @@ -1,6 +1,9 @@
@@ -250,10 +250,10 @@ index 6466e1870dc98e38426d3e6bde3479bc82cdbeab..70ac8b0e6a3c620b9032cd5c54b78b97
  //
  // Generate all the types of files we can bundle.
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index f7b3a77266cb8322a699388be0e21504b9ade569..9d9290d040d7905f39e4cd9d5fd3712f65004c82 100644
+index 5a5e819c9b5a1e264debc92a297c2ddafaa2d47e..ddf4d44c38dada59276f2ba456373d9043a1e55c 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -336,7 +336,10 @@ if config.clang_default_cxx_stdlib != "":
+@@ -347,7 +347,10 @@ if config.clang_default_cxx_stdlib != "":
          "default-cxx-stdlib={}".format(config.clang_default_cxx_stdlib)
      )
  
@@ -265,7 +265,7 @@ index f7b3a77266cb8322a699388be0e21504b9ade569..9d9290d040d7905f39e4cd9d5fd3712f
  
  # ANSI escape sequences in non-dumb terminal
  if platform.system() not in ["Windows"]:
-@@ -389,7 +392,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
+@@ -400,7 +403,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
  
  # [PR18856] Depends to remove opened file. On win32, a file could be removed
  # only if all handles were closed.

@@ -1,4 +1,4 @@
-From 657f76a35293d00be79c22491351d0b3eb0c5193 Mon Sep 17 00:00:00 2001
+From 9eb5cfcff30a4b34de78c7bb8173a3925ed1f1fd Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 9 Apr 2026 19:11:20 +0900
 Subject: [PATCH 45/53] [Clang][Cygwin] Make `-nolibc` to omit w32api

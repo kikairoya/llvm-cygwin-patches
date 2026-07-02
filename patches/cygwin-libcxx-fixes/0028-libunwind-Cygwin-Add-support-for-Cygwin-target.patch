@@ -1,4 +1,4 @@
-From 7eb1ee8f355a7a6f5c21848941613518af233ea9 Mon Sep 17 00:00:00 2001
+From f8cb9f729965868f8adf0c2b3a6d8b5ce7fbd25b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 28/37] [libunwind][Cygwin] Add support for Cygwin target
@@ -112,7 +112,7 @@ index 3711189f57b1d115c82811b18017b56d74284e2c..a62034fae3df51629a8f100f9a39bbfe
    // for us.
    (void)targetAddr;
 diff --git a/libunwind/src/CMakeLists.txt b/libunwind/src/CMakeLists.txt
-index 57e780afb90b280f651d13c3ecb9c45cec1c75ba..f22f257666fbd7680eed94b8bf4b10eab3f19764 100644
+index a9d9a2ef089d6ce98e114bd305b77a65b9d1264a..0db065a3e0cfeec27d4bcc563aed148101af8a22 100644
 --- a/libunwind/src/CMakeLists.txt
 +++ b/libunwind/src/CMakeLists.txt
 @@ -88,6 +88,8 @@ add_link_flags_if(CXX_SUPPORTS_UNWINDLIB_EQ_NONE_FLAG --unwindlib=none)

@@ -176,7 +176,7 @@ jobs:
             [24]=cross-dylib-vanilla-buildonly
             [25]=cross-shared-buildonly
             [26]=cross-static-buildonly
-            [27]=cross-static-buildonly
+            [27]=cygwin-instr
           )
           sched="$(echo $GITHUB_EVENT_SCHEDULE | cut -b1-2)"
           conf=${map[$sched]:-${CONFIG_NAME:-cygwin-dylib}}

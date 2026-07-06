@@ -1,4 +1,4 @@
-From 641a22a62769fbc7b393979587f211cb50c75393 Mon Sep 17 00:00:00 2001
+From 6593107841baa7398d85ee34c1bd49b2c3b9e025 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 27/37] [libc++abi][Cygwin] Add support for Cygwin target
@@ -125,7 +125,7 @@ index ff0d5d2aef47cf904b71953c700f55a03f9c7083..817681a08af9bb8d00d62085307999c0
  // https://sourceware.org/glibc/wiki/Destructor%20support%20for%20thread_local%20variables
  extern _LIBCXXABI_FUNC_VIS int __cxa_thread_atexit(void (*)(void *), void *,
 diff --git a/libcxxabi/src/CMakeLists.txt b/libcxxabi/src/CMakeLists.txt
-index 1889d7d5a82de5521c3e7db73213c7734e8002c8..f9d269ea89dfd40b02ccaf5db1a775b76fda100f 100644
+index fc66ce7187170f76335f7c37814312a69719db33..843b29b89227e1b2f0f98979cfc47825a0cee5b3 100644
 --- a/libcxxabi/src/CMakeLists.txt
 +++ b/libcxxabi/src/CMakeLists.txt
 @@ -36,7 +36,7 @@ else()

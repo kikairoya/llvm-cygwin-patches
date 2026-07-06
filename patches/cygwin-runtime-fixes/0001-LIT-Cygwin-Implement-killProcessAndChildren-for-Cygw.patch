@@ -1,4 +1,4 @@
-From 90b5bd1be601d9e48b6e539af768f0d687d9b8e8 Mon Sep 17 00:00:00 2001
+From a67b544190fc40d43513823ce49db9fb91163bca Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 14:11:39 +0900
 Subject: [PATCH 1/6] [LIT][Cygwin] Implement killProcessAndChildren for Cygwin
@@ -9,7 +9,7 @@ Subject: [PATCH 1/6] [LIT][Cygwin] Implement killProcessAndChildren for Cygwin
  1 file changed, 30 insertions(+), 1 deletion(-)
 
 diff --git a/llvm/utils/lit/lit/util.py b/llvm/utils/lit/lit/util.py
-index e02c99c3c609b4ab5cafc02eed27da85ee2d4f03..c78a3a009db2a67a8677697c78043d79542ad8b3 100644
+index a3fd7672262b33fae31b301663efb5cb31c54d4b..e777e0c15e282db390d010009d58ed3046a03e45 100644
 --- a/llvm/utils/lit/lit/util.py
 +++ b/llvm/utils/lit/lit/util.py
 @@ -389,7 +389,7 @@ def killProcessAndChildrenIsSupported():

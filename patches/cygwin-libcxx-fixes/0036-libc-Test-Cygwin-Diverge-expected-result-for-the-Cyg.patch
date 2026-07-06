@@ -1,4 +1,4 @@
-From 8bbee565d54c5d34fe8943f2c6e2ba159d03527b Mon Sep 17 00:00:00 2001
+From 61892ba07f7da36b008a1bff4e83fea31fdd15ba Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 29 Jun 2026 00:53:37 +0900
 Subject: [PATCH 36/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -38,8 +38,6 @@ Subject: [PATCH 36/37] [libc++][Test][Cygwin] Diverge expected result for the
  .../strings/string.conversions/stof.pass.cpp  |  3 ++
  .../strings/string.conversions/stold.pass.cpp |  3 ++
  .../environment.pass.cpp                      |  2 +-
- .../thread.thread.id/format.functions.tests.h |  2 +-
- .../thread.thread.id/format.pass.cpp          |  2 +-
  .../time.cal.md.nonmembers/ostream.pass.cpp   |  3 ++
  .../time.cal/time.cal.mdlast/ostream.pass.cpp |  3 ++
  .../ostream.pass.cpp                          |  3 ++
@@ -70,7 +68,7 @@ Subject: [PATCH 36/37] [libc++][Test][Cygwin] Diverge expected result for the
  libcxx/test/support/locale_helpers.h          |  8 ++--
  libcxx/test/support/platform_support.h        |  7 +++
  libcxx/utils/libcxx/test/features/platform.py |  4 ++
- 65 files changed, 187 insertions(+), 52 deletions(-)
+ 63 files changed, 185 insertions(+), 50 deletions(-)
 
 diff --git a/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp b/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
 index 88672851f7b6b2cc55e601bf72344ba8d4668fdd..5530d62f8d73d400fe52fc2764b39e4c32a907d2 100644
@@ -631,32 +629,6 @@ index 8907f72b55140bdc59525e1ab809671136643e68..6e6238adc7658ecb19a1ad7e13f6b7a7
      constexpr std::text_encoding::id expected_id = std::text_encoding::UTF8;
  #elif defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
      constexpr std::text_encoding::id expected_id = std::text_encoding::ASCII;
-diff --git a/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.functions.tests.h b/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.functions.tests.h
-index f55f0e2af8cb2c516e121ee2c4f3f19697128380..4be9557450835b77e5b294a84891ed08d5fa5395 100644
---- a/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.functions.tests.h
-+++ b/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.functions.tests.h
-@@ -22,7 +22,7 @@ void format_tests(TestFunction check, ExceptionTest check_exception) {
-   std::thread::id input{};
- 
-   /***** Test the type specific part *****/
--#if !defined(__APPLE__) && !defined(__FreeBSD__)
-+#if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__CYGWIN__)
-   check(SV("0"), SV("{}"), input);
-   check(SV("0^42"), SV("{}^42"), input);
-   check(SV("0^42"), SV("{:}^42"), input);
-diff --git a/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.pass.cpp b/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.pass.cpp
-index 39a257592809d4f467bff97cb5186f3d452c9ce4..46161b545c16d4ef76689f7f709d4bb16ea09949 100644
---- a/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.pass.cpp
-+++ b/libcxx/test/std/thread/thread.threads/thread.thread.class/thread.thread.id/format.pass.cpp
-@@ -52,7 +52,7 @@ void test_format(StringViewT expected, std::thread::id arg) {
- 
- template <class CharT>
- void test_fmt() {
--#if !defined(__APPLE__) && !defined(__FreeBSD__)
-+#if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__CYGWIN__)
-   test_format(SV("0"), std::thread::id());
- #else
-   test_format(SV("0x0"), std::thread::id());
 diff --git a/libcxx/test/std/time/time.cal/time.cal.md/time.cal.md.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.md/time.cal.md.nonmembers/ostream.pass.cpp
 index 3963eb9199f08d76163af748dc4068ac291ef9fe..3e2520cf86617e6c39a9b40feab95f9c7b9a9058 100644
 --- a/libcxx/test/std/time/time.cal/time.cal.md/time.cal.md.nonmembers/ostream.pass.cpp

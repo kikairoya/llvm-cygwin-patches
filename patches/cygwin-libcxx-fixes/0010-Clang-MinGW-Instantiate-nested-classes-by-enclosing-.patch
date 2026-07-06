@@ -1,4 +1,4 @@
-From e115e88f2fc4b4715973b67a00fdf54293cf1bfd Mon Sep 17 00:00:00 2001
+From 1076fd47d77d1d8989e69c39a359ffec013cd16c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:30:26 +0900
 Subject: [PATCH 10/37] [Clang][MinGW] Instantiate nested classes by enclosing
@@ -26,7 +26,7 @@ inherit to the nested class.
  2 files changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index df986a425691762ba0ddc1624b8321645a26d80b..b4b5fbfdb436f7d9e5dfc3aff060a6c1e286d700 100644
+index 2df413ee9d09b65a698e4b8ae9da62f4feca1471..380b9d28e7fb5c9df257af096107830031f340ce 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6604,12 +6604,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {

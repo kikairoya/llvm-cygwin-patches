@@ -1,4 +1,4 @@
-From f06cc23341cc3fd041e5ed6eab09391f92b5d690 Mon Sep 17 00:00:00 2001
+From 25c25e8aa3caba6e8e550eb340b7d9c497d52f75 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 24 May 2025 16:22:47 +0900
 Subject: [PATCH 49/53] [Interpreter][Cygwin] Search symbol from cygwin1.dll

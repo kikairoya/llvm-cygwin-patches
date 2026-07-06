@@ -1,4 +1,4 @@
-From efd1ac373e68a60cdcc3c229d0152b1b7738b559 Mon Sep 17 00:00:00 2001
+From 20b964426baad706aff19e52204fad4d3fc54b73 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:03:35 +0900
 Subject: [PATCH 05/53] [clang] Prevent symbol dup for

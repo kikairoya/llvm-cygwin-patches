@@ -1,7 +1,7 @@
-From e964bd9c3aff5b772f8d738e3c76b9b42adc5168 Mon Sep 17 00:00:00 2001
+From 044522ed1dfadf9a9bcc604fe2096da051fe5901 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 12:34:19 +0900
-Subject: [PATCH 09/37] pretest
+Subject: [PATCH 09/38] pretest
 
 ---
  clang/test/SemaCXX/dllexport.cpp | 50 ++++++++++++++++++++++++++++++++

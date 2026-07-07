@@ -1,0 +1,30 @@
+From ad408fa8ec11568b51da949c538ad6abc212c517 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 7 Jul 2026 18:37:59 +0900
+Subject: [PATCH 39/65] [Hexagon] Don't use reserved identifiers
+
+All identifiers that begin with an underscore followed by a capital letter or by another underscore are reserved.
+---
+ llvm/lib/Target/Hexagon/HexagonPostRAHandleQFP.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/llvm/lib/Target/Hexagon/HexagonPostRAHandleQFP.cpp b/llvm/lib/Target/Hexagon/HexagonPostRAHandleQFP.cpp
+index 09711a16a9c3cd55b17e2bf7a62e328679e7b5a3..476529c83acb48b16b565ebfe8cdbc50545738d5 100644
+--- a/llvm/lib/Target/Hexagon/HexagonPostRAHandleQFP.cpp
++++ b/llvm/lib/Target/Hexagon/HexagonPostRAHandleQFP.cpp
+@@ -254,9 +254,9 @@ private:
+ // default
+ class XqfPostRADiagnosis {
+ public:
+-  XqfPostRADiagnosis(DataFlowGraph &_G, Liveness &_L,
+-                     const HexagonInstrInfo *_HII)
+-      : G(&_G), L(&_L), HII(_HII) {}
++  XqfPostRADiagnosis(DataFlowGraph &G_, Liveness &L_,
++                     const HexagonInstrInfo *HII_)
++      : G(&G_), L(&L_), HII(HII_) {}
+   // Deleting default constructor to handle misconstruction
+   XqfPostRADiagnosis() = delete;
+ 
+-- 
+2.54.0
+

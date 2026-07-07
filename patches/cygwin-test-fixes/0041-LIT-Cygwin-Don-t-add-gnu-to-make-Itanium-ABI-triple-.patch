@@ -1,0 +1,29 @@
+From e22487166b7dd2d6cbcd4c04f91e6e0ac17b0b9f Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 10 Jun 2025 21:42:25 +0900
+Subject: [PATCH 41/64] [LIT][Cygwin] Don't add `-gnu` to make Itanium ABI
+ triple for *-cygwin
+
+It is already Itanium ABI one.
+---
+ llvm/utils/lit/lit/llvm/config.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/llvm/utils/lit/lit/llvm/config.py b/llvm/utils/lit/lit/llvm/config.py
+index 953782d5765df09ea050214e815e92fe5868b4b3..b50f5784a52d095b54f5b5cdf96c8cbaa896f99d 100644
+--- a/llvm/utils/lit/lit/llvm/config.py
++++ b/llvm/utils/lit/lit/llvm/config.py
+@@ -414,8 +414,8 @@ class LLVMConfig:
+             self.lit_config.fatal(
+                 "Could not turn '%s' into Itanium ABI triple" % triple
+             )
+-        if m.group(3).lower() != "windows":
+-            # All non-windows triples use the Itanium ABI.
++        if m.group(3).lower() != "windows" or re.match(r"-cyg.*", triple):
++            # All non-Windows (including Cygwin) triples use the Itanium ABI.
+             return triple
+         return m.group(1) + "-" + m.group(2) + "-" + m.group(3) + "-gnu"
+ 
+-- 
+2.54.0
+

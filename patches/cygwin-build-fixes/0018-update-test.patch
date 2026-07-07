@@ -1,7 +1,7 @@
-From 9733ea33de5d42545171ff9e995ea770bd86a272 Mon Sep 17 00:00:00 2001
+From 6204c1aee01fa03f54d4812eea2b1707d3895e2c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 19 Mar 2026 21:48:00 +0900
-Subject: [PATCH 18/38] update test
+Subject: [PATCH 18/37] update test
 
 ---
  ...t_instantiation.exclude_from_dllexport.cpp |  4 +-

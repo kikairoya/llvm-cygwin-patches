@@ -1,7 +1,7 @@
-From ee081981171596a52ffae6199acb7641cae2b73d Mon Sep 17 00:00:00 2001
+From 3e3209b3049f7d886b9317a9bc857180b8763b3c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 4 Apr 2026 18:34:39 +0900
-Subject: [PATCH 21/65] pretest
+Subject: [PATCH 21/64] pretest
 
 ---
  .../dllexport-no-dllexport-inlines.cpp        | 34 +++++++++++++++++++

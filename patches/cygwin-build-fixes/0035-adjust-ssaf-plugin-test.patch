@@ -1,7 +1,7 @@
-From e3fc8560cddd8e56fd24ce706bc8ba3e540ff9f7 Mon Sep 17 00:00:00 2001
+From 08350a2dee1a96ce530ad684a5725f236ac85c32 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 12 Jun 2026 20:51:31 +0900
-Subject: [PATCH 35/38] adjust ssaf-plugin test
+Subject: [PATCH 35/37] adjust ssaf-plugin test
 
 ---
  clang/lib/ScalableStaticAnalysis/Plugins/CMakeLists.txt         | 2 +-

@@ -1,7 +1,7 @@
-From 350322d54ab14a2ac413f60733ab86fdb8946c6e Mon Sep 17 00:00:00 2001
+From 0e2b2d06b8958084de7e64d707db8ed107ddf7a1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:30:26 +0900
-Subject: [PATCH 17/54] [Clang][MinGW] Instantiate nested classes by enclosing
+Subject: [PATCH 17/53] [Clang][MinGW] Instantiate nested classes by enclosing
  template's explicit instantiation declaration
 
 In-code comment says "explicit instantiation decl of the outer class

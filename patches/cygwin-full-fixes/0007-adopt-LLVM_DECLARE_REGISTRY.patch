@@ -1,4 +1,4 @@
-From 85eca4809f8150f1ffc9792da624b34dfed3019d Mon Sep 17 00:00:00 2001
+From 170066f54ac97dc573490314822cad072752add0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 07/53] adopt LLVM_DECLARE_REGISTRY
@@ -348,10 +348,10 @@ index a8079dbfaf869391c14306f0c6fd6c22cc51a6d4..37f5cccb5314157899e763e134071b68
  
  #endif // FORTRAN_FRONTEND_FRONTENDPLUGINREGISTRY_H
 diff --git a/flang/lib/Frontend/FrontendAction.cpp b/flang/lib/Frontend/FrontendAction.cpp
-index 7d201881cbba7797d5ee92b0a251f1ce69e9f6f7..17782dbfaeec76bc8f36809b8ae1993bc586ac05 100644
+index e17f7ac42b5e65afb9b8a6f21e02d57348e05b74..86b9b2fe840c0d35ad3864d416e92ace2452086c 100644
 --- a/flang/lib/Frontend/FrontendAction.cpp
 +++ b/flang/lib/Frontend/FrontendAction.cpp
-@@ -22,7 +22,7 @@
+@@ -21,7 +21,7 @@
  
  using namespace Fortran::frontend;
  

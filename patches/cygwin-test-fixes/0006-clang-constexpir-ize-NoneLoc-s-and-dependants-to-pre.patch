@@ -1,18 +1,17 @@
-From f6cfe3c0b8f9b3501223746332107a0e7a8b9c16 Mon Sep 17 00:00:00 2001
+From eb29e2ac9f7680bbae674cf1ab812cc6a3afb4d6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/64] [clang] constexpir-ize `NoneLoc`s and dependants to
  prevent symbol dup
 
 ---
- clang/include/clang/AST/DeclTemplate.h  |  6 +++---
- clang/include/clang/AST/TemplateBase.h  |  4 ++--
- llvm/include/llvm/ADT/FunctionExtras.h  | 14 ++++++++------
- llvm/include/llvm/ADT/PointerIntPair.h  |  3 ++-
- llvm/include/llvm/ADT/PointerUnion.h    |  8 ++++----
- llvm/include/llvm/CodeGen/SlotIndexes.h |  2 +-
- llvm/lib/CodeGen/InterferenceCache.h    |  2 +-
- 7 files changed, 21 insertions(+), 18 deletions(-)
+ clang/include/clang/AST/DeclTemplate.h  | 6 +++---
+ clang/include/clang/AST/TemplateBase.h  | 4 ++--
+ llvm/include/llvm/ADT/PointerIntPair.h  | 3 ++-
+ llvm/include/llvm/ADT/PointerUnion.h    | 8 ++++----
+ llvm/include/llvm/CodeGen/SlotIndexes.h | 2 +-
+ llvm/lib/CodeGen/InterferenceCache.h    | 2 +-
+ 6 files changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/clang/include/clang/AST/DeclTemplate.h b/clang/include/clang/AST/DeclTemplate.h
 index 672648c3fc03c50950b64a34de1bec9ee0aa0e8a..23982db95e2e30f1f6830d8a6b41816783b9cabb 100644
@@ -67,50 +66,6 @@ index c0db55ea92cd56f2abaa516c19da068b2f0fc1ce..b48e038e52719888516436ff837f5c09
  
    TemplateArgumentLoc(const TemplateArgument &Argument,
                        TemplateArgumentLocInfo Opaque)
-diff --git a/llvm/include/llvm/ADT/FunctionExtras.h b/llvm/include/llvm/ADT/FunctionExtras.h
-index f853bbf7d976d3afe7766a518de634df0db40ce9..bd2b5589d1e7a950068dac43b18b4e72ac05949f 100644
---- a/llvm/include/llvm/ADT/FunctionExtras.h
-+++ b/llvm/include/llvm/ADT/FunctionExtras.h
-@@ -131,7 +131,7 @@ protected:
-   // pointer in a struct or a pointer to a static struct of the call, move, and
-   // destroy pointers.
-   using CallbackPointerUnionT =
--      PointerUnion<TrivialCallback *, NonTrivialCallbacks *>;
-+      PointerUnion<const TrivialCallback *, const NonTrivialCallbacks *>;
- 
-   // The main storage buffer. This will either have a pointer to out-of-line
-   // storage or an inline buffer storing the callable.
-@@ -163,15 +163,17 @@ protected:
-   bool isInlineStorage() const { return CallbackAndInlineFlag.getInt(); }
- 
-   bool isTrivialCallback() const {
--    return isa<TrivialCallback *>(CallbackAndInlineFlag.getPointer());
-+    return isa<const TrivialCallback *>(CallbackAndInlineFlag.getPointer());
-   }
- 
-   CallPtrT getTrivialCallback() const {
--    return cast<TrivialCallback *>(CallbackAndInlineFlag.getPointer())->CallPtr;
-+    return cast<const TrivialCallback *>(CallbackAndInlineFlag.getPointer())
-+        ->CallPtr;
-   }
- 
--  NonTrivialCallbacks *getNonTrivialCallbacks() const {
--    return cast<NonTrivialCallbacks *>(CallbackAndInlineFlag.getPointer());
-+  const NonTrivialCallbacks *getNonTrivialCallbacks() const {
-+    return cast<const NonTrivialCallbacks *>(
-+        CallbackAndInlineFlag.getPointer());
-   }
- 
-   CallPtrT getCallPtr() const {
-@@ -230,7 +232,7 @@ protected:
-   // here and each instance will contain a pointer to it.
-   // Wrap in a struct to avoid https://gcc.gnu.org/PR71954
-   template <typename CallableT, typename CalledAs> struct CallbacksHolder {
--    inline static auto Callbacks = []() constexpr {
-+    static constexpr auto Callbacks = []() constexpr {
-       // For trivial callables, we don't need to store move and destroy
-       // callbacks.
-       if constexpr (std::is_trivially_move_constructible_v<CallableT> &&
 diff --git a/llvm/include/llvm/ADT/PointerIntPair.h b/llvm/include/llvm/ADT/PointerIntPair.h
 index c2db63382e13fc0e96d27cc11219ce28eddae3f0..da98e13cc417b6711fb421539158a57297247885 100644
 --- a/llvm/include/llvm/ADT/PointerIntPair.h

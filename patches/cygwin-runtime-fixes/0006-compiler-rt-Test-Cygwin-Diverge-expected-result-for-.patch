@@ -1,4 +1,4 @@
-From 6230f73b93ccd7b4467453977951c0f49a6e4e8b Mon Sep 17 00:00:00 2001
+From b51c46a3dc5aff84f9d898e012d1e4c50d44ffd1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:34:49 +0900
 Subject: [PATCH 6/6] [compiler-rt][Test][Cygwin] Diverge expected result for
@@ -16,10 +16,10 @@ Subject: [PATCH 6/6] [compiler-rt][Test][Cygwin] Diverge expected result for
  8 files changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c b/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c
-index 3ffdde6aed3f2002d09d3e3ab1e3987ae2919fc9..31b494569edaa5a35712f1f71c52cb737a5e8685 100644
+index 62a35b23c305a92088b9858b23c5a8f2cf593957..17dce7bc2e096d5d69ca11f53c37a42b01200866 100644
 --- a/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c
 +++ b/compiler-rt/test/builtins/Unit/compiler_rt_scalbnf_test.c
-@@ -9,7 +9,7 @@
+@@ -10,7 +10,7 @@
  #include "fp_lib.h"
  
  int test__compiler_rt_scalbnf(const char *mode, fp_t x, int y) {

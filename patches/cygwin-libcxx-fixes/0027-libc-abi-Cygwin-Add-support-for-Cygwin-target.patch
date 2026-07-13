@@ -1,4 +1,4 @@
-From b12d53d0608ca96d8b0b7544d1d80b5859ddded1 Mon Sep 17 00:00:00 2001
+From e134ed862d320cd040ceaff4b005eecb3e871f73 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 27/37] [libc++abi][Cygwin] Add support for Cygwin target
@@ -103,10 +103,10 @@ index 6ec10e469387e52a9091f7e53663d6be73c5a331..15a0f23000ade681dd2324f658eab82d
   #if !defined(_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS)
    #define _LIBCXXABI_HIDDEN __attribute__((__visibility__("hidden")))
 diff --git a/libcxxabi/include/cxxabi.h b/libcxxabi/include/cxxabi.h
-index ff0d5d2aef47cf904b71953c700f55a03f9c7083..817681a08af9bb8d00d62085307999c0dde6f327 100644
+index c65e353d68daf5237e550e34522dec6d838780d0..1868323b7df97073d7cdc04928970cebefcd6d25 100644
 --- a/libcxxabi/include/cxxabi.h
 +++ b/libcxxabi/include/cxxabi.h
-@@ -26,7 +26,7 @@
+@@ -25,7 +25,7 @@
  #ifdef __cplusplus
  
  namespace std {
@@ -115,7 +115,7 @@ index ff0d5d2aef47cf904b71953c700f55a03f9c7083..817681a08af9bb8d00d62085307999c0
  class _LIBCXXABI_TYPE_VIS type_info; // forward declaration
  #else
  class type_info; // forward declaration
-@@ -180,7 +180,7 @@ __cxa_decrement_exception_refcount(void *primary_exception) _LIBCXXABI_NOEXCEPT;
+@@ -179,7 +179,7 @@ __cxa_decrement_exception_refcount(void *primary_exception) _LIBCXXABI_NOEXCEPT;
  extern _LIBCXXABI_FUNC_VIS bool __cxa_uncaught_exception() _LIBCXXABI_NOEXCEPT;
  extern _LIBCXXABI_FUNC_VIS unsigned int __cxa_uncaught_exceptions() _LIBCXXABI_NOEXCEPT;
  

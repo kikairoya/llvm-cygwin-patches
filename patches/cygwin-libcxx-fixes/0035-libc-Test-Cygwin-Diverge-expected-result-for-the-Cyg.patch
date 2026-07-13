@@ -1,4 +1,4 @@
-From f58a6c67d3c7ae17655124556b85788372de29aa Mon Sep 17 00:00:00 2001
+From a8a24f871473024afb646f01c4de2b3028f823be Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:55:06 +0900
 Subject: [PATCH 35/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -17,10 +17,11 @@ Subject: [PATCH 35/37] [libc++][Test][Cygwin] Diverge expected result for the
  .../fs.op.is_regular_file/is_regular_file.pass.cpp |  2 +-
  .../fs.op.funcs/fs.op.is_socket/is_socket.pass.cpp |  2 +-
  .../fs.op.is_symlink/is_symlink.pass.cpp           |  2 +-
+ .../fs.op.remove_all/bad_perms_parent.pass.cpp     |  2 +-
  .../temp_directory_path.pass.cpp                   |  2 +-
  libcxx/test/support/filesystem_test_helper.h       |  2 +-
  libcxx/test/support/test_macros.h                  |  4 ++--
- 15 files changed, 23 insertions(+), 23 deletions(-)
+ 16 files changed, 24 insertions(+), 24 deletions(-)
 
 diff --git a/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp b/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp
 index a1a37012369d4cdbbf35a3b8cea11fb64fb8e2d9..60daf50a89e3eb3b76caac389c1defc1bd322172 100644
@@ -199,6 +200,19 @@ index 07b446d80c4022f7903577e7bf512b1764060ad0..1ab108ee1f605a73880f8905a2f67f46
      // Windows doesn't support setting perms::none to trigger failures
      // reading directories; test using a special inaccessible directory
      // instead.
+diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/bad_perms_parent.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/bad_perms_parent.pass.cpp
+index c75c5f25dcce265eed92d1c677cb7df4c3197528..6e473f9928fe53951ddf686902e209379b0c5870 100644
+--- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/bad_perms_parent.pass.cpp
++++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/bad_perms_parent.pass.cpp
+@@ -9,7 +9,7 @@
+ // UNSUPPORTED: c++03, c++11, c++14
+ // UNSUPPORTED: no-filesystem
+ 
+-// UNSUPPORTED: windows
++// UNSUPPORTED: windows, cygwin
+ // XFAIL: using-built-library-before-llvm-23
+ 
+ // Verify that remove_all reports the correct error (permission_denied)
 diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.temp_dir_path/temp_directory_path.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.temp_dir_path/temp_directory_path.pass.cpp
 index 38e14438f3fd3d711f2608465a78c6ad2d7ca983..23b41c9ef14a657b8ccb4fa73ff35f15e4950971 100644
 --- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.temp_dir_path/temp_directory_path.pass.cpp

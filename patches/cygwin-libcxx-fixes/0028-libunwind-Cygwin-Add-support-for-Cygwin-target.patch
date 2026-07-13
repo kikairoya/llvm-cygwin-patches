@@ -1,4 +1,4 @@
-From df61c4f5ea20a2ee6a34a29283024ea72b38f0a4 Mon Sep 17 00:00:00 2001
+From 9cd19a9422566285f4dc3af0776129de676a31b0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 28/37] [libunwind][Cygwin] Add support for Cygwin target
@@ -239,7 +239,7 @@ index ff92c9e0a844ab861ae410591c0280e6d56d35f7..32849ef8b1984f95327d2ee668cc21f3
    // In case of this is frame of signal handler, the IP saved in the signal
    // handler points to first non-executed instruction, while FDE/CIE expects IP
 diff --git a/libunwind/src/UnwindRegistersRestore.S b/libunwind/src/UnwindRegistersRestore.S
-index 8f84f4d456a355627d65ea833a27f5febd9f0e5d..4101a861529a85a5b7059bf13c4dc28c2e0f8e12 100644
+index 37e8156408cf2fac4ceeadb1ce28b5d91c7ea26c..0b4a4085ac006d6d35034541fc5a52f699751cef 100644
 --- a/libunwind/src/UnwindRegistersRestore.S
 +++ b/libunwind/src/UnwindRegistersRestore.S
 @@ -79,7 +79,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
@@ -261,7 +261,7 @@ index 8f84f4d456a355627d65ea833a27f5febd9f0e5d..4101a861529a85a5b7059bf13c4dc28c
    movdqu 192(%rdi),%xmm1
    movdqu 208(%rdi),%xmm2
 diff --git a/libunwind/src/UnwindRegistersSave.S b/libunwind/src/UnwindRegistersSave.S
-index a82ebd1ead23bb789256084aac8f564d14cd3bb9..32aa3a5674418928bbe1e62a33fc8f5e91b96714 100644
+index f44f6a1331968cf75de46a3cf64a0cc5c8f485b2..acfd4fc9dc9503930bc2df7b3af7d680d9a6184f 100644
 --- a/libunwind/src/UnwindRegistersSave.S
 +++ b/libunwind/src/UnwindRegistersSave.S
 @@ -121,7 +121,7 @@ DEFINE_LIBUNWIND_FUNCTION("#__unw_getcontext")

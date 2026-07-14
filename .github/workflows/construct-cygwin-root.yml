@@ -1,6 +1,11 @@
 name: Construct Cygwin Filesystem
 on:
   workflow_dispatch:
+    inputs:
+      clean-install:
+        description: "Don't use existing install cache"
+        required: false
+        type: boolean
 
 jobs:
   do-update:
@@ -17,6 +22,7 @@ jobs:
         with:
           skip-update: false
           allow-test-packages: false
+          clean-install: ${{ inputs.clean-install && 'true' || '' }}
       - name: show packages
         run: |
           ${{ steps.cygwin.outputs.root }}\bin\cat.exe /etc/setup/installed.db

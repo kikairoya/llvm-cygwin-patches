@@ -6,6 +6,10 @@ inputs:
     description: Don't launch setup.exe
     required: false
     default: true
+  clean-install:
+    description: Don't use existing install
+    required: false
+    default: ''
   install-dir:
     description: Installation directory in Windows notation
     required: false
@@ -53,8 +57,8 @@ runs:
       with:
         fail-on-cache-miss: ${{ ! steps.globals.outputs.setup-cygwin }}
         enableCrossOsArchive: true
-        key: cygwin-rootfs_${{ inputs.cache-key-base }}_
-        restore-keys: cygwin-rootfs_${{ inputs.cache-key-base }}_
+        key: ${{ (inputs.clean-install && inputs.clean-install != 'false') && 'disable_' || '' }}cygwin-rootfs_${{ inputs.cache-key-base }}_
+        restore-keys: ${{ (inputs.clean-install && inputs.clean-install != 'false') && 'disable_' || '' }}cygwin-rootfs_${{ inputs.cache-key-base }}_
         path: cygwin_tarstrap
 
     - name: unpack Cygwin
@@ -100,7 +104,7 @@ runs:
     - id: cygwin
       name: run Cygwin setup
       if: steps.globals.outputs.setup-cygwin
-      uses: cygwin/cygwin-install-action@711d29f3da23c9f4a1798e369a6f01198c13b11a # v6.1
+      uses: cygwin/cygwin-install-action@3f0a3f9f988f7e96b8c18098ae05eaec175f5b52 #v6.1
       with:
         add-to-path: false
         install-dir: ${{steps.unpack-cygwin-windows.outputs.root}}

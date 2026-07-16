@@ -1,4 +1,4 @@
-From bb14965671b093e78dc4c3152912d00e9a335446 Mon Sep 17 00:00:00 2001
+From 3e2495214aa5096e4044bbb66b8954031b86b10f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:55:10 +0900
 Subject: [PATCH 53/53] [llvm-config] Fix for BUILD_SHARED_LIBS to use import

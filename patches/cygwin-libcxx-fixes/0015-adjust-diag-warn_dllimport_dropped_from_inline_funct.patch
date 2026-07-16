@@ -1,4 +1,4 @@
-From 2e993e8ec5438aaa26e38c3253e8314798a0fe98 Mon Sep 17 00:00:00 2001
+From 64e620088b4b46bed744455e77daf279029cf811 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 30 Mar 2026 18:56:01 +0900
 Subject: [PATCH 15/37] adjust
@@ -9,7 +9,7 @@ Subject: [PATCH 15/37] adjust
  1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDecl.cpp b/clang/lib/Sema/SemaDecl.cpp
-index 7e1b23c971a9c2ecdfcc43f1531cc3d662185d4b..fc807e0e4a79949f5bc67df2beff1f32c7505b71 100644
+index c5920f03ed6e117cbf61e8a1c66a4dff1b07e016..bc58b3911d8a91a2fb1da0b584f842a774ee2ac6 100644
 --- a/clang/lib/Sema/SemaDecl.cpp
 +++ b/clang/lib/Sema/SemaDecl.cpp
 @@ -7385,14 +7385,16 @@ static void checkDLLAttributeRedeclaration(Sema &S, NamedDecl *OldDecl,

@@ -1,4 +1,4 @@
-From 7dadafc2e37e0242c5314a726164d3ac0b3f571e Mon Sep 17 00:00:00 2001
+From bc1e02bebd73bd8e8b1a4f0d6311e7d2c1c08180 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 9 Nov 2025 21:00:27 +0900
 Subject: [PATCH 25/64] always specify `.exe.a` for the suffix of import

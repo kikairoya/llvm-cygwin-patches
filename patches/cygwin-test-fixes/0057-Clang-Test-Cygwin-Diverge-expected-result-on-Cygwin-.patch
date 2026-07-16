@@ -1,4 +1,4 @@
-From c35ff7b3997192cfbceb9088626bf824a82cbd81 Mon Sep 17 00:00:00 2001
+From 715bd1f703d87f511d621370240cbd5f5638018a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -20,9 +20,8 @@ Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
  clang/test/Driver/serenity.cpp                      |  2 +-
  clang/test/Modules/inferred-framework-case.m        |  2 +-
  .../linker-wrapper-hip-no-rdc.c                     |  3 +++
- .../test/OffloadTools/clang-offload-bundler/basic.c |  2 +-
  clang/test/lit.cfg.py                               |  7 +++++--
- 17 files changed, 42 insertions(+), 22 deletions(-)
+ 16 files changed, 41 insertions(+), 21 deletions(-)
 
 diff --git a/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c b/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c
 index ccfdc1a1c6cfa9417c28e6abccafb08d9fe42d0e..5567ec1ab0e43c83ec6f5da8bea7d8b1d7da07d6 100644
@@ -238,22 +237,11 @@ index aae330bd3f6de405ce84c845717df809574a8859..0002b9907cfc4fe6981125b415018d5b
  // Test HIP non-RDC linker wrapper behavior with new offload driver.
  // The linker wrapper should output .hipfb files directly without using -r option.
  
-diff --git a/clang/test/OffloadTools/clang-offload-bundler/basic.c b/clang/test/OffloadTools/clang-offload-bundler/basic.c
-index 6466e1870dc98e38426d3e6bde3479bc82cdbeab..70ac8b0e6a3c620b9032cd5c54b78b978fcd4097 100644
---- a/clang/test/OffloadTools/clang-offload-bundler/basic.c
-+++ b/clang/test/OffloadTools/clang-offload-bundler/basic.c
-@@ -1,5 +1,5 @@
- // REQUIRES: x86-registered-target
--// UNSUPPORTED: target={{.*}}-macosx{{.*}}, target={{.*}}-darwin{{.*}}, target={{.*}}-aix{{.*}}, target={{.*}}-zos{{.*}}
-+// UNSUPPORTED: target={{.*}}-macosx{{.*}}, target={{.*}}-darwin{{.*}}, target={{.*}}-aix{{.*}}, target={{.*}}-zos{{.*}}, target={{.*}}-cyg{{.*}}
- 
- //
- // Generate all the types of files we can bundle.
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 5a5e819c9b5a1e264debc92a297c2ddafaa2d47e..ddf4d44c38dada59276f2ba456373d9043a1e55c 100644
+index 32b8098d71b235367edc87d132612f1a961780a7..07d898b99d69377b4ebe4ed91209992a22e80abc 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -347,7 +347,10 @@ if config.clang_default_cxx_stdlib != "":
+@@ -336,7 +336,10 @@ if config.clang_default_cxx_stdlib != "":
          "default-cxx-stdlib={}".format(config.clang_default_cxx_stdlib)
      )
  
@@ -265,7 +253,7 @@ index 5a5e819c9b5a1e264debc92a297c2ddafaa2d47e..ddf4d44c38dada59276f2ba456373d90
  
  # ANSI escape sequences in non-dumb terminal
  if platform.system() not in ["Windows"]:
-@@ -400,7 +403,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
+@@ -389,7 +392,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
  
  # [PR18856] Depends to remove opened file. On win32, a file could be removed
  # only if all handles were closed.

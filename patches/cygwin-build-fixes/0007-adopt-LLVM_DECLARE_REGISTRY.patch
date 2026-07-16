@@ -1,4 +1,4 @@
-From 99556c3cec793375bad18daf4e0baeb6a4547ba5 Mon Sep 17 00:00:00 2001
+From d265cf457d6cc3ce47ec3683fd08739ca44ebfb7 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 07/37] adopt LLVM_DECLARE_REGISTRY
@@ -35,7 +35,7 @@ Subject: [PATCH 07/37] adopt LLVM_DECLARE_REGISTRY
  28 files changed, 35 insertions(+), 62 deletions(-)
 
 diff --git a/clang-tools-extra/clang-doc/Generators.cpp b/clang-tools-extra/clang-doc/Generators.cpp
-index 5ff1a5c0a4eb24e7a07e146e824550f4d8efb151..8ae534718fe17f0fe3a7c878a833fa94a2ee4e4d 100644
+index fa4af5344d26279988fa78915e874b3fa42124cd..41c80fec514ff23c7ab4547853db09d25a7ef08f 100644
 --- a/clang-tools-extra/clang-doc/Generators.cpp
 +++ b/clang-tools-extra/clang-doc/Generators.cpp
 @@ -10,7 +10,7 @@
@@ -48,10 +48,10 @@ index 5ff1a5c0a4eb24e7a07e146e824550f4d8efb151..8ae534718fe17f0fe3a7c878a833fa94
  using namespace llvm;
  using namespace llvm::json;
 diff --git a/clang-tools-extra/clang-doc/Generators.h b/clang-tools-extra/clang-doc/Generators.h
-index fc7fdb515ee4fa5a970122c55e8c347fce664df2..1c514adf01ff25f4a72f23a6049d4c5728df3bb1 100644
+index 674f98108507f883015611aab671e56859708a0a..c69d47bb639b9f842600da15138dc0a34af2ea13 100644
 --- a/clang-tools-extra/clang-doc/Generators.h
 +++ b/clang-tools-extra/clang-doc/Generators.h
-@@ -149,8 +149,6 @@ extern volatile int MDMustacheGeneratorAnchorSource;
+@@ -147,8 +147,6 @@ extern volatile int JSONGeneratorAnchorSource;
  } // namespace doc
  } // namespace clang
  
@@ -292,7 +292,7 @@ index 3c4bc0577fbc17673963ad41d588cea7b79fb791..ebb62fb4a9d865ed31f68f0940555493
  namespace {
  
 diff --git a/clang/lib/Lex/Preprocessor.cpp b/clang/lib/Lex/Preprocessor.cpp
-index 5ee53a93732bb8066b29d24381eb49132e601fce..0d1eefa83cce6c5d105cf5dc150b387867bc974b 100644
+index 427a3826b299aebfb6b1675d0a5be602b27aa3c7..95869fb98a9a5263a2d6ba767869e232b07fe3be 100644
 --- a/clang/lib/Lex/Preprocessor.cpp
 +++ b/clang/lib/Lex/Preprocessor.cpp
 @@ -80,7 +80,7 @@ using namespace clang;

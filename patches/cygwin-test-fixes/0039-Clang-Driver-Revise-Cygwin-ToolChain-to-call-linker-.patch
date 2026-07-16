@@ -1,4 +1,4 @@
-From e050ef823be924cbc02002359692551bf9b24462 Mon Sep 17 00:00:00 2001
+From 03a4e3826e295025f6e8c1e6103d827cd5aac13f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 20:09:56 +0900
 Subject: [PATCH 39/64] [Clang][Driver] Revise Cygwin ToolChain to call linker
@@ -52,7 +52,7 @@ Co-authored-by: kikairoya <kikairoya@gmail.com>
  create mode 100644 clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/gcc/x86_64-pc-msys/10/crtend.o
 
 diff --git a/clang/lib/Driver/ToolChain.cpp b/clang/lib/Driver/ToolChain.cpp
-index f894a0635de134d1e23dd63af30622adaec67f47..f26fcbc39b37f64bca1a55c27869b913256ba010 100644
+index 53e4583e5d9d0076a423f96368184f20f01b6b96..0002d40bf1aa307bccc6c6293898a62c4669460f 100644
 --- a/clang/lib/Driver/ToolChain.cpp
 +++ b/clang/lib/Driver/ToolChain.cpp
 @@ -852,6 +852,8 @@ static StringRef getArchNameForCompilerRTLib(const ToolChain &TC,

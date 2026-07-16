@@ -1,4 +1,4 @@
-From 91a85f8e930a587088ccf5dc9de8bf8fea415506 Mon Sep 17 00:00:00 2001
+From ec0cc82ceefc7ccc4758c1639555fbfb48d80de3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 22/37] [compiler-rt][Test][Cygwin] Make test runnable for
@@ -26,10 +26,10 @@ index 3fab82518e75f50d408a5f322d8f586f16138748..e6bf78d4d49ef37781911991d2b35fbc
  
      compiler_rt_test_runtime(lsan)
 diff --git a/compiler-rt/test/builtins/Unit/lit.cfg.py b/compiler-rt/test/builtins/Unit/lit.cfg.py
-index d44553b6dd0827757e8351c270e51833272c6943..715c6b6d4f933a6ea34334eba12fb3fd178f097b 100644
+index f1ebd61438bd92ef30d00dd5f054c7fa46f9046e..b212832501a6a20c6bbcf3b4cdc27f17f882402c 100644
 --- a/compiler-rt/test/builtins/Unit/lit.cfg.py
 +++ b/compiler-rt/test/builtins/Unit/lit.cfg.py
-@@ -97,6 +97,17 @@ elif config.target_os == "Windows":
+@@ -73,6 +73,17 @@ elif config.target_os == "Windows":
              + " -lmingw32 -lmoldname -lmingwex -lmsvcrt -ladvapi32 -lshell32 -luser32 -lkernel32 ",
          )
      )
@@ -48,7 +48,7 @@ index d44553b6dd0827757e8351c270e51833272c6943..715c6b6d4f933a6ea34334eba12fb3fd
      base_lib = os.path.join(
          config.compiler_rt_libdir, "libclang_rt.builtins%s.a" % config.target_suffix
 diff --git a/compiler-rt/test/lit.common.cfg.py b/compiler-rt/test/lit.common.cfg.py
-index 27feda69dc1d9032cb5c65753723f19296c17eed..45c46deafdf88f02cfa3476dc50f1b91d9ebc00f 100644
+index 20c1b872bb14bb1885bbe77fe93f159c0bf780c2..dbf52f89e06f49601531ad4df9fdfa1b9e39220a 100644
 --- a/compiler-rt/test/lit.common.cfg.py
 +++ b/compiler-rt/test/lit.common.cfg.py
 @@ -66,7 +66,7 @@ def find_compiler_libdir():

@@ -1,4 +1,4 @@
-From 055168d978c59711f3fc3e9b530e9433494f2e02 Mon Sep 17 00:00:00 2001
+From f12ce76e0d7d8d66d92ec8abc2178e351989d32b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:06:12 +0900
 Subject: [PATCH 04/53] [LLVM] Prevent symbol dup for

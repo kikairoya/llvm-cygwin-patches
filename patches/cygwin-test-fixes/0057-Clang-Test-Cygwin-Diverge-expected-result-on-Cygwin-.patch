@@ -1,4 +1,4 @@
-From 715bd1f703d87f511d621370240cbd5f5638018a Mon Sep 17 00:00:00 2001
+From e88e44880d05e1acbe7a57979bbede6f85c8dc61 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -151,7 +151,7 @@ index 9d5833142fe9dccbc1cff5d6eae027b0977d396a..0aa2896f079215a5bbba52d4770a1038
  // RUN: %clang -v --rocm-path=%S/Inputs/rocm 2>&1 \
  // RUN:   | FileCheck -check-prefixes=FOUND %s
 diff --git a/clang/test/Driver/linux-ld.c b/clang/test/Driver/linux-ld.c
-index 8380d93dfe9742476171c492dd3112019bc21ae5..584412ecaf6b06db4b8aac0e26866495daf4b6b1 100644
+index 922adf7a43115dcf92925753b64c248821a7d9b5..0b9d73a6f49be2978c8fbde70b05e5f296f3ff61 100644
 --- a/clang/test/Driver/linux-ld.c
 +++ b/clang/test/Driver/linux-ld.c
 @@ -1,4 +1,4 @@
@@ -171,7 +171,7 @@ index 54a2519e0a70df4d3ba3a4cb72a925004f9dda73..70bedc18c3b13ead3537439e7b379f8a
  
  // RUN: %clang %s -### --target=loongarch32 2>&1 | FileCheck --check-prefix=CC1 %s -DTRIPLE=loongarch32
 diff --git a/clang/test/Driver/mingw-sysroot.cpp b/clang/test/Driver/mingw-sysroot.cpp
-index 8e46d23c1782dc7bfebc4e0d4c5054696cf3074b..b52c7796b5c47b0baf3774b7d4c1cfe6f4286366 100644
+index 372df0509c8d9f76ba38458cff8e5f7fd495f099..96ad4a8cb5f7573f102b7869fb2c1ebe041014e4 100644
 --- a/clang/test/Driver/mingw-sysroot.cpp
 +++ b/clang/test/Driver/mingw-sysroot.cpp
 @@ -1,4 +1,4 @@

@@ -1,4 +1,4 @@
-From e30466f92de2e517d52a243e1fcf34a73eb1c594 Mon Sep 17 00:00:00 2001
+From 76c77f8477871fc711330215045f1a30ae21980e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/37] [clang] constexpir-ize `NoneLoc`s and dependants to

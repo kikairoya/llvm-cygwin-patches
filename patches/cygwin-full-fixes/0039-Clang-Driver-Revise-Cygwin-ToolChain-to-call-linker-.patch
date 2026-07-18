@@ -1,4 +1,4 @@
-From 03a4e3826e295025f6e8c1e6103d827cd5aac13f Mon Sep 17 00:00:00 2001
+From c377847c01ccb056c57ff02ed6ee8b9da91749b1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 20:09:56 +0900
 Subject: [PATCH 39/53] [Clang][Driver] Revise Cygwin ToolChain to call linker
@@ -35,7 +35,6 @@ adopt the handling of the LTO options changes
 
 Co-authored-by: kikairoya <kikairoya@gmail.com>
 ---
- clang/lib/Driver/ToolChain.cpp                |   2 +
  clang/lib/Driver/ToolChains/Cygwin.cpp        | 300 ++++++++++++++++++
  clang/lib/Driver/ToolChains/Cygwin.h          |  18 ++
  .../usr/lib/gcc/i686-pc-msys/10/crtend.o      |   0
@@ -44,26 +43,13 @@ Co-authored-by: kikairoya <kikairoya@gmail.com>
  .../usr/lib/gcc/i686-pc-cygwin/10/crtend.o    |   0
  .../usr/lib/gcc/x86_64-pc-msys/10/crtend.o    |   0
  clang/test/Driver/cygwin.cpp                  |  69 +++-
- 9 files changed, 377 insertions(+), 12 deletions(-)
+ 8 files changed, 375 insertions(+), 12 deletions(-)
  create mode 100644 clang/test/Driver/Inputs/basic_cross_cygwin_tree/usr/lib/gcc/i686-pc-msys/10/crtend.o
  create mode 100644 clang/test/Driver/Inputs/basic_cross_cygwin_tree/usr/lib/gcc/x86_64-pc-cygwin/10/crtend.o
  create mode 100644 clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/crt0.o
  create mode 100644 clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/gcc/i686-pc-cygwin/10/crtend.o
  create mode 100644 clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/gcc/x86_64-pc-msys/10/crtend.o
 
-diff --git a/clang/lib/Driver/ToolChain.cpp b/clang/lib/Driver/ToolChain.cpp
-index 53e4583e5d9d0076a423f96368184f20f01b6b96..0002d40bf1aa307bccc6c6293898a62c4669460f 100644
---- a/clang/lib/Driver/ToolChain.cpp
-+++ b/clang/lib/Driver/ToolChain.cpp
-@@ -852,6 +852,8 @@ static StringRef getArchNameForCompilerRTLib(const ToolChain &TC,
- StringRef ToolChain::getOSLibName() const {
-   if (Triple.isOSDarwin())
-     return "darwin";
-+  if (Triple.isWindowsCygwinEnvironment())
-+    return "cygwin";
- 
-   switch (Triple.getOS()) {
-   case llvm::Triple::FreeBSD:
 diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
 index 55438125ce0f136e63ff2a81608af176a24fd590..fab67d5d63eb476add3364e439d38e2314f97e3a 100644
 --- a/clang/lib/Driver/ToolChains/Cygwin.cpp

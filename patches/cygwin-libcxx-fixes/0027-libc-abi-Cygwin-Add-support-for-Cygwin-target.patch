@@ -1,4 +1,4 @@
-From ff64d49f040c876a3b53f6cb435239cf2a80f6ba Mon Sep 17 00:00:00 2001
+From 46606f5c5c0bf8565773432519833fe9b9e58f7f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 27/37] [libc++abi][Cygwin] Add support for Cygwin target
@@ -103,7 +103,7 @@ index 6ec10e469387e52a9091f7e53663d6be73c5a331..15a0f23000ade681dd2324f658eab82d
   #if !defined(_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS)
    #define _LIBCXXABI_HIDDEN __attribute__((__visibility__("hidden")))
 diff --git a/libcxxabi/include/cxxabi.h b/libcxxabi/include/cxxabi.h
-index c65e353d68daf5237e550e34522dec6d838780d0..1868323b7df97073d7cdc04928970cebefcd6d25 100644
+index 66301d308282de49dbdce111db3402e0b7343bc0..18ba3902eb375cca26dfcc17fb41701f47c67ab3 100644
 --- a/libcxxabi/include/cxxabi.h
 +++ b/libcxxabi/include/cxxabi.h
 @@ -25,7 +25,7 @@

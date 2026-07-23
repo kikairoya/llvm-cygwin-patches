@@ -1,16 +1,16 @@
-From 211ee5ddb595b4cbf027990d35ca4a7fd96ef5eb Mon Sep 17 00:00:00 2001
+From faa848464cbc0e09ddf35ca4fb51714ed6751288 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Mar 2026 20:30:47 +0900
-Subject: [PATCH 55/64] [LLVM][Unittest][Cygwin] Diverge expected result on
+Subject: [PATCH 56/65] [LLVM][Unittest][Cygwin] Diverge expected result on
  Cygwin host
 
 ---
- llvm/unittests/CAS/ObjectStoreTest.cpp     |  2 ++
- llvm/unittests/CAS/OnDiskCASLoggerTest.cpp |  2 +-
- llvm/unittests/Support/CommandLineTest.cpp |  4 ++++
- llvm/unittests/Support/Path.cpp            |  2 +-
- llvm/unittests/Support/ProgramTest.cpp     | 13 +++++++------
- 5 files changed, 15 insertions(+), 8 deletions(-)
+ llvm/unittests/CAS/ObjectStoreTest.cpp     | 2 ++
+ llvm/unittests/CAS/OnDiskCASLoggerTest.cpp | 2 +-
+ llvm/unittests/Support/CommandLineTest.cpp | 4 ++++
+ llvm/unittests/Support/Path.cpp            | 2 +-
+ llvm/unittests/Support/ProgramTest.cpp     | 8 ++++----
+ 5 files changed, 12 insertions(+), 6 deletions(-)
 
 diff --git a/llvm/unittests/CAS/ObjectStoreTest.cpp b/llvm/unittests/CAS/ObjectStoreTest.cpp
 index d49f4a2c95152c9f2aa5b2d7af841ec974d748f2..27005624200bfa189b142da2a9587cf97f2716c4 100644
@@ -75,18 +75,12 @@ index b63ab426bb080c048d2183ba2bb5778e0359e9ca..ed5aeddd976edd9bd16b17fe162e5e41
    EXPECT_TRUE(CheckPermissions(fs::no_perms));
  
 diff --git a/llvm/unittests/Support/ProgramTest.cpp b/llvm/unittests/Support/ProgramTest.cpp
-index 13a142fcb062470a58b8c9d7dbf8741d650c90f8..a7ded3b39be948bb9d2f06ebfd7b0bc508b42ecb 100644
+index af45336b388910aed735c063701a21b100495b92..a7ded3b39be948bb9d2f06ebfd7b0bc508b42ecb 100644
 --- a/llvm/unittests/Support/ProgramTest.cpp
 +++ b/llvm/unittests/Support/ProgramTest.cpp
-@@ -692,14 +692,15 @@ TEST_F(ProgramEnvTest, TestExecuteEmptyEnvironment) {
- 
-   std::string Error;
-   bool ExecutionFailed;
--  int RetCode = ExecuteAndWait(Executable, argv, ArrayRef<StringRef>{}, {}, 0,
--                               0, &Error, &ExecutionFailed);
-+  [[maybe_unused]] int RetCode =
-+      ExecuteAndWait(Executable, argv, ArrayRef<StringRef>{}, {}, 0, 0, &Error,
-+                     &ExecutionFailed);
+@@ -696,11 +696,11 @@ TEST_F(ProgramEnvTest, TestExecuteEmptyEnvironment) {
+       ExecuteAndWait(Executable, argv, ArrayRef<StringRef>{}, {}, 0, 0, &Error,
+                      &ExecutionFailed);
    EXPECT_FALSE(ExecutionFailed) << Error;
 -#ifndef __MINGW32__
 +#if !defined(__MINGW32__) && !defined(__CYGWIN__)

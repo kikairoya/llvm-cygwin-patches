@@ -1,4 +1,4 @@
-From 76c77f8477871fc711330215045f1a30ae21980e Mon Sep 17 00:00:00 2001
+From ffff75ae268a65d92a7b725c4cf59207c54864df Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/53] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -45,10 +45,10 @@ index ed1a5172479435c0630d2afc6555afe170a4afdb..ed78678c0dd0c0f0ae4371ffb21c00bd
    }
  
 diff --git a/clang/include/clang/AST/TemplateBase.h b/clang/include/clang/AST/TemplateBase.h
-index c0db55ea92cd56f2abaa516c19da068b2f0fc1ce..b48e038e52719888516436ff837f5c0985a8e78f 100644
+index f7d754ea6082bbc2d11d8bdd7223b44bc49850b6..8a5c6961bba64a4bb66cf3d3a8d70816860f5c48 100644
 --- a/clang/include/clang/AST/TemplateBase.h
 +++ b/clang/include/clang/AST/TemplateBase.h
-@@ -489,7 +489,7 @@ struct TemplateArgumentLocInfo {
+@@ -491,7 +491,7 @@ struct TemplateArgumentLocInfo {
      return cast<TemplateTemplateArgLocInfo *>(Pointer);
    }
  
@@ -57,7 +57,7 @@ index c0db55ea92cd56f2abaa516c19da068b2f0fc1ce..b48e038e52719888516436ff837f5c09
    TemplateArgumentLocInfo(TypeSourceInfo *Declarator) { Pointer = Declarator; }
  
    TemplateArgumentLocInfo(Expr *E) { Pointer = E; }
-@@ -553,7 +553,7 @@ class TemplateArgumentLoc {
+@@ -555,7 +555,7 @@ class TemplateArgumentLoc {
    TemplateArgumentLocInfo LocInfo;
  
  public:

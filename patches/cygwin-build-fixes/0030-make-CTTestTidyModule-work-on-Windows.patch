@@ -1,4 +1,4 @@
-From 931bcb5a15c1851e7c0cfcf177ff79d326e1703f Mon Sep 17 00:00:00 2001
+From b8d70dff56622c179b1c78c7e3f5b3d1c5d97f83 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 Jan 2026 08:07:40 +0900
 Subject: [PATCH 30/37] make CTTestTidyModule work on Windows

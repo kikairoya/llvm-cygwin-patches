@@ -1,7 +1,7 @@
-From e88e44880d05e1acbe7a57979bbede6f85c8dc61 Mon Sep 17 00:00:00 2001
+From 5ee6b2d7a569f997a295944971b294991108e243 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
-Subject: [PATCH 57/64] [Clang][Test][Cygwin] Diverge expected result on Cygwin
+Subject: [PATCH 58/65] [Clang][Test][Cygwin] Diverge expected result on Cygwin
  host
 
 ---
@@ -238,7 +238,7 @@ index aae330bd3f6de405ce84c845717df809574a8859..0002b9907cfc4fe6981125b415018d5b
  // The linker wrapper should output .hipfb files directly without using -r option.
  
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 32b8098d71b235367edc87d132612f1a961780a7..07d898b99d69377b4ebe4ed91209992a22e80abc 100644
+index f7ac5d6d6676eadd696fc13bb0c9f69bbf862adf..2c2e2018b099020661040d1a0dacaa9156e6b144 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
 @@ -336,7 +336,10 @@ if config.clang_default_cxx_stdlib != "":

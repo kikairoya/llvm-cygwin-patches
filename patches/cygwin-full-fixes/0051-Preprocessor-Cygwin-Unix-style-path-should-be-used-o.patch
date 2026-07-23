@@ -1,4 +1,4 @@
-From ffd72ec881b33ce0171937879a8c05842b3c2663 Mon Sep 17 00:00:00 2001
+From 2ff791e77ea94851faeb31c6143d0ee2ae308881 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 19 May 2025 20:49:59 +0900
 Subject: [PATCH 51/53] [Preprocessor][Cygwin] Unix-style path should be used
@@ -9,7 +9,7 @@ Subject: [PATCH 51/53] [Preprocessor][Cygwin] Unix-style path should be used
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/clang/lib/Lex/PPMacroExpansion.cpp b/clang/lib/Lex/PPMacroExpansion.cpp
-index e09e80a063c4eed4e0334920257dc656b1dbcb87..15ff3bc2a02cd7575b95760849d9e03ab876a09f 100644
+index eb8f04c248b798a6c44978377a9174363bcdf010..c9cb10e6bce99dad255c037c147b4943f164b7a4 100644
 --- a/clang/lib/Lex/PPMacroExpansion.cpp
 +++ b/clang/lib/Lex/PPMacroExpansion.cpp
 @@ -2116,7 +2116,8 @@ void Preprocessor::processPathForFileMacro(SmallVectorImpl<char> &Path,

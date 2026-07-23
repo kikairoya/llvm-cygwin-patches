@@ -1,7 +1,7 @@
-From b684d627ffa63df98cee2a67f4e7b3b01f764726 Mon Sep 17 00:00:00 2001
+From 9a8a62fbe55b07679ba5ecd6b67c6fe449a215b6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:44:20 +0900
-Subject: [PATCH 63/64] fix tests that use Bye
+Subject: [PATCH 64/65] fix tests that use Bye
 
 ---
  clang/test/CodeGen/codegen-plugins.c      | 2 +-
@@ -40,7 +40,7 @@ index a87e36c7c725c87c602f9a5c912f37e7721aaecb..e19334502a2f3710b3493d38c84e6986
  // XFAIL: target={{.*}}-aix{{.*}}
  // CHECK-INACTIVE-NOT: Bye
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 07d898b99d69377b4ebe4ed91209992a22e80abc..bad84e67bbb8b168532d0ce58fa146f6ddac11e0 100644
+index 2c2e2018b099020661040d1a0dacaa9156e6b144..2238a58c1aaf3cc5a6de81e967d2ae7c84b0e5f9 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
 @@ -322,6 +322,9 @@ if "aarch64" in config.host_arch:

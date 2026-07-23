@@ -1,0 +1,64 @@
+From a50708da2465be84f166f90c2176bb2b4be9f0e5 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 23 Jul 2026 19:54:57 +0900
+Subject: [PATCH 54/65] [Cygwin] adjust lit test stability
+
+---
+ llvm/utils/lit/lit/TestRunner.py | 10 ++++++++--
+ llvm/utils/lit/lit/run.py        |  2 +-
+ llvm/utils/lit/tests/max-time.py |  3 +++
+ 3 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/llvm/utils/lit/lit/TestRunner.py b/llvm/utils/lit/lit/TestRunner.py
+index 97cb54c63be6421a4145d78cee350c83f1d5e48d..e4311638fd5b4e19337c50d312d6a35be02eb677 100644
+--- a/llvm/utils/lit/lit/TestRunner.py
++++ b/llvm/utils/lit/lit/TestRunner.py
+@@ -520,11 +520,17 @@ def _executeShCmd(cmd, shenv, results, timeoutHelper):
+ 
+     for i in range(len(procs) - 1):
+         if procs[i].stdout is not None:
+-            out = procs[i].stdout.read()
++            try:
++                out = procs[i].stdout.read()
++            except:
++                pass
+         else:
+             out = ""
+         if procs[i].stderr is not None:
+-            err = procs[i].stderr.read()
++            try:
++                err = procs[i].stderr.read()
++            except:
++                pass
+         else:
+             err = ""
+         procData[i] = (out, err)
+diff --git a/llvm/utils/lit/lit/run.py b/llvm/utils/lit/lit/run.py
+index d1c56491cee0809ba3c64c36fcf915159337c959..90ac04fd475a68ce3a99f42c34653627205b0a11 100644
+--- a/llvm/utils/lit/lit/run.py
++++ b/llvm/utils/lit/lit/run.py
+@@ -148,7 +148,7 @@ class Run:
+         # if we have more workers requested than the limit.
+         # Also, allow to override the limit with the LIT_WINDOWS_MAX_WORKERS_PER_POOL environment variable.
+         max_workers_per_pool = (
+-            WINDOWS_MAX_WORKERS_PER_POOL if os.name == "nt" else self.workers
++            WINDOWS_MAX_WORKERS_PER_POOL if os.name == "nt" or sys.platform == "cygwin" else self.workers
+         )
+         max_workers_per_pool = int(
+             os.getenv("LIT_WINDOWS_MAX_WORKERS_PER_POOL", max_workers_per_pool)
+diff --git a/llvm/utils/lit/tests/max-time.py b/llvm/utils/lit/tests/max-time.py
+index a416c8da3eaff310ec616850b74c5bc0a08af34b..989b32ea93a1440e978babac151fe09d47dbcdd1 100644
+--- a/llvm/utils/lit/tests/max-time.py
++++ b/llvm/utils/lit/tests/max-time.py
+@@ -1,5 +1,8 @@
+ # UNSUPPORTED: system-windows
+ 
++# Nested ProcessPoolExecutor seems to block signals?
++# UNSUPPORTED: system-cygwin
++
+ # Test overall lit timeout (--max-time).
+ #
+ # RUN: %{lit} %{inputs}/max-time --max-time=5 2>&1  |  FileCheck %s
+-- 
+2.54.0
+

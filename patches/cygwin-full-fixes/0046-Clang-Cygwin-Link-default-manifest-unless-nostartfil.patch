@@ -1,4 +1,4 @@
-From f012fd3593efc43083a4e9a949c826acd21bb401 Mon Sep 17 00:00:00 2001
+From fb01086e515a273b416b046c379a29b038e90e35 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 28 Jun 2026 18:16:32 +0900
 Subject: [PATCH 46/53] [Clang][Cygwin] Link default-manifest unless

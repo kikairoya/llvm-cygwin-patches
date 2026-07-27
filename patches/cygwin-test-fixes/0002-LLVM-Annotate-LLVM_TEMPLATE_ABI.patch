@@ -1,4 +1,4 @@
-From fe798ca5910d6d0a2ab50dbd8d6b0fb3dc001621 Mon Sep 17 00:00:00 2001
+From ff53dd793e87e08e796aef45e0422ba1c6a80de6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
 Subject: [PATCH 02/65] [LLVM] Annotate LLVM_TEMPLATE_ABI
@@ -89,7 +89,7 @@ index 8ab70dd9ed594c501d2c2e388818a1b5b5ec84f3..5845cc0b8fed045e4bb2aaa894d027cd
  /// Represents analyses that only rely on functions' control flow.
  ///
 diff --git a/llvm/include/llvm/IR/Dominators.h b/llvm/include/llvm/IR/Dominators.h
-index 4b84b5791ab77822f56829df76dd549cf14196f8..f3694cd288a382034c70b368bbbe2302b2f547d3 100644
+index de43c9b25017125429151b31e9bf30857e542bf4..2cba8c4281c8b19c6d5eea1af79ca21d581a7abb 100644
 --- a/llvm/include/llvm/IR/Dominators.h
 +++ b/llvm/include/llvm/IR/Dominators.h
 @@ -49,7 +49,7 @@ extern template class LLVM_TEMPLATE_ABI
@@ -102,7 +102,7 @@ index 4b84b5791ab77822f56829df76dd549cf14196f8..f3694cd288a382034c70b368bbbe2302
  namespace DomTreeBuilder {
  using BBDomTree = DomTreeBase<BasicBlock>;
 diff --git a/llvm/include/llvm/IR/PassManager.h b/llvm/include/llvm/IR/PassManager.h
-index adb375f4f837aa60edb24b62c7c1070832a6ba73..9aafcd48e48c47c2f2bf6fadf77a43e4d77d5053 100644
+index ca874eaf03cb6dd88f7fe24a0ed986a9e4558302..e359f39f5dfda2e7a87767826abc77604cff9694 100644
 --- a/llvm/include/llvm/IR/PassManager.h
 +++ b/llvm/include/llvm/IR/PassManager.h
 @@ -599,7 +599,7 @@ using FunctionAnalysisManager = AnalysisManager<Function>;
@@ -212,7 +212,7 @@ index 6e445f678790353a97dd97d734b162b7dddc533b..d78bc69784aab40b20de3dcb1b00aaab
 +
 +template class LLVM_EXPORT_TEMPLATE llvm::AllAnalysesOn<MachineFunction>;
 diff --git a/llvm/lib/IR/Dominators.cpp b/llvm/lib/IR/Dominators.cpp
-index e11b80920e7ffb657c80b97d0fe96e7ec78ebef8..09b2c65900df9255019e2ed7ec97ba40da858296 100644
+index 2603420129f30b04998889e689834095d3604102..176c885bd43f4bded3c2d2dca09e4ea731899e44 100644
 --- a/llvm/lib/IR/Dominators.cpp
 +++ b/llvm/lib/IR/Dominators.cpp
 @@ -65,7 +65,7 @@ template class LLVM_EXPORT_TEMPLATE
@@ -222,8 +222,8 @@ index e11b80920e7ffb657c80b97d0fe96e7ec78ebef8..09b2c65900df9255019e2ed7ec97ba40
 -template class llvm::cfg::Update<BasicBlock *>;
 +template class LLVM_EXPORT_TEMPLATE llvm::cfg::Update<BasicBlock *>;
  
- template LLVM_EXPORT_TEMPLATE void
- llvm::DomTreeBuilder::Calculate<DomTreeBuilder::BBDomTree>(
+ bool DominatorTree::invalidate(Function &F, const PreservedAnalyses &PA,
+                                FunctionAnalysisManager::Invalidator &) {
 diff --git a/llvm/lib/MCA/Support.cpp b/llvm/lib/MCA/Support.cpp
 index 45459f7a3a72b4eb98b731bedb22e151c06a47bb..d349f5933d96792a64b7163f52bd223274d05dc5 100644
 --- a/llvm/lib/MCA/Support.cpp

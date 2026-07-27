@@ -1,4 +1,4 @@
-From faa848464cbc0e09ddf35ca4fb51714ed6751288 Mon Sep 17 00:00:00 2001
+From 9ded4d2513ed1e6f51eb7cd204b124fb0fd41701 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Mar 2026 20:30:47 +0900
 Subject: [PATCH 56/65] [LLVM][Unittest][Cygwin] Diverge expected result on
@@ -33,7 +33,7 @@ index d49f4a2c95152c9f2aa5b2d7af841ec974d748f2..27005624200bfa189b142da2a9587cf9
  #endif // LLVM_ENABLE_THREADS
  
 diff --git a/llvm/unittests/CAS/OnDiskCASLoggerTest.cpp b/llvm/unittests/CAS/OnDiskCASLoggerTest.cpp
-index 7357a976f5f50387d01ca4b3b0d271780fa400c4..44ad63ca5ab593931fde6c8372f125c9ae10f206 100644
+index 61cd5d013eeb77dd71f42abf36825071b00cd007..e37c12d57d613439f705ce67abcd41daf23a6ec0 100644
 --- a/llvm/unittests/CAS/OnDiskCASLoggerTest.cpp
 +++ b/llvm/unittests/CAS/OnDiskCASLoggerTest.cpp
 @@ -82,7 +82,7 @@ protected:

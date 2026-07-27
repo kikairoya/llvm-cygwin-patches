@@ -1,16 +1,16 @@
-From f7c9e45b75be56d3e8f1abe41f492571fcc6a559 Mon Sep 17 00:00:00 2001
+From 4e30b5b363f8fd9a0edb2e7094675f9b9c822aab Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 29/37] [libc++][Test][Cygwin] Make test runnable for Cygwin
  target
 
 ---
- libcxx/CMakeLists.txt                         |  4 ++-
- libcxx/test/configs/llvm-libc++-cygwin.cfg.in | 25 +++++++++++++++++++
+ libcxx/CMakeLists.txt                         |  4 +++-
+ libcxx/test/configs/llvm-libc++-cygwin.cfg.in | 23 +++++++++++++++++++
  .../clang/clang_modules_include.gen.py        |  1 +
  .../test/libcxx/system_reserved_names.gen.py  |  6 ++++-
  libcxx/utils/libcxx/test/features/platform.py |  1 +
- 5 files changed, 35 insertions(+), 2 deletions(-)
+ 5 files changed, 33 insertions(+), 2 deletions(-)
  create mode 100644 libcxx/test/configs/llvm-libc++-cygwin.cfg.in
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
@@ -37,14 +37,12 @@ index 50697c9324d79e6227fd6acea969c9031a9255a1..64f3b5645ab0cd66696b53bcfdbb6562
    add_definitions(-D_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS)
 diff --git a/libcxx/test/configs/llvm-libc++-cygwin.cfg.in b/libcxx/test/configs/llvm-libc++-cygwin.cfg.in
 new file mode 100644
-index 0000000000000000000000000000000000000000..7e4953b3fd240ef18153dd508c680bd12afdbf52
+index 0000000000000000000000000000000000000000..e322b5da34bf3ea1eaf60f3acb6342c3f02fce08
 --- /dev/null
 +++ b/libcxx/test/configs/llvm-libc++-cygwin.cfg.in
-@@ -0,0 +1,25 @@
+@@ -0,0 +1,23 @@
 +# This testing configuration handles running the test suite against LLVM's libc++
 +# using either a DLL or a static library, with Cygwin.
-+
-+lit_config.load_config(config, '@CMAKE_CURRENT_BINARY_DIR@/cmake-bridge.cfg')
 +
 +config.substitutions.append(('%{flags}', '-pthread'))
 +config.substitutions.append(('%{compile_flags}',

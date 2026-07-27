@@ -1,4 +1,4 @@
-From a2f1a8f7c820fa82bd3c7ffb74a8a5f0559c69b0 Mon Sep 17 00:00:00 2001
+From fe9e792d61a655b6762601f39cacf966aa32059b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:30:26 +0900
 Subject: [PATCH 10/37] [Clang][MinGW] Instantiate nested classes by enclosing

@@ -1,4 +1,4 @@
-From 0ca68fe513f01263dd1e50a3371a28f80ea63b5f Mon Sep 17 00:00:00 2001
+From 50de45e0f2e14927db11b644ba530ce2454fe374 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 2/6] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -163,10 +163,10 @@ index a0582d6645b7fc9066b9980be3cc70a195c36664..3afd4341d34b426c3e1279718ae64f45
  #if defined(_MSC_VER)
  /* Merge read-write sections into .data. */
 diff --git a/compiler-rt/lib/profile/InstrProfilingWriter.c b/compiler-rt/lib/profile/InstrProfilingWriter.c
-index 3021e3b3cfc31b01b158b69b6997e3a179845cf3..e92fe2a390279b1b7e685d977ea34887e601cd8b 100644
+index 59fa2af3165449afa226f7699a6be797f7ffa404..c6eb075e9cf74089449197079ff82b06f648a151 100644
 --- a/compiler-rt/lib/profile/InstrProfilingWriter.c
 +++ b/compiler-rt/lib/profile/InstrProfilingWriter.c
-@@ -323,7 +323,7 @@ COMPILER_RT_VISIBILITY int lprofWriteDataImpl(
+@@ -327,7 +327,7 @@ COMPILER_RT_VISIBILITY int lprofWriteDataImpl(
  
    /* On WIN64, label differences are truncated 32-bit values. Truncate
     * CountersDelta to match. */

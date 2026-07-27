@@ -1,4 +1,4 @@
-From b14365d261d932ff86ae2b0cd5117ca8875061ea Mon Sep 17 00:00:00 2001
+From 8dc491945816379aab620a06d2730234e572069d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 07/37] adopt LLVM_DECLARE_REGISTRY
@@ -292,7 +292,7 @@ index 3c4bc0577fbc17673963ad41d588cea7b79fb791..ebb62fb4a9d865ed31f68f0940555493
  namespace {
  
 diff --git a/clang/lib/Lex/Preprocessor.cpp b/clang/lib/Lex/Preprocessor.cpp
-index 427a3826b299aebfb6b1675d0a5be602b27aa3c7..95869fb98a9a5263a2d6ba767869e232b07fe3be 100644
+index 212b78154610f41159ab39d45921fcf31f80bbfe..4953db73e7219e04aba2d222eec76647a6e626e9 100644
 --- a/clang/lib/Lex/Preprocessor.cpp
 +++ b/clang/lib/Lex/Preprocessor.cpp
 @@ -80,7 +80,7 @@ using namespace clang;

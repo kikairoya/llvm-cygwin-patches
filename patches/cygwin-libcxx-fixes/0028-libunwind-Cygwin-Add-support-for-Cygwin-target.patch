@@ -1,4 +1,4 @@
-From 4f4c15d02c89db8045418f3387d0d2d605b17973 Mon Sep 17 00:00:00 2001
+From e2546c421a58fe714529dfa9be507b5c77c0e80d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 28/37] [libunwind][Cygwin] Add support for Cygwin target
@@ -125,7 +125,7 @@ index a9d9a2ef089d6ce98e114bd305b77a65b9d1264a..0db065a3e0cfeec27d4bcc563aed1481
  if (LIBUNWIND_ENABLE_SHARED AND LIBUNWIND_SUPPORTS_SHARED_LIBRARY AND
      NOT (CXX_SUPPORTS_FNO_EXCEPTIONS_FLAG AND
 diff --git a/libunwind/src/Registers.hpp b/libunwind/src/Registers.hpp
-index c88422a6d5f4fbbcb34d9a94e2ea20c776e4a40f..cafb89c9d910847fdaf78a821d52e81df447a787 100644
+index d79d836d6925028a0b9f9e72d1638886b66e5c86..47822f6545c2e8a9fd7711a8b4da7aa62c51a4b4 100644
 --- a/libunwind/src/Registers.hpp
 +++ b/libunwind/src/Registers.hpp
 @@ -350,12 +350,12 @@ private:
@@ -193,7 +193,7 @@ index 0b1930b44d1c648b89099b6f2f796b4233f1c877..38209154729db7365599eb2f51ddea6f
    urc = pers(1, action, exc->exception_class, exc, ctx);
    _LIBUNWIND_TRACE_UNWINDING("_GCC_specific_handler() personality returned %d", urc);
 diff --git a/libunwind/src/UnwindCursor.hpp b/libunwind/src/UnwindCursor.hpp
-index 537dbd83f4f74e57bd3385d2157c3d448674ad36..93b23d6615c41c6324047539503d272454302b30 100644
+index ad110359e26d2e7e87c06dcc91060db8b42c033c..b927ff490596bc4d1fa15517c066222d98db0dda 100644
 --- a/libunwind/src/UnwindCursor.hpp
 +++ b/libunwind/src/UnwindCursor.hpp
 @@ -17,9 +17,9 @@
@@ -219,7 +219,7 @@ index 537dbd83f4f74e57bd3385d2157c3d448674ad36..93b23d6615c41c6324047539503d2724
  
  /// \c UnwindCursor contains all state (including all register values) during
  /// an unwind.  This is normally stack-allocated inside a unw_cursor_t.
-@@ -2136,7 +2137,7 @@ bool UnwindCursor<A, R>::getInfoFromSEH(pint_t pc) {
+@@ -2187,7 +2188,7 @@ bool UnwindCursor<A, R>::getInfoFromSEH(pint_t pc) {
    pint_t base;
    RUNTIME_FUNCTION *unwindEntry = lookUpSEHUnwindInfo(pc, &base);
    if (!unwindEntry) {
@@ -228,7 +228,7 @@ index 537dbd83f4f74e57bd3385d2157c3d448674ad36..93b23d6615c41c6324047539503d2724
      return false;
    }
    _info.gp = 0;
-@@ -2877,7 +2878,8 @@ void UnwindCursor<A, R>::setInfoBasedOnIPRegister(bool isReturnAddress) {
+@@ -2928,7 +2929,8 @@ void UnwindCursor<A, R>::setInfoBasedOnIPRegister(bool isReturnAddress) {
      --pc;
  #endif
  
@@ -261,7 +261,7 @@ index 37e8156408cf2fac4ceeadb1ce28b5d91c7ea26c..0b4a4085ac006d6d35034541fc5a52f6
    movdqu 192(%rdi),%xmm1
    movdqu 208(%rdi),%xmm2
 diff --git a/libunwind/src/UnwindRegistersSave.S b/libunwind/src/UnwindRegistersSave.S
-index 678187fb52f01b0aa6e3c82524a566a4923ccbe5..3db4993d495ca25389dde8516b0d2b56f502250d 100644
+index 37acbf3c693220877d6dec17c637bb9344600e3c..57ed16482006da6b80f45e0c2e7897bd338aff69 100644
 --- a/libunwind/src/UnwindRegistersSave.S
 +++ b/libunwind/src/UnwindRegistersSave.S
 @@ -121,7 +121,7 @@ DEFINE_LIBUNWIND_FUNCTION("#__unw_getcontext")

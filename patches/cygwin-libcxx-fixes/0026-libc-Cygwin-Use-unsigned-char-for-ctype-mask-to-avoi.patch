@@ -1,4 +1,4 @@
-From 074169bc6508009e05c8623b86b5476561ca8f69 Mon Sep 17 00:00:00 2001
+From 0447d140a3922ace4f87301d73ce7cc10e54d7df Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:30:56 +0900
 Subject: [PATCH 26/37] [libc++][Cygwin] Use unsigned char for ctype mask to
@@ -10,10 +10,10 @@ Subject: [PATCH 26/37] [libc++][Cygwin] Use unsigned char for ctype mask to
  2 files changed, 8 insertions(+)
 
 diff --git a/libcxx/include/__locale b/libcxx/include/__locale
-index bb8f8e7bbf5d9cc82d9d45fd539ee1760da33482..b2b44b43aa23e582be041aee4a6c96c459e83288 100644
+index f878aa48071caca6d372938df9e5e1d4b51c5651..40162b61d9428dfa5a1e34ef2a2f96ae6e42c6f6 100644
 --- a/libcxx/include/__locale
 +++ b/libcxx/include/__locale
-@@ -408,8 +408,13 @@ public:
+@@ -406,8 +406,13 @@ public:
    static const mask blank        = _ISBLANK;
    static const mask __regex_word = 0x8000;
  #  elif _LIBCPP_LIBC_NEWLIB
@@ -28,10 +28,10 @@ index bb8f8e7bbf5d9cc82d9d45fd539ee1760da33482..b2b44b43aa23e582be041aee4a6c96c4
    // positive value becomming negative.
    static const mask space  = static_cast<mask>(_S);
 diff --git a/libcxx/src/locale.cpp b/libcxx/src/locale.cpp
-index b0a69ab74f94c5523bd7a4441b100a5e80d7cbf8..63ba842a0406697c9fa67a5e0ef581b9eb976cd6 100644
+index 40613e72b1a9d5a2eb62126be282f49a44d73648..a473f01ce7e0c3acf811af8f31d76787c62b656a 100644
 --- a/libcxx/src/locale.cpp
 +++ b/libcxx/src/locale.cpp
-@@ -909,6 +909,9 @@ const ctype<char>::mask* ctype<char>::classic_table() noexcept {
+@@ -908,6 +908,9 @@ const ctype<char>::mask* ctype<char>::classic_table() noexcept {
    return __pctype_func();
  #  elif defined(__EMSCRIPTEN__)
    return *__ctype_b_loc();

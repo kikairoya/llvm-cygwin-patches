@@ -1,4 +1,4 @@
-From 5b43f829591cdb11e9c7f70af16c9801d0e3fa01 Mon Sep 17 00:00:00 2001
+From 8478f019693320edea363980082f84942dad517e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 25/37] [libc++][Cygwin] Add support for Cygwin target
@@ -100,10 +100,10 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 2faca50f969bafc65c773130057d9166293cd99a..99fe356397ddffeecbb66e4301423c8e6e14c5a6 100644
+index 8c2b0abfb450f184f4bd722853299ab23946655d..23d753a965711e913f2ede561e8a1b8343b3b7ed 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -53,6 +53,10 @@
+@@ -48,6 +48,10 @@
  #      define _LIBCPP_MSVCRT // Using Microsoft's C Runtime library
  #    endif
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 1
@@ -114,7 +114,7 @@ index 2faca50f969bafc65c773130057d9166293cd99a..99fe356397ddffeecbb66e4301423c8e
  #  else
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 0
  #  endif // defined(_WIN32)
-@@ -219,6 +223,7 @@ typedef __char32_t char32_t;
+@@ -214,6 +218,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \
@@ -157,7 +157,7 @@ index ebd638e663215d9d440bbc625c1e6e4c91339f4d..06f106915f31cdb84563542b77a3ee5e
  #elif defined(__wasm__)
  #  define _LIBCPP_OBJECT_FORMAT_WASM 1
 diff --git a/libcxx/src/filesystem/posix_compat.h b/libcxx/src/filesystem/posix_compat.h
-index ddd99d8aaf206fd8e87190a0205add560983f63f..27a22379c05f9da87ea895ef35c1524eac58eac8 100644
+index f5119aebcbefb291c1381e9d496c3e67bc27c680..07649867872428cf33050364c055319ab6106cc6 100644
 --- a/libcxx/src/filesystem/posix_compat.h
 +++ b/libcxx/src/filesystem/posix_compat.h
 @@ -475,7 +475,9 @@ using ::stat;

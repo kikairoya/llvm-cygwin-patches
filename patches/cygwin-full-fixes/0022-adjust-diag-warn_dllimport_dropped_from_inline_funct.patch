@@ -1,7 +1,7 @@
-From 50b28747ce3804e9501030626a5f5ab8b7a66074 Mon Sep 17 00:00:00 2001
+From 277d0d9c7ad76d39b15a6d229eb01856e50ff023 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 30 Mar 2026 18:56:01 +0900
-Subject: [PATCH 22/53] adjust
+Subject: [PATCH 22/54] adjust
  diag::warn_dllimport_dropped_from_inline_function
 
 ---
@@ -9,7 +9,7 @@ Subject: [PATCH 22/53] adjust
  1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDecl.cpp b/clang/lib/Sema/SemaDecl.cpp
-index f56f1ab04e49a9a5cd9ca0aea5a8490e5ca2dbdb..b2a2c59d814ca8d52b0bfa10c3537769d6c263f5 100644
+index c46d2d780fad731008f39a2803bfef269ed12ac6..2b589999a2767e6a82d1ca45633aca7f90ef0ea9 100644
 --- a/clang/lib/Sema/SemaDecl.cpp
 +++ b/clang/lib/Sema/SemaDecl.cpp
 @@ -7389,14 +7389,16 @@ static void checkDLLAttributeRedeclaration(Sema &S, NamedDecl *OldDecl,

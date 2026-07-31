@@ -1,7 +1,7 @@
-From 125ecd36f8b154d809e8bca4bde59403900c812f Mon Sep 17 00:00:00 2001
+From f52a12f7362b42e8cd6e02f8b42d572a57dae243 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 9 Nov 2025 21:00:27 +0900
-Subject: [PATCH 25/65] always specify `.exe.a` for the suffix of import
+Subject: [PATCH 25/66] always specify `.exe.a` for the suffix of import
  library
 
 needs for LLVM_BUILD_LLVM_DYLIB

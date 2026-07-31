@@ -1,4 +1,4 @@
-From 3e3db8b70bde965e15006b78e46837a9e56d25f6 Mon Sep 17 00:00:00 2001
+From 018a9e9df9cd594daeeb11aca124ce397076084f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:55:06 +0900
 Subject: [PATCH 35/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -20,8 +20,8 @@ Subject: [PATCH 35/37] [libc++][Test][Cygwin] Diverge expected result for the
  .../fs.op.remove_all/bad_perms_parent.pass.cpp     |  2 +-
  .../temp_directory_path.pass.cpp                   |  2 +-
  libcxx/test/support/filesystem_test_helper.h       |  2 +-
- libcxx/test/support/test_macros.h                  |  4 ++--
- 16 files changed, 24 insertions(+), 24 deletions(-)
+ libcxx/test/support/test_macros.h                  |  2 +-
+ 16 files changed, 23 insertions(+), 23 deletions(-)
 
 diff --git a/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp b/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp
 index a1a37012369d4cdbbf35a3b8cea11fb64fb8e2d9..60daf50a89e3eb3b76caac389c1defc1bd322172 100644
@@ -240,20 +240,18 @@ index 2ad9efb32c60f0bc14195f8ca7d508163a118f36..68e919d08e422f5068b107c58c65ec09
          // the permissions on a directory that contains a bad symlink. This triggers
          // the assert, despite being able to delete everything with the following
 diff --git a/libcxx/test/support/test_macros.h b/libcxx/test/support/test_macros.h
-index 78b1f6eda6576b5a6db9c95206dc0f143542ebf1..3d03d6ae75dd2e87c446e9618236a12289b1a321 100644
+index 6e2658b4cd756d9a0427cb44918fa8db15f23ed8..1c3f490e544e01388c07567c5a079dc6f8318cd1 100644
 --- a/libcxx/test/support/test_macros.h
 +++ b/libcxx/test/support/test_macros.h
-@@ -413,8 +413,8 @@ inline Tp const& DoNotOptimize(Tp const& value) {
- #define ASSERT_WITH_OPERATOR_NEW_FALLBACKS(...) assert(__VA_ARGS__)
+@@ -413,7 +413,7 @@ inline Tp const& DoNotOptimize(Tp const& value) {
+ #  define ASSERT_WITH_OPERATOR_NEW_FALLBACKS(...) assert(__VA_ARGS__)
  #endif
  
 -#ifdef _WIN32
--#define TEST_WIN_NO_FILESYSTEM_PERMS_NONE
 +#if defined(_WIN32) || defined(__CYGWIN__)
-+#  define TEST_WIN_NO_FILESYSTEM_PERMS_NONE
+ #  define TEST_WIN_NO_FILESYSTEM_PERMS_NONE
  #endif
  
- // Support for carving out parts of the test suite, like removing wide characters, etc.
 -- 
 2.54.0
 

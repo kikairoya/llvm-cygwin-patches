@@ -1,7 +1,7 @@
-From 0b8e87402eeb092961c3a6561c0f60c91514c541 Mon Sep 17 00:00:00 2001
+From 4e52a069f265e93b0c20a865c267c7ddd4347ad4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Jul 2026 15:29:18 +0900
-Subject: [PATCH 26/53] [LLVM] Disable plugin support by default on Windows
+Subject: [PATCH 26/54] [LLVM] Disable plugin support by default on Windows
 
 ---
  llvm/CMakeLists.txt | 2 +-

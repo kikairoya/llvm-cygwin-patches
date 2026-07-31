@@ -1,4 +1,4 @@
-From e2546c421a58fe714529dfa9be507b5c77c0e80d Mon Sep 17 00:00:00 2001
+From 5c661a51ae6b5db0ba82c22f66cd43af3fa3fb7e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 28/37] [libunwind][Cygwin] Add support for Cygwin target
@@ -46,7 +46,7 @@ index 6c2dfe58e53bf1f97bca6c78dacb47cc3676b8dc..b5f58b0e3fea7308fc7846f079263111
  #else
    #define LIBUNWIND_CURSOR_ALIGNMENT_ATTR
 diff --git a/libunwind/include/unwind.h b/libunwind/include/unwind.h
-index b1775d3a3decc76e1a0916fead1aafbc6fa0fb51..94dda313cc4b6640a4a772e871152480c7bd5752 100644
+index 93a9d92f327d362c5c003b77f4212b75507c42eb..b33ca119352eae6ba9dc669293fcf52825a1622e 100644
 --- a/libunwind/include/unwind.h
 +++ b/libunwind/include/unwind.h
 @@ -18,7 +18,8 @@

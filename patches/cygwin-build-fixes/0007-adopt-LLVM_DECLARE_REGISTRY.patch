@@ -1,4 +1,4 @@
-From 5aa3eb895f0b8a7d7229ce72c83628eebbff8a03 Mon Sep 17 00:00:00 2001
+From 7ca52805f81850870647e1506e36e3c4cfb84ec8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 07/38] adopt LLVM_DECLARE_REGISTRY
@@ -62,7 +62,7 @@ index 674f98108507f883015611aab671e56859708a0a..c69d47bb639b9f842600da15138dc0a3
  
  #endif // LLVM_CLANG_TOOLS_EXTRA_CLANG_DOC_GENERATOR_H
 diff --git a/clang-tools-extra/clang-tidy/ClangTidy.cpp b/clang-tools-extra/clang-tidy/ClangTidy.cpp
-index 24cbd0940226d27024a778d5086c4837347ba19c..15074375159c42a3556494b5acfbf22b3e2efeba 100644
+index 32e18645880e134e6a871c45a9d10a52c9d4bb47..68464a3838df59ffeecf6f9d4042e0b9fe91a402 100644
 --- a/clang-tools-extra/clang-tidy/ClangTidy.cpp
 +++ b/clang-tools-extra/clang-tidy/ClangTidy.cpp
 @@ -50,7 +50,7 @@ using namespace clang::driver;
@@ -292,7 +292,7 @@ index c18c702d46cc783727e39488ba000e23a55b57d4..a701efaebd61e88939d8788c3287569e
  namespace {
  
 diff --git a/clang/lib/Lex/Preprocessor.cpp b/clang/lib/Lex/Preprocessor.cpp
-index 11d37877eb41dd3a1efb71d178b992a5c7766bf3..207fb4416efa0a9342aa6f13b0ef1cbc20f6470b 100644
+index 62d67e08e6083a1b8218486c462e41a971a5bbe8..2b326a5d5f9a1f420a8455b9fd4b93470e04dd32 100644
 --- a/clang/lib/Lex/Preprocessor.cpp
 +++ b/clang/lib/Lex/Preprocessor.cpp
 @@ -80,7 +80,7 @@ using namespace clang;
@@ -348,10 +348,10 @@ index a8079dbfaf869391c14306f0c6fd6c22cc51a6d4..37f5cccb5314157899e763e134071b68
  
  #endif // FORTRAN_FRONTEND_FRONTENDPLUGINREGISTRY_H
 diff --git a/flang/lib/Frontend/FrontendAction.cpp b/flang/lib/Frontend/FrontendAction.cpp
-index e17f7ac42b5e65afb9b8a6f21e02d57348e05b74..86b9b2fe840c0d35ad3864d416e92ace2452086c 100644
+index a385e639a6d6799969e99f10ec3be6f386f04316..322416e9c800037ba744d72081cef705e9f071b6 100644
 --- a/flang/lib/Frontend/FrontendAction.cpp
 +++ b/flang/lib/Frontend/FrontendAction.cpp
-@@ -21,7 +21,7 @@
+@@ -25,7 +25,7 @@
  
  using namespace Fortran::frontend;
  

@@ -1,19 +1,56 @@
-From dff5a69551a02ca18ddd8d1737f81683820ac57b Mon Sep 17 00:00:00 2001
+From 5e34994710dc7be39eeae8a2c834b6b07131f6f6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Mar 2026 20:30:47 +0900
 Subject: [PATCH 57/66] [LLVM][Unittest][Cygwin] Diverge expected result on
  Cygwin host
 
 ---
+ llvm/tools/libCASPluginTest/CMakeLists.txt | 9 +++++++++
+ llvm/unittests/CAS/CASTestConfig.cpp       | 4 ++++
  llvm/unittests/CAS/ObjectStoreTest.cpp     | 2 ++
  llvm/unittests/CAS/OnDiskCASLoggerTest.cpp | 2 +-
  llvm/unittests/Support/CommandLineTest.cpp | 4 ++++
  llvm/unittests/Support/Path.cpp            | 2 +-
  llvm/unittests/Support/ProgramTest.cpp     | 8 ++++----
- 5 files changed, 12 insertions(+), 6 deletions(-)
+ 7 files changed, 25 insertions(+), 6 deletions(-)
 
+diff --git a/llvm/tools/libCASPluginTest/CMakeLists.txt b/llvm/tools/libCASPluginTest/CMakeLists.txt
+index 191b00c3aa37815f2cf813f241a4f41d42fd6f3b..a9f3e9a5cee68e596c58cf98858fa0999cde5296 100644
+--- a/llvm/tools/libCASPluginTest/CMakeLists.txt
++++ b/llvm/tools/libCASPluginTest/CMakeLists.txt
+@@ -17,4 +17,13 @@ set(LLVM_EXPORTED_SYMBOL_FILE ${CMAKE_CURRENT_SOURCE_DIR}/libCASPluginTest.expor
+ 
+ add_llvm_library(CASPluginTest SHARED ${SOURCES}
+   LINK_LIBS ${LLVM_PTHREAD_LIB}
++  BUILDTREE_ONLY
+ )
++
++if (CYGWIN)
++  # Create unversioned symlink manually (e.g. cygCASPluginTest.dll -> cygCASPluginTest-0.0.dll)
++  # since CMake doesn't generate it for Cygwin.
++  add_custom_command(TARGET CASPluginTest POST_BUILD
++    COMMAND ${CMAKE_COMMAND} -E create_symlink "$<TARGET_FILE_NAME:CASPluginTest>"
++    "$<TARGET_FILE_DIR:CASPluginTest>/$<TARGET_FILE_PREFIX:CASPluginTest>CASPluginTest$<TARGET_FILE_SUFFIX:CASPluginTest>")
++endif()
+diff --git a/llvm/unittests/CAS/CASTestConfig.cpp b/llvm/unittests/CAS/CASTestConfig.cpp
+index 30e8c11f818dd47bdd783ba29949e9fd6ff47808..b6c8f50fd22263bdc6d55decb450c7820489a7b5 100644
+--- a/llvm/unittests/CAS/CASTestConfig.cpp
++++ b/llvm/unittests/CAS/CASTestConfig.cpp
+@@ -32,8 +32,12 @@ std::string unittest::cas::getCASPluginPath() {
+   llvm::SmallString<256> PathBuf(sys::path::parent_path(
+       sys::path::parent_path(sys::path::parent_path(Executable))));
+ #ifndef _WIN32
++#ifdef __CYGWIN__
++  sys::path::append(PathBuf, "bin", "cygCASPluginTest.dll");
++#else
+   std::string LibName = "libCASPluginTest";
+   sys::path::append(PathBuf, "lib", LibName + LLVM_PLUGIN_EXT);
++#endif
+ #else
+   std::string LibName = "CASPluginTest";
+   sys::path::append(PathBuf, "bin", LibName + LLVM_PLUGIN_EXT);
 diff --git a/llvm/unittests/CAS/ObjectStoreTest.cpp b/llvm/unittests/CAS/ObjectStoreTest.cpp
-index d49f4a2c95152c9f2aa5b2d7af841ec974d748f2..27005624200bfa189b142da2a9587cf97f2716c4 100644
+index af248b6de84328ad12bee6e68a0f5fabf9e94280..d652f0435743defe654e743176f2eca2c7d30bd7 100644
 --- a/llvm/unittests/CAS/ObjectStoreTest.cpp
 +++ b/llvm/unittests/CAS/ObjectStoreTest.cpp
 @@ -422,6 +422,7 @@ TEST_F(OnDiskCASTest, OnDiskCASBlobsParallelMultiCAS) {

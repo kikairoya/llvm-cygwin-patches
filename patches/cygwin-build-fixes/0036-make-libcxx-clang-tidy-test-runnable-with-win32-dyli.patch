@@ -1,4 +1,4 @@
-From f85c0b90a445526aecf61f9b4a83596f1ae1e17d Mon Sep 17 00:00:00 2001
+From 15af60439e20585c6c0ab133466a931570943dfa Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 2 Mar 2026 22:00:33 +0900
 Subject: [PATCH 36/38] make libcxx clang-tidy test runnable with win32 dylib
@@ -12,7 +12,7 @@ Subject: [PATCH 36/38] make libcxx clang-tidy test runnable with win32 dylib
  4 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index 31aaf2977a9af235e3d479b4bc18b03a5a906817..c70739a6f2048e9b205b4eaae8d4c16fe3db42fb 100644
+index 8e63054dd11ec6eab5ec52925d12359398ef7bea..e493b47322a349324a75a5c4324753417c440a58 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
 @@ -339,6 +339,8 @@ endif()
@@ -52,7 +52,7 @@ index 8e125e51344fa60f7bff74ebb1ccbd097d7ce7dc..be16c517f99893e8e48fab7f46c25ffa
  target_include_directories(clangTidy INTERFACE
                             ${CLANG_INCLUDE_DIRS}
 diff --git a/libcxx/utils/libcxx/test/params.py b/libcxx/utils/libcxx/test/params.py
-index d0bb38ab84df496228b295702b2a1a6f6de1ab65..32cf6a7ae505a3de6301507a20d37d16a4a3fc38 100644
+index 21c88e4ea667fa6d74fe61d343abd9483b7c133c..a23e27c89a0b417813f0474eeb5b66795c8f5fb4 100644
 --- a/libcxx/utils/libcxx/test/params.py
 +++ b/libcxx/utils/libcxx/test/params.py
 @@ -8,6 +8,7 @@
@@ -63,7 +63,7 @@ index d0bb38ab84df496228b295702b2a1a6f6de1ab65..32cf6a7ae505a3de6301507a20d37d16
  from pathlib import Path
  
  from libcxx.test.dsl import *
-@@ -124,6 +125,7 @@ def getSizeOptimizationFlag(cfg):
+@@ -123,6 +124,7 @@ def getSizeOptimizationFlag(cfg):
  
  def testClangTidy(cfg, version, executable):
      try:

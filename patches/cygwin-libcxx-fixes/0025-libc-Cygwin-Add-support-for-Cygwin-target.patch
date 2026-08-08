@@ -1,4 +1,4 @@
-From 8478f019693320edea363980082f84942dad517e Mon Sep 17 00:00:00 2001
+From 53d8c71e90f687ecc1a47f35d1682b561a748c9e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 25/37] [libc++][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 25/37] [libc++][Cygwin] Add support for Cygwin target
  6 files changed, 47 insertions(+), 6 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index 31aaf2977a9af235e3d479b4bc18b03a5a906817..50697c9324d79e6227fd6acea969c9031a9255a1 100644
+index 8e63054dd11ec6eab5ec52925d12359398ef7bea..af40edb44e5a1b460c1a8d7f4ac5b873469b776d 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
 @@ -287,7 +287,7 @@ if (LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY
@@ -123,7 +123,7 @@ index 8c2b0abfb450f184f4bd722853299ab23946655d..23d753a965711e913f2ede561e8a1b83
  // clang-format on
  #      undef _LIBCPP_HAS_THREAD_API_PTHREAD
 diff --git a/libcxx/include/__configuration/attributes.h b/libcxx/include/__configuration/attributes.h
-index a49bedd1b874a4c95179a58cd30b512ed0e7f531..5e7137a8244c33d5e819b04d73d996ea90baf389 100644
+index 2f8841fce0a078a8d7b99209e309c825834500f6..deac9a2e02d1cef656a1ddd9bb9fa919de77372c 100644
 --- a/libcxx/include/__configuration/attributes.h
 +++ b/libcxx/include/__configuration/attributes.h
 @@ -55,13 +55,14 @@

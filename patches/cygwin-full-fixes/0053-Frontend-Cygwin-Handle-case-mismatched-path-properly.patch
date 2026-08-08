@@ -1,4 +1,4 @@
-From c4f53fa82d9ae7e5b280e9a3bb4e33dc62228c13 Mon Sep 17 00:00:00 2001
+From ac99e6110601364e7c469f2fd05eee4c2a38870e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 2 May 2025 23:16:55 +0900
 Subject: [PATCH 53/54] [Frontend][Cygwin] Handle case-mismatched path properly
@@ -14,10 +14,10 @@ using Win32API.
  2 files changed, 37 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Frontend/DependencyFile.cpp b/clang/lib/Frontend/DependencyFile.cpp
-index 00f4a54269cfa349497078e6305099954cd3d006..67c656a8bf0616dc45f7021f75354c6e60a002cd 100644
+index 5702d1dabcc8b599d3cf7f683d4585b32b62a9b1..eede8e01c91cabd2bcd6b1e8eb07d763a0a5403e 100644
 --- a/clang/lib/Frontend/DependencyFile.cpp
 +++ b/clang/lib/Frontend/DependencyFile.cpp
-@@ -199,7 +199,7 @@ void DependencyCollector::maybeAddDependency(StringRef Filename,
+@@ -200,7 +200,7 @@ void DependencyCollector::maybeAddDependency(StringRef Filename,
  
  bool DependencyCollector::addDependency(StringRef Filename) {
    StringRef SearchPath;

@@ -1,4 +1,4 @@
-From a796258bdbb2b6d6b07c63b16bbe9eedde8852f1 Mon Sep 17 00:00:00 2001
+From 8099ec54a996795d38bc56d0479d7efad5577155 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 27/37] [libc++abi][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 27/37] [libc++abi][Cygwin] Add support for Cygwin target
  6 files changed, 39 insertions(+), 23 deletions(-)
 
 diff --git a/libcxxabi/CMakeLists.txt b/libcxxabi/CMakeLists.txt
-index d9ab9c494c06394ca482988b2c47abb360dac528..85988b6795ffb4bcd14088d5aeccd93a59431e8f 100644
+index 902d4247fe6f7f39c33bb8bc2dc88f6c8ec5e99e..8e6de23897a46c6a4aa8cb2a3434a4679d7ad228 100644
 --- a/libcxxabi/CMakeLists.txt
 +++ b/libcxxabi/CMakeLists.txt
 @@ -161,7 +161,7 @@ if (NOT LIBCXXABI_ENABLE_SHARED AND NOT LIBCXXABI_ENABLE_STATIC)

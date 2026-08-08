@@ -1,4 +1,4 @@
-From 1ea08df83431aaab8967a7e96c1d896bb7ab7f57 Mon Sep 17 00:00:00 2001
+From 17506614abfa249e3379edd8760a49ac208cc721 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:44:20 +0900
 Subject: [PATCH 65/66] fix tests that use Bye
@@ -80,10 +80,10 @@ index 3941d5f7d49f24cfa3618fcbe6684bc3b61a7d21..31a8e24f768dde81610e54701e69008a
      SimplifyCFG.cpp
      DEPENDS
 diff --git a/llvm/test/CMakeLists.txt b/llvm/test/CMakeLists.txt
-index 3f1ee7c18bde7a71dd11168cb10427329cd75bda..31bb07723c06d38512ebdefb5787b0ce05078c2e 100644
+index 2a00a429e2626dc6a7dc8921b55137bf7ea91159..d53a1f811b5a5b4632274ba36299c87fdb15c038 100644
 --- a/llvm/test/CMakeLists.txt
 +++ b/llvm/test/CMakeLists.txt
-@@ -211,7 +211,7 @@ if(LLVM_INCLUDE_EXAMPLES)
+@@ -210,7 +210,7 @@ if(LLVM_INCLUDE_EXAMPLES)
        LLJITWithRemoteDebugging
        )
    endif()

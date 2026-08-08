@@ -1,4 +1,4 @@
-From 90ca341133ed1c7527b650a040164aaa3cb5e3a6 Mon Sep 17 00:00:00 2001
+From cbf4a9cdc2514b7cd05aacfe8d9b5977d0216f8d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 4/6] [compiler-rt][Test][Cygwin] Make test runnable for Cygwin
@@ -13,7 +13,7 @@ Subject: [PATCH 4/6] [compiler-rt][Test][Cygwin] Make test runnable for Cygwin
  5 files changed, 15 insertions(+), 3 deletions(-)
 
 diff --git a/compiler-rt/test/CMakeLists.txt b/compiler-rt/test/CMakeLists.txt
-index 3fab82518e75f50d408a5f322d8f586f16138748..e6bf78d4d49ef37781911991d2b35fbcc0120a0b 100644
+index fa2847c1b7dd04523661d1a73d6d996b3b96f9c3..836cac16bd65307944f508380e240c749cc1a989 100644
 --- a/compiler-rt/test/CMakeLists.txt
 +++ b/compiler-rt/test/CMakeLists.txt
 @@ -132,7 +132,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)

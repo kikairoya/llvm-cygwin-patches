@@ -1,4 +1,4 @@
-From c139b13bbace5d1c4efb8cd0ccd31457d27267f2 Mon Sep 17 00:00:00 2001
+From 3c1a983b3e2e182e617c7316b5230998d6070f3d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 23 Jul 2026 19:54:57 +0900
 Subject: [PATCH 55/66] [Cygwin] adjust lit test stability
@@ -34,10 +34,10 @@ index 681a56d9b45db467bacdf67b9740938dbe517e02..0c5083be5a2425592feb968580406eb1
              err = ""
          procData[i] = (out, err)
 diff --git a/llvm/utils/lit/lit/run.py b/llvm/utils/lit/lit/run.py
-index d1c56491cee0809ba3c64c36fcf915159337c959..90ac04fd475a68ce3a99f42c34653627205b0a11 100644
+index 1bc54e4bb1a51f7bcbeabd42cdd08d38da8f77c4..63269c7df871d72be9dc897a6c926acc1f966ba8 100644
 --- a/llvm/utils/lit/lit/run.py
 +++ b/llvm/utils/lit/lit/run.py
-@@ -148,7 +148,7 @@ class Run:
+@@ -151,7 +151,7 @@ class Run:
          # if we have more workers requested than the limit.
          # Also, allow to override the limit with the LIT_WINDOWS_MAX_WORKERS_PER_POOL environment variable.
          max_workers_per_pool = (

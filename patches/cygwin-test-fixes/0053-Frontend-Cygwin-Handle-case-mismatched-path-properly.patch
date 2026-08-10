@@ -1,4 +1,4 @@
-From ac99e6110601364e7c469f2fd05eee4c2a38870e Mon Sep 17 00:00:00 2001
+From 5159306004632c24cf33448bedd669cea85d2080 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 2 May 2025 23:16:55 +0900
 Subject: [PATCH 53/66] [Frontend][Cygwin] Handle case-mismatched path properly
@@ -27,7 +27,7 @@ index 5702d1dabcc8b599d3cf7f683d4585b32b62a9b1..eede8e01c91cabd2bcd6b1e8eb07d763
    llvm::SmallString<256> TmpPath = Filename;
    llvm::sys::path::native(TmpPath);
 diff --git a/llvm/lib/Support/Unix/Path.inc b/llvm/lib/Support/Unix/Path.inc
-index f5b01357565dfc76307bf9dd6fdd4968546f8a4c..d05a141fdb4a36b4a285f3eaec9a71406bb21ea4 100644
+index d01967330e12f0ac4d81754ab555bd3370f75550..04242e2ce029d1f23d4ff3adcc589b722ae34943 100644
 --- a/llvm/lib/Support/Unix/Path.inc
 +++ b/llvm/lib/Support/Unix/Path.inc
 @@ -55,6 +55,12 @@ extern char **environ;

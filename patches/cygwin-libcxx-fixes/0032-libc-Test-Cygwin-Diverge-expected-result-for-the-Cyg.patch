@@ -1,4 +1,4 @@
-From 583c61fc6b6dbc57e2d7530dac86ca71dfb93620 Mon Sep 17 00:00:00 2001
+From 88472fde9a84f2f0b1539fe80f8060f72a41633e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 32/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -39,19 +39,19 @@ index 23d753a965711e913f2ede561e8a1b8343b3b7ed..948757bbaab6c12a3d9841ea6077719f
  #  else
  #    define _LIBCPP_HAS_C8RTOMB_MBRTOC8 0
 diff --git a/libcxx/utils/libcxx/test/features/misc.py b/libcxx/utils/libcxx/test/features/misc.py
-index 3701498f595dc7481a831b99c6f811f101e1cfc1..966fca84fd06858379a425854a09f7a66a220def 100644
+index 318765e52708943ee1955814d7dfaa32aa7c0bb9..6ec73236470ccc04f8115e039ee1c8c8f607c718 100644
 --- a/libcxx/utils/libcxx/test/features/misc.py
 +++ b/libcxx/utils/libcxx/test/features/misc.py
-@@ -124,7 +124,7 @@ features = [
+@@ -122,7 +122,7 @@ features = [
+     # https://developercommunity.visualstudio.com/t/utf-8-locales-break-ctype-functions-for-wchar-type/1653678
+     Feature(
          name="win32-broken-utf8-wchar-ctype",
-         when=lambda cfg: not "_LIBCPP_HAS_LOCALIZATION" in compilerMacros(cfg)
-         or compilerMacros(cfg)["_LIBCPP_HAS_LOCALIZATION"] == "1"
--        and "_WIN32" in compilerMacros(cfg)
-+        and ("_WIN32" in compilerMacros(cfg) or "__CYGWIN__" in compilerMacros(cfg))
-         and not programSucceeds(
+-        when=lambda cfg: "_WIN32" in compilerMacros(cfg)
++        when=lambda cfg: ("_WIN32" in compilerMacros(cfg) or "__CYGWIN__" in compilerMacros(cfg))
+         and programSucceeds(
              cfg,
              """
-@@ -141,7 +141,7 @@ features = [
+@@ -147,7 +147,7 @@ features = [
      # https://developercommunity.visualstudio.com/t/printf-formatting-with-g-outputs-too/1660837
      Feature(
          name="win32-broken-printf-g-precision",

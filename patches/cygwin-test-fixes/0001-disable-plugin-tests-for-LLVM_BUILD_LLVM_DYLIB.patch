@@ -1,4 +1,4 @@
-From 193671ee12809ae29d0e45c9814a3211e4087f9e Mon Sep 17 00:00:00 2001
+From 836f147ab17ec9ea1e66d241a878ea3fb316efcf Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 9 Nov 2025 20:59:22 +0900
 Subject: [PATCH 01/66] disable plugin tests for LLVM_BUILD_LLVM_DYLIB

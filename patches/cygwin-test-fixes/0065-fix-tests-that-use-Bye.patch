@@ -1,4 +1,4 @@
-From 17506614abfa249e3379edd8760a49ac208cc721 Mon Sep 17 00:00:00 2001
+From 181bcfb5053a8b3054370b81c4f945d63a0de90f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:44:20 +0900
 Subject: [PATCH 65/66] fix tests that use Bye

@@ -1,4 +1,4 @@
-From 4ccb3b08823aff50221c90dc9914a9434662609d Mon Sep 17 00:00:00 2001
+From 75c8fdf04f4c53b7979722b14f54f7a177905bcc Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 29 Jun 2026 00:53:37 +0900
 Subject: [PATCH 36/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -34,6 +34,7 @@ Subject: [PATCH 36/37] [libc++][Test][Cygwin] Diverge expected result for the
  .../get_one_wide.pass.cpp                     |  3 ++
  .../locale.numpunct.byname/grouping.pass.cpp  |  2 +-
  .../thousands_sep.pass.cpp                    |  4 +-
+ .../re/re.traits/transform_primary.pass.cpp   |  1 +
  .../strings/string.conversions/stod.pass.cpp  |  3 ++
  .../strings/string.conversions/stof.pass.cpp  |  3 ++
  .../strings/string.conversions/stold.pass.cpp |  3 ++
@@ -68,7 +69,7 @@ Subject: [PATCH 36/37] [libc++][Test][Cygwin] Diverge expected result for the
  libcxx/test/support/locale_helpers.h          |  8 ++--
  libcxx/test/support/platform_support.h        |  7 +++
  libcxx/utils/libcxx/test/features/platform.py |  4 ++
- 63 files changed, 185 insertions(+), 50 deletions(-)
+ 64 files changed, 186 insertions(+), 50 deletions(-)
 
 diff --git a/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp b/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
 index 88672851f7b6b2cc55e601bf72344ba8d4668fdd..5530d62f8d73d400fe52fc2764b39e4c32a907d2 100644
@@ -571,6 +572,18 @@ index 8074c889bab4ccb93259fabc724dbb535075307d..6f0d9a1d31aab47432661694c647d053
  #else
              const char sep = ',';
  #endif
+diff --git a/libcxx/test/std/re/re.traits/transform_primary.pass.cpp b/libcxx/test/std/re/re.traits/transform_primary.pass.cpp
+index b86804b6eed3ab56e12c3479305524997c76bf3a..4cac580d05da965b07dc3c62f276b2a5b5a5ceb2 100644
+--- a/libcxx/test/std/re/re.traits/transform_primary.pass.cpp
++++ b/libcxx/test/std/re/re.traits/transform_primary.pass.cpp
+@@ -10,6 +10,7 @@
+ // XFAIL: netbsd
+ 
+ // XFAIL: LIBCXX-AIX-FIXME
++// XFAIL: LIBCXX-CYGWIN-FIXME
+ 
+ // REQUIRES: locale.cs_CZ.ISO8859-2
+ 
 diff --git a/libcxx/test/std/strings/string.conversions/stod.pass.cpp b/libcxx/test/std/strings/string.conversions/stod.pass.cpp
 index bbe992fbc565e71436f40c26e532496d569763ea..cba2c0f1fbbd92eb0bcd456b1072b0a10f03029d 100644
 --- a/libcxx/test/std/strings/string.conversions/stod.pass.cpp

@@ -1,14 +1,13 @@
-From 88472fde9a84f2f0b1539fe80f8060f72a41633e Mon Sep 17 00:00:00 2001
+From 6a0c11a5f5a59d9e3ab7910b673f18367615c9a5 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 32/37] [libc++][Test][Cygwin] Diverge expected result for the
  Cygwin target (part 1/5 - test setup)
 
 ---
- libcxx/CMakeLists.txt                     | 4 +++-
- libcxx/include/__config                   | 2 +-
- libcxx/utils/libcxx/test/features/misc.py | 4 ++--
- 3 files changed, 6 insertions(+), 4 deletions(-)
+ libcxx/CMakeLists.txt   | 4 +++-
+ libcxx/include/__config | 2 +-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
 index 1cfc9462dc2738ca33d3e6be8921b122c5c339c3..ec07b9b1bc896a26c1c29b1d015f1438e0c4eb0d 100644
@@ -38,28 +37,6 @@ index 23d753a965711e913f2ede561e8a1b8343b3b7ed..948757bbaab6c12a3d9841ea6077719f
  #    define _LIBCPP_HAS_C8RTOMB_MBRTOC8 1
  #  else
  #    define _LIBCPP_HAS_C8RTOMB_MBRTOC8 0
-diff --git a/libcxx/utils/libcxx/test/features/misc.py b/libcxx/utils/libcxx/test/features/misc.py
-index 318765e52708943ee1955814d7dfaa32aa7c0bb9..6ec73236470ccc04f8115e039ee1c8c8f607c718 100644
---- a/libcxx/utils/libcxx/test/features/misc.py
-+++ b/libcxx/utils/libcxx/test/features/misc.py
-@@ -122,7 +122,7 @@ features = [
-     # https://developercommunity.visualstudio.com/t/utf-8-locales-break-ctype-functions-for-wchar-type/1653678
-     Feature(
-         name="win32-broken-utf8-wchar-ctype",
--        when=lambda cfg: "_WIN32" in compilerMacros(cfg)
-+        when=lambda cfg: ("_WIN32" in compilerMacros(cfg) or "__CYGWIN__" in compilerMacros(cfg))
-         and programSucceeds(
-             cfg,
-             """
-@@ -147,7 +147,7 @@ features = [
-     # https://developercommunity.visualstudio.com/t/printf-formatting-with-g-outputs-too/1660837
-     Feature(
-         name="win32-broken-printf-g-precision",
--        when=lambda cfg: "_WIN32" in compilerMacros(cfg)
-+        when=lambda cfg: ("_WIN32" in compilerMacros(cfg) or "__CYGWIN__" in compilerMacros(cfg))
-         and not programSucceeds(
-             cfg,
-             """
 -- 
 2.54.0
 

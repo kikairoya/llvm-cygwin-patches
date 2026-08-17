@@ -1,4 +1,4 @@
-From 492ed1482b1b7a3030c9340dfa1a04416dff19c2 Mon Sep 17 00:00:00 2001
+From 8261ef46beb2d6a65ddaf5f38edd6b2a0d397a51 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 2 Mar 2026 22:00:33 +0900
 Subject: [PATCH 36/54] make libcxx clang-tidy test runnable with win32 dylib
@@ -72,5 +72,5 @@ index 21c88e4ea667fa6d74fe61d343abd9483b7c133c..a23e27c89a0b417813f0474eeb5b6679
              return executable
      except ConfigurationRuntimeError:
 -- 
-2.54.0
+2.55.0
 

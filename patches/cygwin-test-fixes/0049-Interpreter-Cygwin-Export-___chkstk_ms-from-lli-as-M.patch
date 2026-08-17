@@ -1,4 +1,4 @@
-From 73cb62ba2195fb3ba938d575e2a357440348b379 Mon Sep 17 00:00:00 2001
+From 4d6a740d36f8eae57ad4963f7248b793e4a1d05c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 May 2025 22:37:15 +0900
 Subject: [PATCH 49/66] [Interpreter][Cygwin] Export ___chkstk_ms from lli as
@@ -9,10 +9,10 @@ Subject: [PATCH 49/66] [Interpreter][Cygwin] Export ___chkstk_ms from lli as
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/llvm/tools/lli/lli.cpp b/llvm/tools/lli/lli.cpp
-index cbc85d6272010133181942dc746b0ad38b8c165a..d16daafc81f48e3a6f3c5c57f1bfb12a0294c76e 100644
+index 97d2e7191e9b08df417a91aabd542b945e873b56..37d760876bf77bed6b27dc2be8330888fc3e4fb5 100644
 --- a/llvm/tools/lli/lli.cpp
 +++ b/llvm/tools/lli/lli.cpp
-@@ -1289,7 +1289,7 @@ static Expected<std::unique_ptr<orc::ExecutorProcessControl>> launchRemote() {
+@@ -1294,7 +1294,7 @@ static Expected<std::unique_ptr<orc::ExecutorProcessControl>> launchRemote() {
  //
  // TODO: Move this into libORC at some point, see
  // https://github.com/llvm/llvm-project/issues/56603.
@@ -22,5 +22,5 @@ index cbc85d6272010133181942dc746b0ad38b8c165a..d16daafc81f48e3a6f3c5c57f1bfb12a
  // require compiling with -fms-extensions.
  #if defined(__i386__)
 -- 
-2.54.0
+2.55.0
 

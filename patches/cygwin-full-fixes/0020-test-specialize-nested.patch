@@ -1,4 +1,4 @@
-From e93e92007b37a3a7aded4b4e4a469cc593bdc427 Mon Sep 17 00:00:00 2001
+From 6f977f1786e8d0f35f0836dd3e9208036d02a457 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:40 +0900
 Subject: [PATCH 20/54] test specialize nested
@@ -130,5 +130,5 @@ index 2e7554545e3de5f18e2f632fa9f5a2c2a9d29df4..f332bb13c7962bab8820b3f059fa12f2
  //
  // Imported specialization of nested class:
 -- 
-2.54.0
+2.55.0
 

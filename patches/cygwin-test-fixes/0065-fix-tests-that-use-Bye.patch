@@ -1,4 +1,4 @@
-From 4058b5eeaa06543091959cf0e5c9e0f608afb438 Mon Sep 17 00:00:00 2001
+From a377e7a0ee1b535731372c8ebf2879b9984ef540 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:44:20 +0900
 Subject: [PATCH 65/66] fix tests that use Bye
@@ -106,5 +106,5 @@ index cd36ef14d8ec3311a5ad43f3b1c7448d5ff8c9e1..38d8210e62fc286a3fdc4edd38f96882
  ; XFAIL: target={{.*}}-aix{{.*}}
  ; CHECK-ASM: somefunk:
 -- 
-2.54.0
+2.55.0
 

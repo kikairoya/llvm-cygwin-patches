@@ -1,4 +1,4 @@
-From 8f5e5aa94c76018da57adc5961b9a7b8487223ec Mon Sep 17 00:00:00 2001
+From 02a1056ed70a0248c041074119742fe70177f60d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Feb 2026 19:54:03 +0900
 Subject: [PATCH 41/66] don't use Cygwin provided stdatomic.h
@@ -20,5 +20,5 @@ index 1991351f9e9efed0fc4154afe02c9a9faf200c73..76e5da0eef36562c7612e8e6819b42e1
      (!defined(_MSC_VER) || (defined(__cplusplus) && __cplusplus >= 202002L))
  # include_next <stdatomic.h>
 -- 
-2.54.0
+2.55.0
 

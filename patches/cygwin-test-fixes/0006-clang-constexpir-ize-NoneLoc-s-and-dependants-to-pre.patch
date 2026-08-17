@@ -1,4 +1,4 @@
-From bdb102143c906f5f7504cebebeb29729b1855b51 Mon Sep 17 00:00:00 2001
+From 632602b262e3e8782e0e55c4c8d2f314ca464702 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/66] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -14,10 +14,10 @@ Subject: [PATCH 06/66] [clang] constexpir-ize `NoneLoc`s and dependants to
  6 files changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/clang/include/clang/AST/DeclTemplate.h b/clang/include/clang/AST/DeclTemplate.h
-index ed1a5172479435c0630d2afc6555afe170a4afdb..ed78678c0dd0c0f0ae4371ffb21c00bda934527c 100644
+index f5b26b0aab9ba03fe19eee1417953f96d60b5b2d..aaba9be8b5986c30a406ebc2a367b8becbd825b8 100644
 --- a/clang/include/clang/AST/DeclTemplate.h
 +++ b/clang/include/clang/AST/DeclTemplate.h
-@@ -1227,7 +1227,7 @@ public:
+@@ -1228,7 +1228,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -26,7 +26,7 @@ index ed1a5172479435c0630d2afc6555afe170a4afdb..ed78678c0dd0c0f0ae4371ffb21c00bd
      return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
    }
  
-@@ -1430,7 +1430,7 @@ public:
+@@ -1431,7 +1431,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -35,7 +35,7 @@ index ed1a5172479435c0630d2afc6555afe170a4afdb..ed78678c0dd0c0f0ae4371ffb21c00bd
      return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
    }
  
-@@ -1712,7 +1712,7 @@ public:
+@@ -1713,7 +1713,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -81,7 +81,7 @@ index c2db63382e13fc0e96d27cc11219ce28eddae3f0..da98e13cc417b6711fb421539158a572
    constexpr intptr_t asInt() const {
      intptr_t R = 0;
 diff --git a/llvm/include/llvm/ADT/PointerUnion.h b/llvm/include/llvm/ADT/PointerUnion.h
-index 93caf86e965b5fd2e08e0214f17062b68abf151a..dbbe005967fb2073948ec481f73e3649e86eceb2 100644
+index 6c1a378aadedac888c61c2bb3de342bd158bfde6..249c8914fa6244e48b5ae7bd0d35e7ecf2f8e3c1 100644
 --- a/llvm/include/llvm/ADT/PointerUnion.h
 +++ b/llvm/include/llvm/ADT/PointerUnion.h
 @@ -135,7 +135,7 @@ class PointerUnionMembers;
@@ -114,7 +114,7 @@ index 93caf86e965b5fd2e08e0214f17062b68abf151a..dbbe005967fb2073948ec481f73e3649
    using Base::operator=;
  
 diff --git a/llvm/include/llvm/CodeGen/SlotIndexes.h b/llvm/include/llvm/CodeGen/SlotIndexes.h
-index 5b40bd26a991c90b31c115a5a27d87b0c3c5ace9..29011e7013dd8538ff9309d2525cfcdef4f760ad 100644
+index cc5143b028e883f5f8d331f741cad216de30e323..2fdac21e9464bc6cb80f52384a102777004c36c3 100644
 --- a/llvm/include/llvm/CodeGen/SlotIndexes.h
 +++ b/llvm/include/llvm/CodeGen/SlotIndexes.h
 @@ -116,7 +116,7 @@ class raw_ostream;
@@ -140,5 +140,5 @@ index 2a176b4f2cf7b181a4100b3bd8e08f1544614bcf..ed6137ab0fe3622ac4bfd593272b5390
  
    /// Entry - A cache entry containing interference information for all aliases
 -- 
-2.54.0
+2.55.0
 

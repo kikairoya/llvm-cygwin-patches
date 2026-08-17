@@ -1,4 +1,4 @@
-From 39e4bc2014bba3ca317946326f5e3e3a02f4954a Mon Sep 17 00:00:00 2001
+From c0abefe2f02e2fd0b27141e748074480fd7badf9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:56:11 +0900
 Subject: [PATCH 66/66] [Plugin][unittest] Disable unittests for plugin when
@@ -40,5 +40,5 @@ index e9e839904a2e68dbf3478a839645472aa55cb385..d42d32eb65a09594fd4d936c567b3ebd
    GTEST_SKIP();
  #endif
 -- 
-2.54.0
+2.55.0
 

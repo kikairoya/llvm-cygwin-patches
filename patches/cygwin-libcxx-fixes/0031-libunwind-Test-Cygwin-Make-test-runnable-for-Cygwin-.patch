@@ -1,4 +1,4 @@
-From f71027a1c4d3465a79d292e05f633f72e713ac3f Mon Sep 17 00:00:00 2001
+From 9c3b9a53bb2827f9dbbbbd35847fb78eea121663 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 31/37] [libunwind][Test][Cygwin] Make test runnable for Cygwin
@@ -49,7 +49,7 @@ index 93a3a0b74c8766e66fc8572b8f64e437553113b6..b4a0cd192e508b63e5e71cba1c9ea8eb
    # necessarily the ones that the callers will use anyway) with the
 diff --git a/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in b/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in
 new file mode 100644
-index 0000000000000000000000000000000000000000..b01784665582d377e88c2dca60420589d65074b0
+index 0000000000000000000000000000000000000000..e40a1134a3399e1e1bfbb1c88e8853ced8a0187d
 --- /dev/null
 +++ b/libunwind/test/configs/llvm-libunwind-shared-cygwin.cfg.in
 @@ -0,0 +1,25 @@
@@ -60,7 +60,7 @@ index 0000000000000000000000000000000000000000..b01784665582d377e88c2dca60420589
 +
 +config.substitutions.append(('%{flags}', ''))
 +config.substitutions.append(('%{compile_flags}',
-+    '-nostdinc++ -I %{include} -funwind-tables'
++    '-nostdinc++ -I %{include} -I %{libcxx}/test/support -funwind-tables'
 +))
 +config.substitutions.append(('%{link_flags}',
 +    '-L %{lib} -lunwind'
@@ -80,7 +80,7 @@ index 0000000000000000000000000000000000000000..b01784665582d377e88c2dca60420589
 +)
 diff --git a/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in b/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 new file mode 100644
-index 0000000000000000000000000000000000000000..dc490a08ba1a63389ccdc01a036020a06e805c49
+index 0000000000000000000000000000000000000000..59a55b372384fbb6383575a68b52f85e9136077c
 --- /dev/null
 +++ b/libunwind/test/configs/llvm-libunwind-static-cygwin.cfg.in
 @@ -0,0 +1,25 @@
@@ -91,7 +91,7 @@ index 0000000000000000000000000000000000000000..dc490a08ba1a63389ccdc01a036020a0
 +
 +config.substitutions.append(('%{flags}', ''))
 +config.substitutions.append(('%{compile_flags}',
-+    '-nostdinc++ -I %{include} -funwind-tables'
++    '-nostdinc++ -I %{include} -I %{libcxx}/test/support -funwind-tables'
 +))
 +config.substitutions.append(('%{link_flags}',
 +    '-L %{lib} -lunwind'
@@ -110,5 +110,5 @@ index 0000000000000000000000000000000000000000..dc490a08ba1a63389ccdc01a036020a0
 +    lit_config
 +)
 -- 
-2.54.0
+2.55.0
 

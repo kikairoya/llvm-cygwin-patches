@@ -1,4 +1,4 @@
-From abed340ce1cf9ac4bec85481bc00e2a4ea80f8e7 Mon Sep 17 00:00:00 2001
+From a1695b328ed07d5b3e8787863958f1f06b3af8b7 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Mar 2026 20:30:47 +0900
 Subject: [PATCH 57/66] [LLVM][Unittest][Cygwin] Diverge expected result on
@@ -14,12 +14,12 @@ Subject: [PATCH 57/66] [LLVM][Unittest][Cygwin] Diverge expected result on
  6 files changed, 22 insertions(+), 6 deletions(-)
 
 diff --git a/llvm/tools/libCASPluginTest/CMakeLists.txt b/llvm/tools/libCASPluginTest/CMakeLists.txt
-index 2f3a9a35389b1d964bc66a47191c3fe69d3d31ae..c2407d19f6acdf416e0c9236d96b81da386f892f 100644
+index a37c8dc603c535a7da08d9aa53d3bd81ceb08200..611af9440b47442d8e09c00a385033611592bf26 100644
 --- a/llvm/tools/libCASPluginTest/CMakeLists.txt
 +++ b/llvm/tools/libCASPluginTest/CMakeLists.txt
-@@ -18,4 +18,14 @@ set(LLVM_EXPORTED_SYMBOL_FILE ${CMAKE_CURRENT_SOURCE_DIR}/libCASPluginTest.expor
- 
- add_llvm_library(CASPluginTest SHARED ${SOURCES}
+@@ -19,4 +19,14 @@ set(LLVM_EXPORTED_SYMBOL_FILE ${CMAKE_CURRENT_SOURCE_DIR}/libCASPluginTest.expor
+ # Only loaded by CAS unit tests out of the build tree.
+ add_llvm_library(CASPluginTest SHARED BUILDTREE_ONLY ${SOURCES}
    LINK_LIBS ${LLVM_PTHREAD_LIB}
 +  BUILDTREE_ONLY
  )
@@ -33,10 +33,10 @@ index 2f3a9a35389b1d964bc66a47191c3fe69d3d31ae..c2407d19f6acdf416e0c9236d96b81da
 +endif()
 +
 diff --git a/llvm/unittests/CAS/ObjectStoreTest.cpp b/llvm/unittests/CAS/ObjectStoreTest.cpp
-index af248b6de84328ad12bee6e68a0f5fabf9e94280..d652f0435743defe654e743176f2eca2c7d30bd7 100644
+index aff7f783ee9abff4db6810b53c4c35018811cddd..db45ef011afbc24038beaac42057ea02edd245fe 100644
 --- a/llvm/unittests/CAS/ObjectStoreTest.cpp
 +++ b/llvm/unittests/CAS/ObjectStoreTest.cpp
-@@ -422,6 +422,7 @@ TEST_F(OnDiskCASTest, OnDiskCASBlobsParallelMultiCAS) {
+@@ -425,6 +425,7 @@ TEST_F(OnDiskCASTest, OnDiskCASBlobsParallelMultiCAS) {
    ASSERT_NO_FATAL_FAILURE(testBlobsParallel(*CAS1, *CAS2, *CAS3, *CAS4, Size));
  }
  
@@ -44,7 +44,7 @@ index af248b6de84328ad12bee6e68a0f5fabf9e94280..d652f0435743defe654e743176f2eca2
  TEST_F(OnDiskCASTest, OnDiskCASBlobsBigParallelMultiCAS) {
    // See comment in BlobsParallelMultiCAS.
    unittest::TempDir Temp("on-disk-cas", /*Unique=*/true);
-@@ -448,6 +449,7 @@ TEST_F(OnDiskCASTest, OnDiskCASBlobsBigParallelMultiCAS) {
+@@ -451,6 +452,7 @@ TEST_F(OnDiskCASTest, OnDiskCASBlobsBigParallelMultiCAS) {
    uint64_t Size = 100ULL * 1024;
    ASSERT_NO_FATAL_FAILURE(testBlobsParallel(*CAS1, *CAS2, *CAS3, *CAS4, Size));
  }
@@ -82,7 +82,7 @@ index 956d5b97c2703ed0b986e1202c53955e8f912ab1..dbc1afe80218d4abcd73cc128e026d53
  
    llvm::SmallString<128> RspOpt;
 diff --git a/llvm/unittests/Support/Path.cpp b/llvm/unittests/Support/Path.cpp
-index b63ab426bb080c048d2183ba2bb5778e0359e9ca..ed5aeddd976edd9bd16b17fe162e5e41e7a8daae 100644
+index 31599f6152e926fda71b33b4b8a78d243aa63cfc..195a75f96028681ed67d64edf7b699402d1c4c7b 100644
 --- a/llvm/unittests/Support/Path.cpp
 +++ b/llvm/unittests/Support/Path.cpp
 @@ -2563,7 +2563,7 @@ TEST_F(FileSystemTest, permissions) {
@@ -115,5 +115,5 @@ index af45336b388910aed735c063701a21b100495b92..a7ded3b39be948bb9d2f06ebfd7b0bc5
    ASSERT_EQ(0, RetCode);
  #endif
 -- 
-2.54.0
+2.55.0
 

@@ -1,4 +1,4 @@
-From 783ea8e0d1a21610a6a251be1814a783c1544e20 Mon Sep 17 00:00:00 2001
+From 12e07a898754f6d805449030a3c6ec76e3c1fd2c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:31 +0900
 Subject: [PATCH 19/66] specialize nested
@@ -9,10 +9,10 @@ Subject: [PATCH 19/66] specialize nested
  2 files changed, 51 insertions(+), 8 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index d824e5af368b9abdbb7516a97535b20eb7a8739e..5f4e121d1919a2d8fb1ce168be0b95926ff907ce 100644
+index 8641207a5b4089670b4434ec05950bbe18b8be44..a8fbb50b365d5c9fcc3fecfe4d29ba2ab76b3d19 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
-@@ -6682,6 +6682,9 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6708,6 +6708,9 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
              cast<InheritableAttr>(ClassAttr->clone(getASTContext()));
          NewAttr->setInherited(true);
          Member->addAttr(NewAttr);
@@ -23,10 +23,10 @@ index d824e5af368b9abdbb7516a97535b20eb7a8739e..5f4e121d1919a2d8fb1ce168be0b9592
        continue;
      }
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index 2ad8b7271b91cc69d215c4b984a23d181d71487c..6fb3031ed3fe29bd21535f8c6619411463835c5e 100644
+index 28664c41ab44fd676f210f9236a82bd2922866be..0022613efd762abe5593c477eb3193a7c48d80c3 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
-@@ -10221,8 +10221,8 @@ static bool ScopeSpecifierHasTemplateId(const CXXScopeSpec &SS) {
+@@ -10227,8 +10227,8 @@ static bool ScopeSpecifierHasTemplateId(const CXXScopeSpec &SS) {
  
  /// Make a dllexport or dllimport attr on a class template specialization take
  /// effect.
@@ -37,7 +37,7 @@ index 2ad8b7271b91cc69d215c4b984a23d181d71487c..6fb3031ed3fe29bd21535f8c66194114
    auto *A = cast_or_null<InheritableAttr>(getDLLAttr(Def));
    assert(A && "dllExportImportClassTemplateSpecialization called "
                "on Def without dllexport or dllimport");
-@@ -10533,21 +10533,23 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10539,21 +10539,23 @@ DeclResult Sema::ActOnExplicitInstantiation(
      }
  
      if ((NewlyDLLExported && PreviouslyDLLImported) ||
@@ -65,7 +65,7 @@ index 2ad8b7271b91cc69d215c4b984a23d181d71487c..6fb3031ed3fe29bd21535f8c66194114
              if (Member->hasAttr<ExcludeFromExplicitInstantiationAttr>())
                return false;
              auto *VD = dyn_cast<VarDecl>(Member);
-@@ -10556,9 +10558,36 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10562,9 +10564,36 @@ DeclResult Sema::ActOnExplicitInstantiation(
                               : MD ? MD->getTemplateSpecializationKind()
                                    : TSK_Undeclared;
              return MemberTSK == TSK_ImplicitInstantiation && Member->isUsed();
@@ -104,7 +104,7 @@ index 2ad8b7271b91cc69d215c4b984a23d181d71487c..6fb3031ed3fe29bd21535f8c66194114
          if (Context.getTargetInfo().getTriple().isOSCygMing() &&
              TSK == TSK_ExplicitInstantiationDeclaration && NewlyDLLImported) {
            // In MinGW mode, all undefined symbols are also searched from DLLs
-@@ -10574,6 +10603,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10580,6 +10609,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
                << /*implicit|explicit=*/0;
          }
        } else {
@@ -112,7 +112,7 @@ index 2ad8b7271b91cc69d215c4b984a23d181d71487c..6fb3031ed3fe29bd21535f8c66194114
          dllExportImportClassTemplateSpecialization(*this, Specialization);
          if (Def != Specialization) {
            if (!getDLLAttr(Def)) {
-@@ -10588,6 +10618,16 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10594,6 +10624,16 @@ DeclResult Sema::ActOnExplicitInstantiation(
      }
  
      InstantiateClassTemplateSpecializationMembers(TemplateNameLoc, Def, TSK);
@@ -130,5 +130,5 @@ index 2ad8b7271b91cc69d215c4b984a23d181d71487c..6fb3031ed3fe29bd21535f8c66194114
  
      // Set the template specialization kind.
 -- 
-2.54.0
+2.55.0
 

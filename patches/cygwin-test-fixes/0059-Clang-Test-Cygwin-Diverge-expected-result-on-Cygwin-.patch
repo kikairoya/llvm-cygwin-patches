@@ -1,4 +1,4 @@
-From 606d436bc4570212c909134ab8f187a39cc5221f Mon Sep 17 00:00:00 2001
+From 033d2adab4a26ae0db9710a60e26c89042606348 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 59/66] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -263,5 +263,5 @@ index f7ac5d6d6676eadd696fc13bb0c9f69bbf862adf..2c2e2018b099020661040d1a0dacaa91
  
  # Features
 -- 
-2.54.0
+2.55.0
 

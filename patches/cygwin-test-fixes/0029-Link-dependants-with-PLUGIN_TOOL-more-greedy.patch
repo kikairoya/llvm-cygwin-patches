@@ -1,4 +1,4 @@
-From 0c23a31a9cfe0eb73e223f2adc29f68c4df39101 Mon Sep 17 00:00:00 2001
+From 838ac64e653e8dbe25a99b65a6b4467d33fe1b3a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 31 Jul 2026 22:57:24 +0900
 Subject: [PATCH 29/66] Link dependants with PLUGIN_TOOL more greedy
@@ -101,5 +101,5 @@ index 88b34b1289bc3e2ea5095f36c4f6924f59b240cb..e4aa3452522a76d1b7138c511d3e7d29
  
  function(export_executable_symbols target)
 -- 
-2.54.0
+2.55.0
 

@@ -1,4 +1,4 @@
-From 5294322a62dfc9b83a25f88627c8c0fbeac3b371 Mon Sep 17 00:00:00 2001
+From 13dcbce3869388b8a2c95848e322338ade45e6e6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 28 Jun 2026 18:16:32 +0900
 Subject: [PATCH 47/66] [Clang][Cygwin] Link default-manifest unless
@@ -26,5 +26,5 @@ index ecf184e340e7c077c8a233d3b89ea71f43b889a1..2faaa3f36d65a898628918fb8ade14e4
      }
    }
 -- 
-2.54.0
+2.55.0
 

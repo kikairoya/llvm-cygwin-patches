@@ -1,4 +1,4 @@
-From 5755cfe6713258ec5af48adc2be97e8e7e2948f6 Mon Sep 17 00:00:00 2001
+From ff84c9df9027f65a9de415da0df3da85f253fcfa Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 23 Jul 2026 19:54:57 +0900
 Subject: [PATCH 55/66] [Cygwin] adjust lit test stability
@@ -10,10 +10,10 @@ Subject: [PATCH 55/66] [Cygwin] adjust lit test stability
  3 files changed, 12 insertions(+), 3 deletions(-)
 
 diff --git a/llvm/utils/lit/lit/TestRunner.py b/llvm/utils/lit/lit/TestRunner.py
-index 681a56d9b45db467bacdf67b9740938dbe517e02..0c5083be5a2425592feb968580406eb18e25d76c 100644
+index 30a39745d01b935d44d54544e766a9f46eea755e..6815f7fdacc72845c1256b4dc82b4b6eeb910348 100644
 --- a/llvm/utils/lit/lit/TestRunner.py
 +++ b/llvm/utils/lit/lit/TestRunner.py
-@@ -840,11 +840,17 @@ def _executeShCmd(cmd, shenv, results, timeoutHelper):
+@@ -872,11 +872,17 @@ def _executeShCmd(cmd, shenv, results, timeoutHelper):
  
      for i in range(len(procs) - 1):
          if procs[i].stdout is not None:
@@ -60,5 +60,5 @@ index a416c8da3eaff310ec616850b74c5bc0a08af34b..989b32ea93a1440e978babac151fe09d
  #
  # RUN: %{lit} %{inputs}/max-time --max-time=5 2>&1  |  FileCheck %s
 -- 
-2.54.0
+2.55.0
 

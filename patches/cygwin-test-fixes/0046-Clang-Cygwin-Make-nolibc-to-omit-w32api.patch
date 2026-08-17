@@ -1,4 +1,4 @@
-From 64ac7b02206513dcdc0695184fd2e42f06eb1566 Mon Sep 17 00:00:00 2001
+From 1338b1085c868aea33b2858c18c55752fa6f5c31 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 9 Apr 2026 19:11:20 +0900
 Subject: [PATCH 46/66] [Clang][Cygwin] Make `-nolibc` to omit w32api
@@ -42,5 +42,5 @@ index 145cdba09957b2b53fcf543a4fa84f2ae0af69bf..ecf184e340e7c077c8a233d3b89ea71f
        if (IsStatic)
          CmdArgs.push_back("--end-group");
 -- 
-2.54.0
+2.55.0
 

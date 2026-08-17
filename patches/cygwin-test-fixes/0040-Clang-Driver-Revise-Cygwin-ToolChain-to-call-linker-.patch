@@ -1,4 +1,4 @@
-From 2b5589e796c6eba1375ab9da6b42d30338f0f2e1 Mon Sep 17 00:00:00 2001
+From a59672c88255b8d1a5c70024196a110b9a6591d9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 20:09:56 +0900
 Subject: [PATCH 40/66] [Clang][Driver] Revise Cygwin ToolChain to call linker
@@ -532,5 +532,5 @@ index dd75c48ddc6b3bfc9f7372a1082ba9bdf312e2db..fd1b6249c6c3db05c39ce1eb94a1ca99
 +// CHECK-64-EXENAME-WITH-EXT:      "{{.*}}ld{{(\.exe)?}}"
 +// CHECK-64-EXENAME-WITH-EXT-SAME: "-o" "a.out"
 -- 
-2.54.0
+2.55.0
 

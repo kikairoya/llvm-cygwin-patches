@@ -1,4 +1,4 @@
-From fc53a86999557724fa9524083ef7e21d6bcaac66 Mon Sep 17 00:00:00 2001
+From 556731fcb56e83372449741e54d9fa14ec5a4f51 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 19:00:48 +0900
 Subject: [PATCH 15/54] update test
@@ -77,10 +77,10 @@ index 8a6a47830cafbd80a356daa6fda0928e6a03d046..b5c981dd0cebd2446b11aa872f304dd2
  // A fully-specialized nested class isn't an explicit instantation, so an inline method won't be imported.
  USE(&Class<ExpSpecNested>::Nested::Memfunc);
 diff --git a/clang/test/SemaCXX/dllexport.cpp b/clang/test/SemaCXX/dllexport.cpp
-index ba3efe43c197c16e1bb8f79e4fdbae9233f84753..0235ac430de03ef367593a34ce47b8d557931701 100644
+index 51c37e0d53eda9ddfa5cfff72bd41d40be86dbcd..24f39d813b498bcbc9f79f3a86544f34882fba99 100644
 --- a/clang/test/SemaCXX/dllexport.cpp
 +++ b/clang/test/SemaCXX/dllexport.cpp
-@@ -1063,43 +1063,38 @@ struct ClassTmplSpecializedMember { // gnu-note 5 {{'dllexport' attribute is mis
+@@ -1077,43 +1077,38 @@ struct ClassTmplSpecializedMember { // gnu-note 5 {{'dllexport' attribute is mis
    void member() {}
  };
  
@@ -173,5 +173,5 @@ index c0266be95cd62b600b438cdc24e14a09ac7f673c..1440d02eccc1fcad549c2cab10f1f4c0
  template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>::specializedMember1(); // non-gnu-note{{implicit instantiation first required here}}
  void anchor(ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
 -- 
-2.54.0
+2.55.0
 

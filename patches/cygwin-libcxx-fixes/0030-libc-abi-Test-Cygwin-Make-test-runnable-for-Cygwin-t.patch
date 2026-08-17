@@ -1,4 +1,4 @@
-From 4b772989b55c5e7c4fbc3d04c1cf5041b4525880 Mon Sep 17 00:00:00 2001
+From 1e3e64e903b1866dcf93afbcac1f598ec91bb2a9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 30/37] [libc++abi][Test][Cygwin] Make test runnable for Cygwin
@@ -55,5 +55,5 @@ index 0000000000000000000000000000000000000000..938d627fa42d779ca01f5b62bc9a6dbe
 +    lit_config
 +)
 -- 
-2.54.0
+2.55.0
 

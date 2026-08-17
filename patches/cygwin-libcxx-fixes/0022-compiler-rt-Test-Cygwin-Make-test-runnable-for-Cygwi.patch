@@ -1,4 +1,4 @@
-From 5097360cd1b52add4ee4bc7be537b48d4fd68a17 Mon Sep 17 00:00:00 2001
+From 4597918d555c88c87ec4d82501451583473ea4e2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 22/37] [compiler-rt][Test][Cygwin] Make test runnable for
@@ -26,7 +26,7 @@ index fa2847c1b7dd04523661d1a73d6d996b3b96f9c3..836cac16bd65307944f508380e240c74
  
      compiler_rt_test_runtime(lsan)
 diff --git a/compiler-rt/test/builtins/Unit/lit.cfg.py b/compiler-rt/test/builtins/Unit/lit.cfg.py
-index f1ebd61438bd92ef30d00dd5f054c7fa46f9046e..b212832501a6a20c6bbcf3b4cdc27f17f882402c 100644
+index 05f97844f5470e95fa5331c68a1e6219afedff60..d4ca4fe448358f7bb7c320912c807d2bc1275e7c 100644
 --- a/compiler-rt/test/builtins/Unit/lit.cfg.py
 +++ b/compiler-rt/test/builtins/Unit/lit.cfg.py
 @@ -73,6 +73,17 @@ elif config.target_os == "Windows":
@@ -84,5 +84,5 @@ index a6168cc4c4ceba601da7deb44c4bc58bfade73f0..7c3001be69dbaca4dbd6d68784bc7f5b
      config.unsupported = True
  
 -- 
-2.54.0
+2.55.0
 

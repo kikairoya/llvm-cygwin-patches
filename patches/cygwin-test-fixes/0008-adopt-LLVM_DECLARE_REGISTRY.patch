@@ -1,7 +1,7 @@
-From fe18e8069236214f0988a2985c89c15b84e7e567 Mon Sep 17 00:00:00 2001
+From bb9ec9f3442ad12cca04dfdddafdb80a03816858 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
-Subject: [PATCH 07/38] adopt LLVM_DECLARE_REGISTRY
+Subject: [PATCH 08/66] adopt LLVM_DECLARE_REGISTRY
 
 ---
  clang-tools-extra/clang-doc/Generators.cpp           |  2 +-
@@ -62,7 +62,7 @@ index 674f98108507f883015611aab671e56859708a0a..c69d47bb639b9f842600da15138dc0a3
  
  #endif // LLVM_CLANG_TOOLS_EXTRA_CLANG_DOC_GENERATOR_H
 diff --git a/clang-tools-extra/clang-tidy/ClangTidy.cpp b/clang-tools-extra/clang-tidy/ClangTidy.cpp
-index 32e18645880e134e6a871c45a9d10a52c9d4bb47..68464a3838df59ffeecf6f9d4042e0b9fe91a402 100644
+index 8135826ef660dcffd9e4b6f6aeaac5dec6b70b7e..b03a9fa6b03edd9732c3cbe5d582bc9b8dc3e205 100644
 --- a/clang-tools-extra/clang-tidy/ClangTidy.cpp
 +++ b/clang-tools-extra/clang-tidy/ClangTidy.cpp
 @@ -50,7 +50,7 @@ using namespace clang::driver;
@@ -435,5 +435,5 @@ index 67f363d26b25f4c1e1eddef87bbdf56913176105..4f25a6ba3257d45d1a5eaef1cfbf2fe2
  GCStrategy::GCStrategy() = default;
  
 -- 
-2.54.0
+2.55.0
 

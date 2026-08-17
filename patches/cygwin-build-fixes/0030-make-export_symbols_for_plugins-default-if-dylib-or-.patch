@@ -1,4 +1,4 @@
-From a56e62fa514145b77497d77b9dad715b7dfbfe80 Mon Sep 17 00:00:00 2001
+From 34465c6aa32e2cd309b072b64cb1f2c5d9686226 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 22:36:50 +0900
 Subject: [PATCH 30/38] make export_symbols_for_plugins default if dylib or
@@ -69,5 +69,5 @@ index e046ddf4d1a71785d8ed9130c512cff43b94a2da..e59a78f7f29ed6aac5de0ece2352ca2d
  
  # By default we should enable LLVM_ENABLE_IDE only for multi-configuration
 -- 
-2.54.0
+2.55.0
 

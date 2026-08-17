@@ -1,4 +1,4 @@
-From cde4de0f50a128a6acebdf735b21dd4c35908a80 Mon Sep 17 00:00:00 2001
+From 519865fea6b54a8494d49b75382af01b08c92507 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 20/37] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -46,7 +46,7 @@ index 3b86ba26f8a84ff2a375f905c7ede22066a754fc..f8ba68852bfa447cf363ca638957b6e9
  else()
    set(COMPILER_RT_HAS_PROFILE FALSE)
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index e7827f2201b4318739d7c665cc505a21975a4a30..e3b4cd29cc95a57ae8bdd7eaeabb4a786a1d9b75 100644
+index 12a3b068b337367e55ce46934d761e78ad03fdb5..97026b1fdd0a77b63c07ebeb8c6f256a0657cc4d 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -176,5 +176,5 @@ index 59fa2af3165449afa226f7699a6be797f7ffa404..c6eb075e9cf74089449197079ff82b06
    Header.BitmapDelta = (uint32_t)Header.BitmapDelta;
    Header.UniformCountersDelta = (uint32_t)Header.UniformCountersDelta;
 -- 
-2.54.0
+2.55.0
 

@@ -1,4 +1,4 @@
-From 5fc03747c7f5c5b34516c89a570a3bcb31496971 Mon Sep 17 00:00:00 2001
+From 0488bf0302c04f3998feceb1bee403465bccaa28 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 19 Mar 2026 21:47:26 +0900
 Subject: [PATCH 04/37] update test
@@ -9,10 +9,10 @@ Subject: [PATCH 04/37] update test
  2 files changed, 42 insertions(+), 32 deletions(-)
 
 diff --git a/clang/test/SemaCXX/dllexport.cpp b/clang/test/SemaCXX/dllexport.cpp
-index 0235ac430de03ef367593a34ce47b8d557931701..ba3efe43c197c16e1bb8f79e4fdbae9233f84753 100644
+index 24f39d813b498bcbc9f79f3a86544f34882fba99..51c37e0d53eda9ddfa5cfff72bd41d40be86dbcd 100644
 --- a/clang/test/SemaCXX/dllexport.cpp
 +++ b/clang/test/SemaCXX/dllexport.cpp
-@@ -1063,38 +1063,43 @@ struct ClassTmplSpecializedMember { // gnu-note 5 {{'dllexport' attribute is mis
+@@ -1077,38 +1077,43 @@ struct ClassTmplSpecializedMember { // gnu-note 5 {{'dllexport' attribute is mis
    void member() {}
  };
  
@@ -135,5 +135,5 @@ index aa8c823bfe85c21d3fcf1f11fbc0e4af858221fe..c0266be95cd62b600b438cdc24e14a09
  
  //===----------------------------------------------------------------------===//
 -- 
-2.54.0
+2.55.0
 

@@ -1,4 +1,4 @@
-From f4aa49e8e5860dbabbfc3286cdceea6f658630bc Mon Sep 17 00:00:00 2001
+From e14142e5a51a4828ead6e7e26fd7ac4ebb708345 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 May 2025 12:04:02 +0900
 Subject: [PATCH 58/66] [JIT][Test][Cygwin] Diverge expected result
@@ -100,7 +100,7 @@ index 9a822fc7ed55654339252523d066568d1e89dc7c..d7898170739ae8cd602b0be2efd4ae75
  
  @o = common global i32 0, align 4
 diff --git a/llvm/test/lit.cfg.py b/llvm/test/lit.cfg.py
-index 6f04a855d8cb828dde6ac09557c6c968a4e94bb5..6f6830c503f827b0834b8e1d44ea7d178ee59c17 100644
+index 03a57a59fa04aea3e8d224c38d09c55e86fe94a6..515e2ed17775d33af07b820e887e243bc8943630 100644
 --- a/llvm/test/lit.cfg.py
 +++ b/llvm/test/lit.cfg.py
 @@ -716,7 +716,7 @@ def host_unwind_supports_jit():
@@ -113,5 +113,5 @@ index 6f04a855d8cb828dde6ac09557c6c968a4e94bb5..6f6830c503f827b0834b8e1d44ea7d17
  
      # On Darwin/x86-64 clang produces both eh-frames and compact-unwind, and
 -- 
-2.54.0
+2.55.0
 

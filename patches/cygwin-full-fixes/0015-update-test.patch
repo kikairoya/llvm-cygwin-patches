@@ -1,7 +1,7 @@
-From 556731fcb56e83372449741e54d9fa14ec5a4f51 Mon Sep 17 00:00:00 2001
+From 6e9ac88672112add9d4b9cca1a0ac430fe3dd0d2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 19:00:48 +0900
-Subject: [PATCH 15/54] update test
+Subject: [PATCH 15/55] update test
 
 ---
  clang/test/CodeGenCXX/dllimport.cpp           |  6 ++---

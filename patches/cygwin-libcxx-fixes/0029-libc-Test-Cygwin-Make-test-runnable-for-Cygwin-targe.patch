@@ -1,4 +1,4 @@
-From b41162c75ef60ed47faba11ee77273489034775e Mon Sep 17 00:00:00 2001
+From 5f82c9cae560a4250af3e314a4c3b2bd4ba4b063 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 29/37] [libc++][Test][Cygwin] Make test runnable for Cygwin
@@ -14,7 +14,7 @@ Subject: [PATCH 29/37] [libc++][Test][Cygwin] Make test runnable for Cygwin
  create mode 100644 libcxx/test/configs/llvm-libc++-cygwin.cfg.in
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index af40edb44e5a1b460c1a8d7f4ac5b873469b776d..1cfc9462dc2738ca33d3e6be8921b122c5c339c3 100644
+index a97d7059baa21b0fb506b3013baa5b169bd1b727..972c6a94fee43c6980cf3407bc3c13bf476762e6 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
 @@ -160,6 +160,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -26,7 +26,7 @@ index af40edb44e5a1b460c1a8d7f4ac5b873469b776d..1cfc9462dc2738ca33d3e6be8921b122
  elseif(WIN32) # clang-cl
    if (LIBCXX_ENABLE_SHARED)
      set(LIBCXX_DEFAULT_TEST_CONFIG "llvm-libc++-shared-clangcl.cfg.in")
-@@ -917,7 +919,7 @@ if (DEFINED WIN32 AND LIBCXX_ENABLE_STATIC AND NOT LIBCXX_ENABLE_SHARED)
+@@ -900,7 +902,7 @@ if (DEFINED WIN32 AND LIBCXX_ENABLE_STATIC AND NOT LIBCXX_ENABLE_SHARED)
    config_define(ON _LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS)
  endif()
  

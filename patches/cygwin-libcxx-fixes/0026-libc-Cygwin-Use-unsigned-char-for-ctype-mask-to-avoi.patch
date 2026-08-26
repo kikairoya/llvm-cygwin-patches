@@ -1,4 +1,4 @@
-From 0060a275b38a465dc0d6e1219cc911b60695a50d Mon Sep 17 00:00:00 2001
+From 26776954fceb9421323139c3fe2cf25bba3b3f4b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:30:56 +0900
 Subject: [PATCH 26/37] [libc++][Cygwin] Use unsigned char for ctype mask to
@@ -28,7 +28,7 @@ index 1188928d7861191b3ec9780e85bfc68de22c0905..db0088417d984322917fda32d2ed61f7
    // positive value becomming negative.
    static const mask space  = static_cast<mask>(_S);
 diff --git a/libcxx/src/locale.cpp b/libcxx/src/locale.cpp
-index 3e1973ad5059d9f6ff9b2eafddca8b4310323271..a6af544cda5b1a77feef38fa8cb1afe5d01e78f8 100644
+index f3f2905da320b0e8cdb64d35199550db7733cc05..f5f2519824d82f7bf4ac7ee0fd0dd986921761fe 100644
 --- a/libcxx/src/locale.cpp
 +++ b/libcxx/src/locale.cpp
 @@ -908,6 +908,9 @@ const ctype<char>::mask* ctype<char>::classic_table() noexcept {

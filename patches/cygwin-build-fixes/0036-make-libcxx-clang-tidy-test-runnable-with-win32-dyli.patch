@@ -1,7 +1,7 @@
-From 8261ef46beb2d6a65ddaf5f38edd6b2a0d397a51 Mon Sep 17 00:00:00 2001
+From 70f92c84ffb120b91ff426d2cff37a960b1e9086 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 2 Mar 2026 22:00:33 +0900
-Subject: [PATCH 36/38] make libcxx clang-tidy test runnable with win32 dylib
+Subject: [PATCH 36/39] make libcxx clang-tidy test runnable with win32 dylib
  builds
 
 ---
@@ -12,7 +12,7 @@ Subject: [PATCH 36/38] make libcxx clang-tidy test runnable with win32 dylib
  4 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index 8e63054dd11ec6eab5ec52925d12359398ef7bea..e493b47322a349324a75a5c4324753417c440a58 100644
+index e28bbfaa0605dbf073e4d880e2e5de16903990e5..6ec741ef1418596c9c7cd811ca0c49cf4d161f10 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
 @@ -339,6 +339,8 @@ endif()

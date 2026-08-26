@@ -1,4 +1,4 @@
-From 47c97a2958884aa2e1a53661659ce4e2251649f0 Mon Sep 17 00:00:00 2001
+From b8aeb30c185da14e220c1ea71ff59906243f2acb Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 25/37] [libc++][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 25/37] [libc++][Cygwin] Add support for Cygwin target
  6 files changed, 47 insertions(+), 6 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index 8e63054dd11ec6eab5ec52925d12359398ef7bea..af40edb44e5a1b460c1a8d7f4ac5b873469b776d 100644
+index e28bbfaa0605dbf073e4d880e2e5de16903990e5..a97d7059baa21b0fb506b3013baa5b169bd1b727 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
 @@ -287,7 +287,7 @@ if (LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY
@@ -67,8 +67,8 @@ index 8e63054dd11ec6eab5ec52925d12359398ef7bea..af40edb44e5a1b460c1a8d7f4ac5b873
 +  endif()
  
    if (MSVC)
-     if ((NOT CMAKE_MSVC_RUNTIME_LIBRARY AND uppercase_CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-@@ -830,6 +850,8 @@ elseif (RUNTIMES_USE_LIBC STREQUAL "newlib")
+     # Required for standards-complaint wide character formatting functions
+@@ -813,6 +833,8 @@ elseif (RUNTIMES_USE_LIBC STREQUAL "newlib")
    config_define(1 _LIBCPP_LIBC_NEWLIB)
  elseif (RUNTIMES_USE_LIBC STREQUAL "llvm-libc")
    config_define(1 _LIBCPP_LIBC_LLVM_LIBC)
@@ -100,10 +100,10 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 8c2b0abfb450f184f4bd722853299ab23946655d..23d753a965711e913f2ede561e8a1b8343b3b7ed 100644
+index 31c573ba5dca3663a20fc2e86ae87ba9f0de49a9..3b41bca82ebbd7a0b3b8b5e8955a71952d992468 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -48,6 +48,10 @@
+@@ -47,6 +47,10 @@
  #      define _LIBCPP_MSVCRT // Using Microsoft's C Runtime library
  #    endif
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 1
@@ -114,7 +114,7 @@ index 8c2b0abfb450f184f4bd722853299ab23946655d..23d753a965711e913f2ede561e8a1b83
  #  else
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 0
  #  endif // defined(_WIN32)
-@@ -214,6 +218,7 @@ typedef __char32_t char32_t;
+@@ -208,6 +212,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \

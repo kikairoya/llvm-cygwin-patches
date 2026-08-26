@@ -1,7 +1,7 @@
-From 632602b262e3e8782e0e55c4c8d2f314ca464702 Mon Sep 17 00:00:00 2001
+From f5c8a57c5b92d8c9c60ec99eb1f1027a9333837e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
-Subject: [PATCH 06/38] [clang] constexpir-ize `NoneLoc`s and dependants to
+Subject: [PATCH 06/39] [clang] constexpir-ize `NoneLoc`s and dependants to
  prevent symbol dup
 
 ---
@@ -45,7 +45,7 @@ index f5b26b0aab9ba03fe19eee1417953f96d60b5b2d..aaba9be8b5986c30a406ebc2a367b8be
    }
  
 diff --git a/clang/include/clang/AST/TemplateBase.h b/clang/include/clang/AST/TemplateBase.h
-index f7d754ea6082bbc2d11d8bdd7223b44bc49850b6..8a5c6961bba64a4bb66cf3d3a8d70816860f5c48 100644
+index 4d1e8beeea18d4469747b10933a6a0011b57cb5a..26199b43b05a6b605b2d49f3955b6bb3b67e80f9 100644
 --- a/clang/include/clang/AST/TemplateBase.h
 +++ b/clang/include/clang/AST/TemplateBase.h
 @@ -491,7 +491,7 @@ struct TemplateArgumentLocInfo {
@@ -114,7 +114,7 @@ index 6c1a378aadedac888c61c2bb3de342bd158bfde6..249c8914fa6244e48b5ae7bd0d35e7ec
    using Base::operator=;
  
 diff --git a/llvm/include/llvm/CodeGen/SlotIndexes.h b/llvm/include/llvm/CodeGen/SlotIndexes.h
-index cc5143b028e883f5f8d331f741cad216de30e323..2fdac21e9464bc6cb80f52384a102777004c36c3 100644
+index eb9906e597f346aa2a16ee4fdf107bd8a96a39fb..7d974a26f4f2404314ef31e70aa4aa8ca73e0152 100644
 --- a/llvm/include/llvm/CodeGen/SlotIndexes.h
 +++ b/llvm/include/llvm/CodeGen/SlotIndexes.h
 @@ -116,7 +116,7 @@ class raw_ostream;

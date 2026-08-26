@@ -1,4 +1,4 @@
-From 4597918d555c88c87ec4d82501451583473ea4e2 Mon Sep 17 00:00:00 2001
+From 85100b379cbeaf04c0072f3d71d4297ce488eab4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 22/37] [compiler-rt][Test][Cygwin] Make test runnable for
@@ -72,10 +72,10 @@ index b622e072bcbfbc28554b5bd44c178de15b016823..2b64b52bf7f1ecb3187ef74ba228056e
 +if root.target_os not in ["Windows", "CYGWIN"]:
      config.unsupported = True
 diff --git a/compiler-rt/test/profile/lit.cfg.py b/compiler-rt/test/profile/lit.cfg.py
-index a6168cc4c4ceba601da7deb44c4bc58bfade73f0..7c3001be69dbaca4dbd6d68784bc7f5b6d9f0327 100644
+index c7109747b85e511ce71d2a641f18b9208adc22a6..c0b7b4ce2463e1a449d05331abf9d49495a41e7d 100644
 --- a/compiler-rt/test/profile/lit.cfg.py
 +++ b/compiler-rt/test/profile/lit.cfg.py
-@@ -165,6 +165,7 @@ if config.target_os not in [
+@@ -170,6 +170,7 @@ if config.target_os not in [
      "SunOS",
      "AIX",
      "Haiku",

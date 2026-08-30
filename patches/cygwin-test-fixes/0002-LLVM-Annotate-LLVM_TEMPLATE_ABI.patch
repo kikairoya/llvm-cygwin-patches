@@ -1,7 +1,7 @@
-From 833e3fc7b2c7d37d846caeee795d418fb863e10b Mon Sep 17 00:00:00 2001
+From d5e0d118a52cbbf8f044dc5e67c88d850930f1d6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
-Subject: [PATCH 02/67] [LLVM] Annotate LLVM_TEMPLATE_ABI
+Subject: [PATCH 02/66] [LLVM] Annotate LLVM_TEMPLATE_ABI
 
 ---
  llvm/include/llvm/ADT/SmallVector.h           |  4 ++--
@@ -212,10 +212,10 @@ index 6e445f678790353a97dd97d734b162b7dddc533b..d78bc69784aab40b20de3dcb1b00aaab
 +
 +template class LLVM_EXPORT_TEMPLATE llvm::AllAnalysesOn<MachineFunction>;
 diff --git a/llvm/lib/IR/Dominators.cpp b/llvm/lib/IR/Dominators.cpp
-index dbd6e71207f75b8f8223f49dbf87a9d509de3a76..11a30ef1c191d6f23921ea70ed377ba436f70642 100644
+index 7423d6bafce081021931e7010d54578ed8ab2dcc..3f32bc607afd9184f5a5b5182c0f721fcd4bebe6 100644
 --- a/llvm/lib/IR/Dominators.cpp
 +++ b/llvm/lib/IR/Dominators.cpp
-@@ -65,7 +65,7 @@ template class LLVM_EXPORT_TEMPLATE
+@@ -64,7 +64,7 @@ template class LLVM_EXPORT_TEMPLATE
  template class LLVM_EXPORT_TEMPLATE
      llvm::DominatorTreeBase<BasicBlock, true>; // PostDomTreeBase
  

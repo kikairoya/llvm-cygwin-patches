@@ -1,7 +1,7 @@
-From f5ed6ef9344aeaded4a6a4a7684b491ba8de6e9f Mon Sep 17 00:00:00 2001
+From 388b6eaefc28abe366450b00eecd8d672f8eff10 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:03:35 +0900
-Subject: [PATCH 05/55] [clang] Prevent symbol dup for
+Subject: [PATCH 05/54] [clang] Prevent symbol dup for
  DeclarationName::getUsingDirectiveName
 
 ---
@@ -40,7 +40,7 @@ index 5121b561288c033bfe03591f8908e739d90fd1b1..d0030ebe4e749aa4bc081c256a87aebc
    /// Evaluates true when this declaration name is non-empty.
    explicit operator bool() const {
 diff --git a/clang/lib/AST/DeclarationName.cpp b/clang/lib/AST/DeclarationName.cpp
-index 9a89a66f3f63aa44a0dbc3661a33734945062005..84ea72e645b42793383aea3f761b78ee75a6b9d8 100644
+index 105d2935d0c6397267aae7ef73037f8a50ea2d5c..1728c9f56d49a9639c1968c58f0da66f1b5f372a 100644
 --- a/clang/lib/AST/DeclarationName.cpp
 +++ b/clang/lib/AST/DeclarationName.cpp
 @@ -37,6 +37,13 @@

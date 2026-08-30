@@ -1,0 +1,34 @@
+From b7ad8958d5cb0464f0ea2e63898e0988d1ebf15d Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 28 Jun 2026 18:16:32 +0900
+Subject: [PATCH 47/66] [Clang][Cygwin] Link default-manifest unless
+ -nostartfiles nor -shared
+
+---
+ clang/lib/Driver/ToolChains/Cygwin.cpp | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
+index 98ce0b0d79c83d26b041d90904d5d0eea2f77651..7336c37645ddd0f8388daf2cabaf4bea0ee7f764 100644
+--- a/clang/lib/Driver/ToolChains/Cygwin.cpp
++++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
+@@ -376,8 +376,15 @@ void cygwin::Linker::ConstructJob(Compilation &C, const JobAction &JA,
+         tools::AddRunTimeLibs(ToolChain, D, CmdArgs, Args);
+     }
+ 
+-    if (!Args.hasArg(options::OPT_nostartfiles))
++    if (!Args.hasArg(options::OPT_nostartfiles)) {
++      if (!Args.hasArg(options::OPT_mdll, options::OPT_shared)) {
++        static constexpr const char *defmanifest = "default-manifest.o";
++        if (std::string O = ToolChain.GetFilePath(defmanifest);
++            O != defmanifest)
++          CmdArgs.push_back(Args.MakeArgString(std::move(O)));
++      }
+       CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath("crtend.o")));
++    }
+   }
+ 
+   Args.addAllArgs(CmdArgs, {options::OPT_T, options::OPT_t});
+-- 
+2.55.0
+

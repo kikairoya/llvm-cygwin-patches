@@ -1,7 +1,7 @@
-From 140093d0e984af3287aa3d1d786e754aad7765d6 Mon Sep 17 00:00:00 2001
+From 23e4787e53ce4ec555a699c0e21515aec1c41111 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 16 Mar 2026 06:52:39 +0900
-Subject: [PATCH 32/67] make llvm/Debuginfod static
+Subject: [PATCH 32/66] make llvm/Debuginfod static
 
 ---
  llvm/lib/Debuginfod/CMakeLists.txt | 6 +++++-

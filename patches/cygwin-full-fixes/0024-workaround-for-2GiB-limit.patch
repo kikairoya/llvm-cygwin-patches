@@ -1,7 +1,7 @@
-From 9bca763c6955e1a6f088f0cbd5dac9a49925dae7 Mon Sep 17 00:00:00 2001
+From e52be5ca96e771b92fd8db94b389f4b635b2a8ef Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 21 Sep 2025 09:57:11 +0900
-Subject: [PATCH 24/55] workaround for 2GiB limit
+Subject: [PATCH 24/54] workaround for 2GiB limit
 
 ---
  clang/unittests/CMakeLists.txt             | 4 ++++

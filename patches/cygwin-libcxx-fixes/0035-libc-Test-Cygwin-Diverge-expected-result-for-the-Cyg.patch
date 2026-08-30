@@ -1,4 +1,4 @@
-From e6642c9fd539be8ed0df55f0f705cca1cfbbe395 Mon Sep 17 00:00:00 2001
+From 0aad6f2d643aee75380421e69e475354b0f6b5f7 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:55:06 +0900
 Subject: [PATCH 35/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -240,10 +240,10 @@ index 2ad9efb32c60f0bc14195f8ca7d508163a118f36..68e919d08e422f5068b107c58c65ec09
          // the permissions on a directory that contains a bad symlink. This triggers
          // the assert, despite being able to delete everything with the following
 diff --git a/libcxx/test/support/test_macros.h b/libcxx/test/support/test_macros.h
-index f0dc661afc2d0413c518f900a2963a7623cf5d0a..9dd419c9826b35dd7771d9594b9b22fbc13fbe87 100644
+index af5e4e57be5a39ef8626261bfd9ced69d39f8a2f..bc7b565472df87c28fa5ee97fa67e11552890dd0 100644
 --- a/libcxx/test/support/test_macros.h
 +++ b/libcxx/test/support/test_macros.h
-@@ -416,7 +416,7 @@ inline Tp const& DoNotOptimize(Tp const& value) {
+@@ -418,7 +418,7 @@ inline Tp const& DoNotOptimize(Tp const& value) {
  #  define ASSERT_WITH_OPERATOR_NEW_FALLBACKS(...) assert(__VA_ARGS__)
  #endif
  

@@ -1,7 +1,7 @@
-From 70f92c84ffb120b91ff426d2cff37a960b1e9086 Mon Sep 17 00:00:00 2001
+From 1e8528e4a374756ad648c8d6abd4e17dbef49f64 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 2 Mar 2026 22:00:33 +0900
-Subject: [PATCH 36/67] make libcxx clang-tidy test runnable with win32 dylib
+Subject: [PATCH 36/66] make libcxx clang-tidy test runnable with win32 dylib
  builds
 
 ---
@@ -52,7 +52,7 @@ index 8e125e51344fa60f7bff74ebb1ccbd097d7ce7dc..be16c517f99893e8e48fab7f46c25ffa
  target_include_directories(clangTidy INTERFACE
                             ${CLANG_INCLUDE_DIRS}
 diff --git a/libcxx/utils/libcxx/test/params.py b/libcxx/utils/libcxx/test/params.py
-index 21c88e4ea667fa6d74fe61d343abd9483b7c133c..a23e27c89a0b417813f0474eeb5b66795c8f5fb4 100644
+index ef229903ea4b6bb17d6f1a4d1ba6ee9f30411e5c..db307db93a7c77baaeaac817a79cf7268b8c7014 100644
 --- a/libcxx/utils/libcxx/test/params.py
 +++ b/libcxx/utils/libcxx/test/params.py
 @@ -8,6 +8,7 @@
@@ -63,7 +63,7 @@ index 21c88e4ea667fa6d74fe61d343abd9483b7c133c..a23e27c89a0b417813f0474eeb5b6679
  from pathlib import Path
  
  from libcxx.test.dsl import *
-@@ -123,6 +124,7 @@ def getSizeOptimizationFlag(cfg):
+@@ -128,6 +129,7 @@ def getSizeOptimizationFlag(cfg):
  
  def testClangTidy(cfg, version, executable):
      try:

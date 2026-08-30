@@ -1,7 +1,7 @@
-From 105e7160844e2468acb8f52971b0f7f40023c6a1 Mon Sep 17 00:00:00 2001
+From c4f63ffe2d8e31c6fe9be8c211aed7086a5e428d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 31 Jul 2026 22:57:24 +0900
-Subject: [PATCH 29/55] Link dependants with PLUGIN_TOOL more greedy
+Subject: [PATCH 29/54] Link dependants with PLUGIN_TOOL more greedy
 
 ---
  llvm/cmake/modules/AddLLVM.cmake | 66 +++++++++++++++-----------------

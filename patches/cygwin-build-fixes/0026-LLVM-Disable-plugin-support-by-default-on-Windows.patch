@@ -1,4 +1,4 @@
-From 0910906fa90f58187c041ecf679a94690e5231db Mon Sep 17 00:00:00 2001
+From 86abb75166863b6f2ab12ae31cee394f7023decc Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Jul 2026 15:29:18 +0900
 Subject: [PATCH 26/39] [LLVM] Disable plugin support by default on Windows

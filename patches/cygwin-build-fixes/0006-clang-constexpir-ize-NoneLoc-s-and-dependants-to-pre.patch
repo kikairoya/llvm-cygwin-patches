@@ -1,4 +1,4 @@
-From f5c8a57c5b92d8c9c60ec99eb1f1027a9333837e Mon Sep 17 00:00:00 2001
+From b1cd240660080c322c8360068f6e7a1ad090fa92 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/39] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -14,10 +14,10 @@ Subject: [PATCH 06/39] [clang] constexpir-ize `NoneLoc`s and dependants to
  6 files changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/clang/include/clang/AST/DeclTemplate.h b/clang/include/clang/AST/DeclTemplate.h
-index f5b26b0aab9ba03fe19eee1417953f96d60b5b2d..aaba9be8b5986c30a406ebc2a367b8becbd825b8 100644
+index 0d110bc3e63063eb4f1b323212b0325d1d4f1aaa..9fd3b8cc2ad96f9c9c20358c3c5cb3645b2964dd 100644
 --- a/clang/include/clang/AST/DeclTemplate.h
 +++ b/clang/include/clang/AST/DeclTemplate.h
-@@ -1228,7 +1228,7 @@ public:
+@@ -1231,7 +1231,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -26,7 +26,7 @@ index f5b26b0aab9ba03fe19eee1417953f96d60b5b2d..aaba9be8b5986c30a406ebc2a367b8be
      return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
    }
  
-@@ -1431,7 +1431,7 @@ public:
+@@ -1434,7 +1434,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -35,7 +35,7 @@ index f5b26b0aab9ba03fe19eee1417953f96d60b5b2d..aaba9be8b5986c30a406ebc2a367b8be
      return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
    }
  
-@@ -1713,7 +1713,7 @@ public:
+@@ -1716,7 +1716,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -45,10 +45,10 @@ index f5b26b0aab9ba03fe19eee1417953f96d60b5b2d..aaba9be8b5986c30a406ebc2a367b8be
    }
  
 diff --git a/clang/include/clang/AST/TemplateBase.h b/clang/include/clang/AST/TemplateBase.h
-index 4d1e8beeea18d4469747b10933a6a0011b57cb5a..26199b43b05a6b605b2d49f3955b6bb3b67e80f9 100644
+index 5896cc721668d0d223a7d12db9fa1ca34895938e..240cb7a66d3b4a198b952f0f9a4c8b66b79f44a4 100644
 --- a/clang/include/clang/AST/TemplateBase.h
 +++ b/clang/include/clang/AST/TemplateBase.h
-@@ -491,7 +491,7 @@ struct TemplateArgumentLocInfo {
+@@ -480,7 +480,7 @@ struct TemplateArgumentLocInfo {
      return cast<TemplateTemplateArgLocInfo *>(Pointer);
    }
  
@@ -57,7 +57,7 @@ index 4d1e8beeea18d4469747b10933a6a0011b57cb5a..26199b43b05a6b605b2d49f3955b6bb3
    TemplateArgumentLocInfo(TypeSourceInfo *Declarator) { Pointer = Declarator; }
  
    TemplateArgumentLocInfo(Expr *E) { Pointer = E; }
-@@ -555,7 +555,7 @@ class TemplateArgumentLoc {
+@@ -544,7 +544,7 @@ class TemplateArgumentLoc {
    TemplateArgumentLocInfo LocInfo;
  
  public:

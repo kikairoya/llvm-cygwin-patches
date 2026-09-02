@@ -1,4 +1,4 @@
-From a8cf733bef458dc46d20039aae9c17d1e5228db6 Mon Sep 17 00:00:00 2001
+From 1019180c8fa31825e8083c715eb0a546d132c9e4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 19 Sep 2025 19:04:00 +0900
 Subject: [PATCH 3/6] [compiler-rt][orc] Add support for Cygwin target
@@ -23,10 +23,10 @@ index efaf0358bb7d87e42af09b29209ee56da646eede..10cb047f7e9e1ae7d8652d07997fa072
  
      set(ORC_IMPL_HEADERS
 diff --git a/compiler-rt/lib/orc/coff_platform.cpp b/compiler-rt/lib/orc/coff_platform.cpp
-index 4cce20e1323f3a924a8728ba6eb5ba7d358108d8..d200ef9b5e5ced713eb6a681298c98671729d12c 100644
+index 23f87c7d710c0c3b8b5e14b31c04f34325c15165..9c9229488cf87eaf33d1c3ced8f6d92d9c31f486 100644
 --- a/compiler-rt/lib/orc/coff_platform.cpp
 +++ b/compiler-rt/lib/orc/coff_platform.cpp
-@@ -785,7 +785,7 @@ ORC_RT_INTERFACE void __stdcall __orc_rt_coff_cxx_throw_exception(
+@@ -788,7 +788,7 @@ ORC_RT_INTERFACE void __stdcall __orc_rt_coff_cxx_throw_exception(
        reinterpret_cast<ULONG_PTR>(BaseAddr),
    };
    RaiseException(EH_EXCEPTION_NUMBER, EXCEPTION_NONCONTINUABLE,

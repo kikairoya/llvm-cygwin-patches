@@ -1,7 +1,7 @@
-From 48e7e70dd61ae131191c42f6f75166c501882282 Mon Sep 17 00:00:00 2001
+From 1dbdfdb6e107e773278177ff718fe64f80d182ad Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
-Subject: [PATCH 08/66] adopt LLVM_DECLARE_REGISTRY
+Subject: [PATCH 08/65] adopt LLVM_DECLARE_REGISTRY
 
 ---
  clang-tools-extra/clang-doc/Generators.cpp           |  2 +-
@@ -222,10 +222,10 @@ index 5eea9c2fd89a32923db9ea3f6d95df4aca2ddd67..697a4c25c82f2a2c1c2e31b3ce81e561
  
  #endif // LLVM_CLANG_FRONTEND_FRONTENDPLUGINREGISTRY_H
 diff --git a/clang/include/clang/Lex/Preprocessor.h b/clang/include/clang/Lex/Preprocessor.h
-index 2967b6e6344c317a565ee99a999296f5ffbfcfc6..9b9114091e59e4bf6df82eb3cf11c6df566111eb 100644
+index d94f3d2cbe8ed52a36333424a12305c65c1f0990..8beec67827390995059a343b2aa7ef0c8d6a5dca 100644
 --- a/clang/include/clang/Lex/Preprocessor.h
 +++ b/clang/include/clang/Lex/Preprocessor.h
-@@ -3243,8 +3243,6 @@ using PragmaHandlerRegistry = llvm::Registry<PragmaHandler>;
+@@ -3252,8 +3252,6 @@ using PragmaHandlerRegistry = llvm::Registry<PragmaHandler>;
  
  } // namespace clang
  

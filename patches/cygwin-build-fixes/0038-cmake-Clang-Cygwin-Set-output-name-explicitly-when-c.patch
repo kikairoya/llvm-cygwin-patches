@@ -1,4 +1,4 @@
-From 19ccad2b799dd42eb21aae8ce4d905c1157014e8 Mon Sep 17 00:00:00 2001
+From 39d2a23245784d94837cc4119a6893ace16f8747 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Sep 2025 18:23:48 +0900
 Subject: [PATCH 38/39] [cmake][Clang][Cygwin] Set output name explicitly when
@@ -9,7 +9,7 @@ Subject: [PATCH 38/39] [cmake][Clang][Cygwin] Set output name explicitly when
  1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/clang/tools/driver/CMakeLists.txt b/clang/tools/driver/CMakeLists.txt
-index 002aaef005253724baa0f201a49453116b1e38c0..cab9a83d86db33ebdb71adfd963f8c3eee75d4ff 100644
+index 17dbb3ce8a27b69384445f749d83fba6802492f7..ac27b2700ee45f5cab833bb4ba7718a841e5370a 100644
 --- a/clang/tools/driver/CMakeLists.txt
 +++ b/clang/tools/driver/CMakeLists.txt
 @@ -67,8 +67,15 @@ clang_target_link_libraries(clang

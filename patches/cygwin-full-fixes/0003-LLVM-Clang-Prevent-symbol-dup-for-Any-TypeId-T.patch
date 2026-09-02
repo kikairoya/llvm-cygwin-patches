@@ -1,7 +1,7 @@
-From 8fcfc801d133c8265bcc50aab30d1d9ab1dd27bf Mon Sep 17 00:00:00 2001
+From ca8f464815f87908c4be81626db5b65f34f2bbfc Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:59:32 +0900
-Subject: [PATCH 03/54] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
+Subject: [PATCH 03/53] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
 
 ---
  .../FlowSensitive/CachedConstAccessorsLattice.h     | 13 +++++++++++++
@@ -101,7 +101,7 @@ index d84ce80e10a3c040a34c1eecbe0897429f9f6bf5..475fb3d8a9d9787199943f06a1982d25
  // GraphTraits specializations for function basic block graphs (CFGs)
  //===--------------------------------------------------------------------===//
 diff --git a/llvm/lib/CodeGen/MachineFunction.cpp b/llvm/lib/CodeGen/MachineFunction.cpp
-index 05b47698fb7ff62b93faecd883c6f0a16055ebd7..6af80fa4dade02f405b008dcda3322f5a447fd75 100644
+index f6121c4034bf8ad337f26b8cd06adbc7bc1c084d..7e6d8c9a42af55a58ac4d8a84976807a5431ac6f 100644
 --- a/llvm/lib/CodeGen/MachineFunction.cpp
 +++ b/llvm/lib/CodeGen/MachineFunction.cpp
 @@ -1373,6 +1373,8 @@ void MachineFunction::setUseDebugInstrRef(bool Use) {

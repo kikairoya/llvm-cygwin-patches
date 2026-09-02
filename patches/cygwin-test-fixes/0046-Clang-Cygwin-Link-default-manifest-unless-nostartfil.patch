@@ -1,0 +1,124 @@
+From f52b21625e1a8a76f3baf3cc5437cea02ae849d0 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 28 Jun 2026 18:16:32 +0900
+Subject: [PATCH 46/65] [Clang][Cygwin] Link default-manifest unless
+ -nostartfiles nor -shared
+
+---
+ clang/lib/Driver/ToolChains/Cygwin.cpp        |  9 +++++-
+ .../usr/lib/default-manifest.o                |  0
+ clang/test/Driver/cygwin.cpp                  | 28 +++++++++++++------
+ 3 files changed, 28 insertions(+), 9 deletions(-)
+ create mode 100644 clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/default-manifest.o
+
+diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
+index a2dbfaca96bd3ce3efb6425763c184a3ef639496..132258c926000feba59ab19adc19b873c54da33d 100644
+--- a/clang/lib/Driver/ToolChains/Cygwin.cpp
++++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
+@@ -374,8 +374,15 @@ void cygwin::Linker::ConstructJob(Compilation &C, const JobAction &JA,
+         tools::AddRunTimeLibs(ToolChain, D, CmdArgs, Args);
+     }
+ 
+-    if (!Args.hasArg(options::OPT_nostartfiles))
++    if (!Args.hasArg(options::OPT_nostartfiles)) {
++      if (!Args.hasArg(options::OPT_mdll, options::OPT_shared)) {
++        static constexpr const char *defmanifest = "default-manifest.o";
++        if (std::string O = ToolChain.GetFilePath(defmanifest);
++            O != defmanifest)
++          CmdArgs.push_back(Args.MakeArgString(std::move(O)));
++      }
+       CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath("crtend.o")));
++    }
+   }
+ 
+   Args.addAllArgs(CmdArgs, {options::OPT_T, options::OPT_t});
+diff --git a/clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/default-manifest.o b/clang/test/Driver/Inputs/basic_cygwin_tree/usr/lib/default-manifest.o
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/clang/test/Driver/cygwin.cpp b/clang/test/Driver/cygwin.cpp
+index c51a359bb35e24e5b30aba8ed9cd40f57624d239..9bf7560990e3183a58aa82fd5fe06ba066923b4f 100644
+--- a/clang/test/Driver/cygwin.cpp
++++ b/clang/test/Driver/cygwin.cpp
+@@ -20,6 +20,7 @@
+ // CHECK-SAME: "-m" "i386pe"
+ // CHECK-SAME: "{{.*}}{{/|\\\\}}crt0.o"
+ // CHECK-SAME: "{{.*}}i686-pc-cygwin{{/|\\\\}}{{[0-9.]*}}{{/|\\\\}}crtbegin.o"
++// CHECK-SAME: "[[SYSROOT]]/usr/lib/default-manifest.o"
+ // CHECK-SAME: "{{.*}}i686-pc-cygwin{{/|\\\\}}{{[0-9.]*}}{{/|\\\\}}crtend.o"
+ 
+ // RUN: %clang -### %s --target=i686-pc-cygwin --sysroot=%S/Inputs/basic_cygwin_tree \
+@@ -30,15 +31,18 @@
+ // CHECK-STATIC-SAME: "-Bstatic"
+ 
+ // RUN: %clang -### %s --target=i686-pc-cygwin --sysroot=%S/Inputs/basic_cygwin_tree \
+-// RUN:   -shared 2>&1 | FileCheck --check-prefix=CHECK-SHARED %s
++// RUN:     -shared 2>&1 | \
++// RUN:   FileCheck --check-prefix=CHECK-SHARED %s \
++// RUN:     --implicit-check-not=default-manifest
+ // CHECK-SHARED:      "{{.*}}ld{{(\.exe)?}}"
+ // CHECK-SHARED-SAME: "--shared"
+ // CHECK-SHARED-SAME: "-e" "__cygwin_dll_entry@12"
+ 
+ // RUN: %clang -### -o %t %s 2>&1 -no-integrated-as -fuse-ld=ld \
+ // RUN:     --gcc-toolchain=%S/Inputs/basic_cross_cygwin_tree/usr \
+-// RUN:     --target=i686-pc-cygwin \
+-// RUN:   | FileCheck --check-prefix=CHECK-CROSS %s
++// RUN:     --target=i686-pc-cygwin | \
++// RUN:   FileCheck --check-prefix=CHECK-CROSS %s \
++// RUN:     --implicit-check-not=default-manifest
+ // CHECK-CROSS: "-cc1" "-triple" "i686-pc-windows-cygnus"
+ // CHECK-CROSS: "{{.*}}/Inputs/basic_cross_cygwin_tree/usr/lib/gcc/i686-pc-msys/10/../../../../i686-pc-msys/bin{{(/|\\\\)}}as" "--32"
+ // CHECK-CROSS:      "{{.*}}ld{{(\.exe)?}}"
+@@ -67,6 +71,7 @@
+ // CHECK-64-SAME: "-m" "i386pep"
+ // CHECK-64-SAME: "{{.*}}{{/|\\\\}}crt0.o"
+ // CHECK-64-SAME: "{{.*}}x86_64-pc-msys{{/|\\\\}}{{[0-9.]*}}{{/|\\\\}}crtbegin.o"
++// CHECK-64-SAME: "[[SYSROOT]]/usr/lib/default-manifest.o"
+ // CHECK-64-SAME: "{{.*}}x86_64-pc-msys{{/|\\\\}}{{[0-9.]*}}{{/|\\\\}}crtend.o"
+ 
+ // RUN: %clang -### %s --target=x86_64-pc-cygwin --sysroot=%S/Inputs/basic_cygwin_tree \
+@@ -77,15 +82,18 @@
+ // CHECK-64-STATIC-SAME: "-Bstatic"
+ 
+ // RUN: %clang -### %s --target=x86_64-pc-cygwin --sysroot=%S/Inputs/basic_cygwin_tree \
+-// RUN:   -shared 2>&1 | FileCheck --check-prefix=CHECK-64-SHARED %s
++// RUN:     -shared 2>&1 | \
++// RUN:   FileCheck --check-prefix=CHECK-64-SHARED %s \
++// RUN:     --implicit-check-not=default-manifest
+ // CHECK-64-SHARED:      "{{.*}}ld{{(\.exe)?}}"
+ // CHECK-64-SHARED-SAME: "--shared"
+ // CHECK-64-SHARED-SAME: "-e" "_cygwin_dll_entry"
+ 
+ // RUN: %clang -### -o %t %s 2>&1 -no-integrated-as -fuse-ld=ld \
+ // RUN:     --gcc-toolchain=%S/Inputs/basic_cross_cygwin_tree/usr \
+-// RUN:     --target=x86_64-pc-cygwin \
+-// RUN:   | FileCheck --check-prefix=CHECK-64-CROSS %s
++// RUN:     --target=x86_64-pc-cygwin | \
++// RUN:   FileCheck --check-prefix=CHECK-64-CROSS %s \
++// RUN:     --implicit-check-not=default-manifest
+ // CHECK-64-CROSS: "-cc1" "-triple" "x86_64-pc-windows-cygnus"
+ // CHECK-64-CROSS: "{{.*}}/Inputs/basic_cross_cygwin_tree/usr/lib/gcc/x86_64-pc-cygwin/10/../../../../x86_64-pc-cygwin/bin{{(/|\\\\)}}as" "--64"
+ // CHECK-64-CROSS:      "{{.*}}ld{{(\.exe)?}}"
+@@ -94,13 +102,17 @@
+ // CHECK-64-CROSS-SAME: "{{.*}}x86_64-pc-cygwin{{/|\\\\}}{{[0-9.]*}}{{/|\\\\}}crtend.o"
+ 
+ // RUN: %clang -### %s --target=x86_64-pc-cygwin --sysroot=%S/Inputs/basic_cygwin_tree \
+-// RUN:   -mdll 2>&1 | FileCheck --check-prefix=CHECK-64-DLL %s
++// RUN:     -mdll 2>&1 | \
++// RUN:   FileCheck --check-prefix=CHECK-64-DLL %s \
++// RUN:     --implicit-check-not=default-manifest
+ // CHECK-64-DLL:      "{{.*}}ld{{(\.exe)?}}"
+ // CHECK-64-DLL-SAME: "--dll"
+ // CHECK-64-DLL-SAME: "-e" "_cygwin_dll_entry"
+ 
+ // RUN: %clang -### %s --target=i686-pc-cygwin --sysroot=%S/Inputs/basic_cygwin_tree \
+-// RUN:   -mdll 2>&1 | FileCheck --check-prefix=CHECK-DLL %s
++// RUN:     -mdll 2>&1 | \
++// RUN:   FileCheck --check-prefix=CHECK-DLL %s \
++// RUN:     --implicit-check-not=default-manifest
+ // CHECK-DLL:      "{{.*}}ld{{(\.exe)?}}"
+ // CHECK-DLL-SAME: "--dll"
+ // CHECK-DLL-SAME: "-e" "__cygwin_dll_entry@12"
+-- 
+2.55.0
+

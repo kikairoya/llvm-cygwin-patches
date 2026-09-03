@@ -1,7 +1,7 @@
-From 68fd6bc3f745bfc5822dbb65d014bdbebc563028 Mon Sep 17 00:00:00 2001
+From 55f4dcc228c5433ac32dea9930beb5bca377a13c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 2 May 2025 23:16:55 +0900
-Subject: [PATCH 52/53] [Frontend][Cygwin] Handle case-mismatched path properly
+Subject: [PATCH 51/64] [Frontend][Cygwin] Handle case-mismatched path properly
  on cygwin
 
 `realpath` provided by cygwin1.dll does not return real-name: that

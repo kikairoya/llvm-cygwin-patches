@@ -1,7 +1,7 @@
-From da1d4a1a2e836cdcf619a8c89aac261ea1400221 Mon Sep 17 00:00:00 2001
+From 586a559c7a64664ec7068e1f8f6051a556b36d14 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 24 May 2025 16:22:47 +0900
-Subject: [PATCH 49/65] [Interpreter][Cygwin] Search symbol from cygwin1.dll
+Subject: [PATCH 48/52] [Interpreter][Cygwin] Search symbol from cygwin1.dll
  prior to msvcrt.dll
 
 ---

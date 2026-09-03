@@ -1,7 +1,7 @@
-From 818306f99a028a0a365c425ea0c87cf3ffc06377 Mon Sep 17 00:00:00 2001
+From c33a244e4ba3301d45adf605e3916d1741647cc8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 May 2025 12:04:02 +0900
-Subject: [PATCH 57/65] [JIT][Test][Cygwin] Diverge expected result
+Subject: [PATCH 56/64] [JIT][Test][Cygwin] Diverge expected result
 
 Diverge Cygwin from other Unix-like systems.
 ---

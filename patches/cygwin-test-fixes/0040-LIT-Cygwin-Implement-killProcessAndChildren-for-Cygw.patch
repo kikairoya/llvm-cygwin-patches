@@ -1,7 +1,7 @@
-From 6badbefc4a3eaac41bfb2c7678cab989b2a30858 Mon Sep 17 00:00:00 2001
+From 2c17a826ea25de8b5a8e15d6154265efd035c551 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 7 Sep 2025 14:11:39 +0900
-Subject: [PATCH 40/65] [LIT][Cygwin] Implement killProcessAndChildren for
+Subject: [PATCH 40/64] [LIT][Cygwin] Implement killProcessAndChildren for
  Cygwin using /proc/<pid>
 
 ---

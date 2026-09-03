@@ -1,4 +1,4 @@
-From db6ef483ab4da320e2dc334823b0622bc39e542e Mon Sep 17 00:00:00 2001
+From 709a10b484d047344aed73059ba6f20a2205a729 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:53:50 +0900
 Subject: [PATCH 34/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -17,10 +17,10 @@ Subject: [PATCH 34/37] [libc++][Test][Cygwin] Diverge expected result for the
  .../default.allocator/allocator.members/allocate.pass.cpp      | 3 +++
  .../allocator.members/allocate_at_least.pass.cpp               | 3 +++
  .../meta/meta.trans/meta.trans.other/aligned_storage.pass.cpp  | 2 +-
- .../allocate_overaligned_request.pass.cpp                      | 3 +++
+ .../allocate_overaligned_request.pass.cpp                      | 3 ++-
  .../sync_allocate_overaligned_request.pass.cpp                 | 3 +++
  .../unsync_allocate_overaligned_request.pass.cpp               | 3 +++
- 15 files changed, 37 insertions(+), 4 deletions(-)
+ 15 files changed, 36 insertions(+), 5 deletions(-)
 
 diff --git a/libcxx/test/libcxx/memory/trivial_abi/weak_ptr_ret.pass.cpp b/libcxx/test/libcxx/memory/trivial_abi/weak_ptr_ret.pass.cpp
 index 0b1a434ee45b52e9c8829729132fa6bbefd29246..721dbec03095bb6ea5410e26a2d9525afd7d17ac 100644
@@ -187,19 +187,19 @@ index 79b9294b7418a7ab44b758b5053e9913fcf42a76..b21c54d04ab05326c110cf70b953b5bd
    {
      const int Align = 65536;
 diff --git a/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp b/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp
-index 95c6b36b71f98b733135c4b07b35645d41d7ffe5..bde00209013d89fc44270ae7e33016fc30bcf64b 100644
+index 96fcbaf47540b8dea53bb33a204b70b89503bb0e..0e30c935776f7aa192e4a1313aef7152e22fc0ca 100644
 --- a/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp
 +++ b/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp
-@@ -10,6 +10,9 @@
+@@ -10,7 +10,8 @@
  // TODO: Change to XFAIL once https://llvm.org/PR40995 is fixed
  // UNSUPPORTED: availability-pmr-missing
  
+-// XFAIL: using-built-library-before-llvm-24
 +// Cygwin runtime has hack to able override operator-new defined in DLL from EXE but it don't works for align_val_t overloads.
 +// XFAIL: cygwin
-+
+ 
  // <memory_resource>
  
- // class monotonic_buffer_resource
 diff --git a/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/sync_allocate_overaligned_request.pass.cpp b/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/sync_allocate_overaligned_request.pass.cpp
 index ce39a4fc6a0e1d7010e1ef0a34b822661b01ced2..e15ffbc9776b61113c6ce4b5b2c9007675ea052c 100644
 --- a/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/sync_allocate_overaligned_request.pass.cpp

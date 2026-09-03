@@ -1,7 +1,7 @@
-From 687052308db35393f5b0fdc722c1382dace4cb42 Mon Sep 17 00:00:00 2001
+From 883534d37f366e8f76928e8ef65393a83a1753a8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:44:20 +0900
-Subject: [PATCH 64/65] fix tests that use Bye
+Subject: [PATCH 63/64] fix tests that use Bye
 
 ---
  clang/test/CodeGen/codegen-plugins.c      | 2 +-

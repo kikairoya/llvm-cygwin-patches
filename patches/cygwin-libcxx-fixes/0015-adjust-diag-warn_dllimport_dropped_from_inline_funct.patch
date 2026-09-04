@@ -1,4 +1,4 @@
-From f130a5a3124a9bb31cb79043f6d0bb0b648ba36e Mon Sep 17 00:00:00 2001
+From a9da2bc5c2a79c3e5b70018b895ca86ba6a9f411 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 30 Mar 2026 18:56:01 +0900
 Subject: [PATCH 15/37] adjust
@@ -9,10 +9,10 @@ Subject: [PATCH 15/37] adjust
  1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDecl.cpp b/clang/lib/Sema/SemaDecl.cpp
-index d6114ccbae7fe933e66659106dd5f3f228809d6c..b38c28a0e69e52620a1c9121244afbead9f1155c 100644
+index ccdc33d6fa39b081770e4f7b2d9d9b86763add61..62fff47c8e0023b0e85a4ec72632ba48ee5a3117 100644
 --- a/clang/lib/Sema/SemaDecl.cpp
 +++ b/clang/lib/Sema/SemaDecl.cpp
-@@ -7413,14 +7413,16 @@ static void checkDLLAttributeRedeclaration(Sema &S, NamedDecl *OldDecl,
+@@ -7424,14 +7424,16 @@ static void checkDLLAttributeRedeclaration(Sema &S, NamedDecl *OldDecl,
        OldDecl->dropAttr<DLLImportAttr>();
        NewDecl->dropAttr<DLLImportAttr>();
      }

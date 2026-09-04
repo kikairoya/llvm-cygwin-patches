@@ -1,27 +1,26 @@
-From 1554e6e79d79aead370f3f16af69821212cea85a Mon Sep 17 00:00:00 2001
+From 784625cdc561876692ceec5aff533b0bb647b590 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 56/63] [Clang][Test][Cygwin] Diverge expected result on Cygwin
  host
 
 ---
- clang/test/CodeGen/2007-06-18-SextAttrAggregate.c   |  2 +-
- clang/test/Driver/DTLTO/dtlto.c                     | 10 ++++++----
- clang/test/Driver/DTLTO/ps5-dtlto.c                 | 13 ++++++++-----
- clang/test/Driver/HLSL/metal-converter.hlsl         |  4 ++++
- clang/test/Driver/dxc_dxv_path.hlsl                 |  4 ++++
- clang/test/Driver/env.c                             |  4 ++--
- clang/test/Driver/hip-version.hip                   |  1 +
- clang/test/Driver/linux-ld.c                        |  2 +-
- clang/test/Driver/loongarch-toolchain.c             |  2 +-
- clang/test/Driver/mingw-sysroot.cpp                 |  2 +-
- clang/test/Driver/riscv32-toolchain.c               |  2 +-
- clang/test/Driver/riscv64-toolchain.c               |  2 +-
- clang/test/Driver/serenity.cpp                      |  2 +-
- clang/test/Modules/inferred-framework-case.m        |  2 +-
- .../linker-wrapper-hip-no-rdc.c                     |  3 +++
- clang/test/lit.cfg.py                               |  7 +++++--
- 16 files changed, 41 insertions(+), 21 deletions(-)
+ clang/test/CodeGen/2007-06-18-SextAttrAggregate.c |  2 +-
+ clang/test/Driver/DTLTO/dtlto.c                   | 10 ++++++----
+ clang/test/Driver/DTLTO/ps5-dtlto.c               | 13 ++++++++-----
+ clang/test/Driver/HLSL/metal-converter.hlsl       |  4 ++++
+ clang/test/Driver/dxc_dxv_path.hlsl               |  4 ++++
+ clang/test/Driver/env.c                           |  4 ++--
+ clang/test/Driver/hip-version.hip                 |  1 +
+ clang/test/Driver/linux-ld.c                      |  2 +-
+ clang/test/Driver/loongarch-toolchain.c           |  2 +-
+ clang/test/Driver/mingw-sysroot.cpp               |  2 +-
+ clang/test/Driver/riscv32-toolchain.c             |  2 +-
+ clang/test/Driver/riscv64-toolchain.c             |  2 +-
+ clang/test/Driver/serenity.cpp                    |  2 +-
+ clang/test/Modules/inferred-framework-case.m      |  2 +-
+ clang/test/lit.cfg.py                             |  7 +++++--
+ 15 files changed, 38 insertions(+), 21 deletions(-)
 
 diff --git a/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c b/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c
 index ccfdc1a1c6cfa9417c28e6abccafb08d9fe42d0e..5567ec1ab0e43c83ec6f5da8bea7d8b1d7da07d6 100644
@@ -223,20 +222,6 @@ index 64828b5cdd86827664016db622a73261406535b8..172df10d8084af8f52dfaaf23c1f8f3e
  
  @import MOdule; // expected-error{{module 'MOdule' not found}}
  @import Module;
-diff --git a/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c b/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
-index 3d65560b9c9862b62c58f9a7905b848e788d9ddc..26ec945164689121780363ff4344bacbc1c598ca 100644
---- a/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
-+++ b/clang/test/OffloadTools/clang-linker-wrapper/linker-wrapper-hip-no-rdc.c
-@@ -1,6 +1,9 @@
- // REQUIRES: amdgpu-registered-target
- // REQUIRES: lld
- 
-+// clang-linker-wrapper doesn't work when LLD_DEFAULT_LD_LLD_IS_MINGW=ON
-+// UNSUPPORTED: system-cygwin
-+
- // Test HIP non-RDC linker wrapper behavior with new offload driver.
- // The linker wrapper should output .hipfb files directly without using -r option.
- 
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
 index 9b7bd1d329d22a118c44c09332c842312649f1e1..8a8a508056f85b7d57c4062ba0bd6f0f9cd85a89 100644
 --- a/clang/test/lit.cfg.py

@@ -1,4 +1,4 @@
-From 784625cdc561876692ceec5aff533b0bb647b590 Mon Sep 17 00:00:00 2001
+From 12ca7f3793dcbe1e94c80ff4ed1cb00bb0be5a39 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 56/63] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -19,8 +19,9 @@ Subject: [PATCH 56/63] [Clang][Test][Cygwin] Diverge expected result on Cygwin
  clang/test/Driver/riscv64-toolchain.c             |  2 +-
  clang/test/Driver/serenity.cpp                    |  2 +-
  clang/test/Modules/inferred-framework-case.m      |  2 +-
+ clang/test/VFS/output-file-permissions.c          |  2 +-
  clang/test/lit.cfg.py                             |  7 +++++--
- 15 files changed, 38 insertions(+), 21 deletions(-)
+ 16 files changed, 39 insertions(+), 22 deletions(-)
 
 diff --git a/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c b/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c
 index ccfdc1a1c6cfa9417c28e6abccafb08d9fe42d0e..5567ec1ab0e43c83ec6f5da8bea7d8b1d7da07d6 100644
@@ -222,6 +223,16 @@ index 64828b5cdd86827664016db622a73261406535b8..172df10d8084af8f52dfaaf23c1f8f3e
  
  @import MOdule; // expected-error{{module 'MOdule' not found}}
  @import Module;
+diff --git a/clang/test/VFS/output-file-permissions.c b/clang/test/VFS/output-file-permissions.c
+index 4628024c031155ee5cf2864324f868fd0c5d4d72..04964d82bea2a0859e35210240f1da5f8180d97b 100644
+--- a/clang/test/VFS/output-file-permissions.c
++++ b/clang/test/VFS/output-file-permissions.c
+@@ -1,4 +1,4 @@
+-// UNSUPPORTED: system-windows
++// UNSUPPORTED: system-windows, system-cygwin
+ 
+ // Reset test
+ // rm -f %t-ref.o %t-readonly.o
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
 index 9b7bd1d329d22a118c44c09332c842312649f1e1..8a8a508056f85b7d57c4062ba0bd6f0f9cd85a89 100644
 --- a/clang/test/lit.cfg.py

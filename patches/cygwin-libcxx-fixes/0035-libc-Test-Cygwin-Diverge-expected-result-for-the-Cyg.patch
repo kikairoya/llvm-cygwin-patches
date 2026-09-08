@@ -1,4 +1,4 @@
-From 351ab3beef4420db5b3e032ba47c7b3d59585c82 Mon Sep 17 00:00:00 2001
+From 564f96e05e3561a7b61267b0173228b74ce7650c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:55:06 +0900
 Subject: [PATCH 35/37] [libc++][Test][Cygwin] Diverge expected result for the
@@ -240,7 +240,7 @@ index 2ad9efb32c60f0bc14195f8ca7d508163a118f36..68e919d08e422f5068b107c58c65ec09
          // the permissions on a directory that contains a bad symlink. This triggers
          // the assert, despite being able to delete everything with the following
 diff --git a/libcxx/test/support/test_macros.h b/libcxx/test/support/test_macros.h
-index af5e4e57be5a39ef8626261bfd9ced69d39f8a2f..bc7b565472df87c28fa5ee97fa67e11552890dd0 100644
+index 11e2a2e844b25f8f6dbb89822c5e7d8c1199b16f..c49b588a699b4b4517a5c2ba9b8df702c003db57 100644
 --- a/libcxx/test/support/test_macros.h
 +++ b/libcxx/test/support/test_macros.h
 @@ -418,7 +418,7 @@ inline Tp const& DoNotOptimize(Tp const& value) {

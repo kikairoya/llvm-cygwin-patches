@@ -1,7 +1,7 @@
-From f7ecc828ecfd57568fbaa502452c74a86452fa38 Mon Sep 17 00:00:00 2001
+From 703084f13d83bf84a6c41b987da1f46089f3e1af Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 14 Jun 2025 08:15:58 +0900
-Subject: [PATCH 43/51] [LLVM-Tools][Cygwin] Enable LTO component
+Subject: [PATCH 43/52] [LLVM-Tools][Cygwin] Enable LTO component
 
 ---
  llvm/tools/CMakeLists.txt | 2 +-

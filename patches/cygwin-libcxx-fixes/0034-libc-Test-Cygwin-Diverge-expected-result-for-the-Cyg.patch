@@ -1,6 +1,6 @@
-From 907a3742972aec2145a9b04eb655b108fbb7c5fe Mon Sep 17 00:00:00 2001
+From ed6f45e68d3ee3e8cf5ad4905cd46eb1079a2b4c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sat, 7 Jun 2025 17:53:50 +0900
+Date: Tue, 8 Sep 2026 22:07:50 +0900
 Subject: [PATCH 34/37] [libc++][Test][Cygwin] Diverge expected result for the
  Cygwin target (part 3/5 - memory management)
 
@@ -17,10 +17,8 @@ Subject: [PATCH 34/37] [libc++][Test][Cygwin] Diverge expected result for the
  .../default.allocator/allocator.members/allocate.pass.cpp      | 3 +++
  .../allocator.members/allocate_at_least.pass.cpp               | 3 +++
  .../meta/meta.trans/meta.trans.other/aligned_storage.pass.cpp  | 2 +-
- .../allocate_overaligned_request.pass.cpp                      | 3 ++-
- .../sync_allocate_overaligned_request.pass.cpp                 | 3 +++
- .../unsync_allocate_overaligned_request.pass.cpp               | 3 +++
- 15 files changed, 36 insertions(+), 5 deletions(-)
+ libcxx/test/support/test_macros.h                              | 2 +-
+ 13 files changed, 29 insertions(+), 5 deletions(-)
 
 diff --git a/libcxx/test/libcxx/memory/trivial_abi/weak_ptr_ret.pass.cpp b/libcxx/test/libcxx/memory/trivial_abi/weak_ptr_ret.pass.cpp
 index 0b1a434ee45b52e9c8829729132fa6bbefd29246..721dbec03095bb6ea5410e26a2d9525afd7d17ac 100644
@@ -186,48 +184,19 @@ index 79b9294b7418a7ab44b758b5053e9913fcf42a76..b21c54d04ab05326c110cf70b953b5bd
    // Windows only supports alignment up to 8192 bytes.
    {
      const int Align = 65536;
-diff --git a/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp b/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp
-index 96fcbaf47540b8dea53bb33a204b70b89503bb0e..0e30c935776f7aa192e4a1313aef7152e22fc0ca 100644
---- a/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp
-+++ b/libcxx/test/std/utilities/utility/mem.res/mem.res.monotonic.buffer/mem.res.monotonic.buffer.mem/allocate_overaligned_request.pass.cpp
-@@ -10,7 +10,8 @@
- // TODO: Change to XFAIL once https://llvm.org/PR40995 is fixed
- // UNSUPPORTED: availability-pmr-missing
+diff --git a/libcxx/test/support/test_macros.h b/libcxx/test/support/test_macros.h
+index af5e4e57be5a39ef8626261bfd9ced69d39f8a2f..11e2a2e844b25f8f6dbb89822c5e7d8c1199b16f 100644
+--- a/libcxx/test/support/test_macros.h
++++ b/libcxx/test/support/test_macros.h
+@@ -381,7 +381,7 @@ inline Tp const& DoNotOptimize(Tp const& value) {
+ #  define TEST_NOT_WIN32(...) __VA_ARGS__
+ #endif
  
--// XFAIL: using-built-library-before-llvm-24
-+// Cygwin runtime has hack to able override operator-new defined in DLL from EXE but it don't works for align_val_t overloads.
-+// XFAIL: cygwin
- 
- // <memory_resource>
- 
-diff --git a/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/sync_allocate_overaligned_request.pass.cpp b/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/sync_allocate_overaligned_request.pass.cpp
-index ce39a4fc6a0e1d7010e1ef0a34b822661b01ced2..e15ffbc9776b61113c6ce4b5b2c9007675ea052c 100644
---- a/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/sync_allocate_overaligned_request.pass.cpp
-+++ b/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/sync_allocate_overaligned_request.pass.cpp
-@@ -10,6 +10,9 @@
- // TODO: Change to XFAIL once https://llvm.org/PR40995 is fixed
- // UNSUPPORTED: availability-pmr-missing
- 
-+// Cygwin runtime has hack to able override operator-new defined in DLL from EXE but it don't works for align_val_t overloads.
-+// XFAIL: cygwin
-+
- // <memory_resource>
- 
- // class synchronized_pool_resource
-diff --git a/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/unsync_allocate_overaligned_request.pass.cpp b/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/unsync_allocate_overaligned_request.pass.cpp
-index 82f75fb4434484287ac430b191d7c534f41a8c27..c5de8fd18e6ad93d5cad1962578fa39756250cc0 100644
---- a/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/unsync_allocate_overaligned_request.pass.cpp
-+++ b/libcxx/test/std/utilities/utility/mem.res/mem.res.pool/mem.res.pool.mem/unsync_allocate_overaligned_request.pass.cpp
-@@ -10,6 +10,9 @@
- // TODO: Change to XFAIL once https://llvm.org/PR40995 is fixed
- // UNSUPPORTED: availability-pmr-missing
- 
-+// Cygwin runtime has hack to able override operator-new defined in DLL from EXE but it don't works for align_val_t overloads.
-+// XFAIL: cygwin
-+
- // <memory_resource>
- 
- // class unsynchronized_pool_resource
+-#if defined(TEST_WINDOWS_DLL) || defined(__MVS__) || defined(_AIX)
++#if defined(TEST_WINDOWS_DLL) || defined(__CYGWIN__) || defined(__MVS__) || defined(_AIX)
+ // Macros for waiving cases when we can't count allocations done within
+ // the library implementation.
+ //
 -- 
 2.55.0
 

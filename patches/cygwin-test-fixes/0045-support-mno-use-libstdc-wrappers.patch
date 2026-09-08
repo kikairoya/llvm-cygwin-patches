@@ -1,0 +1,94 @@
+From d044481332f10d73da40d4b694bf332b568b409b Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 6 Sep 2026 13:15:09 +0900
+Subject: [PATCH 45/64] support -mno-use-libstdc-wrappers
+
+---
+ clang/include/clang/Options/Options.td |  2 ++
+ clang/lib/Driver/ToolChains/Cygwin.cpp | 41 +++++++++++++++-----------
+ clang/test/Driver/cygwin.cpp           |  4 +++
+ 3 files changed, 29 insertions(+), 18 deletions(-)
+
+diff --git a/clang/include/clang/Options/Options.td b/clang/include/clang/Options/Options.td
+index 37e5c3199a0031827220a1116d367149f0cba046..6f52a77ee11a593dda4ad50ab00d9d382ccafa62 100644
+--- a/clang/include/clang/Options/Options.td
++++ b/clang/include/clang/Options/Options.td
+@@ -5616,6 +5616,8 @@ def mconsole : Joined<["-"], "mconsole">, Group<m_Group>;
+ def mwindows : Joined<["-"], "mwindows">, Group<m_Group>;
+ def mdll : Joined<["-"], "mdll">, Group<m_Group>;
+ def municode : Joined<["-"], "municode">, Group<m_Group>;
++def muse_libstdc_wrappers : Joined<["-"], "muse-libstdc-wrappers">, Group<m_Group>;
++def mno_use_libstdc_wrappers : Joined<["-"], "mno-use-libstdc-wrappers">, Group<m_Group>;
+ def mthreads : Joined<["-"], "mthreads">, Group<m_Group>;
+ def marm64x : Joined<["-"], "marm64x">, Group<m_Group>,
+   Visibility<[ClangOption, CLOption]>,
+diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
+index 290d4f5e78d629050dd3160ec380f032209b3fc5..d9f86268a6fcaf6520035896a4f8dd2061dfc850 100644
+--- a/clang/lib/Driver/ToolChains/Cygwin.cpp
++++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
+@@ -183,24 +183,29 @@ void cygwin::Linker::ConstructJob(Compilation &C, const JobAction &JA,
+     CmdArgs.push_back("console");
+   }
+ 
+-  if (ToolChain.getTriple().isArch32Bit()) {
+-    CmdArgs.push_back("--wrap=_Znwj");
+-    CmdArgs.push_back("--wrap=_Znaj");
+-    CmdArgs.push_back("--wrap=_ZdlPv");
+-    CmdArgs.push_back("--wrap=_ZdaPv");
+-    CmdArgs.push_back("--wrap=_ZnwjRKSt9nothrow_t");
+-    CmdArgs.push_back("--wrap=_ZnajRKSt9nothrow_t");
+-    CmdArgs.push_back("--wrap=_ZdlPvRKSt9nothrow_t");
+-    CmdArgs.push_back("--wrap=_ZdaPvRKSt9nothrow_t");
+-  } else {
+-    CmdArgs.push_back("--wrap=_Znwm");
+-    CmdArgs.push_back("--wrap=_Znam");
+-    CmdArgs.push_back("--wrap=_ZdlPv");
+-    CmdArgs.push_back("--wrap=_ZdaPv");
+-    CmdArgs.push_back("--wrap=_ZnwmRKSt9nothrow_t");
+-    CmdArgs.push_back("--wrap=_ZnamRKSt9nothrow_t");
+-    CmdArgs.push_back("--wrap=_ZdlPvRKSt9nothrow_t");
+-    CmdArgs.push_back("--wrap=_ZdaPvRKSt9nothrow_t");
++  Arg *WrapArg = Args.getLastArg(options::OPT_mno_use_libstdc_wrappers,
++                                 options::OPT_muse_libstdc_wrappers);
++
++  if (!WrapArg || WrapArg->getOption().matches(options::OPT_muse_libstdc_wrappers)) {
++    if (ToolChain.getTriple().isArch32Bit()) {
++      CmdArgs.push_back("--wrap=_Znwj");
++      CmdArgs.push_back("--wrap=_Znaj");
++      CmdArgs.push_back("--wrap=_ZdlPv");
++      CmdArgs.push_back("--wrap=_ZdaPv");
++      CmdArgs.push_back("--wrap=_ZnwjRKSt9nothrow_t");
++      CmdArgs.push_back("--wrap=_ZnajRKSt9nothrow_t");
++      CmdArgs.push_back("--wrap=_ZdlPvRKSt9nothrow_t");
++      CmdArgs.push_back("--wrap=_ZdaPvRKSt9nothrow_t");
++    } else {
++      CmdArgs.push_back("--wrap=_Znwm");
++      CmdArgs.push_back("--wrap=_Znam");
++      CmdArgs.push_back("--wrap=_ZdlPv");
++      CmdArgs.push_back("--wrap=_ZdaPv");
++      CmdArgs.push_back("--wrap=_ZnwmRKSt9nothrow_t");
++      CmdArgs.push_back("--wrap=_ZnamRKSt9nothrow_t");
++      CmdArgs.push_back("--wrap=_ZdlPvRKSt9nothrow_t");
++      CmdArgs.push_back("--wrap=_ZdaPvRKSt9nothrow_t");
++    }
+   }
+ 
+   if (Args.hasArg(options::OPT_mdll))
+diff --git a/clang/test/Driver/cygwin.cpp b/clang/test/Driver/cygwin.cpp
+index 66fa9fbcfc1e0ad5557326587b44307b527062f8..7c00ac0e1219b2d4c7b973b2bcb0e79c120b8728 100644
+--- a/clang/test/Driver/cygwin.cpp
++++ b/clang/test/Driver/cygwin.cpp
+@@ -167,6 +167,10 @@
+ // CHECK-64-WRAP-SAME: "--wrap=_ZdlPvRKSt9nothrow_t"
+ // CHECK-64-WRAP-SAME: "--wrap=_ZdaPvRKSt9nothrow_t"
+ 
++// RUN: %clang -### %s --target=x86_64-pc-cygwin --sysroot=%S/Inputs/basic_cygwin_tree \
++// RUN:  -mno-use-libstdc-wrappers 2>&1 | FileCheck --check-prefix=CHECK-NOWRAP %s
++// CHECK-NOWRAP-NOT: --wrap
++
+ // RUN: %clang -### %s --target=x86_64-pc-cygwin --sysroot=%S/Inputs/basic_cygwin_tree \
+ // RUN:                -resource-dir=%S/Inputs/resource_dir -rtlib=compiler-rt \
+ // RUN:   2>&1 | FileCheck --check-prefix=CHECK-64-RTLIB %s
+-- 
+2.55.0
+

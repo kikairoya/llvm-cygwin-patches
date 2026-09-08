@@ -1,7 +1,7 @@
-From be2649677dee1c37d5a252b79c451843073e7e27 Mon Sep 17 00:00:00 2001
+From b4382a404855adf57bbc190d55757eaeea1071b2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 9 Apr 2026 19:11:20 +0900
-Subject: [PATCH 44/51] [Clang][Cygwin] Make `-nolibc` to omit w32api
+Subject: [PATCH 44/52] [Clang][Cygwin] Make `-nolibc` to omit w32api
 
 However, -lcygwin is still linked, since it is the Cygwin.
 ---

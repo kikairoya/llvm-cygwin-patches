@@ -1,0 +1,46 @@
+From da81a935c8a3953f7195d25b60542893b20a754c Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Thu, 9 Apr 2026 19:11:20 +0900
+Subject: [PATCH 43/51] [Clang][Cygwin] Make `-nolibc` to omit w32api
+
+However, -lcygwin is still linked, since it is the Cygwin.
+---
+ clang/lib/Driver/ToolChains/Cygwin.cpp | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
+index f4854e9c6ce642e3d3635339ede1dd11498d8da4..290d4f5e78d629050dd3160ec380f032209b3fc5 100644
+--- a/clang/lib/Driver/ToolChains/Cygwin.cpp
++++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
+@@ -355,19 +355,18 @@ void cygwin::Linker::ConstructJob(Compilation &C, const JobAction &JA,
+       if (Args.hasArg(options::OPT_fsplit_stack))
+         CmdArgs.push_back("--wrap=pthread_create");
+ 
+-      if (!Args.hasArg(options::OPT_nolibc))
+-        CmdArgs.push_back("-lc");
+-
+       // Cygwin specific
+       CmdArgs.push_back("-lcygwin");
+-      if (Args.hasArg(options::OPT_mwindows)) {
+-        CmdArgs.push_back("-lgdi32");
+-        CmdArgs.push_back("-lcomdlg32");
++      if (!Args.hasArg(options::OPT_nolibc)) {
++        if (Args.hasArg(options::OPT_mwindows)) {
++          CmdArgs.push_back("-lgdi32");
++          CmdArgs.push_back("-lcomdlg32");
++        }
++        CmdArgs.push_back("-ladvapi32");
++        CmdArgs.push_back("-lshell32");
++        CmdArgs.push_back("-luser32");
++        CmdArgs.push_back("-lkernel32");
+       }
+-      CmdArgs.push_back("-ladvapi32");
+-      CmdArgs.push_back("-lshell32");
+-      CmdArgs.push_back("-luser32");
+-      CmdArgs.push_back("-lkernel32");
+ 
+       if (IsStatic)
+         CmdArgs.push_back("--end-group");
+-- 
+2.55.0
+

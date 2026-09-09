@@ -1,257 +1,1105 @@
-From 564f96e05e3561a7b61267b0173228b74ce7650c Mon Sep 17 00:00:00 2001
+From a9191f807f592c1b67ce6129611d5743ab2de591 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sat, 7 Jun 2025 17:55:06 +0900
-Subject: [PATCH 35/37] [libc++][Test][Cygwin] Diverge expected result for the
- Cygwin target (part 4/5 - permissions)
+Date: Mon, 29 Jun 2026 00:53:37 +0900
+Subject: [PATCH 35/36] [libc++][Test][Cygwin] Diverge expected result for the
+ Cygwin target (part 5/5 - locale)
 
 ---
- .../directory_entry.cons/path.pass.cpp             |  2 +-
- .../directory_entry.mods/assign.pass.cpp           |  2 +-
- .../fs.op.funcs/fs.op.exists/exists.pass.cpp       | 14 +++++++-------
- .../fs.op.is_block_file/is_block_file.pass.cpp     |  2 +-
- .../fs.op.is_char_file/is_character_file.pass.cpp  |  2 +-
- .../fs.op.is_directory/is_directory.pass.cpp       |  2 +-
- .../fs.op.funcs/fs.op.is_empty/is_empty.pass.cpp   |  4 ++--
- .../fs.op.funcs/fs.op.is_fifo/is_fifo.pass.cpp     |  2 +-
- .../fs.op.funcs/fs.op.is_other/is_other.pass.cpp   |  2 +-
- .../fs.op.is_regular_file/is_regular_file.pass.cpp |  2 +-
- .../fs.op.funcs/fs.op.is_socket/is_socket.pass.cpp |  2 +-
- .../fs.op.is_symlink/is_symlink.pass.cpp           |  2 +-
- .../fs.op.remove_all/bad_perms_parent.pass.cpp     |  2 +-
- .../temp_directory_path.pass.cpp                   |  2 +-
- libcxx/test/support/filesystem_test_helper.h       |  2 +-
- libcxx/test/support/test_macros.h                  |  2 +-
- 16 files changed, 23 insertions(+), 23 deletions(-)
+ .../ext.manip/get_money.pass.cpp              | 48 +++++++++----------
+ .../ext.manip/put_money.pass.cpp              |  3 ++
+ .../std.manip/setfill_wchar_max.pass.cpp      |  2 +-
+ .../wcerr-wide-mode.sh.cpp                    |  1 +
+ .../wide.stream.objects/wcin-wide-mode.sh.cpp |  1 +
+ .../wcout-wide-mode.sh.cpp                    |  1 +
+ .../classic_table.pass.cpp                    |  3 +-
+ .../locale.ctype.byname/is_1.pass.cpp         |  2 +-
+ .../locale.ctype.byname/is_many.pass.cpp      |  2 +-
+ .../locale.ctype.byname/scan_is.pass.cpp      |  2 +-
+ .../locale.ctype.byname/scan_not.pass.cpp     |  2 +-
+ .../locale.ctype.byname/tolower_1.pass.cpp    |  3 ++
+ .../locale.ctype.byname/tolower_many.pass.cpp |  3 ++
+ .../locale.ctype.byname/toupper_1.pass.cpp    |  3 ++
+ .../locale.ctype.byname/toupper_many.pass.cpp |  3 ++
+ .../locale.ctype.byname/widen_1.pass.cpp      |  2 +-
+ .../locale.ctype.byname/widen_many.pass.cpp   |  2 +-
+ .../put_long_double_en_US.pass.cpp            |  3 ++
+ .../put_string_en_US.pass.cpp                 |  3 ++
+ .../curr_symbol.pass.cpp                      |  3 ++
+ .../neg_format.pass.cpp                       |  4 +-
+ .../negative_sign.pass.cpp                    |  8 ++--
+ .../pos_format.pass.cpp                       |  4 +-
+ .../locale.time.get.byname/get_date.pass.cpp  |  2 +-
+ .../get_date_wide.pass.cpp                    |  2 +-
+ .../locale.time.get.byname/get_one.pass.cpp   |  3 ++
+ .../get_one_wide.pass.cpp                     |  3 ++
+ .../locale.numpunct.byname/grouping.pass.cpp  |  2 +-
+ .../thousands_sep.pass.cpp                    |  4 +-
+ .../re/re.traits/transform_primary.pass.cpp   |  1 +
+ .../strings/string.conversions/stod.pass.cpp  |  3 ++
+ .../strings/string.conversions/stof.pass.cpp  |  3 ++
+ .../strings/string.conversions/stold.pass.cpp |  3 ++
+ .../environment.pass.cpp                      |  2 +-
+ .../time.cal.md.nonmembers/ostream.pass.cpp   |  3 ++
+ .../time.cal/time.cal.mdlast/ostream.pass.cpp |  3 ++
+ .../ostream.pass.cpp                          |  3 ++
+ .../time.cal.mwd.nonmembers/ostream.pass.cpp  |  3 ++
+ .../ostream.pass.cpp                          |  3 ++
+ .../time.cal.ym.nonmembers/ostream.pass.cpp   |  3 ++
+ .../ostream.pass.cpp                          |  3 ++
+ .../time.cal.ymwd.nonmembers/ostream.pass.cpp |  3 ++
+ .../ostream.pass.cpp                          |  3 ++
+ .../std/time/time.syn/formatter.day.pass.cpp  |  3 ++
+ .../time/time.syn/formatter.duration.pass.cpp |  3 ++
+ .../time.syn/formatter.file_time.pass.cpp     |  3 ++
+ .../time/time.syn/formatter.hh_mm_ss.pass.cpp |  3 ++
+ .../time.syn/formatter.local_time.pass.cpp    |  3 ++
+ .../time/time.syn/formatter.month.pass.cpp    |  3 ++
+ .../time.syn/formatter.month_day.pass.cpp     |  3 ++
+ .../formatter.month_day_last.pass.cpp         |  3 ++
+ .../time.syn/formatter.month_weekday.pass.cpp |  3 ++
+ .../time/time.syn/formatter.sys_time.pass.cpp |  3 ++
+ .../time/time.syn/formatter.weekday.pass.cpp  |  3 ++
+ .../time.syn/formatter.weekday_index.pass.cpp |  3 ++
+ .../time.syn/formatter.weekday_last.pass.cpp  |  3 ++
+ .../std/time/time.syn/formatter.year.pass.cpp |  3 ++
+ .../time.syn/formatter.year_month.pass.cpp    |  3 ++
+ .../formatter.year_month_day.pass.cpp         |  3 ++
+ .../formatter.year_month_day_last.pass.cpp    |  3 ++
+ .../formatter.year_month_weekday.pass.cpp     |  3 ++
+ libcxx/test/support/locale_helpers.h          |  8 ++--
+ libcxx/test/support/platform_support.h        |  7 +++
+ libcxx/utils/libcxx/test/features/platform.py |  4 ++
+ 64 files changed, 186 insertions(+), 50 deletions(-)
 
-diff --git a/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp b/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp
-index a1a37012369d4cdbbf35a3b8cea11fb64fb8e2d9..60daf50a89e3eb3b76caac389c1defc1bd322172 100644
---- a/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.cons/path.pass.cpp
-@@ -148,7 +148,7 @@ static void path_ctor_dne() {
- 
- static void path_ctor_cannot_resolve() {
-   using namespace fs;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-   // Windows doesn't support setting perms::none to trigger failures
-   // reading directories; test using a special inaccessible directory
-   // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.mods/assign.pass.cpp b/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.mods/assign.pass.cpp
-index ba14af1240d4b788dfaa1fd9ed241d6288fdafbf..5542966d412905bc5acecd4643bc85f233880a0a 100644
---- a/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.mods/assign.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/class.directory_entry/directory_entry.mods/assign.pass.cpp
-@@ -99,7 +99,7 @@ static void test_assign_calls_refresh() {
- static void test_assign_propagates_error() {
-   using namespace fs;
-   scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-   // Windows doesn't support setting perms::none to trigger failures
-   // reading directories; test using a special inaccessible directory
-   // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.exists/exists.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.exists/exists.pass.cpp
-index 56465d01021ad35095d14e94e2670f521ca7cde3..01ca8830af0456931927ce94809ab4499ffed3f1 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.exists/exists.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.exists/exists.pass.cpp
-@@ -84,13 +84,13 @@ static void test_exist_not_found()
- 
- static void test_exists_fails()
+diff --git a/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp b/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
+index 88672851f7b6b2cc55e601bf72344ba8d4668fdd..5530d62f8d73d400fe52fc2764b39e4c32a907d2 100644
+--- a/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
++++ b/libcxx/test/std/input.output/iostream.format/ext.manip/get_money.pass.cpp
+@@ -46,8 +46,8 @@ public:
+ int main(int, char**)
  {
--#ifdef _WIN32
--    // Windows doesn't support setting perms::none to trigger failures
--    // reading directories; test using a special inaccessible directory
--    // instead.
--    const path p = GetWindowsInaccessibleDir();
--    if (p.empty())
--        return;
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-+  // Windows doesn't support setting perms::none to trigger failures
-+  // reading directories; test using a special inaccessible directory
-+  // instead.
-+  const path p = GetWindowsInaccessibleDir();
-+  if (p.empty())
-+    return;
+     {
+-#if defined(_WIN32)
+-        testbuf<char> sb("  ($1,234,567.89)");
++#if defined(WINLOCALE)
++      testbuf<char> sb("  ($1,234,567.89)");
  #else
-     scoped_test_env env;
-     const path dir = env.create_dir("dir");
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_block_file/is_block_file.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_block_file/is_block_file.pass.cpp
-index fad880ecf30f71f40ab26ea62e9ae7a9c3d05b9a..efccd85489d3a28dd1f3836131bfd9cd67c955cc 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_block_file/is_block_file.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_block_file/is_block_file.pass.cpp
-@@ -70,7 +70,7 @@ static void test_exist_not_found()
- static void test_is_block_file_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_char_file/is_character_file.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_char_file/is_character_file.pass.cpp
-index 12bc0c198c0623772765962a3c62ddc89a62301e..bd03d41ead67d8f5b233f4a52932af98fda36458 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_char_file/is_character_file.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_char_file/is_character_file.pass.cpp
-@@ -70,7 +70,7 @@ static void test_exist_not_found()
- static void test_is_character_file_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_directory/is_directory.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_directory/is_directory.pass.cpp
-index f1b559cf2d55ba9e3b7d88e14258f1f85e0ee2fa..c02c8bfae5912e3d2e86bc9aba7d8f7207984f55 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_directory/is_directory.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_directory/is_directory.pass.cpp
-@@ -78,7 +78,7 @@ static void static_env_test()
- static void test_is_directory_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_empty/is_empty.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_empty/is_empty.pass.cpp
-index f3161f2e020d2971fbf56a957e2ba0ffcd9d521c..2aa4287186a44aa68e6e069e0a1498f782d4e441 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_empty/is_empty.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_empty/is_empty.pass.cpp
-@@ -72,7 +72,7 @@ static void test_is_empty_file()
- static void test_is_empty_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-@@ -95,7 +95,7 @@ static void test_is_empty_fails()
- static void test_directory_access_denied()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_fifo/is_fifo.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_fifo/is_fifo.pass.cpp
-index fbf5e7129f7aff9a5eeb8c7887df4336468868e4..48c2464ff90ca363f1ef4bff3e023aeff4900647 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_fifo/is_fifo.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_fifo/is_fifo.pass.cpp
-@@ -70,7 +70,7 @@ static void test_exist_not_found()
- static void test_is_fifo_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_other/is_other.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_other/is_other.pass.cpp
-index d0974640429df09bbcb9b2cb1cdcb60812d8c8e4..9dc7f793909d61b9c402aa95a99d274e7df2d9de 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_other/is_other.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_other/is_other.pass.cpp
-@@ -70,7 +70,7 @@ static void test_exist_not_found()
- static void test_is_other_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_regular_file/is_regular_file.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_regular_file/is_regular_file.pass.cpp
-index 4a5882e36cde2814556e6127d51a39f1809655a0..3dfdfd532d443f365ae872337e9bdbc73da6c3ec 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_regular_file/is_regular_file.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_regular_file/is_regular_file.pass.cpp
-@@ -73,7 +73,7 @@ static void test_exist_not_found()
- static void test_is_regular_file_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_socket/is_socket.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_socket/is_socket.pass.cpp
-index 382685c21dd996560719763992fee0e9f1abc996..5f02455672d88244f98c6e5773319016ed51600c 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_socket/is_socket.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_socket/is_socket.pass.cpp
-@@ -70,7 +70,7 @@ static void test_exist_not_found()
- static void test_is_socket_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_symlink/is_symlink.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_symlink/is_symlink.pass.cpp
-index 07b446d80c4022f7903577e7bf512b1764060ad0..1ab108ee1f605a73880f8905a2f67f469bf72432 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_symlink/is_symlink.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.is_symlink/is_symlink.pass.cpp
-@@ -92,7 +92,7 @@ static void test_exist_not_found()
- static void test_is_symlink_fails()
- {
-     scoped_test_env env;
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/bad_perms_parent.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/bad_perms_parent.pass.cpp
-index c75c5f25dcce265eed92d1c677cb7df4c3197528..6e473f9928fe53951ddf686902e209379b0c5870 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/bad_perms_parent.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.remove_all/bad_perms_parent.pass.cpp
-@@ -9,7 +9,7 @@
- // UNSUPPORTED: c++03, c++11, c++14
- // UNSUPPORTED: no-filesystem
- 
--// UNSUPPORTED: windows
-+// UNSUPPORTED: windows, cygwin
- // XFAIL: using-built-library-before-llvm-23
- 
- // Verify that remove_all reports the correct error (permission_denied)
-diff --git a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.temp_dir_path/temp_directory_path.pass.cpp b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.temp_dir_path/temp_directory_path.pass.cpp
-index 38e14438f3fd3d711f2608465a78c6ad2d7ca983..23b41c9ef14a657b8ccb4fa73ff35f15e4950971 100644
---- a/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.temp_dir_path/temp_directory_path.pass.cpp
-+++ b/libcxx/test/std/input.output/filesystems/fs.op.funcs/fs.op.temp_dir_path/temp_directory_path.pass.cpp
-@@ -45,7 +45,7 @@ static void basic_tests()
-     scoped_test_env env;
-     const path dne = env.make_env_path("dne");
-     const path file = env.create_file("file", 42);
--#ifdef _WIN32
-+#ifdef TEST_WIN_NO_FILESYSTEM_PERMS_NONE
-     // Windows doesn't support setting perms::none to trigger failures
-     // reading directories; test using a special inaccessible directory
-     // instead.
-diff --git a/libcxx/test/support/filesystem_test_helper.h b/libcxx/test/support/filesystem_test_helper.h
-index 2ad9efb32c60f0bc14195f8ca7d508163a118f36..68e919d08e422f5068b107c58c65ec09d36d9515 100644
---- a/libcxx/test/support/filesystem_test_helper.h
-+++ b/libcxx/test/support/filesystem_test_helper.h
-@@ -182,7 +182,7 @@ struct scoped_test_env
-         std::string cmd = "chmod -R 777 " + test_root.string();
- #endif // defined(__MVS__)
-         int ret = std::system(cmd.c_str());
--#  if !defined(_AIX) && !defined(__ANDROID__)
-+#  if !defined(_AIX) && !defined(__ANDROID__) && !defined(__CYGWIN__)
-         // On AIX the chmod command will return non-zero when trying to set
-         // the permissions on a directory that contains a bad symlink. This triggers
-         // the assert, despite being able to delete everything with the following
-diff --git a/libcxx/test/support/test_macros.h b/libcxx/test/support/test_macros.h
-index 11e2a2e844b25f8f6dbb89822c5e7d8c1199b16f..c49b588a699b4b4517a5c2ba9b8df702c003db57 100644
---- a/libcxx/test/support/test_macros.h
-+++ b/libcxx/test/support/test_macros.h
-@@ -418,7 +418,7 @@ inline Tp const& DoNotOptimize(Tp const& value) {
- #  define ASSERT_WITH_OPERATOR_NEW_FALLBACKS(...) assert(__VA_ARGS__)
+         testbuf<char> sb("  -$1,234,567.89");
+ #endif
+@@ -58,8 +58,8 @@ int main(int, char**)
+         assert(x == -123456789);
+     }
+     {
+-#if defined(_WIN32)
+-        testbuf<char> sb("  (USD 1,234,567.89)");
++#if defined(WINLOCALE)
++      testbuf<char> sb("  (USD 1,234,567.89)");
+ #else
+         testbuf<char> sb("  -USD 1,234,567.89");
+ #endif
+@@ -71,28 +71,28 @@ int main(int, char**)
+     }
+ #ifndef TEST_HAS_NO_WIDE_CHARACTERS
+     {
+-#if defined(_WIN32)
+-        testbuf<wchar_t> sb(L"  ($1,234,567.89)");
+-#else
+-        testbuf<wchar_t> sb(L"  -$1,234,567.89");
+-#endif
+-        std::wistream is(&sb);
+-        is.imbue(std::locale(LOCALE_en_US_UTF_8));
+-        long double x = 0;
+-        is >> std::get_money(x, false);
+-        assert(x == -123456789);
++#  if defined(WINLOCALE)
++      testbuf<wchar_t> sb(L"  ($1,234,567.89)");
++#  else
++      testbuf<wchar_t> sb(L"  -$1,234,567.89");
++#  endif
++      std::wistream is(&sb);
++      is.imbue(std::locale(LOCALE_en_US_UTF_8));
++      long double x = 0;
++      is >> std::get_money(x, false);
++      assert(x == -123456789);
+     }
+     {
+-#if defined(_WIN32)
+-        testbuf<wchar_t> sb(L"  (USD 1,234,567.89)");
+-#else
+-        testbuf<wchar_t> sb(L"  -USD 1,234,567.89");
+-#endif
+-        std::wistream is(&sb);
+-        is.imbue(std::locale(LOCALE_en_US_UTF_8));
+-        long double x = 0;
+-        is >> std::get_money(x, true);
+-        assert(x == -123456789);
++#  if defined(WINLOCALE)
++      testbuf<wchar_t> sb(L"  (USD 1,234,567.89)");
++#  else
++      testbuf<wchar_t> sb(L"  -USD 1,234,567.89");
++#  endif
++      std::wistream is(&sb);
++      is.imbue(std::locale(LOCALE_en_US_UTF_8));
++      long double x = 0;
++      is >> std::get_money(x, true);
++      assert(x == -123456789);
+     }
  #endif
  
+diff --git a/libcxx/test/std/input.output/iostream.format/ext.manip/put_money.pass.cpp b/libcxx/test/std/input.output/iostream.format/ext.manip/put_money.pass.cpp
+index d0ff2c87689d144c0694d4ba01e699a6088395d3..51a366e44ee840ae73e78630551a467b1d3db0f8 100644
+--- a/libcxx/test/std/input.output/iostream.format/ext.manip/put_money.pass.cpp
++++ b/libcxx/test/std/input.output/iostream.format/ext.manip/put_money.pass.cpp
+@@ -13,6 +13,9 @@
+ // Bionic has minimal locale support, investigate this later.
+ // XFAIL: LIBCXX-ANDROID-FIXME
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.en_US.UTF-8
+ 
+ #include <iomanip>
+diff --git a/libcxx/test/std/input.output/iostream.format/std.manip/setfill_wchar_max.pass.cpp b/libcxx/test/std/input.output/iostream.format/std.manip/setfill_wchar_max.pass.cpp
+index b24c0b90d86f16452861c0c8001a9499c16d3262..9bf49b7bb5b8c1dabcce818dbbb77d64364df6ca 100644
+--- a/libcxx/test/std/input.output/iostream.format/std.manip/setfill_wchar_max.pass.cpp
++++ b/libcxx/test/std/input.output/iostream.format/std.manip/setfill_wchar_max.pass.cpp
+@@ -14,7 +14,7 @@
+ // WCHAR_MAX with the libcpp ABI version 1 implementation. The libcpp ABI
+ // version 2 implementation fixes the problem.
+ 
+-// XFAIL: target={{.*}}-windows{{.*}} && libcpp-abi-version=1
++// XFAIL: target={{.*}}-windows{{.*}} && libcpp-abi-version=1 && !cygwin
+ // XFAIL: target=armv{{7|8}}{{l?}}{{.*}}-linux-gnueabihf && libcpp-abi-version=1
+ // XFAIL: target=aarch64{{.*}}-linux-gnu && libcpp-abi-version=1
+ // XFAIL: target=aarch64{{.*}}-amazon-linux && libcpp-abi-version=1
+diff --git a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcerr-wide-mode.sh.cpp b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcerr-wide-mode.sh.cpp
+index f23fbee92afd8e838db513f07bf8343ce3b2c31e..249db368895e5c9fcdd9b9299f469de2f1583777 100644
+--- a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcerr-wide-mode.sh.cpp
++++ b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcerr-wide-mode.sh.cpp
+@@ -12,6 +12,7 @@
+ 
+ // UNSUPPORTED: no-wide-characters
+ // REQUIRES: target={{.+}}-windows-{{.+}}
++// XFAIL: cygwin
+ 
+ // FILE_DEPENDENCIES: test.dat
+ // RUN: %{build}
+diff --git a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcin-wide-mode.sh.cpp b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcin-wide-mode.sh.cpp
+index e13d79605f118e0ec382d19933d262f656e2ae4c..4eed763bfecbcb5dbf74d29ef2ed59c6e0ba26d5 100644
+--- a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcin-wide-mode.sh.cpp
++++ b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcin-wide-mode.sh.cpp
+@@ -12,6 +12,7 @@
+ 
+ // UNSUPPORTED: no-wide-characters
+ // REQUIRES: target={{.+}}-windows-{{.+}}
++// XFAIL: cygwin
+ 
+ // FILE_DEPENDENCIES: test.dat
+ // RUN: %{build}
+diff --git a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcout-wide-mode.sh.cpp b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcout-wide-mode.sh.cpp
+index 9908ea0e64db1bb1e88ff827b1fcd85a14b70579..12acabd16c3f9bcc1ac8780413495687be4523ab 100644
+--- a/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcout-wide-mode.sh.cpp
++++ b/libcxx/test/std/input.output/iostream.objects/wide.stream.objects/wcout-wide-mode.sh.cpp
+@@ -12,6 +12,7 @@
+ 
+ // UNSUPPORTED: no-wide-characters
+ // REQUIRES: target={{.+}}-windows-{{.+}}
++// XFAIL: cygwin
+ 
+ // FILE_DEPENDENCIES: test.dat
+ // RUN: %{build}
+diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/facet.ctype.special/facet.ctype.char.statics/classic_table.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/facet.ctype.special/facet.ctype.char.statics/classic_table.pass.cpp
+index 1bd9fc88c72db9286ca32237087bc36ebbd73168..0c53596d3cf9e80ed55873be9f37fc25957c18ed 100644
+--- a/libcxx/test/std/localization/locale.categories/category.ctype/facet.ctype.special/facet.ctype.char.statics/classic_table.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.ctype/facet.ctype.special/facet.ctype.char.statics/classic_table.pass.cpp
+@@ -22,6 +22,7 @@
+ #include <cassert>
+ 
+ #include "test_macros.h"
++#include "platform_support.h" // locale name macros
+ 
+ int main(int, char**)
+ {
+@@ -42,7 +43,7 @@ int main(int, char**)
+ #if defined(_MSVC_STL_VERSION)
+         // MS STL includes the _SPACE bit in F::blank
+         bool expect_blank = (9 <= i && i <= 13) || (i == ' ');
+-#elif defined(_WIN32)
++#elif defined(WINLOCALE)
+         // The _BLANK bit isn't set for '\t' on Windows
+         bool expect_blank = (i == ' ');
+ #else
+diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_1.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_1.pass.cpp
+index 5cebc079c4703980545321f7618f58bc35253619..30d1940d1de6f0d9896a38cf330a1b7f6869ef31 100644
+--- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_1.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_1.pass.cpp
+@@ -109,7 +109,7 @@ int main(int, char**)
+             assert(f.is(F::graph, L'.'));
+             assert(!f.is(F::graph,  L'\x07'));
+ 
+-#if defined(_WIN32)
++#if defined(WINLOCALE)
+             // On Windows, these wchars are classified according to their
+             // Unicode interpretation even in the "C" locale.
+             assert(f.is(F::alpha, L'\x00DA'));
+diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_many.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_many.pass.cpp
+index 2869378b42b92c50012a259b86dd0300ef9d5a85..519785262823951a066caa44eabaa8f9a9442932 100644
+--- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_many.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/is_many.pass.cpp
+@@ -157,7 +157,7 @@ int main(int, char**)
+             assert(!(m[0] & F::punct));
+             assert(!(m[0] & F::xdigit));
+             assert(!(m[0] & F::blank));
+-#if defined(_WIN32)
++#if defined(WINLOCALE)
+             // On Windows, these wchars are classified according to their
+             // Unicode interpretation even in the "C" locale.
+             assert( (m[0] & F::alpha));
+diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_is.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_is.pass.cpp
+index 78bd0a1ef210e555fa4e2a6c04a4d43837fb00c0..8997f079d0f9d3c30f16010d7fb590b2cf86bd56 100644
+--- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_is.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_is.pass.cpp
+@@ -62,7 +62,7 @@ int main(int, char**)
+             assert(f.scan_is(F::punct, in.data(), in.data() + in.size()) - in.data() == 4);
+             assert(f.scan_is(F::xdigit, in.data(), in.data() + in.size()) - in.data() == 2);
+             assert(f.scan_is(F::blank, in.data(), in.data() + in.size()) - in.data() == 1);
+-#if !defined(_WIN32)
++#if !defined(WINLOCALE)
+             // On Windows, these wchars are classified according to their
+             // Unicode interpretation even in the "C" locale, where
+             // the scan_is function returns the same as above for the
+diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_not.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_not.pass.cpp
+index 5f9788a0bfa5beed02dbd657e5db04ccab22cd67..46c10f0ca86ed4019afff13bcf6ac2f0331a3999 100644
+--- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_not.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/scan_not.pass.cpp
+@@ -62,7 +62,7 @@ int main(int, char**)
+             assert(f.scan_not(F::punct, in.data(), in.data() + in.size()) - in.data() == 0);
+             assert(f.scan_not(F::xdigit, in.data(), in.data() + in.size()) - in.data() == 0);
+             assert(f.scan_not(F::blank, in.data(), in.data() + in.size()) - in.data() == 0);
+-#if !defined(_WIN32)
++#if !defined(WINLOCALE)
+             // On Windows, these wchars are classified according to their
+             // Unicode interpretation even in the "C" locale, where
+             // the scan_is function returns the same as above for the
+diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_1.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_1.pass.cpp
+index 447353de8af72fd1d739f7c642e1562a21684b44..9bcc234ddc91bd19c0c01a6aae925e2466817864 100644
+--- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_1.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_1.pass.cpp
+@@ -12,6 +12,9 @@
+ // Bionic has minimal locale support, investigate this later.
+ // XFAIL: LIBCXX-ANDROID-FIXME
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // <locale>
+ 
+ // template <class charT> class ctype_byname;
+diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_many.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_many.pass.cpp
+index 94ecc6c8fa85b03aa8b2d10077122e28844225e1..8a55163f1bdb6785e6f2b09f1084626a3f3370cc 100644
+--- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_many.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/tolower_many.pass.cpp
+@@ -12,6 +12,9 @@
+ // Bionic has minimal locale support, investigate this later.
+ // XFAIL: LIBCXX-ANDROID-FIXME
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // <locale>
+ 
+ // template <class charT> class ctype_byname;
+diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_1.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_1.pass.cpp
+index 2b37737a26bc365c27ec3ebc54c5234fa0838ec6..cb09a443de77fd775c404decba9620199dbe0dd3 100644
+--- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_1.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_1.pass.cpp
+@@ -12,6 +12,9 @@
+ // Bionic has minimal locale support, investigate this later.
+ // XFAIL: LIBCXX-ANDROID-FIXME
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // <locale>
+ 
+ // template <class charT> class ctype_byname;
+diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_many.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_many.pass.cpp
+index 016d8d736ad22a2adbd5c41b60dad38fedf7cc2b..df85b1670074bb81a9cff04c74e91bf2ecd2dff2 100644
+--- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_many.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/toupper_many.pass.cpp
+@@ -12,6 +12,9 @@
+ // Bionic has minimal locale support, investigate this later.
+ // XFAIL: LIBCXX-ANDROID-FIXME
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // <locale>
+ 
+ // template <class charT> class ctype_byname;
+diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_1.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_1.pass.cpp
+index 959a4be9e1de9648904d9c9ea485214d26285145..085ae20d1a0f8eb696b8e5ee23cb9a8a4d17b9c2 100644
+--- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_1.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_1.pass.cpp
+@@ -56,7 +56,7 @@ int main(int, char**)
+             assert(f.widen('.') == L'.');
+             assert(f.widen('a') == L'a');
+             assert(f.widen('1') == L'1');
+-#if defined(__APPLE__) || defined(__FreeBSD__) || defined(_WIN32) || defined(_AIX)
++#if defined(__APPLE__) || defined(__FreeBSD__) || defined(WINLOCALE) || defined(_AIX)
+             assert(f.widen(char(-5)) == L'\u00fb');
+ #else
+             assert(f.widen(char(-5)) == wchar_t(-1));
+diff --git a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_many.pass.cpp b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_many.pass.cpp
+index 078b4a6fefb7e1789086f429c02d814bf5a724b2..fd9eb59b9eb55b1091f4a917337d32677fd81aa0 100644
+--- a/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_many.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.ctype/locale.ctype.byname/widen_many.pass.cpp
+@@ -62,7 +62,7 @@ int main(int, char**)
+             assert(v[3] == L'.');
+             assert(v[4] == L'a');
+             assert(v[5] == L'1');
+-#if defined(__APPLE__) || defined(__FreeBSD__) || defined(_WIN32) || defined(_AIX)
++#if defined(__APPLE__) || defined(__FreeBSD__) || defined(WINLOCALE) || defined(_AIX)
+             assert(v[6] == L'\xfb');
+ #else
+             assert(v[6] == wchar_t(-1));
+diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp
+index 4b767fae871fa77991f9d3589702d72b537ec9d6..cf6d4312e6eeb3349b5d85a13875c0ed8e4abc4c 100644
+--- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_long_double_en_US.pass.cpp
+@@ -16,6 +16,9 @@
+ // Bionic has minimal locale support, investigate this later.
+ // XFAIL: LIBCXX-ANDROID-FIXME
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.en_US.UTF-8
+ 
+ #include <locale>
+diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp
+index 1c8710a008f27f2b93543787eac8f051ed03a176..89b9b2a1fb80b8da2285c5fa4ff3a7cd19b16d41 100644
+--- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.money.put/locale.money.put.members/put_string_en_US.pass.cpp
+@@ -16,6 +16,9 @@
+ // Bionic has minimal locale support, investigate this later.
+ // XFAIL: LIBCXX-ANDROID-FIXME
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.en_US.UTF-8
+ 
+ #include <locale>
+diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp
+index 0cc0a075d13fa097f0f9918006f474a811fef743..5209a604846832879a9397d8d653a3a0b4f31926 100644
+--- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/curr_symbol.pass.cpp
+@@ -9,6 +9,9 @@
+ // NetBSD does not support LC_MONETARY at the moment
+ // XFAIL: netbsd
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.en_US.UTF-8
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ru_RU.UTF-8
+diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp
+index 1225f70966847d121c60c940aac6108df00a62fd..6170a71b8be236c7f9b1d31b7326b4b0e580f84f 100644
+--- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/neg_format.pass.cpp
+@@ -191,7 +191,7 @@ int main(int, char**)
+     {
+         Fnt f(LOCALE_zh_CN_UTF_8, 1);
+         std::money_base::pattern p = f.neg_format();
+-#if defined(_WIN32)
++#if defined(WINLOCALE)
+         assert_symbol_sign_none_value(p);
+ #else
+         assert_sign_symbol_none_value(p);
+@@ -210,7 +210,7 @@ int main(int, char**)
+     {
+         Fwt f(LOCALE_zh_CN_UTF_8, 1);
+         std::money_base::pattern p = f.neg_format();
+-#if defined(_WIN32)
++#  if defined(WINLOCALE)
+         assert_symbol_sign_none_value(p);
+ #else
+         assert_sign_symbol_none_value(p);
+diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/negative_sign.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/negative_sign.pass.cpp
+index be2f5585d06977d40ae295e2bb8d75d29fb4af0e..6c19bca92b10e63180340dafc833572a22b12570 100644
+--- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/negative_sign.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/negative_sign.pass.cpp
+@@ -81,7 +81,7 @@ int main(int, char**)
+ 
+     {
+         Fnf f(LOCALE_en_US_UTF_8, 1);
+-#if defined(_WIN32)
++#if defined(WINLOCALE)
+         assert(f.negative_sign() == "()");
+ #else
+         assert(f.negative_sign() == "-");
+@@ -89,7 +89,7 @@ int main(int, char**)
+     }
+     {
+         Fnt f(LOCALE_en_US_UTF_8, 1);
+-#if defined(_WIN32)
++#if defined(WINLOCALE)
+         assert(f.negative_sign() == "()");
+ #else
+         assert(f.negative_sign() == "-");
+@@ -98,7 +98,7 @@ int main(int, char**)
+ #ifndef TEST_HAS_NO_WIDE_CHARACTERS
+     {
+         Fwf f(LOCALE_en_US_UTF_8, 1);
+-#if defined(_WIN32)
++#  if defined(WINLOCALE)
+         assert(f.negative_sign() == L"()");
+ #else
+         assert(f.negative_sign() == L"-");
+@@ -106,7 +106,7 @@ int main(int, char**)
+     }
+     {
+         Fwt f(LOCALE_en_US_UTF_8, 1);
+-#if defined(_WIN32)
++#  if defined(WINLOCALE)
+         assert(f.negative_sign() == L"()");
+ #else
+         assert(f.negative_sign() == L"-");
+diff --git a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp
+index 2db6b353b7114f1229206417cbb14401de1c849c..86fa7e62e4567aa84d0564f773046b24a695a5b3 100644
+--- a/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.monetary/locale.moneypunct.byname/pos_format.pass.cpp
+@@ -191,7 +191,7 @@ int main(int, char**)
+     {
+         Fnt f(LOCALE_zh_CN_UTF_8, 1);
+         std::money_base::pattern p = f.pos_format();
 -#ifdef _WIN32
++#ifdef WINLOCALE
+         assert_symbol_sign_none_value(p);
+ #else
+         assert_sign_symbol_none_value(p);
+@@ -210,7 +210,7 @@ int main(int, char**)
+     {
+         Fwt f(LOCALE_zh_CN_UTF_8, 1);
+         std::money_base::pattern p = f.pos_format();
+-#ifdef _WIN32
++#  ifdef WINLOCALE
+         assert_symbol_sign_none_value(p);
+ #else
+         assert_sign_symbol_none_value(p);
+diff --git a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date.pass.cpp b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date.pass.cpp
+index a0c0a869e4fbdc84cb2f171f187503d53744dd62..4a01ddacafd0723b06d6a005ec44b0a2ec04b96f 100644
+--- a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date.pass.cpp
+@@ -63,7 +63,7 @@ int main(int, char**)
+     }
+     {
+         const my_facet f(LOCALE_fr_FR_UTF_8, 1);
+-#if defined(_WIN32) || defined(TEST_HAS_GLIBC) || defined(_AIX)
++#if defined(WINLOCALE) || defined(TEST_HAS_GLIBC) || defined(_AIX)
+         const char in[] = "10/06/2009";
+ #else
+         const char in[] = "10.06.2009";
+diff --git a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date_wide.pass.cpp b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date_wide.pass.cpp
+index 0b271efece686c214c897818b22bd54a37b5ec1a..815919530751265df17974ef498b26d818402b95 100644
+--- a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date_wide.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_date_wide.pass.cpp
+@@ -65,7 +65,7 @@ int main(int, char**)
+     }
+     {
+         const my_facet f(LOCALE_fr_FR_UTF_8, 1);
+-#if defined(_WIN32) || defined(TEST_HAS_GLIBC) || defined(_AIX)
++#if defined(WINLOCALE) || defined(TEST_HAS_GLIBC) || defined(_AIX)
+         const wchar_t in[] = L"10/06/2009";
+ #else
+         const wchar_t in[] = L"10.06.2009";
+diff --git a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one.pass.cpp b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one.pass.cpp
+index 6efefb269f518290818cae446b8e733346a98113..ed695e98ce9b72e94d6b6bba8c04b199c2151a4a 100644
+--- a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one.pass.cpp
+@@ -9,6 +9,9 @@
+ // NetBSD does not support LC_TIME at the moment
+ // XFAIL: netbsd
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.en_US.UTF-8
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ru_RU.UTF-8
+diff --git a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one_wide.pass.cpp b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one_wide.pass.cpp
+index de90bde417ec6a8599f12170020064b995cf0fd0..5e8284eeffa8ea4e88f5ddcc5c9a39a7f80996f9 100644
+--- a/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one_wide.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/category.time/locale.time.get.byname/get_one_wide.pass.cpp
+@@ -9,6 +9,9 @@
+ // NetBSD does not support LC_TIME at the moment
+ // XFAIL: netbsd
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // XFAIL: no-wide-characters
+ 
+ // REQUIRES: locale.en_US.UTF-8
+diff --git a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp
+index b9c613956d1ddddac40e580381e10ad11af54b17..7453955a49ce726a0dd44ec62c63c74bc75458e5 100644
+--- a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/grouping.pass.cpp
+@@ -58,7 +58,7 @@ int main(int, char**)
+     }
+     {
+         std::locale l(LOCALE_fr_FR_UTF_8);
+-#if defined(TEST_HAS_GLIBC) || defined(_WIN32) || defined(_AIX) || defined(__APPLE__) || defined(__FreeBSD__)
++#if defined(TEST_HAS_GLIBC) || defined(WINLOCALE) || defined(_AIX) || defined(__APPLE__) || defined(__FreeBSD__)
+         const char* const group = "\3";
+ #else
+         const char* const group = "\x7f";
+diff --git a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp
+index 8074c889bab4ccb93259fabc724dbb535075307d..6f0d9a1d31aab47432661694c647d0537b13a0b1 100644
+--- a/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp
++++ b/libcxx/test/std/localization/locale.categories/facet.numpunct/locale.numpunct.byname/thousands_sep.pass.cpp
+@@ -64,8 +64,8 @@ int main(int, char**)
+         // The below tests work around GLIBC's use of U202F as LC_NUMERIC thousands_sep.
+         std::locale l(LOCALE_fr_FR_UTF_8);
+         {
+-#if defined(_CS_GNU_LIBC_VERSION) || defined(_WIN32) || defined(_AIX) || defined(__APPLE__) || defined(__FreeBSD__)
+-          const char sep = ' ';
++#if defined(_CS_GNU_LIBC_VERSION) || defined(WINLOCALE) || defined(_AIX) || defined(__APPLE__) || defined(__FreeBSD__)
++            const char sep = ' ';
+ #else
+             const char sep = ',';
+ #endif
+diff --git a/libcxx/test/std/re/re.traits/transform_primary.pass.cpp b/libcxx/test/std/re/re.traits/transform_primary.pass.cpp
+index b86804b6eed3ab56e12c3479305524997c76bf3a..4cac580d05da965b07dc3c62f276b2a5b5a5ceb2 100644
+--- a/libcxx/test/std/re/re.traits/transform_primary.pass.cpp
++++ b/libcxx/test/std/re/re.traits/transform_primary.pass.cpp
+@@ -10,6 +10,7 @@
+ // XFAIL: netbsd
+ 
+ // XFAIL: LIBCXX-AIX-FIXME
++// XFAIL: LIBCXX-CYGWIN-FIXME
+ 
+ // REQUIRES: locale.cs_CZ.ISO8859-2
+ 
+diff --git a/libcxx/test/std/strings/string.conversions/stod.pass.cpp b/libcxx/test/std/strings/string.conversions/stod.pass.cpp
+index bbe992fbc565e71436f40c26e532496d569763ea..cba2c0f1fbbd92eb0bcd456b1072b0a10f03029d 100644
+--- a/libcxx/test/std/strings/string.conversions/stod.pass.cpp
++++ b/libcxx/test/std/strings/string.conversions/stod.pass.cpp
+@@ -136,7 +136,10 @@ int main(int, char**) {
+       std::size_t idx = 0;
+       try {
+         (void)std::stod(L"  - 8", &idx);
++#    ifndef __CYGWIN__
++        // Cygwin's wcstod consumes leading whitespace even if conversion failed
+         assert(false);
++#    endif
+       } catch (const std::invalid_argument&) {
+         assert(idx == 0);
+       }
+diff --git a/libcxx/test/std/strings/string.conversions/stof.pass.cpp b/libcxx/test/std/strings/string.conversions/stof.pass.cpp
+index 4ddeb8f95ede03813cbdd93444f68dce272687f5..cbb241d7bbfed0f801f7b5f71a7858a619dbafde 100644
+--- a/libcxx/test/std/strings/string.conversions/stof.pass.cpp
++++ b/libcxx/test/std/strings/string.conversions/stof.pass.cpp
+@@ -138,7 +138,10 @@ int main(int, char**) {
+     std::size_t idx = 0;
+     try {
+       (void)std::stof(L"  - 8", &idx);
++#    ifndef __CYGWIN__
++      // Cygwin's wcstod consumes leading whitespace even if conversion failed
+       assert(false);
++#    endif
+     } catch (const std::invalid_argument&) {
+       assert(idx == 0);
+     }
+diff --git a/libcxx/test/std/strings/string.conversions/stold.pass.cpp b/libcxx/test/std/strings/string.conversions/stold.pass.cpp
+index ef756982ee9a03657cde0f12380af50b1ca5bf45..6da72c9f60595a4ab5a420f71913d85b1e786b95 100644
+--- a/libcxx/test/std/strings/string.conversions/stold.pass.cpp
++++ b/libcxx/test/std/strings/string.conversions/stold.pass.cpp
+@@ -122,7 +122,10 @@ int main(int, char**) {
+     std::size_t idx = 0;
+     try {
+       (void)std::stold(L"  - 8", &idx);
++#    ifndef __CYGWIN__
++      // Cygwin's wcstod consumes leading whitespace even if conversion failed
+       assert(false);
++#    endif
+     } catch (const std::invalid_argument&) {
+       assert(idx == 0);
+     }
+diff --git a/libcxx/test/std/text/text_encoding/text_encoding.members/environment.pass.cpp b/libcxx/test/std/text/text_encoding/text_encoding.members/environment.pass.cpp
+index 8907f72b55140bdc59525e1ab809671136643e68..6e6238adc7658ecb19a1ad7e13f6b7a7bc4d477f 100644
+--- a/libcxx/test/std/text/text_encoding/text_encoding.members/environment.pass.cpp
++++ b/libcxx/test/std/text/text_encoding/text_encoding.members/environment.pass.cpp
+@@ -28,7 +28,7 @@
+ 
+ int main(int, char**) {
+   auto check_env = []() {
+-#if defined(__ANDROID__)
++#if defined(__ANDROID__) || defined(__CYGWIN__)
+     constexpr std::text_encoding::id expected_id = std::text_encoding::UTF8;
+ #elif defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+     constexpr std::text_encoding::id expected_id = std::text_encoding::ASCII;
+diff --git a/libcxx/test/std/time/time.cal/time.cal.md/time.cal.md.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.md/time.cal.md.nonmembers/ostream.pass.cpp
+index 3963eb9199f08d76163af748dc4068ac291ef9fe..3e2520cf86617e6c39a9b40feab95f9c7b9a9058 100644
+--- a/libcxx/test/std/time/time.cal/time.cal.md/time.cal.md.nonmembers/ostream.pass.cpp
++++ b/libcxx/test/std/time/time.cal/time.cal.md/time.cal.md.nonmembers/ostream.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.cal/time.cal.mdlast/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.mdlast/ostream.pass.cpp
+index 83953121d7fd2a1d8e3d34ab8e4e5eb93c2fefed..bb701605b3743f16ae7f030ea5714cfad0ed02f2 100644
+--- a/libcxx/test/std/time/time.cal/time.cal.mdlast/ostream.pass.cpp
++++ b/libcxx/test/std/time/time.cal/time.cal.mdlast/ostream.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.cal/time.cal.month/time.cal.month.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.month/time.cal.month.nonmembers/ostream.pass.cpp
+index 3ce8ed13696e558cec8bb2bcd8a83d6d23a5b9be..09f1b8b1987ae558f2ae22cd6ac20fe7d5a531a3 100644
+--- a/libcxx/test/std/time/time.cal/time.cal.month/time.cal.month.nonmembers/ostream.pass.cpp
++++ b/libcxx/test/std/time/time.cal/time.cal.month/time.cal.month.nonmembers/ostream.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.cal/time.cal.mwd/time.cal.mwd.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.mwd/time.cal.mwd.nonmembers/ostream.pass.cpp
+index fcf80680b8e9af1b0b371de96c528652c9750363..414f9e380dddc51d76afa1d3d15146387a5b037d 100644
+--- a/libcxx/test/std/time/time.cal/time.cal.mwd/time.cal.mwd.nonmembers/ostream.pass.cpp
++++ b/libcxx/test/std/time/time.cal/time.cal.mwd/time.cal.mwd.nonmembers/ostream.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.cal/time.cal.mwdlast/time.cal.mwdlast.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.mwdlast/time.cal.mwdlast.nonmembers/ostream.pass.cpp
+index d9c6ed67b29de0f23e3b4a25d00c68c8a0437dcd..e899ae7c22bb48b68dd385e81662b71fb72fd1ae 100644
+--- a/libcxx/test/std/time/time.cal/time.cal.mwdlast/time.cal.mwdlast.nonmembers/ostream.pass.cpp
++++ b/libcxx/test/std/time/time.cal/time.cal.mwdlast/time.cal.mwdlast.nonmembers/ostream.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.cal/time.cal.ym/time.cal.ym.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.ym/time.cal.ym.nonmembers/ostream.pass.cpp
+index bf74b5366459f45a0672a1951ad4eca5165b0a9c..3ba3059e6c9366e5d2a30a049c3b2bd69bfd45fb 100644
+--- a/libcxx/test/std/time/time.cal/time.cal.ym/time.cal.ym.nonmembers/ostream.pass.cpp
++++ b/libcxx/test/std/time/time.cal/time.cal.ym/time.cal.ym.nonmembers/ostream.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.cal/time.cal.ymdlast/time.cal.ymdlast.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.ymdlast/time.cal.ymdlast.nonmembers/ostream.pass.cpp
+index b6295226cf0453e4683db5aabf6b29da4a8c3bf5..f45c5fad575aedbc98af46ee26d349a9f52eac30 100644
+--- a/libcxx/test/std/time/time.cal/time.cal.ymdlast/time.cal.ymdlast.nonmembers/ostream.pass.cpp
++++ b/libcxx/test/std/time/time.cal/time.cal.ymdlast/time.cal.ymdlast.nonmembers/ostream.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.cal/time.cal.ymwd/time.cal.ymwd.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.ymwd/time.cal.ymwd.nonmembers/ostream.pass.cpp
+index 2ffef9972462de54050130265dfac78707bc8845..ede45fe8683d1661f6319b6193800d4f6d1bada6 100644
+--- a/libcxx/test/std/time/time.cal/time.cal.ymwd/time.cal.ymwd.nonmembers/ostream.pass.cpp
++++ b/libcxx/test/std/time/time.cal/time.cal.ymwd/time.cal.ymwd.nonmembers/ostream.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.cal/time.cal.ymwdlast/time.cal.ymwdlast.nonmembers/ostream.pass.cpp b/libcxx/test/std/time/time.cal/time.cal.ymwdlast/time.cal.ymwdlast.nonmembers/ostream.pass.cpp
+index 4aca705db2e462cfe1eae13b21d8d69a2624e3af..c03f0cd91223ea4d3bd1f79dda2f19f183ffe196 100644
+--- a/libcxx/test/std/time/time.cal/time.cal.ymwdlast/time.cal.ymwdlast.nonmembers/ostream.pass.cpp
++++ b/libcxx/test/std/time/time.cal/time.cal.ymwdlast/time.cal.ymwdlast.nonmembers/ostream.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.day.pass.cpp b/libcxx/test/std/time/time.syn/formatter.day.pass.cpp
+index 02dc215d35c5325bf78c5e8966befaca8714e215..6c939fa0d5da4c80f2a935120b77cf78d23edaf3 100644
+--- a/libcxx/test/std/time/time.syn/formatter.day.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.day.pass.cpp
+@@ -16,6 +16,9 @@
+ // TODO FMT Investigate Windows issues.
+ // XFAIL: msvc
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.duration.pass.cpp b/libcxx/test/std/time/time.syn/formatter.duration.pass.cpp
+index f1f7debed24646f251faef6aab4c8f711e1f68b4..3c75056c55f4e7f63936ecd5089e7840b6393d04 100644
+--- a/libcxx/test/std/time/time.syn/formatter.duration.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.duration.pass.cpp
+@@ -12,6 +12,9 @@
+ 
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.file_time.pass.cpp b/libcxx/test/std/time/time.syn/formatter.file_time.pass.cpp
+index 379d2bd9399088727375fe5d3b6edad62fb1442e..8243ccc91548ed2210f673fae7a3b202ba652cd7 100644
+--- a/libcxx/test/std/time/time.syn/formatter.file_time.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.file_time.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.hh_mm_ss.pass.cpp b/libcxx/test/std/time/time.syn/formatter.hh_mm_ss.pass.cpp
+index bbd9c074bef24cfe07036179d1cfe7d902cc3d3e..1e91619967454929028333c7a075b16713e1bc47 100644
+--- a/libcxx/test/std/time/time.syn/formatter.hh_mm_ss.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.hh_mm_ss.pass.cpp
+@@ -12,6 +12,9 @@
+ 
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.local_time.pass.cpp b/libcxx/test/std/time/time.syn/formatter.local_time.pass.cpp
+index b8e208fef619c28be0fd2bf5e5f4f55e48ce3e99..aaab41e7e5ef9b985e287ed486d9a95fef78c89c 100644
+--- a/libcxx/test/std/time/time.syn/formatter.local_time.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.local_time.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.month.pass.cpp b/libcxx/test/std/time/time.syn/formatter.month.pass.cpp
+index ea07d7c829816c1e098cf3813709e7480e6d6970..0f0f21d41b89ece4957ef4bc4b907aba8c10acd9 100644
+--- a/libcxx/test/std/time/time.syn/formatter.month.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.month.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.month_day.pass.cpp b/libcxx/test/std/time/time.syn/formatter.month_day.pass.cpp
+index cfe57d40ab6ebc8335f36ad37b56e7470a44e1e5..66e9881bf3e067ad5f4a6437c3afdef21370b768 100644
+--- a/libcxx/test/std/time/time.syn/formatter.month_day.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.month_day.pass.cpp
+@@ -16,6 +16,9 @@
+ // TODO FMT Investigate Windows issues.
+ // XFAIL: msvc
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.month_day_last.pass.cpp b/libcxx/test/std/time/time.syn/formatter.month_day_last.pass.cpp
+index 48b0f8656ec154467da4c6ef0843b3e245dc704b..14a4b5b1051e879579895071813ee5bc32590bc6 100644
+--- a/libcxx/test/std/time/time.syn/formatter.month_day_last.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.month_day_last.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.month_weekday.pass.cpp b/libcxx/test/std/time/time.syn/formatter.month_weekday.pass.cpp
+index 2daf721a6685906bc8e991c7c14b086c953cb9e8..bd6e506deda8a32f7df583330914605676212d9d 100644
+--- a/libcxx/test/std/time/time.syn/formatter.month_weekday.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.month_weekday.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.sys_time.pass.cpp b/libcxx/test/std/time/time.syn/formatter.sys_time.pass.cpp
+index 3983dfbff799b1cb10b969388ea7b1c374fe4595..994f941031a34511def1d10a8baec53410e8c264 100644
+--- a/libcxx/test/std/time/time.syn/formatter.sys_time.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.sys_time.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.weekday.pass.cpp b/libcxx/test/std/time/time.syn/formatter.weekday.pass.cpp
+index 0b49d0c36268dad683f8c362c38f2af48e49cd35..627ec659836eb6af09785e5b89d9d0f39ac5d364 100644
+--- a/libcxx/test/std/time/time.syn/formatter.weekday.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.weekday.pass.cpp
+@@ -16,6 +16,9 @@
+ // TODO FMT Investigate Windows issues.
+ // XFAIL: msvc
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.weekday_index.pass.cpp b/libcxx/test/std/time/time.syn/formatter.weekday_index.pass.cpp
+index c5c67158ef3c51bbd2cccb7b41f5c378e91c12c2..550d921cdb8af2bf72a9a81a195719bdd40c72b6 100644
+--- a/libcxx/test/std/time/time.syn/formatter.weekday_index.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.weekday_index.pass.cpp
+@@ -16,6 +16,9 @@
+ // TODO FMT Investigate Windows issues.
+ // XFAIL: msvc
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.weekday_last.pass.cpp b/libcxx/test/std/time/time.syn/formatter.weekday_last.pass.cpp
+index 29a75833e3e249205b26325066b290cbdbee4f3f..39aa8d57724a7d8bfd52144a25081f27388ef522 100644
+--- a/libcxx/test/std/time/time.syn/formatter.weekday_last.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.weekday_last.pass.cpp
+@@ -16,6 +16,9 @@
+ // TODO FMT Investigate Windows issues.
+ // XFAIL: msvc
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.year.pass.cpp b/libcxx/test/std/time/time.syn/formatter.year.pass.cpp
+index e1a7d788f9db11c46668a377dac96c396caec8af..b0ebe0c503ccb3fe217f5e956725838d66623751 100644
+--- a/libcxx/test/std/time/time.syn/formatter.year.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.year.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.year_month.pass.cpp b/libcxx/test/std/time/time.syn/formatter.year_month.pass.cpp
+index 26c7f33832cbf3a47fdae0d2da4b344426bc9120..078927e447895341614199965a25cd06b5861ad3 100644
+--- a/libcxx/test/std/time/time.syn/formatter.year_month.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.year_month.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.year_month_day.pass.cpp b/libcxx/test/std/time/time.syn/formatter.year_month_day.pass.cpp
+index 356e80a9277c2a4ff092129152077d6a6753f7fb..e89134fbaf53f90a0bb054f6e3463757db89a18c 100644
+--- a/libcxx/test/std/time/time.syn/formatter.year_month_day.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.year_month_day.pass.cpp
+@@ -16,6 +16,9 @@
+ // TODO FMT Investigate Windows issues.
+ // XFAIL: msvc
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.year_month_day_last.pass.cpp b/libcxx/test/std/time/time.syn/formatter.year_month_day_last.pass.cpp
+index 648c344d29b947654e7a34c9f6b00fc6e6da2b0f..6ed012a926defdbd262e715faa148ca3b29e27e0 100644
+--- a/libcxx/test/std/time/time.syn/formatter.year_month_day_last.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.year_month_day_last.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/std/time/time.syn/formatter.year_month_weekday.pass.cpp b/libcxx/test/std/time/time.syn/formatter.year_month_weekday.pass.cpp
+index 6ea05c9f2a216bb58273ece6ada442201c906675..bfc2200314a351a953307c360728873b1e80461d 100644
+--- a/libcxx/test/std/time/time.syn/formatter.year_month_weekday.pass.cpp
++++ b/libcxx/test/std/time/time.syn/formatter.year_month_weekday.pass.cpp
+@@ -13,6 +13,9 @@
+ // TODO FMT This test should not require std::to_chars(floating-point)
+ // XFAIL: availability-fp_to_chars-missing
+ 
++// Cygwin's locale slightly differs from others
++// XFAIL: LIBCXX-CYGWIN-FIXME
++
+ // REQUIRES: locale.fr_FR.UTF-8
+ // REQUIRES: locale.ja_JP.UTF-8
+ 
+diff --git a/libcxx/test/support/locale_helpers.h b/libcxx/test/support/locale_helpers.h
+index bd29fd2a85111229f7719dde8b6920ed3981aa40..b45ca9dc7a6529270544d4653df68b43a05c799d 100644
+--- a/libcxx/test/support/locale_helpers.h
++++ b/libcxx/test/support/locale_helpers.h
+@@ -42,7 +42,7 @@ std::wstring convert_thousands_sep(std::wstring const& in, wchar_t sep) {
+ }
+ 
+ std::wstring negate_en_US(std::wstring s) {
+-#if defined(_WIN32)
++#  if defined(_WIN32) || defined(__CYGWIN__)
+   return L"(" + s + L")";
+ #else
+   return L"-" + s;
+@@ -58,7 +58,7 @@ wchar_t decimal_point_or_default(std::wstring s) { return !s.empty() ? s[0] : L'
+ #endif // TEST_HAS_NO_WIDE_CHARACTERS
+ 
+ std::string negate_en_US(std::string s) {
+-#if defined(_WIN32)
 +#if defined(_WIN32) || defined(__CYGWIN__)
- #  define TEST_WIN_NO_FILESYSTEM_PERMS_NONE
- #endif
+   return "(" + s + ")";
+ #else
+   return "-" + s;
+@@ -71,7 +71,7 @@ MultiStringType currency_symbol_ru_RU() {
+     return MKSTR("\u0440\u0443\u0431");
+   else
+     return MKSTR("\u20BD"); // U+20BD RUBLE SIGN
+-#elif defined(_WIN32) || defined(__FreeBSD__) || defined(_AIX)
++#elif defined(_WIN32) || defined(__FreeBSD__) || defined(_AIX) || defined(__CYGWIN__)
+   return MKSTR("\u20BD"); // U+20BD RUBLE SIGN
+ #elif defined(__APPLE__)
+   if (__builtin_available(macOS 15.4, *)) {
+@@ -85,7 +85,7 @@ MultiStringType currency_symbol_ru_RU() {
+ }
  
+ MultiStringType currency_symbol_zh_CN() {
+-#if defined(_WIN32)
++#if defined(_WIN32) || defined(__CYGWIN__)
+   return MKSTR("\u00A5"); // U+00A5 YEN SIGN
+ #elif defined(__APPLE__) || defined(__FreeBSD__)
+   if (__builtin_available(macOS 15.4, *)) {
+diff --git a/libcxx/test/support/platform_support.h b/libcxx/test/support/platform_support.h
+index ff44096bf717171d53f444e48cdd38f068019481..b60cc85734d9ff2b5f582abdfc5ef7169c9f3d1d 100644
+--- a/libcxx/test/support/platform_support.h
++++ b/libcxx/test/support/platform_support.h
+@@ -25,6 +25,9 @@
+ #elif defined(_WIN32)
+ #    define LOCALE_fr_CA_ISO8859_1 "fr-CA"
+ #    define LOCALE_cs_CZ_ISO8859_2 "cs-CZ"
++#elif defined(__CYGWIN__)
++#  define LOCALE_fr_CA_ISO8859_1 "fr_CA"
++#  define LOCALE_cs_CZ_ISO8859_2 "cs_CZ"
+ #else
+ #    define LOCALE_fr_CA_ISO8859_1 "fr_CA.ISO8859-1"
+ #    define LOCALE_cs_CZ_ISO8859_2 "cs_CZ.ISO8859-2"
+@@ -33,6 +36,10 @@
+ #define LOCALE_ru_RU_UTF_8     "ru_RU.UTF-8"
+ #define LOCALE_zh_CN_UTF_8     "zh_CN.UTF-8"
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++#  define WINLOCALE
++#endif
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string>
+diff --git a/libcxx/utils/libcxx/test/features/platform.py b/libcxx/utils/libcxx/test/features/platform.py
+index da47f70378d941966bbb333d9cb9f65e7d584887..18ad39ab7aad336b8bae925f3aee939ad3d6efc2 100644
+--- a/libcxx/utils/libcxx/test/features/platform.py
++++ b/libcxx/utils/libcxx/test/features/platform.py
+@@ -114,6 +114,10 @@ features = [
+         name="LLVM-LIBC-FIXME",
+         when=lambda cfg: "__LLVM_LIBC__" in compilerMacros(cfg),
+     ),
++    Feature(
++        name="LIBCXX-CYGWIN-FIXME",
++        when=lambda cfg: "__CYGWIN__" in compilerMacros(cfg),
++    ),
+ ]
+ 
+ # Add features representing the build host platform name.
 -- 
 2.55.0
 

@@ -1,0 +1,26 @@
+From 70798474e838f202a68f586739b9071a33172c32 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 18 May 2025 22:37:15 +0900
+Subject: [PATCH 46/51] [Interpreter][Cygwin] Export ___chkstk_ms from lli as
+ MinGW does
+
+---
+ llvm/tools/lli/lli.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/llvm/tools/lli/lli.cpp b/llvm/tools/lli/lli.cpp
+index 9cafbcf104921d920cdf5715b0f6845b6608e365..d51a169f366de1523ff5404a74fe4fb993223df2 100644
+--- a/llvm/tools/lli/lli.cpp
++++ b/llvm/tools/lli/lli.cpp
+@@ -1308,7 +1308,7 @@ static Expected<std::unique_ptr<orc::ExecutorProcessControl>> launchRemote() {
+ //
+ // TODO: Move this into libORC at some point, see
+ // https://github.com/llvm/llvm-project/issues/56603.
+-#ifdef __MINGW32__
++#if defined(__MINGW32__) || defined(__CYGWIN__)
+ // This is a MinGW version of #pragma comment(linker, "...") that doesn't
+ // require compiling with -fms-extensions.
+ #if defined(__i386__)
+-- 
+2.55.0
+

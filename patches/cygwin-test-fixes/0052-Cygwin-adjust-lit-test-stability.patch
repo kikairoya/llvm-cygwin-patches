@@ -1,4 +1,4 @@
-From c6b949d1d375b3090a7d424b3496591ba286354b Mon Sep 17 00:00:00 2001
+From 676bb0d40ed1ca9ab32a448f44b98f7567280c33 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 23 Jul 2026 19:54:57 +0900
 Subject: [PATCH 52/63] [Cygwin] adjust lit test stability
@@ -10,7 +10,7 @@ Subject: [PATCH 52/63] [Cygwin] adjust lit test stability
  3 files changed, 12 insertions(+), 3 deletions(-)
 
 diff --git a/llvm/utils/lit/lit/TestRunner.py b/llvm/utils/lit/lit/TestRunner.py
-index 9ef299d82c1183ab0ac24604518a730b95c74c47..34ed0fe9649a96a164b00273d83d264a1172c5aa 100644
+index 1d4480f81f8737a7bd862b492c50747b041cd70a..ae3ddd6867a39a5a14be5174497308712b5a85eb 100644
 --- a/llvm/utils/lit/lit/TestRunner.py
 +++ b/llvm/utils/lit/lit/TestRunner.py
 @@ -873,11 +873,17 @@ def _executeShCmd(cmd, shenv, results, timeoutHelper):

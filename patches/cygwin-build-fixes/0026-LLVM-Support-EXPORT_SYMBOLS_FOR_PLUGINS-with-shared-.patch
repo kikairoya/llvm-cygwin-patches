@@ -1,4 +1,4 @@
-From 53ced0ae7b2e676fceb73d357508e740e6177f9f Mon Sep 17 00:00:00 2001
+From 84d19f86eecf204e577f7f29dd2338a812626e74 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 19:02:44 +0900
 Subject: [PATCH 26/38] [LLVM] Support EXPORT_SYMBOLS_FOR_PLUGINS with shared
@@ -16,7 +16,7 @@ Resolve the incompatibilities of EXPORT_SYMBOLS_FOR_PLUGINS with
  1 file changed, 65 insertions(+), 49 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index 7eb47af6aaa8addabb6ae443be2eeb51fd6e3512..65a9131bae598af0eae4962ba6f75b00f65a9cbd 100644
+index 2595c1ad635acb8a18547f50daefc9c4dd840e31..3ae12959c8d863eddcf046e1f9fdcdf3034226a8 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
 @@ -1467,52 +1467,44 @@ function(process_llvm_pass_plugins)

@@ -1,4 +1,4 @@
-From 4021c0ccfe43ddcfa16357621d2cf2ec8a3d2c47 Mon Sep 17 00:00:00 2001
+From 0ea2976a85fa84a3ed03edefbb9ee2364dbd1d70 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 17:45:43 +0900
 Subject: [PATCH 31/36] [libc++][Test][Cygwin] Diverge expected result for the
@@ -25,10 +25,10 @@ index eb36bac3bc6610e0439815d085dd5593f877eec8..cd3dacbc6d559bfd076ec51a85f73de9
    # Let the library headers know they are currently being used to build the
    # library.
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 3fcf40b359d57be2526c93efe0ea8baa5e03a636..308f339ae71da5e66543bcda84ae1ce6b5ad9f1d 100644
+index 64ce01d5e69c061e8069a6ac49a87400e6e4d158..ec0057ac58427b49df907dc6070ac21c577d1434 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
-@@ -329,7 +329,7 @@ typedef __char32_t char32_t;
+@@ -324,7 +324,7 @@ typedef __char32_t char32_t;
  // the latter depends on internal GNU libc details that are not appropriate
  // to depend on here, so any declarations present when __cpp_char8_t is not
  // defined are ignored.

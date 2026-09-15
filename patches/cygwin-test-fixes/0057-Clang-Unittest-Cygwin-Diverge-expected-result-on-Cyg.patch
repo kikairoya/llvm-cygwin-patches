@@ -1,4 +1,4 @@
-From 72498423c2562ba7984c2434280978e8f981ad36 Mon Sep 17 00:00:00 2001
+From c2a585a4464c4e216af178c169322167a4ef3e6d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 11 Oct 2025 17:39:03 +0900
 Subject: [PATCH 57/63] [Clang][Unittest][Cygwin] Diverge expected result on
@@ -23,7 +23,7 @@ index 62c8f215dc98cea3b20e7e066752e7f0ed176f39..c274eb9e22bd680a2c1d1dce7a69ac29
  endif()
  
 diff --git a/clang/unittests/Interpreter/InterpreterTest.cpp b/clang/unittests/Interpreter/InterpreterTest.cpp
-index 450be2a25a12f4fccd9d9c99dd46c1193072180b..134e4bccdac344b12496f4e3d5e8551e06d382dc 100644
+index 3becd00c128205b4dd5ff6be4bb8cff023ea26ef..ad1bed12c8433ac6da51549c46576baeee8dc850 100644
 --- a/clang/unittests/Interpreter/InterpreterTest.cpp
 +++ b/clang/unittests/Interpreter/InterpreterTest.cpp
 @@ -284,7 +284,7 @@ TEST_F(InterpreterTest, FindMangledNameSymbol) {
@@ -32,7 +32,7 @@ index 450be2a25a12f4fccd9d9c99dd46c1193072180b..134e4bccdac344b12496f4e3d5e8551e
    // FIXME: Re-enable when we investigate the way we handle dllimports on Win.
 -#ifndef _WIN32
 +#if !defined(_WIN32) && !defined(__CYGWIN__)
-   EXPECT_EQ((uintptr_t)&printf, Addr->getValue());
+   EXPECT_EQ(llvm::orc::ExecutorAddr::fromPtr(&printf), *Addr);
  #endif // _WIN32
  }
 -- 

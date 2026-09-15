@@ -1,4 +1,4 @@
-From b3f6254908e5a3779183e9dff529d3512de2efdc Mon Sep 17 00:00:00 2001
+From 0479611d3a4d384a09d87326c8855f70db00d976 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 56/63] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -234,10 +234,10 @@ index 4628024c031155ee5cf2864324f868fd0c5d4d72..04964d82bea2a0859e35210240f1da5f
  // Reset test
  // rm -f %t-ref.o %t-readonly.o
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 9b7bd1d329d22a118c44c09332c842312649f1e1..8a8a508056f85b7d57c4062ba0bd6f0f9cd85a89 100644
+index af3144f3ddcf933c18ce24ffbb0659496007bbac..f7f9ded72b0a23adc14458b269470ac9af1debea 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -337,7 +337,10 @@ if config.clang_default_cxx_stdlib != "":
+@@ -338,7 +338,10 @@ if config.clang_default_cxx_stdlib != "":
          "default-cxx-stdlib={}".format(config.clang_default_cxx_stdlib)
      )
  
@@ -249,7 +249,7 @@ index 9b7bd1d329d22a118c44c09332c842312649f1e1..8a8a508056f85b7d57c4062ba0bd6f0f
  
  # ANSI escape sequences in non-dumb terminal
  if platform.system() not in ["Windows"]:
-@@ -390,7 +393,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
+@@ -391,7 +394,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
  
  # [PR18856] Depends to remove opened file. On win32, a file could be removed
  # only if all handles were closed.

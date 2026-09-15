@@ -1,4 +1,4 @@
-From b1aab069f0903faac9639c7eed5e544ecc759ab5 Mon Sep 17 00:00:00 2001
+From 4d7801701e96003cc39a86ad36a3face1ee35111 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 24/36] [libc++][Cygwin] Add support for Cygwin target
@@ -100,7 +100,7 @@ index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index 8cbf9b15b6ab8609ed93dd6c3713b6c3b7354d13..64ce01d5e69c061e8069a6ac49a87400e6e4d158 100644
+index ade43d42dc283de660f3a0e0d36bdb5bfccdade4..889bf99bae6c35c1326a0624b276ba22e7c63133 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
 @@ -47,6 +47,10 @@
@@ -114,7 +114,7 @@ index 8cbf9b15b6ab8609ed93dd6c3713b6c3b7354d13..64ce01d5e69c061e8069a6ac49a87400
  #  else
  #    define _LIBCPP_HAS_OPEN_WITH_WCHAR 0
  #  endif // defined(_WIN32)
-@@ -208,6 +212,7 @@ typedef __char32_t char32_t;
+@@ -194,6 +198,7 @@ typedef __char32_t char32_t;
          defined(__APPLE__) ||                                                                                          \
          defined(__MVS__) ||                                                                                            \
          defined(_AIX) ||                                                                                               \

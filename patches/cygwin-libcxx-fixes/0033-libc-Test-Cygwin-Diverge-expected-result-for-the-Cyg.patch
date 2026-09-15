@@ -1,4 +1,4 @@
-From f06aa1a73ce32b2913ffbc2cdebf9f439e082e6a Mon Sep 17 00:00:00 2001
+From 40111ea2b05f68e82b4d462ec77bbc2a91cdef86 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 8 Sep 2026 22:07:50 +0900
 Subject: [PATCH 33/36] [libc++][Test][Cygwin] Diverge expected result for the
@@ -185,10 +185,10 @@ index 79b9294b7418a7ab44b758b5053e9913fcf42a76..b21c54d04ab05326c110cf70b953b5bd
    {
      const int Align = 65536;
 diff --git a/libcxx/test/support/test_macros.h b/libcxx/test/support/test_macros.h
-index af5e4e57be5a39ef8626261bfd9ced69d39f8a2f..11e2a2e844b25f8f6dbb89822c5e7d8c1199b16f 100644
+index 5cceccf1da679b9d8fefaa77f5a9bf792c343450..bc64058dab8cbefd49b366839d25863fac926876 100644
 --- a/libcxx/test/support/test_macros.h
 +++ b/libcxx/test/support/test_macros.h
-@@ -381,7 +381,7 @@ inline Tp const& DoNotOptimize(Tp const& value) {
+@@ -377,7 +377,7 @@ inline Tp const& DoNotOptimize(Tp const& value) {
  #  define TEST_NOT_WIN32(...) __VA_ARGS__
  #endif
  

@@ -1,4 +1,4 @@
-From 30384333ba4164d36e90ae60eaec2fe43023d49b Mon Sep 17 00:00:00 2001
+From 9acef73aee5be0b1ad893d5eb866a10071cb39f0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 26/36] [libc++abi][Cygwin] Add support for Cygwin target
@@ -149,7 +149,7 @@ index dd23e9bb5bf794d1aac5903085174163af83f918..2c4458bd28a475477c5f9e2f76833b2d
    list(APPEND LIBCXXABI_LIBRARIES android_support)
  endif()
 diff --git a/libcxxabi/src/fallback_malloc.cpp b/libcxxabi/src/fallback_malloc.cpp
-index 81195c9a4dc1743ddc609e0d9bce4be3a75dd730..2d8856b76a188fb627ef1bc32afa7a87fbfa7f02 100644
+index 7359b1f46d180f68f97ed5ab060320383c345661..4240943c9b28e75ce8babd27ff49794ac7a7fce0 100644
 --- a/libcxxabi/src/fallback_malloc.cpp
 +++ b/libcxxabi/src/fallback_malloc.cpp
 @@ -256,7 +256,7 @@ namespace __cxxabiv1 {
@@ -160,7 +160,7 @@ index 81195c9a4dc1743ddc609e0d9bce4be3a75dd730..2d8856b76a188fb627ef1bc32afa7a87
 +#if defined(_WIN32) || defined(__CYGWIN__)
    if (void* dest = std::__libcpp_aligned_alloc(alignof(__aligned_type), size))
      return dest;
- #elif !_LIBCPP_HAS_LIBRARY_ALIGNED_ALLOCATION
+ #elif !_LIBCPP_HAS_ALIGNED_ALLOCATION
 -- 
 2.55.0
 

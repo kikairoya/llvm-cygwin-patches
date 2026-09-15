@@ -1,4 +1,4 @@
-From 4efb4dd70ee4502c787e5eb8808efbda25b161b0 Mon Sep 17 00:00:00 2001
+From c12fc1f8b7ed8bf830b95439aa773c1b2d4b1337 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 6 Sep 2026 13:15:09 +0900
 Subject: [PATCH 44/63] support -mno-use-libstdc-wrappers
@@ -10,10 +10,10 @@ Subject: [PATCH 44/63] support -mno-use-libstdc-wrappers
  3 files changed, 29 insertions(+), 18 deletions(-)
 
 diff --git a/clang/include/clang/Options/Options.td b/clang/include/clang/Options/Options.td
-index 0e57c128210b311f85761a83831a731673a50d9e..61770109c95f17c8f4e2fc30d20c03df53e25ade 100644
+index c109b385350f390edf65dece72a586deb8c19083..380c49afbfedbb585068ff72ca4ecf369b309916 100644
 --- a/clang/include/clang/Options/Options.td
 +++ b/clang/include/clang/Options/Options.td
-@@ -5623,6 +5623,8 @@ def mconsole : Joined<["-"], "mconsole">, Group<m_Group>;
+@@ -5626,6 +5626,8 @@ def mconsole : Joined<["-"], "mconsole">, Group<m_Group>;
  def mwindows : Joined<["-"], "mwindows">, Group<m_Group>;
  def mdll : Joined<["-"], "mdll">, Group<m_Group>;
  def municode : Joined<["-"], "municode">, Group<m_Group>;
@@ -23,7 +23,7 @@ index 0e57c128210b311f85761a83831a731673a50d9e..61770109c95f17c8f4e2fc30d20c03df
  def marm64x : Joined<["-"], "marm64x">, Group<m_Group>,
    Visibility<[ClangOption, CLOption]>,
 diff --git a/clang/lib/Driver/ToolChains/Cygwin.cpp b/clang/lib/Driver/ToolChains/Cygwin.cpp
-index d78c9983e5f27afac85db84b2888c0818aac818a..ff108407c1e8f27dd93bf5d69cc0ca4ff9e980c1 100644
+index 00f72333811848fdaae19e9579e0f78321748304..2a87e15d68ddd0e6bf57f5c311d5da94aa065685 100644
 --- a/clang/lib/Driver/ToolChains/Cygwin.cpp
 +++ b/clang/lib/Driver/ToolChains/Cygwin.cpp
 @@ -183,24 +183,29 @@ void cygwin::Linker::ConstructJob(Compilation &C, const JobAction &JA,

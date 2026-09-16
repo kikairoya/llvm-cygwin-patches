@@ -1,7 +1,7 @@
-From 9d625eb5e2b11c17f52f2aef8d6e5dc16f99a2f4 Mon Sep 17 00:00:00 2001
+From 293e6301c642ccf8365656146edd53e124616d3f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
-Subject: [PATCH 02/63] [LLVM] Annotate LLVM_TEMPLATE_ABI
+Subject: [PATCH 02/60] [LLVM] Annotate LLVM_TEMPLATE_ABI
 
 ---
  llvm/include/llvm/ADT/SmallVector.h           |  4 ++--
@@ -102,10 +102,10 @@ index de43c9b25017125429151b31e9bf30857e542bf4..2cba8c4281c8b19c6d5eea1af79ca21d
  namespace DomTreeBuilder {
  using BBDomTree = DomTreeBase<BasicBlock>;
 diff --git a/llvm/include/llvm/IR/PassManager.h b/llvm/include/llvm/IR/PassManager.h
-index c8e2276ac22ee5d0bd1044a3280769a236034e8d..e168409a75384c15f29bd7526a0d90001ecf8863 100644
+index 1a7581a062aedc84d89010750137614619c5a8ed..dcfc9c12e48ff9c42c57da21c9daf6e31ba5a321 100644
 --- a/llvm/include/llvm/IR/PassManager.h
 +++ b/llvm/include/llvm/IR/PassManager.h
-@@ -601,7 +601,7 @@ using FunctionAnalysisManager = AnalysisManager<Function>;
+@@ -606,7 +606,7 @@ using FunctionAnalysisManager = AnalysisManager<Function>;
  /// Note that the proxy's result is a move-only RAII object.  The validity of
  /// the analyses in the inner analysis manager is tied to its lifetime.
  template <typename AnalysisManagerT, typename IRUnitT, typename... ExtraArgTs>
@@ -114,7 +114,7 @@ index c8e2276ac22ee5d0bd1044a3280769a236034e8d..e168409a75384c15f29bd7526a0d9000
      : public AnalysisInfoMixin<
            InnerAnalysisManagerProxy<AnalysisManagerT, IRUnitT>> {
  public:
-@@ -673,21 +673,11 @@ private:
+@@ -678,21 +678,11 @@ private:
    friend AnalysisInfoMixin<
        InnerAnalysisManagerProxy<AnalysisManagerT, IRUnitT>>;
  
@@ -137,7 +137,7 @@ index c8e2276ac22ee5d0bd1044a3280769a236034e8d..e168409a75384c15f29bd7526a0d9000
  /// Provide the \c FunctionAnalysisManager to \c Module proxy.
  using FunctionAnalysisManagerModuleProxy =
      InnerAnalysisManagerProxy<FunctionAnalysisManager, Module>;
-@@ -701,8 +691,8 @@ LLVM_ABI bool FunctionAnalysisManagerModuleProxy::Result::invalidate(
+@@ -706,8 +696,8 @@ LLVM_ABI bool FunctionAnalysisManagerModuleProxy::Result::invalidate(
  
  // Ensure the \c FunctionAnalysisManagerModuleProxy is provided as an extern
  // template.
@@ -148,7 +148,7 @@ index c8e2276ac22ee5d0bd1044a3280769a236034e8d..e168409a75384c15f29bd7526a0d9000
  
  /// An analysis over an "inner" IR unit that provides access to an
  /// analysis manager over a "outer" IR unit.  The inner unit must be contained
-@@ -831,15 +821,11 @@ private:
+@@ -836,15 +826,11 @@ private:
    friend AnalysisInfoMixin<
        OuterAnalysisManagerProxy<AnalysisManagerT, IRUnitT, ExtraArgTs...>>;
  

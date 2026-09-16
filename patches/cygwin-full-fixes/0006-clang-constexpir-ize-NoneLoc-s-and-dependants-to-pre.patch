@@ -1,7 +1,7 @@
-From 7d8cca1dd643e80608e824312e58121e8a0a867e Mon Sep 17 00:00:00 2001
+From bc8bbf3202844b1bd48cae09e4ecf987473d4a37 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
-Subject: [PATCH 06/51] [clang] constexpir-ize `NoneLoc`s and dependants to
+Subject: [PATCH 06/48] [clang] constexpir-ize `NoneLoc`s and dependants to
  prevent symbol dup
 
 ---
@@ -114,7 +114,7 @@ index 6c1a378aadedac888c61c2bb3de342bd158bfde6..249c8914fa6244e48b5ae7bd0d35e7ec
    using Base::operator=;
  
 diff --git a/llvm/include/llvm/CodeGen/SlotIndexes.h b/llvm/include/llvm/CodeGen/SlotIndexes.h
-index eb9906e597f346aa2a16ee4fdf107bd8a96a39fb..7d974a26f4f2404314ef31e70aa4aa8ca73e0152 100644
+index 5204ef0dd87cb0350f2ab4a4026b8fd5520c208e..9c35eef6817869e92cac16f75b8105acfa7221bf 100644
 --- a/llvm/include/llvm/CodeGen/SlotIndexes.h
 +++ b/llvm/include/llvm/CodeGen/SlotIndexes.h
 @@ -116,7 +116,7 @@ class raw_ostream;

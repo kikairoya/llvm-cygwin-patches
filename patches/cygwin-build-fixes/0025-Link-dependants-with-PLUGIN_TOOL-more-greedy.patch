@@ -1,4 +1,4 @@
-From 89f695d7858366ced2548466e0f74308c5f1e522 Mon Sep 17 00:00:00 2001
+From 71a67da0e0e6f1104e7c6879f049976500c67fbc Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 31 Jul 2026 22:57:24 +0900
 Subject: [PATCH 25/35] Link dependants with PLUGIN_TOOL more greedy

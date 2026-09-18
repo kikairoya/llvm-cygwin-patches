@@ -1,4 +1,4 @@
-From b7b966cb79b8e9d143a70537970200c84bb2ac06 Mon Sep 17 00:00:00 2001
+From 24b649e6448e0ab54e3d7270a1b1c3614ede3fba Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 6 Sep 2026 13:15:09 +0900
 Subject: [PATCH 41/60] support -mno-use-libstdc-wrappers
@@ -10,10 +10,10 @@ Subject: [PATCH 41/60] support -mno-use-libstdc-wrappers
  3 files changed, 29 insertions(+), 18 deletions(-)
 
 diff --git a/clang/include/clang/Options/Options.td b/clang/include/clang/Options/Options.td
-index 06461acdf216e78668976cc9dd1873ba5b8509bb..2adfa4a5a69087faaa0a1e5c2f9dbef28132a6af 100644
+index c4c49df73c15ae2bc267d5217987f02a1663f242..30551968a5442f16eda328b6eda1688d3665feea 100644
 --- a/clang/include/clang/Options/Options.td
 +++ b/clang/include/clang/Options/Options.td
-@@ -5626,6 +5626,8 @@ def mconsole : Joined<["-"], "mconsole">, Group<m_Group>;
+@@ -5627,6 +5627,8 @@ def mconsole : Joined<["-"], "mconsole">, Group<m_Group>;
  def mwindows : Joined<["-"], "mwindows">, Group<m_Group>;
  def mdll : Joined<["-"], "mdll">, Group<m_Group>;
  def municode : Joined<["-"], "municode">, Group<m_Group>;

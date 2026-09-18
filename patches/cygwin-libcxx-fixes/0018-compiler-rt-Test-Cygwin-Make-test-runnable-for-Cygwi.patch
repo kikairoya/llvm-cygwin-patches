@@ -1,4 +1,4 @@
-From e6b0fe06434f0745079ed538bc3e30995d344fd4 Mon Sep 17 00:00:00 2001
+From 612a04518bbc4aab745680c9e100b12db2f64c45 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 18/33] [compiler-rt][Test][Cygwin] Make test runnable for
@@ -13,10 +13,10 @@ Subject: [PATCH 18/33] [compiler-rt][Test][Cygwin] Make test runnable for
  5 files changed, 15 insertions(+), 3 deletions(-)
 
 diff --git a/compiler-rt/test/CMakeLists.txt b/compiler-rt/test/CMakeLists.txt
-index b236fe35bc5f8d2f1a364df8d930a454fa28b7e6..bae587f99c07c6c281aac5d84a19dba51059a482 100644
+index 272e687cf91dec3c6d16d9b0fac524dc2aa90995..75b4d314686a203ae494474d47fa8e82a24d4d35 100644
 --- a/compiler-rt/test/CMakeLists.txt
 +++ b/compiler-rt/test/CMakeLists.txt
-@@ -137,7 +137,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)
+@@ -175,7 +175,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)
    if(COMPILER_RT_BUILD_BUILTINS OR COMPILER_RT_TEST_EXTERNAL_BUILTINS)
      compiler_rt_test_runtime(builtins NO_COMPILER_RT_HAS_GUARD)
    endif()
@@ -48,7 +48,7 @@ index 05f97844f5470e95fa5331c68a1e6219afedff60..d4ca4fe448358f7bb7c320912c807d2b
      base_lib = os.path.join(
          config.compiler_rt_libdir, "libclang_rt.builtins%s.a" % config.target_suffix
 diff --git a/compiler-rt/test/lit.common.cfg.py b/compiler-rt/test/lit.common.cfg.py
-index b4de1a83e691b13d58e8098012ad09199788c35c..d14821c61c138bfb07bf4fa806fa094e685a2da9 100644
+index 64e6ede9b19b40419d6465f52fe76da7c3cb2aa2..9b21fa9b46edab62949f77745fe8113392237b31 100644
 --- a/compiler-rt/test/lit.common.cfg.py
 +++ b/compiler-rt/test/lit.common.cfg.py
 @@ -66,7 +66,7 @@ def find_compiler_libdir():
@@ -72,10 +72,10 @@ index b622e072bcbfbc28554b5bd44c178de15b016823..2b64b52bf7f1ecb3187ef74ba228056e
 +if root.target_os not in ["Windows", "CYGWIN"]:
      config.unsupported = True
 diff --git a/compiler-rt/test/profile/lit.cfg.py b/compiler-rt/test/profile/lit.cfg.py
-index c7109747b85e511ce71d2a641f18b9208adc22a6..c0b7b4ce2463e1a449d05331abf9d49495a41e7d 100644
+index f3cd3f525a58d932106568be8e7ade69b87a162a..8c7a87e63b1bdb4c7055409cb9c8cbf6df81e00d 100644
 --- a/compiler-rt/test/profile/lit.cfg.py
 +++ b/compiler-rt/test/profile/lit.cfg.py
-@@ -170,6 +170,7 @@ if config.target_os not in [
+@@ -168,6 +168,7 @@ if config.target_os not in [
      "SunOS",
      "AIX",
      "Haiku",

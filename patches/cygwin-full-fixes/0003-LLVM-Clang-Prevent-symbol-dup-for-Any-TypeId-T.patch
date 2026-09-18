@@ -1,4 +1,4 @@
-From 1cb33b05d8a1816da573cebc342b411f8a213b2d Mon Sep 17 00:00:00 2001
+From a1c820d67ed89dc3c07a3e5a5bef05dd2f0f494f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:59:32 +0900
 Subject: [PATCH 03/48] [LLVM][Clang] Prevent symbol dup for Any::TypeId<T>
@@ -80,7 +80,7 @@ index 9e0fd8122c89055af9d2bb6528df80fdb8d524da..1ad39c70e4dfa21605f5cad7df667b32
  
  namespace clang {
 diff --git a/llvm/include/llvm/CodeGen/MachineFunction.h b/llvm/include/llvm/CodeGen/MachineFunction.h
-index 94386510b9f8aba3efda0c432c1fa8c4a693320d..d367c01de1733ce767faad2055ff293ef39dfc67 100644
+index ca07c0dc26105dd1b08cef5c7dc5c7c2be1a820d..b286d6cbd20d4c30f5bc68bc766a37b390b800c7 100644
 --- a/llvm/include/llvm/CodeGen/MachineFunction.h
 +++ b/llvm/include/llvm/CodeGen/MachineFunction.h
 @@ -17,6 +17,7 @@
@@ -91,7 +91,7 @@ index 94386510b9f8aba3efda0c432c1fa8c4a693320d..d367c01de1733ce767faad2055ff293e
  #include "llvm/ADT/ArrayRef.h"
  #include "llvm/ADT/DenseMap.h"
  #include "llvm/ADT/GraphTraits.h"
-@@ -1519,6 +1520,8 @@ public:
+@@ -1508,6 +1509,8 @@ public:
    }
  };
  

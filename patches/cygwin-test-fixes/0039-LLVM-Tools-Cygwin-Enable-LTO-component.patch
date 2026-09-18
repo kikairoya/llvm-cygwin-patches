@@ -1,4 +1,4 @@
-From 8e4aabd3787ccdaa4b0dec14ab2c50216bf16429 Mon Sep 17 00:00:00 2001
+From 989d61b8bff97fb52ef886427431ce32012b1210 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 14 Jun 2025 08:15:58 +0900
 Subject: [PATCH 39/60] [LLVM-Tools][Cygwin] Enable LTO component

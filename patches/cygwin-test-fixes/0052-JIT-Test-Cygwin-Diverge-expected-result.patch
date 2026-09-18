@@ -1,4 +1,4 @@
-From 1829d02257ef28342493c24489d975376aa15519 Mon Sep 17 00:00:00 2001
+From 3ae8360e1a5949906ba163101c657c104de122ff Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 May 2025 12:04:02 +0900
 Subject: [PATCH 52/60] [JIT][Test][Cygwin] Diverge expected result
@@ -10,10 +10,9 @@ Diverge Cygwin from other Unix-like systems.
  .../ExecutionEngine/MCJIT/remote/test-ptr-reloc-sm-pic.ll    | 2 +-
  llvm/test/ExecutionEngine/MCJIT/stubs-sm-pic.ll              | 5 +++--
  llvm/test/ExecutionEngine/OrcLazy/comdat-functions.ll        | 2 +-
- llvm/test/ExecutionEngine/OrcLazy/emulated-tls.ll            | 1 +
  llvm/test/ExecutionEngine/RuntimeDyld/X86/coff-alignment.ll  | 2 +-
  llvm/test/lit.cfg.py                                         | 2 +-
- 8 files changed, 10 insertions(+), 8 deletions(-)
+ 7 files changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/llvm/test/ExecutionEngine/MCJIT/remote/multi-module-a.ll b/llvm/test/ExecutionEngine/MCJIT/remote/multi-module-a.ll
 index ed1b9c62bdb663262a73d9afa5682a67caaf545a..584d383ac86482443f18c3a264ac2764c8ac2fd3 100644
@@ -78,17 +77,6 @@ index 895410da98a11880df568d2ad0610d0cf1866fb1..5604818d82ee6e0f13451f4fb49e79f9
  ; RUN: lli -jit-kind=orc-lazy -extra-module %p/Inputs/comdat-functions.ll %s
  ; Check if crashing comdat any functions are not causing duplicate symbol error.
  
-diff --git a/llvm/test/ExecutionEngine/OrcLazy/emulated-tls.ll b/llvm/test/ExecutionEngine/OrcLazy/emulated-tls.ll
-index a70bc5f4ceb4216eec7e687f0dabb437e24e1a22..c0bd5ece36c6b666dd635196cb1d44fc2ff6787b 100644
---- a/llvm/test/ExecutionEngine/OrcLazy/emulated-tls.ll
-+++ b/llvm/test/ExecutionEngine/OrcLazy/emulated-tls.ll
-@@ -1,5 +1,6 @@
- ; LoongArch does not support emulated tls.
- ; UNSUPPORTED: target=loongarch{{.*}}
-+; UNSUPPORTED: system-cygwin
- 
- ; RUN: not lli -no-process-syms -lljit-platform=Inactive -emulated-tls \
- ; RUN:   -jit-kind=orc-lazy %s 2>&1 | FileCheck %s
 diff --git a/llvm/test/ExecutionEngine/RuntimeDyld/X86/coff-alignment.ll b/llvm/test/ExecutionEngine/RuntimeDyld/X86/coff-alignment.ll
 index 9a822fc7ed55654339252523d066568d1e89dc7c..d7898170739ae8cd602b0be2efd4ae75e3319b5e 100644
 --- a/llvm/test/ExecutionEngine/RuntimeDyld/X86/coff-alignment.ll

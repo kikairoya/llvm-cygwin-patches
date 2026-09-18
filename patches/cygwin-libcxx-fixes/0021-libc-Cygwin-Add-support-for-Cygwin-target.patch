@@ -1,4 +1,4 @@
-From 8e6ee746a46ad7b037f2a1db2fc0f158ac0beaef Mon Sep 17 00:00:00 2001
+From caa8aac1a17cec591bb9dc249b60c5ee60bec73b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 21/33] [libc++][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 21/33] [libc++][Cygwin] Add support for Cygwin target
  6 files changed, 47 insertions(+), 6 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index 8841f5d07aaf6c080fc402e6e17bba2eda9c25ab..d37d5399d86c0a2b51695c8bdf3557604deba2cd 100644
+index d163f0f579c3954f52cdc7fe84789d6d14202619..9b3fd9ef6f7df1fc0a8ed38c1efd304fd095adec 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
 @@ -287,7 +287,7 @@ if (LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY
@@ -25,7 +25,7 @@ index 8841f5d07aaf6c080fc402e6e17bba2eda9c25ab..d37d5399d86c0a2b51695c8bdf355760
    set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE ON)
  else()
    set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE OFF)
-@@ -333,7 +333,7 @@ option(LIBCXX_ENABLE_PEDANTIC "Compile with pedantic enabled." OFF)
+@@ -337,7 +337,7 @@ option(LIBCXX_ENABLE_PEDANTIC "Compile with pedantic enabled." OFF)
  option(LIBCXX_ENABLE_WERROR "Fail and stop if a warning is triggered." OFF)
  
  set(LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT OFF)
@@ -34,7 +34,7 @@ index 8841f5d07aaf6c080fc402e6e17bba2eda9c25ab..d37d5399d86c0a2b51695c8bdf355760
    set(LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT ON)
  endif()
  option(LIBCXX_HERMETIC_STATIC_LIBRARY
-@@ -561,6 +561,10 @@ function(cxx_add_basic_build_flags target)
+@@ -565,6 +565,10 @@ function(cxx_add_basic_build_flags target)
      target_compile_options(${target} PRIVATE -std=c++26)
    endif()
  
@@ -45,7 +45,7 @@ index 8841f5d07aaf6c080fc402e6e17bba2eda9c25ab..d37d5399d86c0a2b51695c8bdf355760
    # When building the dylib, don't warn for unavailable aligned allocation
    # functions based on the deployment target -- they are always available
    # because they are provided by the dylib itself with the exception of z/OS.
-@@ -696,6 +700,22 @@ function(cxx_link_system_libraries target)
+@@ -700,6 +704,22 @@ function(cxx_link_system_libraries target)
    if (MINGW)
      target_link_libraries(${target} PRIVATE "${MINGW_LIBRARIES}")
    endif()
@@ -68,7 +68,7 @@ index 8841f5d07aaf6c080fc402e6e17bba2eda9c25ab..d37d5399d86c0a2b51695c8bdf355760
  
    if (MSVC)
      # Required for standards-complaint wide character formatting functions
-@@ -770,6 +790,8 @@ elseif (RUNTIMES_USE_LIBC STREQUAL "newlib")
+@@ -774,6 +794,8 @@ elseif (RUNTIMES_USE_LIBC STREQUAL "newlib")
    config_define(1 _LIBCPP_LIBC_NEWLIB)
  elseif (RUNTIMES_USE_LIBC STREQUAL "llvm-libc")
    config_define(1 _LIBCPP_LIBC_LLVM_LIBC)
@@ -78,7 +78,7 @@ index 8841f5d07aaf6c080fc402e6e17bba2eda9c25ab..d37d5399d86c0a2b51695c8bdf355760
  
  if (LIBCXX_HARDENING_MODE STREQUAL "none")
 diff --git a/libcxx/cmake/config-ix.cmake b/libcxx/cmake/config-ix.cmake
-index 270d80575adcfd4c0a4e49e4c68395a1d6f63b80..2219ad018e1797d0f5aa068cf0f63b66d7cc2044 100644
+index 7a2b7e3209c765d26e976c507b6de34d9861d66d..214d466ee1ab20083e211629697a1302374d1147 100644
 --- a/libcxx/cmake/config-ix.cmake
 +++ b/libcxx/cmake/config-ix.cmake
 @@ -79,6 +79,17 @@ if (NOT CXX_SUPPORTS_NOSTDLIBXX_FLAG AND C_SUPPORTS_NODEFAULTLIBS_FLAG)

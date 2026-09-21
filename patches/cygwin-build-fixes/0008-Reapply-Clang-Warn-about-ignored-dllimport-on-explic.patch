@@ -1,0 +1,358 @@
+From 9b45f395ccc50f9c15f5fe5311a2a167926088fd Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 22 Sep 2026 05:28:05 +0900
+Subject: [PATCH 08/38] Reapply "[Clang] Warn about ignored dllimport on
+ explicit instantiations" (#224971)
+
+This reverts commit 16ff0ec65655a16f9a01c20d059d1e6ddb27f6b9.
+---
+ .../clang/Basic/DiagnosticSemaKinds.td        |   6 ++
+ clang/lib/Sema/SemaTemplate.cpp               | 100 +++++++++++-------
+ clang/test/SemaCXX/dllexport.cpp              |  55 ++++++++++
+ clang/test/SemaCXX/dllimport.cpp              |  50 +++++++++
+ 4 files changed, 175 insertions(+), 36 deletions(-)
+
+diff --git a/clang/include/clang/Basic/DiagnosticSemaKinds.td b/clang/include/clang/Basic/DiagnosticSemaKinds.td
+index 9074dc7a822c583ea10448a91b38205a7a54c3b5..fca68f292f6671a22e599d1af81d749ba2bd9913 100644
+--- a/clang/include/clang/Basic/DiagnosticSemaKinds.td
++++ b/clang/include/clang/Basic/DiagnosticSemaKinds.td
+@@ -3880,6 +3880,9 @@ def warn_dllimport_dropped_from_inline_function : Warning<
+ def warn_nothrow_attribute_ignored : Warning<"'nothrow' attribute conflicts with"
+   " exception specification; attribute ignored">,
+   InGroup<IgnoredAttributes>;
++def warn_dllattr_ignored_already_instantiated : Warning<
++  "%0 attribute ignored; class template is already instantiated">,
++  InGroup<IgnoredAttributes>;
+ def warn_dllattr_ignored_exclusion_takes_precedence : Warning<
+   "%0 attribute ignored; %1 takes precedence">,
+   InGroup<IgnoredAttributes>;
+@@ -4003,6 +4006,9 @@ def err_attribute_dllimport_static_field_definition : Error<
+ def warn_attribute_dllimport_static_field_definition : Warning<
+   "definition of dllimport static field">,
+   InGroup<DiagGroup<"dllimport-static-field-def">>;
++def warn_attribute_dllimport_explicit_instantiation_def : Warning<
++  "'dllimport' attribute ignored on explicit instantiation definition">,
++  InGroup<IgnoredAttributes>;
+ def warn_attribute_dllexport_explicit_instantiation_decl : Warning<
+   "explicit instantiation declaration should not be 'dllexport'">,
+   InGroup<DllexportExplicitInstantiationDecl>;
+diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
+index 466515550381a2d14d0b45c9997b2a9fb8e9012f..a53ab69afb823a4e7c4f809a963263e7d474c915 100644
+--- a/clang/lib/Sema/SemaTemplate.cpp
++++ b/clang/lib/Sema/SemaTemplate.cpp
+@@ -10294,23 +10294,32 @@ DeclResult Sema::ActOnExplicitInstantiation(
+                                        ? TSK_ExplicitInstantiationDefinition
+                                        : TSK_ExplicitInstantiationDeclaration;
+ 
++  bool DLLAttrAffected = false;
++  const ParsedAttr *AttachedExportAttr = nullptr;
++  const ParsedAttr *AttachedImportAttr = nullptr;
++  for (const ParsedAttr &AL : Attr) {
++    if (AL.getKind() == ParsedAttr::AT_DLLExport)
++      AttachedExportAttr = &AL;
++    else if (AL.getKind() == ParsedAttr::AT_DLLImport)
++      AttachedImportAttr = &AL;
++  }
++
+   if (TSK == TSK_ExplicitInstantiationDeclaration &&
+       !Context.getTargetInfo().getTriple().isOSCygMing()) {
+     // Check for dllexport class template instantiation declarations,
+     // except for MinGW mode.
+-    for (const ParsedAttr &AL : Attr) {
+-      if (AL.getKind() == ParsedAttr::AT_DLLExport) {
+-        Diag(ExternLoc,
+-             diag::warn_attribute_dllexport_explicit_instantiation_decl);
+-        Diag(AL.getLoc(), diag::note_attribute);
+-        break;
+-      }
++    if (AttachedExportAttr) {
++      Diag(ExternLoc,
++           diag::warn_attribute_dllexport_explicit_instantiation_decl);
++      Diag(AttachedExportAttr->getLoc(), diag::note_attribute);
++      DLLAttrAffected = true;
+     }
+ 
+     if (auto *A = ClassTemplate->getTemplatedDecl()->getAttr<DLLExportAttr>()) {
+       Diag(ExternLoc,
+            diag::warn_attribute_dllexport_explicit_instantiation_decl);
+       Diag(A->getLocation(), diag::note_attribute);
++      DLLAttrAffected = true;
+     }
+   }
+ 
+@@ -10318,20 +10327,12 @@ DeclResult Sema::ActOnExplicitInstantiation(
+   // instantiation declarations for most purposes.
+   bool DLLImportExplicitInstantiationDef = false;
+   if (TSK == TSK_ExplicitInstantiationDefinition &&
+-      Context.getTargetInfo().getCXXABI().isMicrosoft()) {
++      Context.getTargetInfo().shouldDLLImportComdatSymbols()) {
+     // Check for dllimport class template instantiation definitions.
+     bool DLLImport =
+         ClassTemplate->getTemplatedDecl()->getAttr<DLLImportAttr>();
+-    for (const ParsedAttr &AL : Attr) {
+-      if (AL.getKind() == ParsedAttr::AT_DLLImport)
+-        DLLImport = true;
+-      if (AL.getKind() == ParsedAttr::AT_DLLExport) {
+-        // dllexport trumps dllimport here.
+-        DLLImport = false;
+-        break;
+-      }
+-    }
+-    if (DLLImport) {
++    // dllexport trumps dllimport.
++    if ((DLLImport || AttachedImportAttr) && !AttachedExportAttr) {
+       TSK = TSK_ExplicitInstantiationDeclaration;
+       DLLImportExplicitInstantiationDef = true;
+     }
+@@ -10363,28 +10364,30 @@ DeclResult Sema::ActOnExplicitInstantiation(
+       Context.getTargetInfo().getTriple().isOSCygMing()) {
+     // Check for dllexport class template instantiation definitions in MinGW
+     // mode, if a previous declaration of the instantiation was seen.
+-    for (const ParsedAttr &AL : Attr) {
+-      if (AL.getKind() == ParsedAttr::AT_DLLExport) {
+-        if (PrevDecl->hasAttr<DLLExportAttr>()) {
+-          Diag(AL.getLoc(), diag::warn_attr_dllexport_explicit_inst_def);
+-        } else {
+-          Diag(AL.getLoc(),
+-               diag::warn_attr_dllexport_explicit_inst_def_mismatch);
+-          Diag(PrevDecl->getLocation(), diag::note_prev_decl_missing_dllexport);
+-        }
+-        break;
++    if (AttachedExportAttr) {
++      if (PrevDecl->hasAttr<DLLExportAttr>()) {
++        Diag(AttachedExportAttr->getLoc(),
++             diag::warn_attr_dllexport_explicit_inst_def);
++      } else {
++        Diag(AttachedExportAttr->getLoc(),
++             diag::warn_attr_dllexport_explicit_inst_def_mismatch);
++        Diag(PrevDecl->getLocation(), diag::note_prev_decl_missing_dllexport);
+       }
++      DLLAttrAffected = true;
++    } else if (AttachedImportAttr) {
++      Diag(AttachedImportAttr->getLoc(),
++           diag::warn_attribute_dllimport_explicit_instantiation_def);
++      DLLAttrAffected = true;
+     }
+   }
+ 
+   if (TSK == TSK_ExplicitInstantiationDefinition && PrevDecl &&
+       !Context.getTargetInfo().getTriple().isWindowsGNUEnvironment() &&
+-      llvm::none_of(Attr, [](const ParsedAttr &AL) {
+-        return AL.getKind() == ParsedAttr::AT_DLLExport;
+-      })) {
++      !AttachedExportAttr) {
+     if (const auto *DEA = PrevDecl->getAttr<DLLExportOnDeclAttr>()) {
+       Diag(TemplateLoc, diag::warn_dllexport_on_decl_ignored);
+       Diag(DEA->getLoc(), diag::note_dllexport_on_decl);
++      DLLAttrAffected = true;
+     }
+   }
+ 
+@@ -10456,7 +10459,10 @@ DeclResult Sema::ActOnExplicitInstantiation(
+   Specialization->setTemplateKeywordLoc(TemplateLoc);
+   Specialization->setBraceRange(SourceRange());
+ 
+-  bool PreviouslyDLLExported = Specialization->hasAttr<DLLExportAttr>();
++  bool PreviouslyDLLExported = Specialization->hasAttr<DLLExportAttr>() ||
++                               (PrevDecl && PrevDecl->hasAttr<DLLExportAttr>());
++  bool PreviouslyDLLImported = Specialization->hasAttr<DLLImportAttr>() ||
++                               (PrevDecl && PrevDecl->hasAttr<DLLImportAttr>());
+   ProcessDeclAttributeList(S, Specialization, Attr);
+   ProcessAPINotes(Specialization);
+ 
+@@ -10492,11 +10498,12 @@ DeclResult Sema::ActOnExplicitInstantiation(
+   ClassTemplateSpecializationDecl *Def
+     = cast_or_null<ClassTemplateSpecializationDecl>(
+                                               Specialization->getDefinition());
+-  if (!Def)
++  if (!Def) {
+     InstantiateClassTemplateSpecialization(TemplateNameLoc, Specialization, TSK,
+                                            /*Complain=*/true,
+                                            CTAI.StrictPackMatch);
+-  else if (TSK == TSK_ExplicitInstantiationDefinition) {
++    DLLAttrAffected = true;
++  } else if (TSK == TSK_ExplicitInstantiationDefinition) {
+     MarkVTableUsed(TemplateNameLoc, Specialization, true);
+     Specialization->setPointOfInstantiation(Def->getPointOfInstantiation());
+   }
+@@ -10524,13 +10531,16 @@ DeclResult Sema::ActOnExplicitInstantiation(
+         A->setInherited(true);
+         Def->addAttr(A);
+         dllExportImportClassTemplateSpecialization(*this, Def);
++        DLLAttrAffected = true;
+       }
+     }
+ 
+     // Fix a TSK_ImplicitInstantiation followed by a
+     // TSK_ExplicitInstantiationDefinition
+-    bool NewlyDLLExported =
+-        !PreviouslyDLLExported && Specialization->hasAttr<DLLExportAttr>();
++    bool NewlyDLLExported = !PreviouslyDLLExported && AttachedExportAttr &&
++                            Specialization->hasAttr<DLLExportAttr>();
++    bool NewlyDLLImported = !PreviouslyDLLImported && AttachedImportAttr &&
++                            Specialization->hasAttr<DLLImportAttr>();
+     if (Old_TSK == TSK_ImplicitInstantiation && NewlyDLLExported &&
+         Context.getTargetInfo().shouldDLLImportComdatSymbols()) {
+       // An explicit instantiation definition can add a dll attribute to a
+@@ -10548,6 +10558,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
+       assert(Def == Specialization &&
+              "Def and Specialization should match for implicit instantiation");
+       dllExportImportClassTemplateSpecialization(*this, Def);
++      DLLAttrAffected = true;
+     }
+ 
+     // In MinGW mode, export the template instantiation if the declaration
+@@ -10556,6 +10567,23 @@ DeclResult Sema::ActOnExplicitInstantiation(
+         Context.getTargetInfo().getTriple().isOSCygMing() &&
+         PrevDecl->hasAttr<DLLExportAttr>()) {
+       dllExportImportClassTemplateSpecialization(*this, Def);
++      DLLAttrAffected = true;
++    }
++
++    if (!DLLAttrAffected && (NewlyDLLExported || NewlyDLLImported)) {
++      if (Context.getTargetInfo().getTriple().isOSCygMing() &&
++          TSK == TSK_ExplicitInstantiationDeclaration && NewlyDLLImported) {
++        // In MinGW mode, all undefined symbols are also searched from DLLs
++        // even if they were not declared with dllimport, so doesn't warn
++        // about ignoring dllimport.
++      } else {
++        const ParsedAttr *A =
++            AttachedExportAttr ? AttachedExportAttr : AttachedImportAttr;
++        Diag(A->getLoc(), diag::warn_dllattr_ignored_already_instantiated) << A;
++        Diag(Def->getPointOfInstantiation(),
++             diag::note_instantiation_required_here)
++            << /*implicit|explicit=*/0;
++      }
+     }
+ 
+     // Set the template specialization kind. Make sure it is set before
+diff --git a/clang/test/SemaCXX/dllexport.cpp b/clang/test/SemaCXX/dllexport.cpp
+index 70e7f1398ad0526b3ac100ceb4db751cd21bc8bc..51c37e0d53eda9ddfa5cfff72bd41d40be86dbcd 100644
+--- a/clang/test/SemaCXX/dllexport.cpp
++++ b/clang/test/SemaCXX/dllexport.cpp
+@@ -1063,6 +1063,61 @@ template<typename T> __declspec(dllexport) constexpr int CTMR<T>::ConstexprField
+ // dllexport.
+ template <> void ExportClassTmplMembers<int>::normalDecl() = delete; // non-gnu-error {{attribute 'dllexport' cannot be applied to a deleted function}}
+ 
++struct InstTrig {
++    struct Spec;
++    struct Impl;
++    struct Decl;
++};
++template<bool InstDef, typename... Triggers>
++struct ClassTmplSpecializedMember { // gnu-note 5 {{'dllexport' attribute is missing on previous declaration}}
++  void specializedMember1();
++  void specializedMember2();
++  void instantiatedMember1();
++  void instantiatedMember2();
++  void member() {}
++};
++
++template <> void ClassTmplSpecializedMember<false, InstTrig::Spec>::specializedMember1();       // gnu-note{{implicit instantiation first required here}}
++extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
++                                                                                                   non-gnu-note{{attribute is here}} \
++                                                                                                   gnu-warning{{'dllexport' attribute ignored; class template is already instantiated}}
++template <> void ClassTmplSpecializedMember<true, InstTrig::Spec>::specializedMember1();
++template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Spec>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
++
++void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl> &x) { x.instantiatedMember1(); }  // gnu-note{{implicit instantiation first required here}}
++extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Impl>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
++                                                                                                   non-gnu-note{{attribute is here}} \
++                                                                                                   gnu-warning{{'dllexport' attribute ignored; class template is already instantiated}}
++void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl> &x) { x.instantiatedMember1(); }
++template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Impl>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
++
++template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>::specializedMember1();       // gnu-note{{implicit instantiation first required here}}
++template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>::specializedMember2();
++extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
++                                                                                                                   non-gnu-note{{attribute is here}} \
++                                                                                                                   gnu-warning{{'dllexport' attribute ignored; class template is already instantiated}}
++template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>::specializedMember1();
++template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>::specializedMember2();
++template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
++
++template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>::specializedMember1();       // gnu-note{{implicit instantiation first required here}}
++void anchor(ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
++extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
++                                                                                                                   non-gnu-note{{attribute is here}} \
++                                                                                                                   gnu-warning{{'dllexport' attribute ignored; class template is already instantiated}}
++template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>::specializedMember1();
++void anchor(ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
++template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
++
++void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); }  // gnu-note{{implicit instantiation first required here}}
++template <> void ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>::specializedMember1();
++extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
++                                                                                                                   non-gnu-note{{attribute is here}} \
++                                                                                                                   gnu-warning{{'dllexport' attribute ignored; class template is already instantiated}}
++void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); }
++template <> void ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>::specializedMember1();
++template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
++
+ 
+ //===----------------------------------------------------------------------===//
+ // Class template member templates
+diff --git a/clang/test/SemaCXX/dllimport.cpp b/clang/test/SemaCXX/dllimport.cpp
+index deb0574cb5e68aa667697366812ed0720f8d70b7..c0266be95cd62b600b438cdc24e14a09ac7f673c 100644
+--- a/clang/test/SemaCXX/dllimport.cpp
++++ b/clang/test/SemaCXX/dllimport.cpp
+@@ -999,6 +999,56 @@ template<> void ClassTmpl<int>::importedStatic() {} // non-gnu-error{{cannot def
+ 
+ template <> void ImportClassTmplMembers<int>::normalDecl() = delete; // non-gnu-error{{cannot define non-inline dllimport template specialization}} \
+                                                                         non-gnu-error{{attribute 'dllimport' cannot be applied to a deleted function}}
++struct InstTrig {
++    struct Spec;
++    struct Impl;
++    struct Decl;
++};
++template<bool InstDef, typename... Triggers>
++struct ClassTmplSpecializedMember {
++  void specializedMember1();
++  void specializedMember2();
++  void instantiatedMember1();
++  void instantiatedMember2();
++  void member() {}
++};
++
++template <> void ClassTmplSpecializedMember<false, InstTrig::Spec>::specializedMember1(); // non-gnu-note{{implicit instantiation first required here}}
++extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Spec>; // non-gnu-warning{{'dllimport' attribute ignored; class template is already instantiated}}
++template <> void ClassTmplSpecializedMember<true, InstTrig::Spec>::specializedMember1(); // non-gnu-note{{implicit instantiation first required here}}
++template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Spec>; // non-gnu-warning{{'dllimport' attribute ignored; class template is already instantiated}} \
++                                                                                           gnu-warning{{'dllimport' attribute ignored on explicit instantiation definition}}
++
++void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl> &x) { x.instantiatedMember1(); } // non-gnu-note{{implicit instantiation first required here}}
++extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Impl>; // non-gnu-warning{{'dllimport' attribute ignored; class template is already instantiated}}
++void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl> &x) { x.instantiatedMember1(); } // non-gnu-note{{implicit instantiation first required here}}
++template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Impl>; // non-gnu-warning{{'dllimport' attribute ignored; class template is already instantiated}} \
++                                                                                           gnu-warning{{'dllimport' attribute ignored on explicit instantiation definition}}
++
++template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>::specializedMember1(); // non-gnu-note{{implicit instantiation first required here}}
++template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>::specializedMember2();
++extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>; // non-gnu-warning{{'dllimport' attribute ignored; class template is already instantiated}}
++template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>::specializedMember1(); // non-gnu-note{{implicit instantiation first required here}}
++template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>::specializedMember2();
++template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>; // non-gnu-warning{{'dllimport' attribute ignored; class template is already instantiated}} \
++                                                                                                           gnu-warning{{'dllimport' attribute ignored on explicit instantiation definition}}
++
++template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>::specializedMember1(); // non-gnu-note{{implicit instantiation first required here}}
++void anchor(ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
++extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>; // non-gnu-warning{{'dllimport' attribute ignored; class template is already instantiated}}
++template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>::specializedMember1(); // non-gnu-note{{implicit instantiation first required here}}
++void anchor(ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
++template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>; // non-gnu-warning{{'dllimport' attribute ignored; class template is already instantiated}} \
++                                                                                                           gnu-warning{{'dllimport' attribute ignored on explicit instantiation definition}}
++
++void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); } // non-gnu-note{{implicit instantiation first required here}}
++template <> void ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>::specializedMember1();
++extern template struct __declspec(dllimport) ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>; // non-gnu-warning{{'dllimport' attribute ignored; class template is already instantiated}}
++void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); } // non-gnu-note{{implicit instantiation first required here}}
++template <> void ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>::specializedMember1();
++template struct __declspec(dllimport) ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>; // non-gnu-warning{{'dllimport' attribute ignored; class template is already instantiated}} \
++                                                                                                           gnu-warning{{'dllimport' attribute ignored on explicit instantiation definition}}
++
+ 
+ //===----------------------------------------------------------------------===//
+ // Class template member templates
+-- 
+2.55.0
+

@@ -1,0 +1,88 @@
+From 75a51d98636e909b6a6e787cd8ccc8da3964138e Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Mon, 21 Sep 2026 08:47:38 +0900
+Subject: [PATCH 02/35] don't warn about dllexport
+
+---
+ clang/lib/Sema/SemaTemplate.cpp  |  5 +++--
+ clang/test/SemaCXX/dllexport.cpp | 25 ++++++++++---------------
+ 2 files changed, 13 insertions(+), 17 deletions(-)
+
+diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
+index a53ab69afb823a4e7c4f809a963263e7d474c915..b0fa045521dbba54912a67ae21d5cb08de5daee3 100644
+--- a/clang/lib/Sema/SemaTemplate.cpp
++++ b/clang/lib/Sema/SemaTemplate.cpp
+@@ -10570,9 +10570,10 @@ DeclResult Sema::ActOnExplicitInstantiation(
+       DLLAttrAffected = true;
+     }
+ 
+-    if (!DLLAttrAffected && (NewlyDLLExported || NewlyDLLImported)) {
++    // Warn about adding dllimport which doesn't work while dllexport works fine.
++    if (!DLLAttrAffected && NewlyDLLImported) {
+       if (Context.getTargetInfo().getTriple().isOSCygMing() &&
+-          TSK == TSK_ExplicitInstantiationDeclaration && NewlyDLLImported) {
++          TSK == TSK_ExplicitInstantiationDeclaration) {
+         // In MinGW mode, all undefined symbols are also searched from DLLs
+         // even if they were not declared with dllimport, so doesn't warn
+         // about ignoring dllimport.
+diff --git a/clang/test/SemaCXX/dllexport.cpp b/clang/test/SemaCXX/dllexport.cpp
+index 51c37e0d53eda9ddfa5cfff72bd41d40be86dbcd..24f39d813b498bcbc9f79f3a86544f34882fba99 100644
+--- a/clang/test/SemaCXX/dllexport.cpp
++++ b/clang/test/SemaCXX/dllexport.cpp
+@@ -1077,43 +1077,38 @@ struct ClassTmplSpecializedMember { // gnu-note 5 {{'dllexport' attribute is mis
+   void member() {}
+ };
+ 
+-template <> void ClassTmplSpecializedMember<false, InstTrig::Spec>::specializedMember1();       // gnu-note{{implicit instantiation first required here}}
++template <> void ClassTmplSpecializedMember<false, InstTrig::Spec>::specializedMember1();
+ extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
+-                                                                                                   non-gnu-note{{attribute is here}} \
+-                                                                                                   gnu-warning{{'dllexport' attribute ignored; class template is already instantiated}}
++                                                                                                   non-gnu-note{{attribute is here}}
+ template <> void ClassTmplSpecializedMember<true, InstTrig::Spec>::specializedMember1();
+ template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Spec>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
+ 
+-void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl> &x) { x.instantiatedMember1(); }  // gnu-note{{implicit instantiation first required here}}
++void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl> &x) { x.instantiatedMember1(); }
+ extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Impl>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
+-                                                                                                   non-gnu-note{{attribute is here}} \
+-                                                                                                   gnu-warning{{'dllexport' attribute ignored; class template is already instantiated}}
++                                                                                                   non-gnu-note{{attribute is here}}
+ void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl> &x) { x.instantiatedMember1(); }
+ template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Impl>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
+ 
+-template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>::specializedMember1();       // gnu-note{{implicit instantiation first required here}}
++template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>::specializedMember1();
+ template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>::specializedMember2();
+ extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
+-                                                                                                                   non-gnu-note{{attribute is here}} \
+-                                                                                                                   gnu-warning{{'dllexport' attribute ignored; class template is already instantiated}}
++                                                                                                                   non-gnu-note{{attribute is here}}
+ template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>::specializedMember1();
+ template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>::specializedMember2();
+ template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Spec>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
+ 
+-template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>::specializedMember1();       // gnu-note{{implicit instantiation first required here}}
++template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>::specializedMember1();
+ void anchor(ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
+ extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
+-                                                                                                                   non-gnu-note{{attribute is here}} \
+-                                                                                                                   gnu-warning{{'dllexport' attribute ignored; class template is already instantiated}}
++                                                                                                                   non-gnu-note{{attribute is here}}
+ template <> void ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>::specializedMember1();
+ void anchor(ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
+ template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Spec, InstTrig::Impl>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
+ 
+-void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); }  // gnu-note{{implicit instantiation first required here}}
++void anchor(ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); }
+ template <> void ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>::specializedMember1();
+ extern template struct __declspec(dllexport) ClassTmplSpecializedMember<false, InstTrig::Impl, InstTrig::Spec>; // non-gnu-warning{{explicit instantiation declaration should not be 'dllexport'}} \
+-                                                                                                                   non-gnu-note{{attribute is here}} \
+-                                                                                                                   gnu-warning{{'dllexport' attribute ignored; class template is already instantiated}}
++                                                                                                                   non-gnu-note{{attribute is here}}
+ void anchor(ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec> &x) { x.instantiatedMember1(); }
+ template <> void ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>::specializedMember1();
+ template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
+-- 
+2.55.0
+

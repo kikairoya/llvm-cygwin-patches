@@ -1,4 +1,4 @@
-From 1894c513c50a74ba660f0958dfecd11d6465e03e Mon Sep 17 00:00:00 2001
+From ba8c364922e2fad773974bff73559e85b76465fd Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 2/6] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 2/6] [compiler-rt][Cygwin] Add support for Cygwin target
  6 files changed, 30 insertions(+), 14 deletions(-)
 
 diff --git a/compiler-rt/cmake/config-ix.cmake b/compiler-rt/cmake/config-ix.cmake
-index 9efa761a3a321ad75015ee45d812c3f3b47ea3d4..6104d4523e22b7dff1464d6a28d495a023ca89b4 100644
+index e1abc7eb5c44e9cfaa6651caea3181558f9fc77a..bbdc4a4ba821fc630993a023b0dc40674a3ac480 100644
 --- a/compiler-rt/cmake/config-ix.cmake
 +++ b/compiler-rt/cmake/config-ix.cmake
 @@ -66,6 +66,19 @@ if (C_SUPPORTS_NODEFAULTLIBS_FLAG)

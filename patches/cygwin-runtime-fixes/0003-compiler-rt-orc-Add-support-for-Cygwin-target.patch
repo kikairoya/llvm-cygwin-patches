@@ -1,4 +1,4 @@
-From 5db1d082a92c63ed7e19f50f7b2164978cee8e43 Mon Sep 17 00:00:00 2001
+From d16cbc93fa4e69f7b3571436ef05c79429837fb1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 19 Sep 2025 19:04:00 +0900
 Subject: [PATCH 3/6] [compiler-rt][orc] Add support for Cygwin target

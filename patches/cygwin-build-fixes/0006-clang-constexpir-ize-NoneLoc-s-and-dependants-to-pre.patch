@@ -1,7 +1,7 @@
-From 4ff33082c40cebb2c3c5cb5a2a415add6d276fd3 Mon Sep 17 00:00:00 2001
+From 491fd49d4b3697f2c05eabe0b5d6f033e8cd88f0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
-Subject: [PATCH 06/35] [clang] constexpir-ize `NoneLoc`s and dependants to
+Subject: [PATCH 06/38] [clang] constexpir-ize `NoneLoc`s and dependants to
  prevent symbol dup
 
 ---
@@ -14,7 +14,7 @@ Subject: [PATCH 06/35] [clang] constexpir-ize `NoneLoc`s and dependants to
  6 files changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/clang/include/clang/AST/DeclTemplate.h b/clang/include/clang/AST/DeclTemplate.h
-index 0d110bc3e63063eb4f1b323212b0325d1d4f1aaa..9fd3b8cc2ad96f9c9c20358c3c5cb3645b2964dd 100644
+index d32b044ef40e2ef71779fac033f86a1dbf987d96..869c0fc2830ad4b09d1e986e55f592d14ea04edc 100644
 --- a/clang/include/clang/AST/DeclTemplate.h
 +++ b/clang/include/clang/AST/DeclTemplate.h
 @@ -1231,7 +1231,7 @@ public:

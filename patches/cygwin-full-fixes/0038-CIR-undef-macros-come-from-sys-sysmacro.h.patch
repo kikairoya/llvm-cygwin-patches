@@ -1,0 +1,26 @@
+From 6de73e0004998dcb3481810f332428bc1c88d97a Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Fri, 18 Sep 2026 22:46:51 +0900
+Subject: [PATCH 38/51] [CIR] undef macros come from sys/sysmacro.h
+
+---
+ clang/lib/CIR/Dialect/IR/CIRAttrs.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/clang/lib/CIR/Dialect/IR/CIRAttrs.cpp b/clang/lib/CIR/Dialect/IR/CIRAttrs.cpp
+index 05408c8b2f2e99ac0d4859ff16703681ad588828..0effaf610066a09ee038eeacd622b3e4d488577c 100644
+--- a/clang/lib/CIR/Dialect/IR/CIRAttrs.cpp
++++ b/clang/lib/CIR/Dialect/IR/CIRAttrs.cpp
+@@ -17,6 +17,9 @@
+ #include "mlir/IR/DialectImplementation.h"
+ #include "llvm/ADT/TypeSwitch.h"
+ 
++#undef major
++#undef minor
++
+ //===-----------------------------------------------------------------===//
+ // RecordMembers
+ //===-----------------------------------------------------------------===//
+-- 
+2.55.0
+

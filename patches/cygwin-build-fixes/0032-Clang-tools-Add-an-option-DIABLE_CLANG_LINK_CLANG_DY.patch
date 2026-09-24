@@ -1,4 +1,4 @@
-From 83765fecd25e983446a679795c135f8f4f62655e Mon Sep 17 00:00:00 2001
+From 461b3abd006c2c141e6def81650e0c17bbdfde66 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 21:20:11 +0900
 Subject: [PATCH 32/38] [Clang-tools] Add an option
@@ -84,7 +84,7 @@ index 84f24603ea87dcb1f8b458a9392411ea20f69497..2d5f9ad4d2e8d963a732dd6ddb9ce15f
    ${CLANG_SYCL_LINKER_LIB_DEPS}
    )
 diff --git a/clang/tools/offload-arch/CMakeLists.txt b/clang/tools/offload-arch/CMakeLists.txt
-index f7d7012cf7272ee004bd89668312c88f3e129d93..27361784eafaaf8eb6038a644e84779ea65c9890 100644
+index 8e37e3d2ae5db98c529b850ab0167e947e3ac695..707724acaff3446316cae3d8e070c55cb0f26d18 100644
 --- a/clang/tools/offload-arch/CMakeLists.txt
 +++ b/clang/tools/offload-arch/CMakeLists.txt
 @@ -7,4 +7,7 @@ add_clang_tool(offload-arch OffloadArch.cpp NVPTXArch.cpp AMDGPUArchByKFD.cpp

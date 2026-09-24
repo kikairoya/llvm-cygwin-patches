@@ -1,7 +1,7 @@
-From 50d0c019831a3c47b74cee3d16a542b0e885ae48 Mon Sep 17 00:00:00 2001
+From 94835bfbdc6ab6fe52914e8aaaa1d085b301e3a9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:55:10 +0900
-Subject: [PATCH 51/63] [llvm-config] Fix for BUILD_SHARED_LIBS to use import
+Subject: [PATCH 51/64] [llvm-config] Fix for BUILD_SHARED_LIBS to use import
  libraries instead of DLLs directly
 
 ---

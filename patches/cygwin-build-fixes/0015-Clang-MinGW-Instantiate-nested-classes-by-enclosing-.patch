@@ -1,4 +1,4 @@
-From 9d91731ec12b669e5d4ceb7deab3184315a0a264 Mon Sep 17 00:00:00 2001
+From 81152c8345bc291df4c76c3463e1ff8e84876da1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:30:26 +0900
 Subject: [PATCH 15/38] [Clang][MinGW] Instantiate nested classes by enclosing
@@ -26,10 +26,10 @@ inherit to the nested class.
  2 files changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 0a8123bcc09eeeec695cf5336a07ee794eb7ea94..30870776d5d9b8b88c7073804510d871a0bc09fa 100644
+index 133e7df05ba4c9f4d0a662d3719b7f0bcecd69e3..06457223f952af24fe86bfbceba7968a76b484a4 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
-@@ -6668,12 +6668,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6672,12 +6672,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
        cast<DLLImportAttr>(ClassAttr)->wasPropagatedToBaseTemplate();
  
    TemplateSpecializationKind TSK = Class->getTemplateSpecializationKind();
@@ -44,7 +44,7 @@ index 0a8123bcc09eeeec695cf5336a07ee794eb7ea94..30870776d5d9b8b88c7073804510d871
      if (auto *DEA = Class->getAttr<DLLExportAttr>()) {
        Class->addAttr(DLLExportOnDeclAttr::Create(Context, DEA->getLoc()));
        Class->dropAttr<DLLExportAttr>();
-@@ -6717,14 +6718,30 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6721,14 +6722,30 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
  
      VarDecl *VD = dyn_cast<VarDecl>(Member);
      CXXMethodDecl *MD = dyn_cast<CXXMethodDecl>(Member);
@@ -75,7 +75,7 @@ index 0a8123bcc09eeeec695cf5336a07ee794eb7ea94..30870776d5d9b8b88c7073804510d871
      // Only methods and static fields inherit the attributes.
      if (!VD && !MD)
        continue;
-@@ -6788,7 +6805,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6792,7 +6809,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
          // MinGW does not import or export inline methods. But do it for
          // template instantiations and inherited constructors (which are
          // marked inline but must be exported to match MSVC behavior).
@@ -85,7 +85,7 @@ index 0a8123bcc09eeeec695cf5336a07ee794eb7ea94..30870776d5d9b8b88c7073804510d871
              TSK != TSK_ExplicitInstantiationDefinition) {
            if (auto *CD = dyn_cast<CXXConstructorDecl>(MD);
 diff --git a/clang/lib/Sema/SemaTemplateInstantiate.cpp b/clang/lib/Sema/SemaTemplateInstantiate.cpp
-index bbca1267461e494a098fa23968020f2b79f51826..bfa8cc737542d5684cad9f7dc0a3198a6b4c5556 100644
+index 06ea12ca7bd73bd77d2c219ab7f872dd44dc7bdb..f0b4821022ced34d004ff36d61ce875e646944b8 100644
 --- a/clang/lib/Sema/SemaTemplateInstantiate.cpp
 +++ b/clang/lib/Sema/SemaTemplateInstantiate.cpp
 @@ -4329,6 +4329,7 @@ Sema::InstantiateClassMembers(SourceLocation PointOfInstantiation,

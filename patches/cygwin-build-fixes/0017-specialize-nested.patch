@@ -1,4 +1,4 @@
-From 87ab16b898f3f12eec9e82a2d85d77df76b62d02 Mon Sep 17 00:00:00 2001
+From ba68832e82009a0df01c158e816c1a88522c9631 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:31 +0900
 Subject: [PATCH 17/38] specialize nested
@@ -9,10 +9,10 @@ Subject: [PATCH 17/38] specialize nested
  2 files changed, 51 insertions(+), 8 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 30870776d5d9b8b88c7073804510d871a0bc09fa..057baea902e974e3a4b2f1ea860626a7e5012815 100644
+index 06457223f952af24fe86bfbceba7968a76b484a4..4e45939c5748047fb51377680bac1189848aeef0 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
-@@ -6738,6 +6738,9 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6742,6 +6742,9 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
              cast<InheritableAttr>(ClassAttr->clone(getASTContext()));
          NewAttr->setInherited(true);
          Member->addAttr(NewAttr);
@@ -23,7 +23,7 @@ index 30870776d5d9b8b88c7073804510d871a0bc09fa..057baea902e974e3a4b2f1ea860626a7
        continue;
      }
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index 10be755c16bac15f858e2b3c1cbc5179f10ca288..aafc4fcec3e39083f87216839d773057d5e29157 100644
+index 29c4ae0d948579aa2023588dadbd29e6096377fa..98cff4e2745a4b6dfab16bf6263bc0c50fb69323 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
 @@ -10228,8 +10228,8 @@ static bool ScopeSpecifierHasTemplateId(const CXXScopeSpec &SS) {

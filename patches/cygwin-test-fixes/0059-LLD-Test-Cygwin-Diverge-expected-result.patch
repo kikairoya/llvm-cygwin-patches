@@ -1,7 +1,7 @@
-From e8802f16b559a663497c1988aca7cf6444893a79 Mon Sep 17 00:00:00 2001
+From 63fa6d84e849f45297045dc75e6f3f04efe59390 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 22:57:01 +0900
-Subject: [PATCH 59/63] [LLD][Test][Cygwin] Diverge expected result
+Subject: [PATCH 59/64] [LLD][Test][Cygwin] Diverge expected result
 
 ---
  lld/test/COFF/driver-windows.test                 | 2 +-

@@ -1,4 +1,4 @@
-From a8bda44d6937de50bfd6e4b8570baaf56d1a0a59 Mon Sep 17 00:00:00 2001
+From f3eef35f173b8432a0cc33585b55bbc47740b2b0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 12:34:01 +0900
 Subject: [PATCH 10/51] pretest
@@ -9,7 +9,7 @@ Subject: [PATCH 10/51] pretest
  2 files changed, 74 insertions(+)
 
 diff --git a/clang/test/CodeGenCXX/dllexport.cpp b/clang/test/CodeGenCXX/dllexport.cpp
-index 898d2965eff9d0ad448ab8c53398a6ca2a2bc918..2ac6bcc4da248f38bc4f8cdc15c2eabc6a213fc3 100644
+index 210bc804969b4468c1ff17b61950007dcb100bb6..5c6ef220a1fde307e1664334056f8484c3f3a5e4 100644
 --- a/clang/test/CodeGenCXX/dllexport.cpp
 +++ b/clang/test/CodeGenCXX/dllexport.cpp
 @@ -805,6 +805,41 @@ USEMEMFUNC(ImplicitInstantiationExportedExplicitInstantiationDefExportedTemplate

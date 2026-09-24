@@ -1,7 +1,7 @@
-From dba1cd5c7ca107e05d13d953ece67a322513df54 Mon Sep 17 00:00:00 2001
+From 1cc368356cbded26fc5c74fef4d572f1ae9c3ec3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 2 Mar 2026 22:00:33 +0900
-Subject: [PATCH 34/63] make libcxx clang-tidy test runnable with win32 dylib
+Subject: [PATCH 34/64] make libcxx clang-tidy test runnable with win32 dylib
  builds
 
 ---
@@ -52,7 +52,7 @@ index 8e125e51344fa60f7bff74ebb1ccbd097d7ce7dc..be16c517f99893e8e48fab7f46c25ffa
  target_include_directories(clangTidy INTERFACE
                             ${CLANG_INCLUDE_DIRS}
 diff --git a/libcxx/utils/libcxx/test/params.py b/libcxx/utils/libcxx/test/params.py
-index ef229903ea4b6bb17d6f1a4d1ba6ee9f30411e5c..db307db93a7c77baaeaac817a79cf7268b8c7014 100644
+index 951b0a4dd9806e86887e30167e9bc42e08646939..86db4c7b6071d62ec8eeaf0cd8c94205477fada8 100644
 --- a/libcxx/utils/libcxx/test/params.py
 +++ b/libcxx/utils/libcxx/test/params.py
 @@ -8,6 +8,7 @@

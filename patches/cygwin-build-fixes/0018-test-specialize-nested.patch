@@ -1,4 +1,4 @@
-From 2d5fdff530cf0bda7442660d6613501b94dc8341 Mon Sep 17 00:00:00 2001
+From d71cc15daf43f90280a62319003f0100a2718b5f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:40 +0900
 Subject: [PATCH 18/38] test specialize nested

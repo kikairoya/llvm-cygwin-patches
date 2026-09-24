@@ -1,4 +1,4 @@
-From ebf556f5d9fbb6d47b49dc5a81f7c620e5681ec2 Mon Sep 17 00:00:00 2001
+From 65bba067a425ba4adba1a4993b0088c4b67029cf Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:29:58 +0900
 Subject: [PATCH 12/51] [Clang] Let an explicit specialization not to prevent
@@ -10,10 +10,10 @@ Subject: [PATCH 12/51] [Clang] Let an explicit specialization not to prevent
  2 files changed, 76 insertions(+), 64 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 3639640f2886abed6bfc7995b38c7ac9932b5757..0a8123bcc09eeeec695cf5336a07ee794eb7ea94 100644
+index 68ad77ec5e8c7baee8a69ccc6f1529d62d209fff..133e7df05ba4c9f4d0a662d3719b7f0bcecd69e3 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
-@@ -6717,6 +6717,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6721,6 +6721,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
  
      VarDecl *VD = dyn_cast<VarDecl>(Member);
      CXXMethodDecl *MD = dyn_cast<CXXMethodDecl>(Member);
@@ -28,7 +28,7 @@ index 3639640f2886abed6bfc7995b38c7ac9932b5757..0a8123bcc09eeeec695cf5336a07ee79
      // Only methods and static fields inherit the attributes.
      if (!VD && !MD)
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index b0fa045521dbba54912a67ae21d5cb08de5daee3..10be755c16bac15f858e2b3c1cbc5179f10ca288 100644
+index 1e858bc455034513f9d034f0bd4950e2aab6b106..29c4ae0d948579aa2023588dadbd29e6096377fa 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
 @@ -10294,7 +10294,7 @@ DeclResult Sema::ActOnExplicitInstantiation(

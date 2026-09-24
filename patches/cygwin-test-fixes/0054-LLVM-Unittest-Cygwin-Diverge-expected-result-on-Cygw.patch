@@ -1,7 +1,7 @@
-From 7aac13a2e0b54f0504803d25a7ab701477322735 Mon Sep 17 00:00:00 2001
+From e2da629b88e438776233862aaeaabd99aacc1285 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Mar 2026 20:30:47 +0900
-Subject: [PATCH 54/63] [LLVM][Unittest][Cygwin] Diverge expected result on
+Subject: [PATCH 54/64] [LLVM][Unittest][Cygwin] Diverge expected result on
  Cygwin host
 
 ---
@@ -66,10 +66,10 @@ index 61cd5d013eeb77dd71f42abf36825071b00cd007..e37c12d57d613439f705ce67abcd41da
  static void writeToLog(OnDiskCASLogger *Logger, int NumOpens, int NumEntries) {
    StringRef Path = "/fake_cas/index";
 diff --git a/llvm/unittests/Support/CommandLineTest.cpp b/llvm/unittests/Support/CommandLineTest.cpp
-index f810778d175bdd6ea7fd7a214283dd7eb497cf13..43f5b2adf459d633d2f293d752bfb255b421d3c2 100644
+index 6af5ec7ccc774549dd89f9ee3288017f0df8585f..5485fbe1d7b375a117b782ffc2d0954493912bda 100644
 --- a/llvm/unittests/Support/CommandLineTest.cpp
 +++ b/llvm/unittests/Support/CommandLineTest.cpp
-@@ -947,7 +947,11 @@ TEST(CommandLineTest, ResponseFileWindows) {
+@@ -885,7 +885,11 @@ TEST(CommandLineTest, ResponseFileWindows) {
  
    // Create response file.
    TempFile ResponseFile("resp-", ".txt",

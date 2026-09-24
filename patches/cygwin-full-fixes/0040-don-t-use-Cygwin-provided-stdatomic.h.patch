@@ -1,4 +1,4 @@
-From 538c9b018c6e20088e36dc4ecd7650fabb0aca8d Mon Sep 17 00:00:00 2001
+From 7009bbc1546494569e21bd0234895693b7cb4be8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Feb 2026 19:54:03 +0900
 Subject: [PATCH 40/51] don't use Cygwin provided stdatomic.h

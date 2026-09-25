@@ -1,7 +1,7 @@
-From bd2b0064475eac80ead800c5d6acdbbd5383c7f7 Mon Sep 17 00:00:00 2001
+From b9bab8a6564dc053e0bb5a38d813b53bec3e24d6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 26 Aug 2026 20:42:26 +0900
-Subject: [PATCH 35/51] [LLVM][SPIRV] Add a null check
+Subject: [PATCH 35/52] [LLVM][SPIRV] Add a null check
 
 ---
  llvm/lib/Target/SPIRV/SPIRVGlobalRegistry.cpp | 1 +

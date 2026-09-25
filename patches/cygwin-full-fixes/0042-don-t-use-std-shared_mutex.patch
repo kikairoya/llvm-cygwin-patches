@@ -1,0 +1,26 @@
+From 967976863af1e7a9fffc1b498ffc9ea3f15c57f5 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Sun, 20 Sep 2026 18:00:09 +0900
+Subject: [PATCH 42/52] don't use std::shared_mutex
+
+workaround for https://cygwin.com/pipermail/cygwin/2026-September/260061.html
+---
+ llvm/include/llvm/Support/RWMutex.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/llvm/include/llvm/Support/RWMutex.h b/llvm/include/llvm/Support/RWMutex.h
+index 67079d615bd9d98021099409d0d7d9f5231febe7..b239e050fbe77dbb1bbe8022850c0a6f2cffa947 100644
+--- a/llvm/include/llvm/Support/RWMutex.h
++++ b/llvm/include/llvm/Support/RWMutex.h
+@@ -19,7 +19,7 @@
+ #include <mutex>
+ #include <shared_mutex>
+ 
+-#if defined(__APPLE__)
++#if defined(__APPLE__) || defined(__CYGWIN__)
+ #define LLVM_USE_RW_MUTEX_IMPL
+ #endif
+ 
+-- 
+2.55.0
+

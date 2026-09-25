@@ -1,7 +1,7 @@
-From d1229a4022749d0b1f205ddeb8b1e131477acf6c Mon Sep 17 00:00:00 2001
+From 6ddee61aa6c87e92b4c326085f2d9b9e697b9373 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 21 Sep 2026 08:47:38 +0900
-Subject: [PATCH 09/51] don't warn about dllexport
+Subject: [PATCH 09/52] don't warn about dllexport
 
 ---
  clang/lib/Sema/SemaTemplate.cpp  |  5 +++--

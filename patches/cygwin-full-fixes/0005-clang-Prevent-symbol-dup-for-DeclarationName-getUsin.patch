@@ -1,7 +1,7 @@
-From b99def4bd25f6b19d45eb8dee4ef19f00724492a Mon Sep 17 00:00:00 2001
+From a46e03fcdaf43c00891d86f4bd2e5a5b0050439c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:03:35 +0900
-Subject: [PATCH 05/52] [clang] Prevent symbol dup for
+Subject: [PATCH 05/53] [clang] Prevent symbol dup for
  DeclarationName::getUsingDirectiveName
 
 ---

@@ -1,7 +1,7 @@
-From a96f1da33a6a3957ed44ea977dfdf557e0286a16 Mon Sep 17 00:00:00 2001
+From eb2b170f1c2ecafd3c0160bee9c79410ed4266ec Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 4 Apr 2026 21:33:58 +0900
-Subject: [PATCH 21/64] update test
+Subject: [PATCH 21/65] update test
 
 ---
  clang/test/SemaCXX/dllexport-no-dllexport-inlines.cpp | 9 ++++-----

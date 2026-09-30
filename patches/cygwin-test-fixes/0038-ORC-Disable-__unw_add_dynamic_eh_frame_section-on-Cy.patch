@@ -1,0 +1,50 @@
+From fc1c5b586f54d5b7945e2fcea79cae8f243f61bd Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Wed, 30 Sep 2026 20:56:31 +0900
+Subject: [PATCH 38/65] [ORC] Disable __unw_add_dynamic_eh_frame_section on
+ Cygwin
+
+Causes a link error:
+```
+    ld.lld: error: undefined symbol: __unw_add_dynamic_eh_frame_section
+    >>> referenced by libLLVMOrcTargetProcess.a(RegisterEHFrames.cpp.o):(llvm::orc::registerEHFrameSection(void const*, unsigned long))
+    >>> referenced by libLLVMOrcTargetProcess.a(RegisterEHFrames.cpp.o):(registerEHFrameWrapper(llvm::orc::ExecutorAddrRange))
+```
+---
+ .../ExecutionEngine/Orc/TargetProcess/RegisterEHFrames.cpp  | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/llvm/lib/ExecutionEngine/Orc/TargetProcess/RegisterEHFrames.cpp b/llvm/lib/ExecutionEngine/Orc/TargetProcess/RegisterEHFrames.cpp
+index b64f7664f80f3fd83554d15a220033b09292547e..e261b3f001ab125374394afb601844dd8d21415c 100644
+--- a/llvm/lib/ExecutionEngine/Orc/TargetProcess/RegisterEHFrames.cpp
++++ b/llvm/lib/ExecutionEngine/Orc/TargetProcess/RegisterEHFrames.cpp
+@@ -22,7 +22,7 @@ using namespace llvm::orc::shared;
+ namespace llvm {
+ namespace orc {
+ 
+-#if !defined(_WIN32)
++#if !defined(_WIN32) && !defined(__CYGWIN__)
+ extern "C" void
+ __unw_add_dynamic_eh_frame_section(const void *) LLVM_ATTRIBUTE_WEAK;
+ extern "C" void
+@@ -130,7 +130,7 @@ Error walkLibunwindEHFrameSection(const char *const SectionStart,
+ Error registerEHFrameSection(const void *EHFrameSectionAddr,
+                              size_t EHFrameSectionSize) {
+   // For libunwind after D111863.
+-#if !defined(_WIN32)
++#if !defined(_WIN32) && !defined(__CYGWIN__)
+   if (__unw_add_dynamic_eh_frame_section &&
+       __unw_remove_dynamic_eh_frame_section) {
+     __unw_add_dynamic_eh_frame_section(EHFrameSectionAddr);
+@@ -157,7 +157,7 @@ Error registerEHFrameSection(const void *EHFrameSectionAddr,
+ 
+ Error deregisterEHFrameSection(const void *EHFrameSectionAddr,
+                                size_t EHFrameSectionSize) {
+-#if !defined(_WIN32)
++#if !defined(_WIN32) && !defined(__CYGWIN__)
+   if (__unw_add_dynamic_eh_frame_section &&
+       __unw_remove_dynamic_eh_frame_section) {
+     __unw_remove_dynamic_eh_frame_section(EHFrameSectionAddr);
+-- 
+2.55.0
+

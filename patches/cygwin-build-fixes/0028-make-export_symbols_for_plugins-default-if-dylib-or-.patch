@@ -1,7 +1,7 @@
-From 100fc4d4b6019bb7b7f6e6a13bc88ed7b71769dc Mon Sep 17 00:00:00 2001
+From 82ba6c5904328f84048b89511fee4ded5d00a184 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 22:36:50 +0900
-Subject: [PATCH 28/39] make export_symbols_for_plugins default if dylib or
+Subject: [PATCH 28/40] make export_symbols_for_plugins default if dylib or
  shared
 
 ---
@@ -9,10 +9,10 @@ Subject: [PATCH 28/39] make export_symbols_for_plugins default if dylib or
  1 file changed, 22 insertions(+), 15 deletions(-)
 
 diff --git a/llvm/cmake/modules/HandleLLVMOptions.cmake b/llvm/cmake/modules/HandleLLVMOptions.cmake
-index 34b4580c84e65635cd5e85ab772ae4e30e5569f0..9f574feaed88589f5b7ddfcd3e4e0d08f6cd4769 100644
+index 943418f7ec0da6117eb5788eb74b8e4e4f1ad78f..e753329209f44acfd2013e55ffc3f2ef034e41be 100644
 --- a/llvm/cmake/modules/HandleLLVMOptions.cmake
 +++ b/llvm/cmake/modules/HandleLLVMOptions.cmake
-@@ -1575,13 +1575,6 @@ if(LLVM_ENABLE_FATLTO AND ((UNIX AND NOT APPLE) OR FUCHSIA))
+@@ -1576,13 +1576,6 @@ if(LLVM_ENABLE_FATLTO AND ((UNIX AND NOT APPLE) OR FUCHSIA))
    endif()
  endif()
  
@@ -26,7 +26,7 @@ index 34b4580c84e65635cd5e85ab772ae4e30e5569f0..9f574feaed88589f5b7ddfcd3e4e0d08
  # This option makes utils/extract_symbols.py be used to determine the list of
  # symbols to export from LLVM tools. This is necessary when on AIX or when using
  # MSVC if you want to allow plugins. On AIX we don't show this option, and we
-@@ -1589,19 +1582,33 @@ endif()
+@@ -1590,19 +1583,33 @@ endif()
  # linking (due to incompatibility). With MSVC, note that the plugin has to
  # explicitly link against (exactly one) tool so we can't unilaterally turn on
  # LLVM_ENABLE_PLUGINS when it's enabled.

@@ -1,7 +1,7 @@
-From 868552a9fbbb7486cd81da071ba0fa04ba66c8c8 Mon Sep 17 00:00:00 2001
+From 2f57ed7f80da7073a73d31a977903e704d432c9a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 19:00:48 +0900
-Subject: [PATCH 13/64] update test
+Subject: [PATCH 13/65] update test
 
 ---
  clang/test/CodeGenCXX/dllimport.cpp           |  6 ++---

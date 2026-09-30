@@ -1,7 +1,7 @@
-From fa740c3822e990c5d8ad4b956ad42c3f8bd45699 Mon Sep 17 00:00:00 2001
+From ba3d8f56b27e923df7baa9dc4c0dac4e5c4f94c8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 22 Sep 2026 05:28:05 +0900
-Subject: [PATCH 08/39] Reapply "[Clang] Warn about ignored dllimport on
+Subject: [PATCH 08/40] Reapply "[Clang] Warn about ignored dllimport on
  explicit instantiations" (#224971)
 
 This reverts commit 16ff0ec65655a16f9a01c20d059d1e6ddb27f6b9.

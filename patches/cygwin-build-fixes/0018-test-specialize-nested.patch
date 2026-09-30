@@ -1,7 +1,7 @@
-From 661694e7f3f0ad0a850b735a48db2dcfae47afd5 Mon Sep 17 00:00:00 2001
+From 8e9db0c25a4c956122a2ac79f0d82988936bc12d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:40 +0900
-Subject: [PATCH 18/39] test specialize nested
+Subject: [PATCH 18/40] test specialize nested
 
 ---
  .../CodeGenCXX/mingw-template-dllexport.cpp   | 26 ++++++------

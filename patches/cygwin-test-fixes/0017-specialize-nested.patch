@@ -1,7 +1,7 @@
-From c40b1b87cfb6f54996b45cf7c8f81640469ac1b7 Mon Sep 17 00:00:00 2001
+From c0f643a933d28a90159b10ce0a4ffe54ecbebf2e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:31 +0900
-Subject: [PATCH 17/64] specialize nested
+Subject: [PATCH 17/65] specialize nested
 
 ---
  clang/lib/Sema/SemaDeclCXX.cpp  |  3 ++

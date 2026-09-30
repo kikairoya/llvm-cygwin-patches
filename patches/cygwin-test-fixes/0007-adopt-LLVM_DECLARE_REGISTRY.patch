@@ -1,7 +1,7 @@
-From 27f6e5849d8ada9ae04e9b40cc1b343cab3534af Mon Sep 17 00:00:00 2001
+From f16d6c19f2ca7399b0349fb4b723af5997d4d5bc Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
-Subject: [PATCH 07/64] adopt LLVM_DECLARE_REGISTRY
+Subject: [PATCH 07/65] adopt LLVM_DECLARE_REGISTRY
 
 ---
  clang-tools-extra/clang-doc/Generators.cpp           |  2 +-

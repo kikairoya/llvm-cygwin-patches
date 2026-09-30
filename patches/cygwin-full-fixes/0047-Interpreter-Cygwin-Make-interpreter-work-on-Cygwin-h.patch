@@ -1,4 +1,4 @@
-From 4b6206f21f29e644b5c6debf5ba4e90707805e37 Mon Sep 17 00:00:00 2001
+From f6f91a9ff5d9f495de2beb7c36ef6efcf337053d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 24 May 2025 16:58:17 +0900
 Subject: [PATCH 47/53] [Interpreter][Cygwin] Make interpreter work on Cygwin

@@ -1,4 +1,4 @@
-From f75106043b25a88e1562fb802dc8040e3afecdfe Mon Sep 17 00:00:00 2001
+From a960a9075554860e18b412b08fbb21998e0b3dc2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 6 Sep 2026 13:15:09 +0900
 Subject: [PATCH 46/65] [Clang][Cygwin] Support -mno-use-libstdc-wrappers

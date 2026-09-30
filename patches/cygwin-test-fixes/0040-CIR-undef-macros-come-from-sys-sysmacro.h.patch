@@ -1,4 +1,4 @@
-From 556b3fd1db3ceee86ea9b9171190e5b1904444f3 Mon Sep 17 00:00:00 2001
+From 00850015e875a38c9f642a92f77c462253f0a2da Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 18 Sep 2026 22:46:51 +0900
 Subject: [PATCH 40/65] [CIR] undef macros come from sys/sysmacro.h

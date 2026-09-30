@@ -1,4 +1,4 @@
-From f6ebf21d62bf529b06eda855a7f6dccea3b0dc1f Mon Sep 17 00:00:00 2001
+From 0b4334a99f6ec34c12864d857d1bd852dcbce42e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:29:58 +0900
 Subject: [PATCH 05/35] [Clang] Let an explicit specialization not to prevent
@@ -10,7 +10,7 @@ Subject: [PATCH 05/35] [Clang] Let an explicit specialization not to prevent
  2 files changed, 76 insertions(+), 64 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 68ad77ec5e8c7baee8a69ccc6f1529d62d209fff..133e7df05ba4c9f4d0a662d3719b7f0bcecd69e3 100644
+index 5345966419d40bb16ea9887ec3ba7c76070069cf..73f18cef236a43ee4ffb8612c1c9d78822b4aa9d 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6721,6 +6721,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {

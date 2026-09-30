@@ -1,4 +1,4 @@
-From bf65183c457081da6a8647a377526d5f79fd009a Mon Sep 17 00:00:00 2001
+From f65ae1ad1db6deefefa6bacba6e7aa0282edf08a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 8 Jun 2025 22:25:26 +0900
 Subject: [PATCH 23/35] [libc++][Cygwin] Add support for Cygwin target
@@ -123,7 +123,7 @@ index ade43d42dc283de660f3a0e0d36bdb5bfccdade4..889bf99bae6c35c1326a0624b276ba22
  // clang-format on
  #      undef _LIBCPP_HAS_THREAD_API_PTHREAD
 diff --git a/libcxx/include/__configuration/attributes.h b/libcxx/include/__configuration/attributes.h
-index 2f8841fce0a078a8d7b99209e309c825834500f6..deac9a2e02d1cef656a1ddd9bb9fa919de77372c 100644
+index 5d503ca4a7c3a277e11e02f96dfb0dec8f2f739c..8568b18d87611bcfd24854fc418d0304f9c36374 100644
 --- a/libcxx/include/__configuration/attributes.h
 +++ b/libcxx/include/__configuration/attributes.h
 @@ -55,13 +55,14 @@

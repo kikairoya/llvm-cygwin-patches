@@ -1,4 +1,4 @@
-From 0f5970402bc4a3239c7511ee98572565d450b426 Mon Sep 17 00:00:00 2001
+From 27daf30662800d10e25bd6abde587373634fa53b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:44:20 +0900
 Subject: [PATCH 63/64] fix tests that use Bye
@@ -40,10 +40,10 @@ index a87e36c7c725c87c602f9a5c912f37e7721aaecb..e19334502a2f3710b3493d38c84e6986
  // XFAIL: target={{.*}}-aix{{.*}}
  // CHECK-INACTIVE-NOT: Bye
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index f7f9ded72b0a23adc14458b269470ac9af1debea..661995cb44f9a2e1c5e686928f770dc6e0c4a513 100644
+index e715a2726ed44afe167f53299485dcdc7cf3ddfa..9f5a7d1cce5880dcce30944731b632ce0292f915 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -324,6 +324,9 @@ if "aarch64" in config.host_arch:
+@@ -376,6 +376,9 @@ if "aarch64" in config.host_arch:
  if not (config.build_shared_libs or config.link_llvm_dylib or config.link_clang_dylib):
      config.available_features.add("static-libs")
  
@@ -80,10 +80,10 @@ index 3941d5f7d49f24cfa3618fcbe6684bc3b61a7d21..31a8e24f768dde81610e54701e69008a
      SimplifyCFG.cpp
      DEPENDS
 diff --git a/llvm/test/CMakeLists.txt b/llvm/test/CMakeLists.txt
-index 18f176c3fe17f982bc2c5cb245453b8560d5d16b..6c75750fb983caafcc82b03f82fd9badf5207668 100644
+index 56f96b4f3de923a5ec502243b739bbd332f13da3..0c9f24c8b482137c477ef3788adab155325fbd57 100644
 --- a/llvm/test/CMakeLists.txt
 +++ b/llvm/test/CMakeLists.txt
-@@ -226,7 +226,7 @@ if(LLVM_INCLUDE_EXAMPLES)
+@@ -238,7 +238,7 @@ if(LLVM_INCLUDE_EXAMPLES)
        LLJITWithRemoteDebugging
        )
    endif()
@@ -93,12 +93,12 @@ index 18f176c3fe17f982bc2c5cb245453b8560d5d16b..6c75750fb983caafcc82b03f82fd9bad
        Bye
        ExampleIRTransforms
 diff --git a/llvm/test/Feature/codegen-plugin.ll b/llvm/test/Feature/codegen-plugin.ll
-index cd36ef14d8ec3311a5ad43f3b1c7448d5ff8c9e1..38d8210e62fc286a3fdc4edd38f96882fb4452b7 100644
+index 571c7e348520e90693aa5026d2802b533d8e64ba..55c02224dcf96cfeb8307f37644c2f01abf336fe 100644
 --- a/llvm/test/Feature/codegen-plugin.ll
 +++ b/llvm/test/Feature/codegen-plugin.ll
 @@ -3,7 +3,7 @@
- ; RUN: llc < %s %loadnewpmbye -last-words | FileCheck %s --check-prefix=CHECK-ACTIVE
- ; RUN: not llc < %s %loadnewpmbye -last-words -filetype=obj 2>&1 | FileCheck %s --check-prefix=CHECK-ERR
+ ; RUN: llc < %s %loadnewpmbye -plugin-arg=Bye,-last-words | FileCheck %s --check-prefix=CHECK-ACTIVE
+ ; RUN: not llc < %s %loadnewpmbye -plugin-arg=Bye,-last-words -filetype=obj 2>&1 | FileCheck %s --check-prefix=CHECK-ERR
  ; REQUIRES: plugins, examples
 -; UNSUPPORTED: target={{.*windows.*}}
 +; UNSUPPORTED: (system-windows || system-cygwin) && !llvm-dylib

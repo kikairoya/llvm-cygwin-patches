@@ -1,4 +1,4 @@
-From 38d32b990a28228c4299b7be48c3792a200e71e5 Mon Sep 17 00:00:00 2001
+From b81d9e7dd7a2aa04caf3e3091854034c9e13de00 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Dec 2025 22:22:52 +0900
 Subject: [PATCH 54/64] [LLVM][Test][Cygwin] Diverge expected result on Cygwin
@@ -10,10 +10,10 @@ Subject: [PATCH 54/64] [LLVM][Test][Cygwin] Diverge expected result on Cygwin
  2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/llvm/test/Feature/load_extension.ll b/llvm/test/Feature/load_extension.ll
-index 6f99e99cb63458c9c322819f89070c985b2ea075..c57f300d277501b96c217201399c6994babd24da 100644
+index 80f0ca8a33c8a884d50e75c151494b4b22130061..f3da97fb0cc78aecbf69185c47e2dc8ece4f0f58 100644
 --- a/llvm/test/Feature/load_extension.ll
 +++ b/llvm/test/Feature/load_extension.ll
-@@ -5,7 +5,7 @@
+@@ -8,7 +8,7 @@
  ; RUN: llvm-lto2 run %t.o %loadbye %loadnewpmbye -wave-goodbye -o %t -r %t.o,somefunk,plx -r %t.o,junk,plx 2>&1 | FileCheck %s
  ; RUN: llvm-lto2 run %t.o %loadbye %loadnewpmbye -opt-pipeline="goodbye" -wave-goodbye -o %t -r %t.o,somefunk,plx -r %t.o,junk,plx 2>&1 | FileCheck %s
  ; REQUIRES: plugins, examples

@@ -1,7 +1,7 @@
-From cefa6947b97c2194b72d436786aa14950551e9d1 Mon Sep 17 00:00:00 2001
+From 3ba5d131e750745bf4c282026e6a7b956838c197 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 30 Mar 2026 18:56:01 +0900
-Subject: [PATCH 20/40] adjust
+Subject: [PATCH 20/39] adjust
  diag::warn_dllimport_dropped_from_inline_function
 
 ---

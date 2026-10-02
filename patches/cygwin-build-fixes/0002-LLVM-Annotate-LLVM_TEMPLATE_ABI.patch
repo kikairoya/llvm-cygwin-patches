@@ -1,7 +1,7 @@
-From 9060a4e137a021f0cb4bddc3a062188e0951e978 Mon Sep 17 00:00:00 2001
+From eb0d31fa9ef4b4a56b691bd3c9d8119b02340bb9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
-Subject: [PATCH 02/40] [LLVM] Annotate LLVM_TEMPLATE_ABI
+Subject: [PATCH 02/39] [LLVM] Annotate LLVM_TEMPLATE_ABI
 
 ---
  llvm/include/llvm/ADT/SmallVector.h           |  4 ++--
@@ -9,13 +9,12 @@ Subject: [PATCH 02/40] [LLVM] Annotate LLVM_TEMPLATE_ABI
  llvm/include/llvm/IR/Analysis.h               |  2 ++
  llvm/include/llvm/IR/Dominators.h             |  2 +-
  llvm/include/llvm/IR/PassManager.h            | 24 ++++---------------
- llvm/include/llvm/MCA/Support.h               |  1 +
  llvm/include/llvm/Object/XCOFFObjectFile.h    |  4 ++++
  llvm/lib/CodeGen/MachinePassManager.cpp       |  4 +++-
  llvm/lib/IR/Dominators.cpp                    |  2 +-
  llvm/lib/MCA/Support.cpp                      |  2 ++
  llvm/lib/Support/SmallVector.cpp              |  4 ++--
- 11 files changed, 28 insertions(+), 31 deletions(-)
+ 10 files changed, 27 insertions(+), 31 deletions(-)
 
 diff --git a/llvm/include/llvm/ADT/SmallVector.h b/llvm/include/llvm/ADT/SmallVector.h
 index c6469f689a3e160c51f4aabcaa5f38e08d6f19a3..38b2395114be8cd2d2701cbf3558e2879cd67699 100644
@@ -165,18 +164,6 @@ index c626e3a63ac0e9bb2ac238c7471a767124510fad..f594b17dee9d20816a0ca039f58d88a4
  extern template class LLVM_TEMPLATE_ABI
      OuterAnalysisManagerProxy<ModuleAnalysisManager, Function>;
  /// Provide the \c ModuleAnalysisManager to \c Function proxy.
-diff --git a/llvm/include/llvm/MCA/Support.h b/llvm/include/llvm/MCA/Support.h
-index 6875787833d9362320fe027727b858eaddb1643c..eedad4d3293507fdac32afa6aa466e1d6badd3f8 100644
---- a/llvm/include/llvm/MCA/Support.h
-+++ b/llvm/include/llvm/MCA/Support.h
-@@ -42,6 +42,7 @@ public:
- };
- 
- template <typename T> char InstructionError<T>::ID;
-+extern template class LLVM_TEMPLATE_ABI InstructionError<MCInst>;
- 
- /// This class represents the number of cycles per resource (fractions of
- /// cycles).  That quantity is managed here as a ratio, and accessed via the
 diff --git a/llvm/include/llvm/Object/XCOFFObjectFile.h b/llvm/include/llvm/Object/XCOFFObjectFile.h
 index da3538ecb3024709fbbb420fa175238d0d8c3774..33ae47dcc9c43c040bee94f0d956d3ee1daa2284 100644
 --- a/llvm/include/llvm/Object/XCOFFObjectFile.h

@@ -1,7 +1,7 @@
-From a065f6aa7d7acc5cb5cb26949f5b8fe5d5eb2a3e Mon Sep 17 00:00:00 2001
+From 1ed45af75d275fab41b8a65fa62a24d697d445c9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Sep 2025 18:23:48 +0900
-Subject: [PATCH 36/40] [cmake][Clang][Cygwin] Set output name explicitly when
+Subject: [PATCH 36/39] [cmake][Clang][Cygwin] Set output name explicitly when
  cross-compiling to Cygwin
 
 ---

@@ -1,7 +1,7 @@
-From 7212d696c1774d35d33dd3a6fcb4506947de94eb Mon Sep 17 00:00:00 2001
+From 3cd3ca304448b03a78e68cf76bd4f1e6c71e631e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
-Subject: [PATCH 06/53] [clang] constexpir-ize `NoneLoc`s and dependants to
+Subject: [PATCH 06/52] [clang] constexpir-ize `NoneLoc`s and dependants to
  prevent symbol dup
 
 ---

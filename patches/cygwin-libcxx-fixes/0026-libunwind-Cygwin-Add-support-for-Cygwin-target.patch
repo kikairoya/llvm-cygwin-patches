@@ -1,4 +1,4 @@
-From 124c10f2df51e9c4465292f8da6b5fe594bf5e80 Mon Sep 17 00:00:00 2001
+From ce0792594876385681b515a3bd89203538b5935b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 26/35] [libunwind][Cygwin] Add support for Cygwin target
@@ -125,7 +125,7 @@ index a9d9a2ef089d6ce98e114bd305b77a65b9d1264a..0db065a3e0cfeec27d4bcc563aed1481
  if (LIBUNWIND_ENABLE_SHARED AND LIBUNWIND_SUPPORTS_SHARED_LIBRARY AND
      NOT (CXX_SUPPORTS_FNO_EXCEPTIONS_FLAG AND
 diff --git a/libunwind/src/Registers.hpp b/libunwind/src/Registers.hpp
-index d79d836d6925028a0b9f9e72d1638886b66e5c86..47822f6545c2e8a9fd7711a8b4da7aa62c51a4b4 100644
+index 7101bb21abda58f7d3f113b9e2a00c795cae1fed..973893b8663a2befaa4692ddd9e5a654fc66fc78 100644
 --- a/libunwind/src/Registers.hpp
 +++ b/libunwind/src/Registers.hpp
 @@ -350,12 +350,12 @@ private:

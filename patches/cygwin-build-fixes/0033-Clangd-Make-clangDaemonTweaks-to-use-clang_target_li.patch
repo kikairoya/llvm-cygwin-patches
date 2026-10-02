@@ -1,7 +1,7 @@
-From dbdf1d98b01f02a9fb1152851f11f2477ae5a153 Mon Sep 17 00:00:00 2001
+From 5709800ffdcb071b38f3aa0ebe2b71be8a74edca Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 24 Dec 2025 07:07:07 +0900
-Subject: [PATCH 33/40] [Clangd] Make clangDaemonTweaks to use
+Subject: [PATCH 33/39] [Clangd] Make clangDaemonTweaks to use
  `clang_target_link_libraries`
 
 ---

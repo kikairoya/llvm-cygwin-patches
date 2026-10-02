@@ -1,7 +1,7 @@
-From 32870c102a2f1eeff0d1b0fc8ac0d62fbe3f9e7f Mon Sep 17 00:00:00 2001
+From acf22b49bce821d6f0018fd4be0c6e07e9ec3673 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
-Subject: [PATCH 07/40] adopt LLVM_DECLARE_REGISTRY
+Subject: [PATCH 07/39] adopt LLVM_DECLARE_REGISTRY
 
 ---
  clang-tools-extra/clang-doc/Generators.cpp           |  2 +-
@@ -279,7 +279,7 @@ index 4c82fad98478f0f2786fc1fb919204fb4136fcad..cbd703b93765b644c4e273e86b8bcbd4
  static std::list<std::unique_ptr<ParsedAttrInfo>> instantiateEntries() {
    std::list<std::unique_ptr<ParsedAttrInfo>> Instances;
 diff --git a/clang/lib/Frontend/FrontendAction.cpp b/clang/lib/Frontend/FrontendAction.cpp
-index 877ef662fe8da613f2b1056455ef6b1632a95044..e2638b5ae1de36bb173b9bc96dc0622793bcee3e 100644
+index 27b45195702f4208c0b53cc59737b2131a475e86..43ab75ad9e0088494260bbd1413b3c86dd056a36 100644
 --- a/clang/lib/Frontend/FrontendAction.cpp
 +++ b/clang/lib/Frontend/FrontendAction.cpp
 @@ -53,7 +53,7 @@

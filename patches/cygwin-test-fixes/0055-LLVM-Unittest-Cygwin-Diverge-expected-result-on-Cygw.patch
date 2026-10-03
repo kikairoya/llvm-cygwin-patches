@@ -1,37 +1,17 @@
-From 338d8790a031eadecd3ceb620d8829ce0d7398d9 Mon Sep 17 00:00:00 2001
+From 0189bc156a9332b1e3c1fa905b32a2a391320ac3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Mar 2026 20:30:47 +0900
 Subject: [PATCH 55/64] [LLVM][Unittest][Cygwin] Diverge expected result on
  Cygwin host
 
 ---
- llvm/tools/libCASPluginTest/CMakeLists.txt | 10 ++++++++++
- llvm/unittests/CAS/ObjectStoreTest.cpp     |  2 ++
- llvm/unittests/CAS/OnDiskCASLoggerTest.cpp |  2 +-
- llvm/unittests/Support/CommandLineTest.cpp |  4 ++++
- llvm/unittests/Support/Path.cpp            |  2 +-
- llvm/unittests/Support/ProgramTest.cpp     |  8 ++++----
- 6 files changed, 22 insertions(+), 6 deletions(-)
+ llvm/unittests/CAS/ObjectStoreTest.cpp     | 2 ++
+ llvm/unittests/CAS/OnDiskCASLoggerTest.cpp | 2 +-
+ llvm/unittests/Support/CommandLineTest.cpp | 4 ++++
+ llvm/unittests/Support/Path.cpp            | 2 +-
+ llvm/unittests/Support/ProgramTest.cpp     | 8 ++++----
+ 5 files changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/llvm/tools/libCASPluginTest/CMakeLists.txt b/llvm/tools/libCASPluginTest/CMakeLists.txt
-index a37c8dc603c535a7da08d9aa53d3bd81ceb08200..611af9440b47442d8e09c00a385033611592bf26 100644
---- a/llvm/tools/libCASPluginTest/CMakeLists.txt
-+++ b/llvm/tools/libCASPluginTest/CMakeLists.txt
-@@ -19,4 +19,14 @@ set(LLVM_EXPORTED_SYMBOL_FILE ${CMAKE_CURRENT_SOURCE_DIR}/libCASPluginTest.expor
- # Only loaded by CAS unit tests out of the build tree.
- add_llvm_library(CASPluginTest SHARED BUILDTREE_ONLY ${SOURCES}
-   LINK_LIBS ${LLVM_PTHREAD_LIB}
-+  BUILDTREE_ONLY
- )
-+
-+if (CYGWIN)
-+  # Create unversioned symlink manually (e.g. cygCASPluginTest.dll -> cygCASPluginTest-0.0.dll)
-+  # since CMake doesn't generate it for Cygwin.
-+  add_custom_command(TARGET CASPluginTest POST_BUILD
-+    COMMAND ${CMAKE_COMMAND} -E create_symlink "$<TARGET_FILE_NAME:CASPluginTest>"
-+    "$<TARGET_FILE_DIR:CASPluginTest>/$<TARGET_FILE_PREFIX:CASPluginTest>CASPluginTest$<TARGET_FILE_SUFFIX:CASPluginTest>")
-+endif()
-+
 diff --git a/llvm/unittests/CAS/ObjectStoreTest.cpp b/llvm/unittests/CAS/ObjectStoreTest.cpp
 index aff7f783ee9abff4db6810b53c4c35018811cddd..db45ef011afbc24038beaac42057ea02edd245fe 100644
 --- a/llvm/unittests/CAS/ObjectStoreTest.cpp

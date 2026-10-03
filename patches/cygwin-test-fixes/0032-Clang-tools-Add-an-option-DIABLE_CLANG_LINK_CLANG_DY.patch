@@ -1,4 +1,4 @@
-From 2303568ba0b212b170a7ff50c301889b6c02f94a Mon Sep 17 00:00:00 2001
+From 306f93c098f435ed20aaba89f9bb9b5e5667b14f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 21:20:11 +0900
 Subject: [PATCH 32/64] [Clang-tools] Add an option

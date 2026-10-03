@@ -1,4 +1,4 @@
-From 3d1239ba9cce58e42114068daf7a4928e2ae7dd1 Mon Sep 17 00:00:00 2001
+From aff398b262a1920e85efcafd940113ed039d9e87 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 21 Sep 2026 08:47:38 +0900
 Subject: [PATCH 09/39] don't warn about dllexport
@@ -9,10 +9,10 @@ Subject: [PATCH 09/39] don't warn about dllexport
  2 files changed, 13 insertions(+), 17 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index d61dc28da6ea0642323c7a383126cee0a165c9c4..157c0c8c1812999931395a2996811a6fbb9a21d1 100644
+index 54bba246ae28fef093ba91cf1cba620c9fa6fd9a..3e53be555b600df9cab26d287f65f7815126fb23 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
-@@ -10601,9 +10601,10 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10616,9 +10616,10 @@ DeclResult Sema::ActOnExplicitInstantiation(
        DLLAttrAffected = true;
      }
  

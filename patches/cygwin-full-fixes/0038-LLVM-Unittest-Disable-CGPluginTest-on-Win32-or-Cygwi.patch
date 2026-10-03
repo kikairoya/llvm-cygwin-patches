@@ -1,4 +1,4 @@
-From fa11dca03938d0a631e07230ebc888986deb4336 Mon Sep 17 00:00:00 2001
+From 74a5827076bfad8e4169d49f18e3726d3849bd3e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 25 Sep 2026 06:11:51 +0900
 Subject: [PATCH 38/52] [LLVM][Unittest] Disable CGPluginTest on Win32 or

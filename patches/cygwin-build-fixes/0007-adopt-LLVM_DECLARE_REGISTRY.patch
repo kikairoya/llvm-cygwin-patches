@@ -1,7 +1,7 @@
-From 145e5a0dbf4ebac3794f2111b90e68efdf44b1d6 Mon Sep 17 00:00:00 2001
+From e3ccb12a118313b07fc1ad41ab4ea73004352328 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
-Subject: [PATCH 07/39] adopt LLVM_DECLARE_REGISTRY
+Subject: [PATCH 07/38] adopt LLVM_DECLARE_REGISTRY
 
 ---
  clang-tools-extra/clang-doc/Generators.cpp           |  2 +-
@@ -99,10 +99,10 @@ index 38461e3db4e6bd10dbbf46dde25d0462b119b480..f53f62e6902114e75c03ad571a96571e
 -LLVM_INSTANTIATE_REGISTRY(clang::clangd::FeatureModuleRegistry)
 +LLVM_DEFINE_REGISTRY(clang::clangd::FeatureModuleRegistry)
 diff --git a/clang-tools-extra/clangd/FeatureModule.h b/clang-tools-extra/clangd/FeatureModule.h
-index 90714fe9101a837a6abd9fa5ee2fec52ca5369d1..26d7f30e112eff5aa31854612a49b8046f58ccea 100644
+index c327f39e8a1d1a19c23154ca93ba61c2a6bd51f9..09d741ccbecfe97c43c05c0fdf76c3956d6e7178 100644
 --- a/clang-tools-extra/clangd/FeatureModule.h
 +++ b/clang-tools-extra/clangd/FeatureModule.h
-@@ -218,8 +218,6 @@ using FeatureModuleRegistry = llvm::Registry<FeatureModule>;
+@@ -229,8 +229,6 @@ using FeatureModuleRegistry = llvm::Registry<FeatureModule>;
  } // namespace clangd
  } // namespace clang
  
@@ -279,7 +279,7 @@ index 4c82fad98478f0f2786fc1fb919204fb4136fcad..cbd703b93765b644c4e273e86b8bcbd4
  static std::list<std::unique_ptr<ParsedAttrInfo>> instantiateEntries() {
    std::list<std::unique_ptr<ParsedAttrInfo>> Instances;
 diff --git a/clang/lib/Frontend/FrontendAction.cpp b/clang/lib/Frontend/FrontendAction.cpp
-index 27b45195702f4208c0b53cc59737b2131a475e86..43ab75ad9e0088494260bbd1413b3c86dd056a36 100644
+index 001ad1fd1e654ca7759d3ae2c9c8b3ecd1a4a7d8..4294b5a4261eb94b6cb231eaacee17066cfd61de 100644
 --- a/clang/lib/Frontend/FrontendAction.cpp
 +++ b/clang/lib/Frontend/FrontendAction.cpp
 @@ -53,7 +53,7 @@

@@ -1,7 +1,7 @@
-From d34446c17f044b31548a07105c61d66dc2fff0ef Mon Sep 17 00:00:00 2001
+From 6d775b0de248255317959668293ff382e0b416e3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
-Subject: [PATCH 02/52] [LLVM] Annotate LLVM_TEMPLATE_ABI
+Subject: [PATCH 02/51] [LLVM] Annotate LLVM_TEMPLATE_ABI
 
 ---
  llvm/include/llvm/ADT/SmallVector.h           |  4 ++--
@@ -101,7 +101,7 @@ index de43c9b25017125429151b31e9bf30857e542bf4..2cba8c4281c8b19c6d5eea1af79ca21d
  namespace DomTreeBuilder {
  using BBDomTree = DomTreeBase<BasicBlock>;
 diff --git a/llvm/include/llvm/IR/PassManager.h b/llvm/include/llvm/IR/PassManager.h
-index c626e3a63ac0e9bb2ac238c7471a767124510fad..f594b17dee9d20816a0ca039f58d88a474a00821 100644
+index e3ccface423a724d9e34be36b497e7ab6c62805e..de05b0e03b318a222648339fab6d0f13a88fe2c4 100644
 --- a/llvm/include/llvm/IR/PassManager.h
 +++ b/llvm/include/llvm/IR/PassManager.h
 @@ -607,7 +607,7 @@ using FunctionAnalysisManager = AnalysisManager<Function>;

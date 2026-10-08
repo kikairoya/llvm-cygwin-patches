@@ -1,0 +1,26 @@
+From 3767256f280cd2110052de5439198e22ec170e71 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Fri, 25 Sep 2026 06:11:51 +0900
+Subject: [PATCH 37/38] [LLVM][Unittest] Disable CGPluginTest on Win32 or
+ Cygwin
+
+---
+ llvm/unittests/CodeGen/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/llvm/unittests/CodeGen/CMakeLists.txt b/llvm/unittests/CodeGen/CMakeLists.txt
+index cee089e335c9b69260bc155c95a41a449e3e18c5..eb1f6436deef516ae9d31e226a2e593962a72bd8 100644
+--- a/llvm/unittests/CodeGen/CMakeLists.txt
++++ b/llvm/unittests/CodeGen/CMakeLists.txt
+@@ -61,7 +61,7 @@ add_llvm_unittest(CodeGenTests
+ 
+ add_subdirectory(GlobalISel)
+ 
+-if (LLVM_ENABLE_PLUGINS)
++if (LLVM_ENABLE_PLUGINS AND NOT (WIN32 OR CYGWIN))
+   add_subdirectory(CGPluginTest)
+ endif()
+ 
+-- 
+2.55.0
+

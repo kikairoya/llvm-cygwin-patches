@@ -1,4 +1,4 @@
-From 8cece8baebac1fe02a121e08b14e781137e667eb Mon Sep 17 00:00:00 2001
+From 75ce356a1608982514d8673ca0ab3fc011bc91ba Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/38] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -114,7 +114,7 @@ index 6c1a378aadedac888c61c2bb3de342bd158bfde6..249c8914fa6244e48b5ae7bd0d35e7ec
    using Base::operator=;
  
 diff --git a/llvm/include/llvm/CodeGen/SlotIndexes.h b/llvm/include/llvm/CodeGen/SlotIndexes.h
-index 7747563534f954bb75945f9c54aab40d9a652500..e3d190d96c8bd8d15b29e5ac8fd58cc8b7dada35 100644
+index 542a6beb0ed01696cd3e89399088fd9b743a892d..3690fd4ad6d75b15ffc432b2311bb9afb71002c2 100644
 --- a/llvm/include/llvm/CodeGen/SlotIndexes.h
 +++ b/llvm/include/llvm/CodeGen/SlotIndexes.h
 @@ -116,7 +116,7 @@ class raw_ostream;

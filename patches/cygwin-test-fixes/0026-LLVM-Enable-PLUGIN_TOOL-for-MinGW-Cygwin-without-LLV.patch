@@ -1,4 +1,4 @@
-From 74c8ce9806a775f4fccc5dd87d5fbc2f14ab8edd Mon Sep 17 00:00:00 2001
+From 37867919089d2aef7fb6dd53e36cd07c689d27f5 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 9 Apr 2026 19:37:48 +0900
 Subject: [PATCH 26/63] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
@@ -9,7 +9,7 @@ Subject: [PATCH 26/63] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
  1 file changed, 41 insertions(+), 4 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index c86c7a11ccd74be95c35ef386d6edda49a2013a7..fc3ca90be0d77a8bc708c3c6737112af2b95ac79 100644
+index 123d584c2e6aad6e25b9714931ca736308f1e460..b2650492614fc8ce3bc4b98bbe3e940a8caed322 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
 @@ -639,6 +639,17 @@ function(llvm_add_library name)
@@ -30,7 +30,7 @@ index c86c7a11ccd74be95c35ef386d6edda49a2013a7..fc3ca90be0d77a8bc708c3c6737112af
    else()
      if(ARG_PLUGIN_TOOL)
        message(WARNING "PLUGIN_TOOL without MODULE doesn't make sense.")
-@@ -871,7 +882,7 @@ function(llvm_add_library name)
+@@ -872,7 +883,7 @@ function(llvm_add_library name)
      set(libtype PRIVATE)
    endif()
  
@@ -39,7 +39,7 @@ index c86c7a11ccd74be95c35ef386d6edda49a2013a7..fc3ca90be0d77a8bc708c3c6737112af
      # On DLL platforms symbols are imported from the tool by linking against it.
      set(llvm_libs ${ARG_PLUGIN_TOOL})
    elseif (NOT ARG_COMPONENT_LIB)
-@@ -1547,6 +1558,21 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
+@@ -1548,6 +1559,21 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
    set_target_properties(${target} PROPERTIES INTERFACE_LINK_LIBRARIES "${other_libs}")
  endfunction()
  
@@ -61,7 +61,7 @@ index c86c7a11ccd74be95c35ef386d6edda49a2013a7..fc3ca90be0d77a8bc708c3c6737112af
  function(export_executable_symbols target)
    if (LLVM_EXPORTED_SYMBOL_FILE)
      # The symbol file should contain the symbols we want the executable to
-@@ -1565,10 +1591,21 @@ function(export_executable_symbols target)
+@@ -1566,10 +1592,21 @@ function(export_executable_symbols target)
          CALL do_export_executable_symbols_for_plugins [[${target}]] [[${exported_symbol_file}]]
        )
      ")

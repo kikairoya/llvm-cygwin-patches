@@ -1,4 +1,4 @@
-From 8d398229c2c7da4c5126c2105e5ca086922da8ea Mon Sep 17 00:00:00 2001
+From f36a16f90ce6b61d2290a73b71ad6c9c3e765850 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 May 2025 12:04:02 +0900
 Subject: [PATCH 55/63] [JIT][Test][Cygwin] Diverge expected result
@@ -88,10 +88,10 @@ index 9a822fc7ed55654339252523d066568d1e89dc7c..d7898170739ae8cd602b0be2efd4ae75
  
  @o = common global i32 0, align 4
 diff --git a/llvm/test/lit.cfg.py b/llvm/test/lit.cfg.py
-index f988ac31eccfc153f2bb36ebda15b07fc59329bc..f8f8dce0490fb8308692c2dc608b8d9896443e59 100644
+index a320ddc3c36ab14b7e5697a6bb6295eee4b9fbbe..12b2931e4b5ab362ac6ede9130fa525c33f97a46 100644
 --- a/llvm/test/lit.cfg.py
 +++ b/llvm/test/lit.cfg.py
-@@ -732,7 +732,7 @@ def host_unwind_supports_jit():
+@@ -726,7 +726,7 @@ def host_unwind_supports_jit():
          return True
  
      # Windows does not support frame info without the ORC runtime.

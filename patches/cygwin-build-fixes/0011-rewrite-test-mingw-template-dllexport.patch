@@ -1,4 +1,4 @@
-From 0e6af13b84fe08332877af64557bd54e7fce0aa4 Mon Sep 17 00:00:00 2001
+From 4dfabf0b40ba88be5d0ae529b8cde9e3d42fc91d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 14 Mar 2026 10:54:46 +0900
 Subject: [PATCH 11/38] rewrite test mingw-template-dllexport

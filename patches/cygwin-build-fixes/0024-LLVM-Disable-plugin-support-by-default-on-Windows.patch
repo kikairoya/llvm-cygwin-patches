@@ -1,4 +1,4 @@
-From a56a2066e3fd4d37199acbf956a30632712aa4ec Mon Sep 17 00:00:00 2001
+From def6ec7bf217f2d7ad12ffc1d0d8f7d7d0d82c3a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 18 Jul 2026 15:29:18 +0900
 Subject: [PATCH 24/38] [LLVM] Disable plugin support by default on Windows
@@ -8,7 +8,7 @@ Subject: [PATCH 24/38] [LLVM] Disable plugin support by default on Windows
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
-index 28e96fc28b5aa660fe821507cf78a490abaad973..8cd2aed147f38029c9df4af89e441e9f12d5ff5f 100644
+index 5dd8797b506792d83835c02036131f30b0ca00e2..8614c7becae0f462bf98909b493918c690064149 100644
 --- a/llvm/CMakeLists.txt
 +++ b/llvm/CMakeLists.txt
 @@ -1113,7 +1113,7 @@ message(STATUS "LLVM default target triple: ${LLVM_DEFAULT_TARGET_TRIPLE}")

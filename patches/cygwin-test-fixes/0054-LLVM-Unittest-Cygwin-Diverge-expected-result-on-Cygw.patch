@@ -1,16 +1,16 @@
-From 3821cf0573092b0bd5f804b359b688b87eb80e91 Mon Sep 17 00:00:00 2001
+From 8168d212ee9f48f5824ce5a0f2a2663db3c79032 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Mar 2026 20:30:47 +0900
 Subject: [PATCH 54/63] [LLVM][Unittest][Cygwin] Diverge expected result on
  Cygwin host
 
 ---
- llvm/unittests/CAS/ObjectStoreTest.cpp     | 2 ++
- llvm/unittests/CAS/OnDiskCASLoggerTest.cpp | 2 +-
- llvm/unittests/Support/CommandLineTest.cpp | 4 ++++
- llvm/unittests/Support/Path.cpp            | 2 +-
- llvm/unittests/Support/ProgramTest.cpp     | 8 ++++----
- 5 files changed, 12 insertions(+), 6 deletions(-)
+ llvm/unittests/CAS/ObjectStoreTest.cpp     |  2 ++
+ llvm/unittests/CAS/OnDiskCASLoggerTest.cpp |  2 +-
+ llvm/unittests/Support/CommandLineTest.cpp |  4 ++++
+ llvm/unittests/Support/Path.cpp            |  2 +-
+ llvm/unittests/Support/ProgramTest.cpp     | 12 +++++++++---
+ 5 files changed, 17 insertions(+), 5 deletions(-)
 
 diff --git a/llvm/unittests/CAS/ObjectStoreTest.cpp b/llvm/unittests/CAS/ObjectStoreTest.cpp
 index aff7f783ee9abff4db6810b53c4c35018811cddd..db45ef011afbc24038beaac42057ea02edd245fe 100644
@@ -46,7 +46,7 @@ index 61cd5d013eeb77dd71f42abf36825071b00cd007..e37c12d57d613439f705ce67abcd41da
  static void writeToLog(OnDiskCASLogger *Logger, int NumOpens, int NumEntries) {
    StringRef Path = "/fake_cas/index";
 diff --git a/llvm/unittests/Support/CommandLineTest.cpp b/llvm/unittests/Support/CommandLineTest.cpp
-index fc5d93acf87b860eee964af2d2ea7e9159a68bb8..720e3b499856ac6fd1ad3548bcddc602b81afdb7 100644
+index ccf45962ba04fc360b15c158a7a3729f053d0a0c..4cfb1ec02cb1c6d7896142ca38027736e4b4830f 100644
 --- a/llvm/unittests/Support/CommandLineTest.cpp
 +++ b/llvm/unittests/Support/CommandLineTest.cpp
 @@ -971,7 +971,11 @@ TEST(CommandLineTest, ResponseFileWindows) {
@@ -75,15 +75,25 @@ index 31599f6152e926fda71b33b4b8a78d243aa63cfc..195a75f96028681ed67d64edf7b69940
    EXPECT_TRUE(CheckPermissions(fs::no_perms));
  
 diff --git a/llvm/unittests/Support/ProgramTest.cpp b/llvm/unittests/Support/ProgramTest.cpp
-index af45336b388910aed735c063701a21b100495b92..a7ded3b39be948bb9d2f06ebfd7b0bc508b42ecb 100644
+index d78c86655ef603182ba72e9d903d169fdfcd46a9..f9c6ee6ac26e34cc45beaee295ca575ff076678f 100644
 --- a/llvm/unittests/Support/ProgramTest.cpp
 +++ b/llvm/unittests/Support/ProgramTest.cpp
-@@ -696,11 +696,11 @@ TEST_F(ProgramEnvTest, TestExecuteEmptyEnvironment) {
-       ExecuteAndWait(Executable, argv, ArrayRef<StringRef>{}, {}, 0, 0, &Error,
-                      &ExecutionFailed);
+@@ -681,6 +681,12 @@ TEST_F(ProgramEnvTest, TestExecuteWithNoStacktraceHandler) {
+ }
+ 
+ TEST_F(ProgramEnvTest, TestExecuteEmptyEnvironment) {
++#ifdef __CYGWIN__
++  // Cygwin needs to be cygwin1.dll in PATH.
++  // The workaround below for Windows doesn't work since RetCode is translated
++  // to unix style.
++  GTEST_SKIP();
++#endif
+   using namespace llvm::sys;
+ 
+   std::string Executable =
+@@ -698,9 +704,9 @@ TEST_F(ProgramEnvTest, TestExecuteEmptyEnvironment) {
    EXPECT_FALSE(ExecutionFailed) << Error;
--#ifndef __MINGW32__
-+#if !defined(__MINGW32__) && !defined(__CYGWIN__)
+ #ifdef _WIN32
    // When running with an empty environment, the child process doesn't in herit
 -  // the PATH variable. On MinGW, it is common for executables to require a
 -  // shared libstdc++ or libc++ DLL, which may be in PATH but not in the
@@ -92,8 +102,8 @@ index af45336b388910aed735c063701a21b100495b92..a7ded3b39be948bb9d2f06ebfd7b0bc5
 +  // require a shared libstdc++ or libc++ DLL, which may be in PATH but not in
 +  // the directory of SupportTests.exe - leading to STATUS_DLL_NOT_FOUND errors.
    // Therefore, waive this failure in MinGW environments.
-   ASSERT_EQ(0, RetCode);
- #endif
+   // This can also happen in MSVC mode environments when the unittest is linked
+   // against LLVM.dll.
 -- 
 2.55.0
 

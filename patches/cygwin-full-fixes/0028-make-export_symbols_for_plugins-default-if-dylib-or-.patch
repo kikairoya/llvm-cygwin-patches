@@ -1,4 +1,4 @@
-From 5b14798d932a3e896f3e7f63fe77cfa274ab0561 Mon Sep 17 00:00:00 2001
+From 462f313508a90b3ae13fa3d19a7577fa01b35ff8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 22:36:50 +0900
 Subject: [PATCH 28/51] make export_symbols_for_plugins default if dylib or
@@ -9,7 +9,7 @@ Subject: [PATCH 28/51] make export_symbols_for_plugins default if dylib or
  1 file changed, 22 insertions(+), 15 deletions(-)
 
 diff --git a/llvm/cmake/modules/HandleLLVMOptions.cmake b/llvm/cmake/modules/HandleLLVMOptions.cmake
-index 943418f7ec0da6117eb5788eb74b8e4e4f1ad78f..e753329209f44acfd2013e55ffc3f2ef034e41be 100644
+index 8d1e8392928f1eec0001a9a800685a27e1ac396e..e171b1e49d298209907ca4e4794cfb70f69549fb 100644
 --- a/llvm/cmake/modules/HandleLLVMOptions.cmake
 +++ b/llvm/cmake/modules/HandleLLVMOptions.cmake
 @@ -1576,13 +1576,6 @@ if(LLVM_ENABLE_FATLTO AND ((UNIX AND NOT APPLE) OR FUCHSIA))

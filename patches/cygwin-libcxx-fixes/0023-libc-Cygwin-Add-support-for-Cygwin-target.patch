@@ -1,6 +1,6 @@
-From 0f23f10d1ac689c9d9020717c162a0e196f1978a Mon Sep 17 00:00:00 2001
+From f74a0b6c303d0a9d1697c0754c6f78c18dc3214c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
-Date: Sun, 8 Jun 2025 22:25:26 +0900
+Date: Tue, 13 Oct 2026 20:15:01 +0900
 Subject: [PATCH 23/35] [libc++][Cygwin] Add support for Cygwin target
 
 ---
@@ -9,8 +9,9 @@ Subject: [PATCH 23/35] [libc++][Cygwin] Add support for Cygwin target
  libcxx/include/__config                     |  5 ++++
  libcxx/include/__configuration/attributes.h |  5 ++--
  libcxx/include/__configuration/platform.h   |  2 +-
+ libcxx/src/debugging.cpp                    |  2 +-
  libcxx/src/filesystem/posix_compat.h        |  4 +++-
- 6 files changed, 47 insertions(+), 6 deletions(-)
+ 7 files changed, 48 insertions(+), 7 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
 index d163f0f579c3954f52cdc7fe84789d6d14202619..9b3fd9ef6f7df1fc0a8ed38c1efd304fd095adec 100644
@@ -156,6 +157,19 @@ index ebd638e663215d9d440bbc625c1e6e4c91339f4d..06f106915f31cdb84563542b77a3ee5e
  #  define _LIBCPP_OBJECT_FORMAT_COFF 1
  #elif defined(__wasm__)
  #  define _LIBCPP_OBJECT_FORMAT_WASM 1
+diff --git a/libcxx/src/debugging.cpp b/libcxx/src/debugging.cpp
+index ea4eccaae5a44726885e5cbbe94be7210ca3373a..6484ade6a5e4092de811cdf6293790dfc57569ab 100644
+--- a/libcxx/src/debugging.cpp
++++ b/libcxx/src/debugging.cpp
+@@ -10,7 +10,7 @@
+ #  include "debugging/linux.ipp"
+ #elif defined(__FREEBSD__) || defined(__APPLE__)
+ #  include "debugging/bsd_like.ipp"
+-#elif defined(_WIN32)
++#elif defined(_WIN32) || defined(__CYGWIN__)
+ #  include "debugging/windows.ipp"
+ #elif defined(_AIX)
+ #  include "debugging/aix.ipp"
 diff --git a/libcxx/src/filesystem/posix_compat.h b/libcxx/src/filesystem/posix_compat.h
 index f5119aebcbefb291c1381e9d496c3e67bc27c680..07649867872428cf33050364c055319ab6106cc6 100644
 --- a/libcxx/src/filesystem/posix_compat.h

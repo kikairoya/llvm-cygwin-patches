@@ -1,4 +1,4 @@
-From 8e283de56c7ca820ef7acf2e0512a0913b9c074a Mon Sep 17 00:00:00 2001
+From 793d916813c1875e45d2d205d59f3341a0b8705e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:29:58 +0900
 Subject: [PATCH 12/51] [Clang] Let an explicit specialization not to prevent
@@ -28,10 +28,10 @@ index f80fb2a3446b38d519b6618892fc6930f5bf2a86..557ba06ce9246dc3a3d0c7a51a0bb363
      // Only methods and static fields inherit the attributes.
      if (!VD && !MD)
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index 58422078240316fdbbd7eb14162b8bfcb59f0423..55a6342c357966c6cab26ea00ead0257d35258b2 100644
+index 1d3342ae57b0308efe2d136534db772cfd80da04..f5cf3252f249908936da446508f1edd8388d7cec 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
-@@ -10350,7 +10350,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10345,7 +10345,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
                                         ? TSK_ExplicitInstantiationDefinition
                                         : TSK_ExplicitInstantiationDeclaration;
  
@@ -40,7 +40,7 @@ index 58422078240316fdbbd7eb14162b8bfcb59f0423..55a6342c357966c6cab26ea00ead0257
    const ParsedAttr *AttachedExportAttr = nullptr;
    const ParsedAttr *AttachedImportAttr = nullptr;
    for (const ParsedAttr &AL : Attr) {
-@@ -10368,14 +10368,14 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10363,14 +10363,14 @@ DeclResult Sema::ActOnExplicitInstantiation(
        Diag(ExternLoc,
             diag::warn_attribute_dllexport_explicit_instantiation_decl);
        Diag(AttachedExportAttr->getLoc(), diag::note_attribute);
@@ -57,7 +57,7 @@ index 58422078240316fdbbd7eb14162b8bfcb59f0423..55a6342c357966c6cab26ea00ead0257
      }
    }
  
-@@ -10429,11 +10429,11 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10424,11 +10424,11 @@ DeclResult Sema::ActOnExplicitInstantiation(
               diag::warn_attr_dllexport_explicit_inst_def_mismatch);
          Diag(PrevDecl->getLocation(), diag::note_prev_decl_missing_dllexport);
        }
@@ -71,7 +71,7 @@ index 58422078240316fdbbd7eb14162b8bfcb59f0423..55a6342c357966c6cab26ea00ead0257
      }
    }
  
-@@ -10443,7 +10443,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10438,7 +10438,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
      if (const auto *DEA = PrevDecl->getAttr<DLLExportOnDeclAttr>()) {
        Diag(TemplateLoc, diag::warn_dllexport_on_decl_ignored);
        Diag(DEA->getLoc(), diag::note_dllexport_on_decl);
@@ -80,7 +80,7 @@ index 58422078240316fdbbd7eb14162b8bfcb59f0423..55a6342c357966c6cab26ea00ead0257
      }
    }
  
-@@ -10558,7 +10558,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10553,7 +10553,7 @@ DeclResult Sema::ActOnExplicitInstantiation(
      InstantiateClassTemplateSpecialization(TemplateNameLoc, Specialization, TSK,
                                             /*Complain=*/true,
                                             CTAI.StrictPackMatch);
@@ -89,7 +89,7 @@ index 58422078240316fdbbd7eb14162b8bfcb59f0423..55a6342c357966c6cab26ea00ead0257
    } else if (TSK == TSK_ExplicitInstantiationDefinition) {
      MarkVTableUsed(TemplateNameLoc, Specialization, true);
      Specialization->setPointOfInstantiation(Def->getPointOfInstantiation());
-@@ -10576,76 +10576,81 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10571,76 +10571,81 @@ DeclResult Sema::ActOnExplicitInstantiation(
           DLLImportExplicitInstantiationDef)) {
        // FIXME: Need to notify the ASTMutationListener that we did this.
        Def->setTemplateSpecializationKind(TSK);

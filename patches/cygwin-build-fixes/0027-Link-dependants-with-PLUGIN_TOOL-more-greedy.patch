@@ -1,4 +1,4 @@
-From cd76bc5678f262b849028e780ff6e66336714044 Mon Sep 17 00:00:00 2001
+From 69ecf36073bcd64a1fa5ad527cd6554f9cc5240e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 31 Jul 2026 22:57:24 +0900
 Subject: [PATCH 27/38] Link dependants with PLUGIN_TOOL more greedy
@@ -8,7 +8,7 @@ Subject: [PATCH 27/38] Link dependants with PLUGIN_TOOL more greedy
  1 file changed, 31 insertions(+), 35 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index b2650492614fc8ce3bc4b98bbe3e940a8caed322..99614240a01e7e045be43e14137d7eeea493f4c2 100644
+index 05ca179c7a0fe3c43be810f9296aa6557d5745cb..078cf0352ae33fa8aceb6f4d4b9df76f8731845f 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
 @@ -1515,7 +1515,11 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)

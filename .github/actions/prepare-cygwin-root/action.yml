@@ -116,6 +116,7 @@ runs:
           clang
           lld
           cmake
+          gdb
           git
           make
           ninja

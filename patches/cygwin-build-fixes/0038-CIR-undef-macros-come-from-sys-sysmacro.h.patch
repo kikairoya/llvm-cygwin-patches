@@ -1,4 +1,4 @@
-From 68bfccbb3a902620e566a4f1fb192f0cb3570a52 Mon Sep 17 00:00:00 2001
+From 03ee79c0212b42f55d900c23e5796aabbed9acd4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 18 Sep 2026 22:46:51 +0900
 Subject: [PATCH 38/38] [CIR] undef macros come from sys/sysmacro.h

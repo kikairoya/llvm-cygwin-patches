@@ -1,7 +1,7 @@
-From 4cb50d8c07553179700db05bb04fac7c3b8975bc Mon Sep 17 00:00:00 2001
+From 026e64ee394413669932e7574d1e0a738d9bf6fe Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 23 Jul 2026 19:54:57 +0900
-Subject: [PATCH 52/63] [Cygwin] adjust lit test stability
+Subject: [PATCH 52/64] [Cygwin] adjust lit test stability
 
 ---
  llvm/utils/lit/lit/TestRunner.py | 10 ++++++++--

@@ -1,4 +1,4 @@
-From a474c609935e361554e9d1e25f2dfc17632a8c9c Mon Sep 17 00:00:00 2001
+From 664a92284e35d196b3fe118be2f8a63b8a1e83ba Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 9 Jul 2025 21:23:51 +0900
 Subject: [PATCH 36/38] [Clang-Python][Test][Cygwin] Make check-clang-python

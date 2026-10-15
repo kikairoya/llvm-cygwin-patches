@@ -1,4 +1,4 @@
-From f74a0b6c303d0a9d1697c0754c6f78c18dc3214c Mon Sep 17 00:00:00 2001
+From 91804e2b4df14be7dc9469e18ffc8ff974645948 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 13 Oct 2026 20:15:01 +0900
 Subject: [PATCH 23/35] [libc++][Cygwin] Add support for Cygwin target
@@ -158,12 +158,12 @@ index ebd638e663215d9d440bbc625c1e6e4c91339f4d..06f106915f31cdb84563542b77a3ee5e
  #elif defined(__wasm__)
  #  define _LIBCPP_OBJECT_FORMAT_WASM 1
 diff --git a/libcxx/src/debugging.cpp b/libcxx/src/debugging.cpp
-index ea4eccaae5a44726885e5cbbe94be7210ca3373a..6484ade6a5e4092de811cdf6293790dfc57569ab 100644
+index 6a4d21dd7a71e742be506150a85e2d5b44c34bef..01a610bd49f107a31e8271667480751bedefaa7b 100644
 --- a/libcxx/src/debugging.cpp
 +++ b/libcxx/src/debugging.cpp
 @@ -10,7 +10,7 @@
  #  include "debugging/linux.ipp"
- #elif defined(__FREEBSD__) || defined(__APPLE__)
+ #elif defined(__FreeBSD__) || defined(__APPLE__)
  #  include "debugging/bsd_like.ipp"
 -#elif defined(_WIN32)
 +#elif defined(_WIN32) || defined(__CYGWIN__)

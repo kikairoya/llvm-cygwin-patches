@@ -1,7 +1,7 @@
-From fba9b490df895d7ebf94e21cd848dfe1399f35d4 Mon Sep 17 00:00:00 2001
+From e1a13c141b5f3e83ebf33a443f9f9767a56fb6c3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 17 Jun 2025 07:46:03 +0900
-Subject: [PATCH 48/63] [Interpreter][Cygwin] Workaround for laking of
+Subject: [PATCH 48/64] [Interpreter][Cygwin] Workaround for laking of
  __register_frame
 
 ---

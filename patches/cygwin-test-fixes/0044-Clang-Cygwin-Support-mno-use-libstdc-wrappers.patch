@@ -1,7 +1,7 @@
-From 2d53b5674bb4b6d48ac2b72702975603c1c2869b Mon Sep 17 00:00:00 2001
+From a0f0abbe285df58cd8bf1212ccceed51a949f8c4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 6 Sep 2026 13:15:09 +0900
-Subject: [PATCH 44/63] [Clang][Cygwin] Support -mno-use-libstdc-wrappers
+Subject: [PATCH 44/64] [Clang][Cygwin] Support -mno-use-libstdc-wrappers
 
 Cygwin provides a mechanism to share overridden `operator new`, etc., in a DLL from a host EXE or other DLLs, by
 cooperating with the linker's `--wrap` option.
@@ -14,7 +14,7 @@ This patch implements it to align with GCC.
  3 files changed, 29 insertions(+), 18 deletions(-)
 
 diff --git a/clang/include/clang/Options/Options.td b/clang/include/clang/Options/Options.td
-index 1adc5f8399e4bbeb71bdeff883a683e8201d7fad..2560998479cc41478d3e29fcd56a2e107fa4aa31 100644
+index 09f614b1e8b078b67aa046f7ea5ab28c1773da4d..aa804e4d83f994368dd4660fe293f9b196551567 100644
 --- a/clang/include/clang/Options/Options.td
 +++ b/clang/include/clang/Options/Options.td
 @@ -5657,6 +5657,8 @@ def mconsole : Joined<["-"], "mconsole">, Group<m_Group>;

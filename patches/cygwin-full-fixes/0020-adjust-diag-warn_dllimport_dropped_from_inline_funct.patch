@@ -1,4 +1,4 @@
-From 341ee490235294d24ef7f3256e45fa1b28640ff4 Mon Sep 17 00:00:00 2001
+From 8446d09c431d52ea1a7ae5f064cff0bcdab9fe24 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 30 Mar 2026 18:56:01 +0900
 Subject: [PATCH 20/51] adjust
@@ -9,10 +9,10 @@ Subject: [PATCH 20/51] adjust
  1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDecl.cpp b/clang/lib/Sema/SemaDecl.cpp
-index 1459b71326375a06b37d59d22f0e8a22d90ae08c..976ac228a3b165f45d8bd864fc061c208c82779b 100644
+index fba96fe7abb2bc9d6dc55dc60c65e7db282a94b1..95a261eda75e9e8ca9fcf57c2933367920d85588 100644
 --- a/clang/lib/Sema/SemaDecl.cpp
 +++ b/clang/lib/Sema/SemaDecl.cpp
-@@ -7458,14 +7458,16 @@ static void checkDLLAttributeRedeclaration(Sema &S, NamedDecl *OldDecl,
+@@ -7471,14 +7471,16 @@ static void checkDLLAttributeRedeclaration(Sema &S, NamedDecl *OldDecl,
        OldDecl->dropAttr<DLLImportAttr>();
        NewDecl->dropAttr<DLLImportAttr>();
      }
@@ -34,5 +34,5 @@ index 1459b71326375a06b37d59d22f0e8a22d90ae08c..976ac228a3b165f45d8bd864fc061c20
  
    // A specialization of a class template member function is processed here
 -- 
-2.55.0
+2.56.0
 

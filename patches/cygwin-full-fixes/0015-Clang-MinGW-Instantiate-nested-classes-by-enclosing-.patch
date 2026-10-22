@@ -1,4 +1,4 @@
-From d1133ddbd0902c8d0be812d26d0c9d16ea0ab95b Mon Sep 17 00:00:00 2001
+From d76c88406cdfc9801701a98f196591deabc0fbb3 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:30:26 +0900
 Subject: [PATCH 15/51] [Clang][MinGW] Instantiate nested classes by enclosing
@@ -26,10 +26,10 @@ inherit to the nested class.
  2 files changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 557ba06ce9246dc3a3d0c7a51a0bb363de17b48a..bc0575320e2d676ed7d872e1a9945f441d9dd5f3 100644
+index 5526e88448134a89f61f9f711f6b68a02a150670..815aed8fffdda6a1027c0afb81dab43b15cd38ba 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
-@@ -6672,12 +6672,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6673,12 +6673,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
        cast<DLLImportAttr>(ClassAttr)->wasPropagatedToBaseTemplate();
  
    TemplateSpecializationKind TSK = Class->getTemplateSpecializationKind();
@@ -44,7 +44,7 @@ index 557ba06ce9246dc3a3d0c7a51a0bb363de17b48a..bc0575320e2d676ed7d872e1a9945f44
      if (auto *DEA = Class->getAttr<DLLExportAttr>()) {
        Class->addAttr(DLLExportOnDeclAttr::Create(Context, DEA->getLoc()));
        Class->dropAttr<DLLExportAttr>();
-@@ -6721,14 +6722,30 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6722,14 +6723,30 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
  
      VarDecl *VD = dyn_cast<VarDecl>(Member);
      CXXMethodDecl *MD = dyn_cast<CXXMethodDecl>(Member);
@@ -75,7 +75,7 @@ index 557ba06ce9246dc3a3d0c7a51a0bb363de17b48a..bc0575320e2d676ed7d872e1a9945f44
      // Only methods and static fields inherit the attributes.
      if (!VD && !MD)
        continue;
-@@ -6792,7 +6809,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6793,7 +6810,7 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
          // MinGW does not import or export inline methods. But do it for
          // template instantiations and inherited constructors (which are
          // marked inline but must be exported to match MSVC behavior).
@@ -97,5 +97,5 @@ index 036642f22bd8cb1eeac6837715164e907750edb8..9a48390177843307ffeb5df69324fa41
          // On Windows, explicit instantiation decl of the outer class doesn't
          // affect the inner class. Typically extern template declarations are
 -- 
-2.55.0
+2.56.0
 

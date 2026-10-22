@@ -1,4 +1,4 @@
-From 743900151e99288f792c6dc16b7bb73c44d211e4 Mon Sep 17 00:00:00 2001
+From 8b6b8ab49694728732d2f9ca1cde107f8479ed68 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 3 Apr 2026 19:24:01 +0900
 Subject: [PATCH 07/63] adopt LLVM_DECLARE_REGISTRY
@@ -292,7 +292,7 @@ index 001ad1fd1e654ca7759d3ae2c9c8b3ecd1a4a7d8..4294b5a4261eb94b6cb231eaacee1706
  namespace {
  
 diff --git a/clang/lib/Lex/Preprocessor.cpp b/clang/lib/Lex/Preprocessor.cpp
-index 84907adc5d744ae9fe144c129c579181b249b530..70cc274ebef509c2d47e700c16adc2bce03b07bc 100644
+index a8717424f1d15520bd661c6f44481f418a16061b..d24874f1f10aa527037f703bb9a6d1302d3a004b 100644
 --- a/clang/lib/Lex/Preprocessor.cpp
 +++ b/clang/lib/Lex/Preprocessor.cpp
 @@ -80,7 +80,7 @@ using namespace clang;
@@ -435,5 +435,5 @@ index 67f363d26b25f4c1e1eddef87bbdf56913176105..4f25a6ba3257d45d1a5eaef1cfbf2fe2
  GCStrategy::GCStrategy() = default;
  
 -- 
-2.55.0
+2.56.0
 

@@ -1,4 +1,4 @@
-From 46a9e7d6af533505c2b70f08e2cdf750ae36b0ff Mon Sep 17 00:00:00 2001
+From 3d9377abb208ce874fa020a32faa446651afb871 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 29 Jun 2026 00:53:37 +0900
 Subject: [PATCH 34/35] [libc++][Test][Cygwin] Diverge expected result for the
@@ -1101,5 +1101,5 @@ index da47f70378d941966bbb333d9cb9f65e7d584887..18ad39ab7aad336b8bae925f3aee939a
  
  # Add features representing the build host platform name.
 -- 
-2.55.0
+2.56.0
 

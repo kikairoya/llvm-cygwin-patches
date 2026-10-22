@@ -1,4 +1,4 @@
-From b13ce87dc03e4e76b542dc400b511ad132bd4751 Mon Sep 17 00:00:00 2001
+From 6910002852e68f7d15b1e658da9f453a1d7dd57b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 2/6] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -46,7 +46,7 @@ index d411cf014dd34b11008358f7ae96aef51d79c8fc..71a7c21e3d7a360e2a7c6c607fe7b55f
  else()
    set(COMPILER_RT_HAS_PROFILE FALSE)
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index bdc72d0053dc263065f6dbc8ca068d6391db8826..76d46fc4ea89c3946b4ee79d968c1d5d58a7d519 100644
+index ab9c707b3db44dc9b4d896c52c7a526cd4a95c05..5a34588347adab603311414255b3dc9998584c48 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -82,16 +82,16 @@ index bdc72d0053dc263065f6dbc8ca068d6391db8826..76d46fc4ea89c3946b4ee79d968c1d5d
        set(x86_64_SOURCES
          ${x86_64_SOURCES}
          x86_64/floatundixf.S
-@@ -438,7 +440,7 @@ if (NOT MSVC)
-   # Darwin x86_64 Haswell
-   set(x86_64h_SOURCES ${x86_64_SOURCES})
+@@ -441,7 +443,7 @@ if (NOT MSVC)
+   # x86_64 LFI
+   set(x86_64_lfi_SOURCES ${x86_64_SOURCES})
  
 -  if (WIN32)
 +  if (WIN32 OR CYGWIN)
      set(x86_64_SOURCES
        ${x86_64_SOURCES}
        x86_64/chkstk.S
-@@ -470,7 +472,7 @@ if (NOT MSVC)
+@@ -473,7 +475,7 @@ if (NOT MSVC)
      )
    endif()
  
@@ -100,7 +100,7 @@ index bdc72d0053dc263065f6dbc8ca068d6391db8826..76d46fc4ea89c3946b4ee79d968c1d5d
      set(i386_SOURCES
        ${i386_SOURCES}
        i386/chkstk.S
-@@ -753,7 +755,7 @@ set(arm_min_SOURCES
+@@ -756,7 +758,7 @@ set(arm_min_SOURCES
    ${arm_EABI_SOURCES}
  )
  
@@ -109,7 +109,7 @@ index bdc72d0053dc263065f6dbc8ca068d6391db8826..76d46fc4ea89c3946b4ee79d968c1d5d
    set(arm_SOURCES
      arm/aeabi_idivmod.S
      arm/aeabi_ldivmod.S
-@@ -864,7 +866,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
+@@ -867,7 +869,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
    endforeach(size)
  endforeach(pat)
  
@@ -176,5 +176,5 @@ index 59fa2af3165449afa226f7699a6be797f7ffa404..c6eb075e9cf74089449197079ff82b06
    Header.BitmapDelta = (uint32_t)Header.BitmapDelta;
    Header.UniformCountersDelta = (uint32_t)Header.UniformCountersDelta;
 -- 
-2.55.0
+2.56.0
 

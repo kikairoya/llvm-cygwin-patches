@@ -1,4 +1,4 @@
-From 668c91994a0c58c6268acc1e504a56af3a5feb37 Mon Sep 17 00:00:00 2001
+From 9fdc4c43ee597170b6ca30970a58117c53ef3718 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 21 Sep 2026 08:47:38 +0900
 Subject: [PATCH 09/51] don't warn about dllexport
@@ -9,10 +9,10 @@ Subject: [PATCH 09/51] don't warn about dllexport
  2 files changed, 13 insertions(+), 17 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index a5bb9a9a985a06ba097a23331612c057b06e3498..1d3342ae57b0308efe2d136534db772cfd80da04 100644
+index e09137161d89b55965768a732ae6239995d42a34..93bb2c5e7075fbc64c35c146e0cc8b4830f4b144 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
-@@ -10621,9 +10621,10 @@ DeclResult Sema::ActOnExplicitInstantiation(
+@@ -10637,9 +10637,10 @@ DeclResult Sema::ActOnExplicitInstantiation(
        DLLAttrAffected = true;
      }
  
@@ -84,5 +84,5 @@ index 51c37e0d53eda9ddfa5cfff72bd41d40be86dbcd..24f39d813b498bcbc9f79f3a86544f34
  template <> void ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>::specializedMember1();
  template struct __declspec(dllexport) ClassTmplSpecializedMember<true, InstTrig::Impl, InstTrig::Spec>;         // gnu-warning{{'dllexport' attribute ignored on explicit instantiation definition}}
 -- 
-2.55.0
+2.56.0
 

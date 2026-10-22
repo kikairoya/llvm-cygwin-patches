@@ -1,4 +1,4 @@
-From 75623098f3e581dc6ac66c2c60bfdc52167d70a1 Mon Sep 17 00:00:00 2001
+From 89bc8dcc54813aa204a8fa877f3d6dde9696a1ae Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 19:00:48 +0900
 Subject: [PATCH 13/63] update test
@@ -114,5 +114,5 @@ index c0266be95cd62b600b438cdc24e14a09ac7f673c..1440d02eccc1fcad549c2cab10f1f4c0
  template <> void ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl>::specializedMember1(); // non-gnu-note{{implicit instantiation first required here}}
  void anchor(ClassTmplSpecializedMember<false, InstTrig::Spec, InstTrig::Impl> &x) { x.instantiatedMember1(); }
 -- 
-2.55.0
+2.56.0
 

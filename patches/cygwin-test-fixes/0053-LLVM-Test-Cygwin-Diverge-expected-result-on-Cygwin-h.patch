@@ -1,4 +1,4 @@
-From 27fefb228f94f474a6730bad9bb7d2a4b72b20f3 Mon Sep 17 00:00:00 2001
+From dac7c9071edf54989ff7be9c5de335f4efa639d5 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Dec 2025 22:22:52 +0900
 Subject: [PATCH 53/63] [LLVM][Test][Cygwin] Diverge expected result on Cygwin
@@ -36,5 +36,5 @@ index 37626e7357b28b70283a643681a54d32652a1b39..67c9e4eb4386a2afe1632243bd301c3b
  
  * Directories are executable, but we don't want to try to execute them.
 -- 
-2.55.0
+2.56.0
 

@@ -1,4 +1,4 @@
-From 4cb50d8c07553179700db05bb04fac7c3b8975bc Mon Sep 17 00:00:00 2001
+From f9a459a527dc35b52372c91144dd91f1556bdfa8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 23 Jul 2026 19:54:57 +0900
 Subject: [PATCH 52/63] [Cygwin] adjust lit test stability
@@ -60,5 +60,5 @@ index a416c8da3eaff310ec616850b74c5bc0a08af34b..989b32ea93a1440e978babac151fe09d
  #
  # RUN: %{lit} %{inputs}/max-time --max-time=5 2>&1  |  FileCheck %s
 -- 
-2.55.0
+2.56.0
 

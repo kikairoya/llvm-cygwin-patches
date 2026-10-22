@@ -1,4 +1,4 @@
-From 2d53b5674bb4b6d48ac2b72702975603c1c2869b Mon Sep 17 00:00:00 2001
+From 0024b51cdd1b8a8f2490e61ab04858c24dc0bdab Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 6 Sep 2026 13:15:09 +0900
 Subject: [PATCH 44/51] [Clang][Cygwin] Support -mno-use-libstdc-wrappers
@@ -14,10 +14,10 @@ This patch implements it to align with GCC.
  3 files changed, 29 insertions(+), 18 deletions(-)
 
 diff --git a/clang/include/clang/Options/Options.td b/clang/include/clang/Options/Options.td
-index 1adc5f8399e4bbeb71bdeff883a683e8201d7fad..2560998479cc41478d3e29fcd56a2e107fa4aa31 100644
+index bc2d305fc45242ca50d8a2ddd176ef8087d5d5e5..2a13b7b2185159cdcaed1dfb00e392dd74771c20 100644
 --- a/clang/include/clang/Options/Options.td
 +++ b/clang/include/clang/Options/Options.td
-@@ -5657,6 +5657,8 @@ def mconsole : Joined<["-"], "mconsole">, Group<m_Group>;
+@@ -5671,6 +5671,8 @@ def mconsole : Joined<["-"], "mconsole">, Group<m_Group>;
  def mwindows : Joined<["-"], "mwindows">, Group<m_Group>;
  def mdll : Joined<["-"], "mdll">, Group<m_Group>;
  def municode : Joined<["-"], "municode">, Group<m_Group>;
@@ -94,5 +94,5 @@ index 66fa9fbcfc1e0ad5557326587b44307b527062f8..7c00ac0e1219b2d4c7b973b2bcb0e79c
  // RUN:                -resource-dir=%S/Inputs/resource_dir -rtlib=compiler-rt \
  // RUN:   2>&1 | FileCheck --check-prefix=CHECK-64-RTLIB %s
 -- 
-2.55.0
+2.56.0
 

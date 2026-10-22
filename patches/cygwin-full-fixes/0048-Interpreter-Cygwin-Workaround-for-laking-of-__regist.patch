@@ -1,4 +1,4 @@
-From fba9b490df895d7ebf94e21cd848dfe1399f35d4 Mon Sep 17 00:00:00 2001
+From cecdaa42d72b64cb9ffc5934e026ac5db023748d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 17 Jun 2025 07:46:03 +0900
 Subject: [PATCH 48/51] [Interpreter][Cygwin] Workaround for laking of
@@ -48,5 +48,5 @@ index 4be7f0b66fdae9b0da10f9ff292f6b26455ac039..e6937381afa34ad66410364303da3592
  ; UNSUPPORTED: target=powerpc64-unknown-linux-gnu
  ; Remove UNSUPPORTED for powerpc64-unknown-linux-gnu if problem caused by r266663 is fixed
 -- 
-2.55.0
+2.56.0
 

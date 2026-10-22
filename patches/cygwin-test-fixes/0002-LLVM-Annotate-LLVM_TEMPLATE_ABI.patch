@@ -1,4 +1,4 @@
-From 3f55a74c4620253a2c5859d80d1817ea1f9b0a6d Mon Sep 17 00:00:00 2001
+From a9abd88f1e64caa556b4e1509bf149c82a2829a8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
 Subject: [PATCH 02/63] [LLVM] Annotate LLVM_TEMPLATE_ABI
@@ -7,20 +7,18 @@ Subject: [PATCH 02/63] [LLVM] Annotate LLVM_TEMPLATE_ABI
  llvm/include/llvm/ADT/SmallVector.h           |  4 ++--
  .../include/llvm/CodeGen/MachinePassManager.h | 10 ++++----
  llvm/include/llvm/IR/Analysis.h               |  2 ++
- llvm/include/llvm/IR/Dominators.h             |  2 +-
  llvm/include/llvm/IR/PassManager.h            | 24 ++++---------------
  llvm/include/llvm/Object/XCOFFObjectFile.h    |  4 ++++
  llvm/lib/CodeGen/MachinePassManager.cpp       |  4 +++-
- llvm/lib/IR/Dominators.cpp                    |  2 +-
  llvm/lib/MCA/Support.cpp                      |  2 ++
  llvm/lib/Support/SmallVector.cpp              |  4 ++--
- 10 files changed, 27 insertions(+), 31 deletions(-)
+ 8 files changed, 25 insertions(+), 29 deletions(-)
 
 diff --git a/llvm/include/llvm/ADT/SmallVector.h b/llvm/include/llvm/ADT/SmallVector.h
-index c6469f689a3e160c51f4aabcaa5f38e08d6f19a3..38b2395114be8cd2d2701cbf3558e2879cd67699 100644
+index 98097fb97f85a143117da22872b4f6bfc3c6d8ad..c39871173187973b3b056d4d548e36939104cc14 100644
 --- a/llvm/include/llvm/ADT/SmallVector.h
 +++ b/llvm/include/llvm/ADT/SmallVector.h
-@@ -1382,9 +1382,9 @@ template <typename Out, typename R> SmallVector<Out> to_vector_of(R &&Range) {
+@@ -1393,9 +1393,9 @@ template <typename Out, typename R> SmallVector<Out> to_vector_of(R &&Range) {
  }
  
  // Explicit instantiations
@@ -87,19 +85,6 @@ index 8ab70dd9ed594c501d2c2e388818a1b5b5ec84f3..5845cc0b8fed045e4bb2aaa894d027cd
  
  /// Represents analyses that only rely on functions' control flow.
  ///
-diff --git a/llvm/include/llvm/IR/Dominators.h b/llvm/include/llvm/IR/Dominators.h
-index de43c9b25017125429151b31e9bf30857e542bf4..2cba8c4281c8b19c6d5eea1af79ca21d581a7abb 100644
---- a/llvm/include/llvm/IR/Dominators.h
-+++ b/llvm/include/llvm/IR/Dominators.h
-@@ -49,7 +49,7 @@ extern template class LLVM_TEMPLATE_ABI
- extern template class LLVM_TEMPLATE_ABI
-     DominatorTreeBase<BasicBlock, true>; // PostDomTree
- 
--extern template class cfg::Update<BasicBlock *>;
-+extern template class LLVM_TEMPLATE_ABI cfg::Update<BasicBlock *>;
- 
- namespace DomTreeBuilder {
- using BBDomTree = DomTreeBase<BasicBlock>;
 diff --git a/llvm/include/llvm/IR/PassManager.h b/llvm/include/llvm/IR/PassManager.h
 index e3ccface423a724d9e34be36b497e7ab6c62805e..de05b0e03b318a222648339fab6d0f13a88fe2c4 100644
 --- a/llvm/include/llvm/IR/PassManager.h
@@ -198,19 +183,6 @@ index 6e445f678790353a97dd97d734b162b7dddc533b..d78bc69784aab40b20de3dcb1b00aaab
  }
 +
 +template class LLVM_EXPORT_TEMPLATE llvm::AllAnalysesOn<MachineFunction>;
-diff --git a/llvm/lib/IR/Dominators.cpp b/llvm/lib/IR/Dominators.cpp
-index 37ef7696727c06cb73864b42ea5f5f0201d2ac31..7d70b1ad8651e7fe4a2c7f635a073167c1e33c71 100644
---- a/llvm/lib/IR/Dominators.cpp
-+++ b/llvm/lib/IR/Dominators.cpp
-@@ -66,7 +66,7 @@ template class LLVM_EXPORT_TEMPLATE
- template class LLVM_EXPORT_TEMPLATE
-     llvm::DominatorTreeBase<BasicBlock, true>; // PostDomTreeBase
- 
--template class llvm::cfg::Update<BasicBlock *>;
-+template class LLVM_EXPORT_TEMPLATE llvm::cfg::Update<BasicBlock *>;
- 
- bool DominatorTree::invalidate(Function &F, const PreservedAnalyses &PA,
-                                FunctionAnalysisManager::Invalidator &) {
 diff --git a/llvm/lib/MCA/Support.cpp b/llvm/lib/MCA/Support.cpp
 index 45459f7a3a72b4eb98b731bedb22e151c06a47bb..d349f5933d96792a64b7163f52bd223274d05dc5 100644
 --- a/llvm/lib/MCA/Support.cpp
@@ -245,5 +217,5 @@ index dceea4fbc630e85a869458af8b35ee1066c5866d..ccccf226404c843cb1ca463cfa3b4a3c
  // Assertions to ensure this #if stays in sync with SmallVectorSizeType.
  static_assert(sizeof(SmallVectorSizeType<char>) == sizeof(uint64_t),
 -- 
-2.55.0
+2.56.0
 

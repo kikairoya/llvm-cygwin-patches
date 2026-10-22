@@ -1,4 +1,4 @@
-From c579fa64fb4cc020d38e13c26065abc0168930ae Mon Sep 17 00:00:00 2001
+From 26d02b7c1bd361665d7f960ef71f1343dc04f1cb Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 21 Sep 2025 09:57:11 +0900
 Subject: [PATCH 22/51] workaround for 2GiB limit
@@ -24,10 +24,10 @@ index b2fee01649abc6d7e2eefd32524cc07fbc02790d..2663307143fe6df267ad11f329b48447
  # the merged clang unit test binary, we can update the include paths and make
  # this the default.
 diff --git a/clang/unittests/Interpreter/CMakeLists.txt b/clang/unittests/Interpreter/CMakeLists.txt
-index ad5836d8a1b7fc0647642e5146716974061ebb40..5d07ce66eae9a290caf9ff9d34c3ad03f128f339 100644
+index f4909d06ce73d2d8577ef7a7cba2c7ef266ce7d8..b32d4a6d33fc62129af84644051fd250a785e5d9 100644
 --- a/clang/unittests/Interpreter/CMakeLists.txt
 +++ b/clang/unittests/Interpreter/CMakeLists.txt
-@@ -99,6 +99,10 @@ set_target_properties(ClangReplInterpreterTests PROPERTIES
+@@ -100,6 +100,10 @@ set_target_properties(ClangReplInterpreterTests PROPERTIES
  )
  endif()
  
@@ -39,5 +39,5 @@ index ad5836d8a1b7fc0647642e5146716974061ebb40..5d07ce66eae9a290caf9ff9d34c3ad03
  if(NOT WIN32 AND NOT EMSCRIPTEN)
    add_subdirectory(ExceptionTests)
 -- 
-2.55.0
+2.56.0
 

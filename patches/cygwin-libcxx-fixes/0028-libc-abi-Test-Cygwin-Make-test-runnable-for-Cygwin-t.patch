@@ -1,4 +1,4 @@
-From a56039e8a8a158d2f6a7e090f7cdd8522ea70f06 Mon Sep 17 00:00:00 2001
+From a192c5e2d233095d058c127d586d6cc125df3b59 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 28/35] [libc++abi][Test][Cygwin] Make test runnable for Cygwin
@@ -11,10 +11,10 @@ Subject: [PATCH 28/35] [libc++abi][Test][Cygwin] Make test runnable for Cygwin
  create mode 100644 libcxxabi/test/configs/llvm-libc++abi-cygwin.cfg.in
 
 diff --git a/libcxxabi/CMakeLists.txt b/libcxxabi/CMakeLists.txt
-index 9e30c93b52ca1a05ced919dc3d7456fd7f0c5ff9..b3374805289bcd601a58356a62fef87ad793bb64 100644
+index e62f6b59d96a1033c2c04d2faeb893f9cf3f88fb..3b0cc9336bf69ef6d07d941213f14a52b92295cb 100644
 --- a/libcxxabi/CMakeLists.txt
 +++ b/libcxxabi/CMakeLists.txt
-@@ -169,6 +169,8 @@ option(LIBCXXABI_HERMETIC_STATIC_LIBRARY
+@@ -176,6 +176,8 @@ option(LIBCXXABI_HERMETIC_STATIC_LIBRARY
  
  if(MINGW)
    set(LIBCXXABI_DEFAULT_TEST_CONFIG "llvm-libc++abi-mingw.cfg.in")
@@ -55,5 +55,5 @@ index 0000000000000000000000000000000000000000..938d627fa42d779ca01f5b62bc9a6dbe
 +    lit_config
 +)
 -- 
-2.55.0
+2.56.0
 

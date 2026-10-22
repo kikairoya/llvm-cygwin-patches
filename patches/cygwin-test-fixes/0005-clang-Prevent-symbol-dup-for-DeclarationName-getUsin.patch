@@ -1,4 +1,4 @@
-From c4742faaf8677379d2215a4b30eeb5dc404f1a83 Mon Sep 17 00:00:00 2001
+From 8f8362dae76097fa6ebc149ae7dad1852c93bb1f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:03:35 +0900
 Subject: [PATCH 05/63] [clang] Prevent symbol dup for
@@ -58,5 +58,5 @@ index 105d2935d0c6397267aae7ef73037f8a50ea2d5c..1728c9f56d49a9639c1968c58f0da66f
    return (A < B ? -1 : (A > B ? 1 : 0));
  }
 -- 
-2.55.0
+2.56.0
 

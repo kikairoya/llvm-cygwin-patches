@@ -1,4 +1,4 @@
-From 385111d21973b1b5c3224873ef169e8bce5a3275 Mon Sep 17 00:00:00 2001
+From f84e2958f58f896a9e7903c8e78bea928e2f85b1 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 14 Mar 2026 10:54:46 +0900
 Subject: [PATCH 11/38] rewrite test mingw-template-dllexport
@@ -486,5 +486,5 @@ index 0000000000000000000000000000000000000000..8a6a47830cafbd80a356daa6fda0928e
 +// CHECK: declare dso_local void @_ZN5ClassI20SpecializeWholeClassE6Nested7MemfuncEv
 +// CHECK: declare dllimport void @_ZN5ClassI20SpecializeWholeClassE14ImportedNested7MemfuncEv
 -- 
-2.55.0
+2.56.0
 

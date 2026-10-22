@@ -1,4 +1,4 @@
-From 37d282329edc928a3ce592d62a0d479f18ca5da3 Mon Sep 17 00:00:00 2001
+From 2e571c57ea8f36e7adf6efe872a21f0b7d553152 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/63] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -14,7 +14,7 @@ Subject: [PATCH 06/63] [clang] constexpir-ize `NoneLoc`s and dependants to
  6 files changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/clang/include/clang/AST/DeclTemplate.h b/clang/include/clang/AST/DeclTemplate.h
-index 575ca86155742e2cd5e81ee258c15255aeb324e0..5f3682306668f771d7bf8dbdc0ec04323b6f161e 100644
+index 5724645602d9b31078d91c3bfa9dd262a5da3525..44928da70dd42f1089f1bc5a4556f68a75dfc761 100644
 --- a/clang/include/clang/AST/DeclTemplate.h
 +++ b/clang/include/clang/AST/DeclTemplate.h
 @@ -1231,7 +1231,7 @@ public:
@@ -114,7 +114,7 @@ index 6c1a378aadedac888c61c2bb3de342bd158bfde6..249c8914fa6244e48b5ae7bd0d35e7ec
    using Base::operator=;
  
 diff --git a/llvm/include/llvm/CodeGen/SlotIndexes.h b/llvm/include/llvm/CodeGen/SlotIndexes.h
-index 542a6beb0ed01696cd3e89399088fd9b743a892d..3690fd4ad6d75b15ffc432b2311bb9afb71002c2 100644
+index a5f397fd8626b49015675729f6fc5b20b1a31386..9ca0633822bd39dba54c19d43896f2698017e84b 100644
 --- a/llvm/include/llvm/CodeGen/SlotIndexes.h
 +++ b/llvm/include/llvm/CodeGen/SlotIndexes.h
 @@ -116,7 +116,7 @@ class raw_ostream;
@@ -140,5 +140,5 @@ index 2a176b4f2cf7b181a4100b3bd8e08f1544614bcf..ed6137ab0fe3622ac4bfd593272b5390
  
    /// Entry - A cache entry containing interference information for all aliases
 -- 
-2.55.0
+2.56.0
 

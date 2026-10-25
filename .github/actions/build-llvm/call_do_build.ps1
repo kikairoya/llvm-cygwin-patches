@@ -20,10 +20,6 @@ $cygwinBin = Join-Path $cygwinRoot 'bin'
 $Env:PATH = "$cygwinBin;$Env:PATH"
 $bashPath = Join-Path $cygwinBin 'bash.exe'
 
-echo $cygwinRoot
-echo $bashPath
-echo $Env:PATH
-
 Remove-Item Env:TEMP -ErrorAction SilentlyContinue
 Remove-Item Env:TMP -ErrorAction SilentlyContinue
 

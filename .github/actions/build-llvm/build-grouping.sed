@@ -45,7 +45,7 @@ H; n; x
 # The hold space holds text from the input, which needs to be just printed.
 # The pattern space holds whole the error dumps.
 :E1
-s/::/%3A%3A/g
+#s/::/%3A%3A/g
 s/\n/%0A/g
 s/^/::error ::/p
 G; D

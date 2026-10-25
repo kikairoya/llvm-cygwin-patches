@@ -247,7 +247,7 @@ jobs:
           temp-reserve-mb: 5120
 
       - name: configure Pagefile
-        if: ${{ runner.os == 'Windows' }}
+        if: ${{ false && runner.os == 'Windows' }}
         uses: al-cheb/configure-pagefile-action@9b6da52fb72a3c6147c1aad2df22d8d905681adc # v1.5
         with:
           minimum-size: 16GB
@@ -309,7 +309,7 @@ jobs:
           temp-reserve-mb: 5120
 
       - name: configure Pagefile
-        if: ${{ runner.os == 'Windows' }}
+        if: ${{ false && runner.os == 'Windows' }}
         uses: al-cheb/configure-pagefile-action@9b6da52fb72a3c6147c1aad2df22d8d905681adc # v1.5
         with:
           minimum-size: 16GB
@@ -369,7 +369,7 @@ jobs:
   #       uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
 
   #     - name: configure Pagefile
-  #       if: ${{ runner.os == 'Windows' }}
+  #       if: ${{ false && runner.os == 'Windows' }}
   #       uses: al-cheb/configure-pagefile-action@v1.5
   #       with:
   #         minimum-size: 16GB

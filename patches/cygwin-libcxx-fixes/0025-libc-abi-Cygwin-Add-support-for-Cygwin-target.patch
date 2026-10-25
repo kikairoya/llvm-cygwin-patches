@@ -1,4 +1,4 @@
-From 7727ad11fa2ff491d700bfd2afb58d0cbf6bbb80 Mon Sep 17 00:00:00 2001
+From 5b9c5e01d0575870bf7a4b60e89166689578024c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:20 +0900
 Subject: [PATCH 25/35] [libc++abi][Cygwin] Add support for Cygwin target
@@ -13,10 +13,10 @@ Subject: [PATCH 25/35] [libc++abi][Cygwin] Add support for Cygwin target
  6 files changed, 37 insertions(+), 21 deletions(-)
 
 diff --git a/libcxxabi/CMakeLists.txt b/libcxxabi/CMakeLists.txt
-index 6ea3cea30bdbc9a2fd72303443460c5d7c17e365..9e30c93b52ca1a05ced919dc3d7456fd7f0c5ff9 100644
+index 4032e03b7487e3bbc7435954c3c00e939e65dbd7..e62f6b59d96a1033c2c04d2faeb893f9cf3f88fb 100644
 --- a/libcxxabi/CMakeLists.txt
 +++ b/libcxxabi/CMakeLists.txt
-@@ -161,7 +161,7 @@ if (NOT LIBCXXABI_ENABLE_SHARED AND NOT LIBCXXABI_ENABLE_STATIC)
+@@ -168,7 +168,7 @@ if (NOT LIBCXXABI_ENABLE_SHARED AND NOT LIBCXXABI_ENABLE_STATIC)
  endif()
  
  set(LIBCXXABI_HERMETIC_STATIC_LIBRARY_DEFAULT OFF)
@@ -25,7 +25,7 @@ index 6ea3cea30bdbc9a2fd72303443460c5d7c17e365..9e30c93b52ca1a05ced919dc3d7456fd
    set(LIBCXXABI_HERMETIC_STATIC_LIBRARY_DEFAULT ON)
  endif()
  option(LIBCXXABI_HERMETIC_STATIC_LIBRARY
-@@ -391,7 +391,7 @@ if (LLVM_ENABLE_MODULES)
+@@ -398,7 +398,7 @@ if (LLVM_ENABLE_MODULES)
  endif()
  
  set(LIBCXXABI_HAS_UNDEFINED_SYMBOLS OFF)
@@ -144,5 +144,5 @@ index 7359b1f46d180f68f97ed5ab060320383c345661..4240943c9b28e75ce8babd27ff49794a
      return dest;
  #elif !_LIBCPP_HAS_ALIGNED_ALLOCATION
 -- 
-2.55.0
+2.56.0
 

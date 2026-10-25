@@ -1,7 +1,7 @@
-From f8505fd0d6938ba16d0d642da0a7a58e13694fb8 Mon Sep 17 00:00:00 2001
+From 7c15728e90104aba1808690a1831dbbe0683fcc9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 22:57:01 +0900
-Subject: [PATCH 60/64] [LLD][Test][Cygwin] Diverge expected result
+Subject: [PATCH 59/63] [LLD][Test][Cygwin] Diverge expected result
 
 ---
  lld/test/COFF/driver-windows.test                 | 2 +-
@@ -57,5 +57,5 @@ index 77bf700837dfb8f9aecc262dd34e183b9ef3f939..6697c6868282896338914a1c38bb2d8a
  ;
  ; CHECK: define hidden void @main()
 -- 
-2.55.0
+2.56.0
 

@@ -1,4 +1,4 @@
-From 9667b40547465c709348e22677b18c3e93f3da78 Mon Sep 17 00:00:00 2001
+From 0d1305e625db70a28250be870d2c7f819cf83aee Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 19:02:44 +0900
 Subject: [PATCH 25/38] [LLVM] Support EXPORT_SYMBOLS_FOR_PLUGINS with shared
@@ -16,10 +16,10 @@ Resolve the incompatibilities of EXPORT_SYMBOLS_FOR_PLUGINS with
  1 file changed, 65 insertions(+), 49 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index 22c33ae6eaa894b80ceb92b612c2dc8897c1c663..1c3bb3fa3719b2fbce9073d6f0e2e2a2363e9da6 100644
+index 20f10383cd0b9f4cc6f555636ece241cd84d4234..118bb599af385ab947fb06e6bf06296ed4270c90 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
-@@ -1481,52 +1481,44 @@ function(process_llvm_pass_plugins)
+@@ -1472,52 +1472,44 @@ function(process_llvm_pass_plugins)
    endif()
  endfunction()
  
@@ -108,7 +108,7 @@ index 22c33ae6eaa894b80ceb92b612c2dc8897c1c663..1c3bb3fa3719b2fbce9073d6f0e2e2a2
        set(mangling microsoft)
      else()
        set(mangling itanium)
-@@ -1545,11 +1537,35 @@ function(export_executable_symbols target)
+@@ -1536,11 +1528,35 @@ function(export_executable_symbols target)
                           ${static_libs} ${llvm_nm_target} ${llvm_readobj_target}
                         VERBATIM
                         COMMENT "Generating export list for ${target}")
@@ -150,5 +150,5 @@ index 22c33ae6eaa894b80ceb92b612c2dc8897c1c663..1c3bb3fa3719b2fbce9073d6f0e2e2a2
      # On Windows auto-exporting everything doesn't work because of the limit on
      # the size of the exported symbol table, but on other platforms we can do
 -- 
-2.55.0
+2.56.0
 

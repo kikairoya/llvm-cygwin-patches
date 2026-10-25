@@ -1,4 +1,4 @@
-From da361370a2255be761eede2918b0f546b81b3ff4 Mon Sep 17 00:00:00 2001
+From e2df3434b3f7247efc1dbac2525a7fb5865cac30 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 26/35] [libunwind][Cygwin] Add support for Cygwin target
@@ -193,7 +193,7 @@ index 0b1930b44d1c648b89099b6f2f796b4233f1c877..38209154729db7365599eb2f51ddea6f
    urc = pers(1, action, exc->exception_class, exc, ctx);
    _LIBUNWIND_TRACE_UNWINDING("_GCC_specific_handler() personality returned %d", urc);
 diff --git a/libunwind/src/UnwindCursor.hpp b/libunwind/src/UnwindCursor.hpp
-index ad110359e26d2e7e87c06dcc91060db8b42c033c..b927ff490596bc4d1fa15517c066222d98db0dda 100644
+index f307190addadac9a8cdf84e35d7dab2255315409..31fa4059fb0b858b7184539b2168e927b0d8be0f 100644
 --- a/libunwind/src/UnwindCursor.hpp
 +++ b/libunwind/src/UnwindCursor.hpp
 @@ -17,9 +17,9 @@
@@ -219,7 +219,7 @@ index ad110359e26d2e7e87c06dcc91060db8b42c033c..b927ff490596bc4d1fa15517c066222d
  
  /// \c UnwindCursor contains all state (including all register values) during
  /// an unwind.  This is normally stack-allocated inside a unw_cursor_t.
-@@ -2187,7 +2188,7 @@ bool UnwindCursor<A, R>::getInfoFromSEH(pint_t pc) {
+@@ -2189,7 +2190,7 @@ bool UnwindCursor<A, R>::getInfoFromSEH(pint_t pc) {
    pint_t base;
    RUNTIME_FUNCTION *unwindEntry = lookUpSEHUnwindInfo(pc, &base);
    if (!unwindEntry) {
@@ -228,7 +228,7 @@ index ad110359e26d2e7e87c06dcc91060db8b42c033c..b927ff490596bc4d1fa15517c066222d
      return false;
    }
    _info.gp = 0;
-@@ -2928,7 +2929,8 @@ void UnwindCursor<A, R>::setInfoBasedOnIPRegister(bool isReturnAddress) {
+@@ -2930,7 +2931,8 @@ void UnwindCursor<A, R>::setInfoBasedOnIPRegister(bool isReturnAddress) {
      --pc;
  #endif
  
@@ -239,7 +239,7 @@ index ad110359e26d2e7e87c06dcc91060db8b42c033c..b927ff490596bc4d1fa15517c066222d
    // In case of this is frame of signal handler, the IP saved in the signal
    // handler points to first non-executed instruction, while FDE/CIE expects IP
 diff --git a/libunwind/src/UnwindRegistersRestore.S b/libunwind/src/UnwindRegistersRestore.S
-index b299bcd0a759490f3a68c7e72c2ffafcd1728ff0..af1abe8d50c55958481c67485fa77ee258081359 100644
+index 6c9dcc48c309ad1e12084326f99a78990694ae10..99b96443b6c24dbcef40a3db8281232196ae2e99 100644
 --- a/libunwind/src/UnwindRegistersRestore.S
 +++ b/libunwind/src/UnwindRegistersRestore.S
 @@ -79,7 +79,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
@@ -251,7 +251,7 @@ index b299bcd0a759490f3a68c7e72c2ffafcd1728ff0..af1abe8d50c55958481c67485fa77ee2
  # On entry, thread_state pointer is in rcx; move it into rdi
  # to share restore code below. Since this routine restores and
  # overwrites all registers, we can use the same registers for
-@@ -120,7 +120,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
+@@ -123,7 +123,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
    # skip fs
    # skip gs
  
@@ -261,7 +261,7 @@ index b299bcd0a759490f3a68c7e72c2ffafcd1728ff0..af1abe8d50c55958481c67485fa77ee2
    movdqu 192(%rdi),%xmm1
    movdqu 208(%rdi),%xmm2
 diff --git a/libunwind/src/UnwindRegistersSave.S b/libunwind/src/UnwindRegistersSave.S
-index c51b5b8d17664619140a5209047e0377e9f1f514..2904596d4adbcd02cd3a2186d6c40fee204f9142 100644
+index 81d32009952895ae707296af4189fcb0870ec2a2..eade6521effbef9f5caffc0d2007c23884f08a3c 100644
 --- a/libunwind/src/UnwindRegistersSave.S
 +++ b/libunwind/src/UnwindRegistersSave.S
 @@ -121,7 +121,7 @@ DEFINE_LIBUNWIND_FUNCTION("#__unw_getcontext")
@@ -273,7 +273,7 @@ index c51b5b8d17664619140a5209047e0377e9f1f514..2904596d4adbcd02cd3a2186d6c40fee
  #define PTR %rcx
  #define TMP %rdx
  #else
-@@ -154,7 +154,7 @@ DEFINE_LIBUNWIND_FUNCTION(__unw_getcontext)
+@@ -157,7 +157,7 @@ DEFINE_LIBUNWIND_FUNCTION(__unw_getcontext)
    # skip fs
    # skip gs
  
@@ -367,10 +367,10 @@ index f017403fa2234f7234e784eefeafe8eae6b1a59b..c0870efd8b993808ecb1495d3e832d20
  #define _LIBUNWIND_REMEMBER_FREE(_ptr)                                         \
    do {                                                                         \
 diff --git a/libunwind/test/signal_frame.pass.cpp b/libunwind/test/signal_frame.pass.cpp
-index 3e5b938b6502b69bb1ff577fd9e963a775438507..112942b40288639d992736a303794c6c797e3c89 100644
+index 74deb846964ceb65c860db9b3e1eb49e3f1eb5c3..a71bc99a29654f435c225953f0ed86aee91ed5eb 100644
 --- a/libunwind/test/signal_frame.pass.cpp
 +++ b/libunwind/test/signal_frame.pass.cpp
-@@ -25,6 +25,7 @@
+@@ -26,6 +26,7 @@
  // Windows doesn't generally use CFI directives. However, i686
  // mingw targets do use DWARF (where CFI directives are supported).
  // UNSUPPORTED: target={{x86_64|arm.*|aarch64}}-{{.*}}-windows-{{.*}}
@@ -379,5 +379,5 @@ index 3e5b938b6502b69bb1ff577fd9e963a775438507..112942b40288639d992736a303794c6c
  #undef NDEBUG
  #include <assert.h>
 -- 
-2.55.0
+2.56.0
 

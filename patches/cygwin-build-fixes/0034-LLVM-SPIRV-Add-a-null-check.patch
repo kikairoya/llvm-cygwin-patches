@@ -1,4 +1,4 @@
-From 369b3d2c1e6a74ad30d3b405b1468b4ee1876c38 Mon Sep 17 00:00:00 2001
+From 7a231f6e2728f3d65b8b89cba758a8d09f3a2161 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 26 Aug 2026 20:42:26 +0900
 Subject: [PATCH 34/38] [LLVM][SPIRV] Add a null check
@@ -8,10 +8,10 @@ Subject: [PATCH 34/38] [LLVM][SPIRV] Add a null check
  1 file changed, 1 insertion(+)
 
 diff --git a/llvm/lib/Target/SPIRV/SPIRVGlobalRegistry.cpp b/llvm/lib/Target/SPIRV/SPIRVGlobalRegistry.cpp
-index a0eab4a541550f1a82870179797c8909a0c68036..faea6fcd97fbe43a8ccc35b01a054798dfd79727 100644
+index 245f83721c579fd7743493744d3262c482f4a898..649e2788ab70f03bb37595cbb8c8f76f1a093012 100644
 --- a/llvm/lib/Target/SPIRV/SPIRVGlobalRegistry.cpp
 +++ b/llvm/lib/Target/SPIRV/SPIRVGlobalRegistry.cpp
-@@ -2362,6 +2362,7 @@ void SPIRVGlobalRegistry::buildAssignPtr(IRBuilder<> &B, Type *ElemTy,
+@@ -2363,6 +2363,7 @@ void SPIRVGlobalRegistry::buildAssignPtr(IRBuilder<> &B, Type *ElemTy,
    Function *CurrF =
        B.GetInsertBlock() ? B.GetInsertBlock()->getParent() : nullptr;
    if (AssignPtrTyCI == nullptr ||
@@ -20,5 +20,5 @@ index a0eab4a541550f1a82870179797c8909a0c68036..faea6fcd97fbe43a8ccc35b01a054798
      AssignPtrTyCI = buildIntrWithMD(
          Intrinsic::spv_assign_ptr_type, {Arg->getType()}, OfType, Arg,
 -- 
-2.55.0
+2.56.0
 

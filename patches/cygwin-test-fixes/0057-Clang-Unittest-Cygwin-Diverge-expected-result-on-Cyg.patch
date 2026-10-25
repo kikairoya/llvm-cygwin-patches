@@ -1,7 +1,7 @@
-From a2f9fccbd6d87d4711c4f1fe6a91b273a2f3f0b5 Mon Sep 17 00:00:00 2001
+From bb1360c86f92207e546adca572fbb76d6440db1f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 11 Oct 2025 17:39:03 +0900
-Subject: [PATCH 58/64] [Clang][Unittest][Cygwin] Diverge expected result on
+Subject: [PATCH 57/63] [Clang][Unittest][Cygwin] Diverge expected result on
  Cygwin host
 
 ---
@@ -10,10 +10,10 @@ Subject: [PATCH 58/64] [Clang][Unittest][Cygwin] Diverge expected result on
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/clang/unittests/Interpreter/CMakeLists.txt b/clang/unittests/Interpreter/CMakeLists.txt
-index 5d07ce66eae9a290caf9ff9d34c3ad03f128f339..dfa4e25d1e7a039d847a0c2e9fc65379e3965b67 100644
+index b32d4a6d33fc62129af84644051fd250a785e5d9..c23db4b6697aa4e4916ddc5ab8eefb8671a290cd 100644
 --- a/clang/unittests/Interpreter/CMakeLists.txt
 +++ b/clang/unittests/Interpreter/CMakeLists.txt
-@@ -104,7 +104,7 @@ if ((MINGW OR CYGWIN) AND NOT (CLANG_LINK_CLANG_DYLIB OR BUILD_SHARED_LIBS))
+@@ -105,7 +105,7 @@ if ((MINGW OR CYGWIN) AND NOT (CLANG_LINK_CLANG_DYLIB OR BUILD_SHARED_LIBS))
  endif()
  
  # Interpreter exception tests are not supported on Windows or Emscripten.
@@ -36,5 +36,5 @@ index 17cc6fc9b6ca8ee27a8e9db76f123b5b1c4934ca..a23a107e3819d54b1329c7c6e5fce859
  #endif // _WIN32
  }
 -- 
-2.55.0
+2.56.0
 

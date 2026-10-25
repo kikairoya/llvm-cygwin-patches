@@ -1,4 +1,4 @@
-From 03ee79c0212b42f55d900c23e5796aabbed9acd4 Mon Sep 17 00:00:00 2001
+From 1023b43ce8a9540da3899cce7d03ff66fe8fd05f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 18 Sep 2026 22:46:51 +0900
 Subject: [PATCH 38/38] [CIR] undef macros come from sys/sysmacro.h
@@ -8,7 +8,7 @@ Subject: [PATCH 38/38] [CIR] undef macros come from sys/sysmacro.h
  1 file changed, 3 insertions(+)
 
 diff --git a/clang/lib/CIR/Dialect/IR/CIRAttrs.cpp b/clang/lib/CIR/Dialect/IR/CIRAttrs.cpp
-index 2649ed14497393fc717f5ecc7621b841a5882c9d..c9c9bfb94b9de1702bfd2b8f6ce7611002a90dc2 100644
+index 023ac73178152ab3626044f692d8d3f4af7fc809..7eab18347f2159f86e543afd585ad467c321bf4c 100644
 --- a/clang/lib/CIR/Dialect/IR/CIRAttrs.cpp
 +++ b/clang/lib/CIR/Dialect/IR/CIRAttrs.cpp
 @@ -17,6 +17,9 @@
@@ -22,5 +22,5 @@ index 2649ed14497393fc717f5ecc7621b841a5882c9d..c9c9bfb94b9de1702bfd2b8f6ce76110
  // RecordMembers
  //===-----------------------------------------------------------------===//
 -- 
-2.55.0
+2.56.0
 

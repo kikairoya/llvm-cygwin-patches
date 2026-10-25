@@ -1,7 +1,7 @@
-From cd5cc593dd750b025092f9bcb344aa6098a978c4 Mon Sep 17 00:00:00 2001
+From a940748af1be6bddcbcb158dfa2103cfabbd5ef6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Mar 2026 20:30:47 +0900
-Subject: [PATCH 54/64] [LLVM][Unittest][Cygwin] Diverge expected result on
+Subject: [PATCH 54/63] [LLVM][Unittest][Cygwin] Diverge expected result on
  Cygwin host
 
 ---
@@ -46,7 +46,7 @@ index 61cd5d013eeb77dd71f42abf36825071b00cd007..e37c12d57d613439f705ce67abcd41da
  static void writeToLog(OnDiskCASLogger *Logger, int NumOpens, int NumEntries) {
    StringRef Path = "/fake_cas/index";
 diff --git a/llvm/unittests/Support/CommandLineTest.cpp b/llvm/unittests/Support/CommandLineTest.cpp
-index ccf45962ba04fc360b15c158a7a3729f053d0a0c..4cfb1ec02cb1c6d7896142ca38027736e4b4830f 100644
+index ee6d2308b46f3ab77df6c89ac568521e951bf72b..fff4db30c26198013b50a14445bd794d31bba4ab 100644
 --- a/llvm/unittests/Support/CommandLineTest.cpp
 +++ b/llvm/unittests/Support/CommandLineTest.cpp
 @@ -971,7 +971,11 @@ TEST(CommandLineTest, ResponseFileWindows) {
@@ -62,10 +62,10 @@ index ccf45962ba04fc360b15c158a7a3729f053d0a0c..4cfb1ec02cb1c6d7896142ca38027736
  
    llvm::SmallString<128> RspOpt;
 diff --git a/llvm/unittests/Support/Path.cpp b/llvm/unittests/Support/Path.cpp
-index 31599f6152e926fda71b33b4b8a78d243aa63cfc..195a75f96028681ed67d64edf7b699402d1c4c7b 100644
+index 677ef8eabc57b9fea4fbc0bcacdd2d9b18a5b340..9441c7895b95b068d510c13dd5b321c49c6db2d6 100644
 --- a/llvm/unittests/Support/Path.cpp
 +++ b/llvm/unittests/Support/Path.cpp
-@@ -2563,7 +2563,7 @@ TEST_F(FileSystemTest, permissions) {
+@@ -2566,7 +2566,7 @@ TEST_F(FileSystemTest, permissions) {
  
    EXPECT_EQ(fs::setPermissions(TempPath, fs::all_perms), NoError);
    EXPECT_TRUE(CheckPermissions(fs::all_all));
@@ -105,5 +105,5 @@ index d78c86655ef603182ba72e9d903d169fdfcd46a9..f9c6ee6ac26e34cc45beaee295ca575f
    // This can also happen in MSVC mode environments when the unittest is linked
    // against LLVM.dll.
 -- 
-2.55.0
+2.56.0
 

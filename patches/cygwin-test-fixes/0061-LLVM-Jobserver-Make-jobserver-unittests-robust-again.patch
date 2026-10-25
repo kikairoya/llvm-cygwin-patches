@@ -1,7 +1,7 @@
-From 9f880741cabd2f5a7e258f333b4bead761575b0b Mon Sep 17 00:00:00 2001
+From 27b845d4915fdefe5d3a91abadaf619f17c22a7e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 6 Nov 2025 21:21:48 +0900
-Subject: [PATCH 62/64] [LLVM][Jobserver] Make jobserver unittests robust
+Subject: [PATCH 61/63] [LLVM][Jobserver] Make jobserver unittests robust
  against test execution order.
 
 `JobserverClient::resetForTesting` calls `delete` on the jobserver object. However, since thread pool objects don't know
@@ -48,5 +48,5 @@ index c36769087aba781b2d3ca4adfe0a9c6abb469785..2ee690a85d777a8ee47fcfb0a6ce7291
  
    // Starts a background thread that emulates `make`. It populates the FIFO
 -- 
-2.55.0
+2.56.0
 

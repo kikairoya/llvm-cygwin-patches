@@ -1,4 +1,4 @@
-From cf5d0814ba78b089ee9b459219ece0b49eb8479b Mon Sep 17 00:00:00 2001
+From 7805e49f798c57598dd7c9466a6f50c8d9186483 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 20 Dec 2025 21:20:11 +0900
 Subject: [PATCH 31/51] [Clang-tools] Add an option
@@ -83,5 +83,5 @@ index 84f24603ea87dcb1f8b458a9392411ea20f69497..2d5f9ad4d2e8d963a732dd6ddb9ce15f
    ${CLANG_SYCL_LINKER_LIB_DEPS}
    )
 -- 
-2.55.0
+2.56.0
 

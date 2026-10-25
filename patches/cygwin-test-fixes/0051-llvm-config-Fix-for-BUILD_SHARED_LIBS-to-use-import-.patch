@@ -1,7 +1,7 @@
-From 2e62b3242c6b1444b866a96ee8efef21fbd27c04 Mon Sep 17 00:00:00 2001
+From c819e34c54ed22ba8d59a2bf40a60a2899eae724 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:55:10 +0900
-Subject: [PATCH 51/64] [llvm-config] Fix for BUILD_SHARED_LIBS to use import
+Subject: [PATCH 51/63] [llvm-config] Fix for BUILD_SHARED_LIBS to use import
  libraries instead of DLLs directly
 
 ---
@@ -48,5 +48,5 @@ index 76aa9f82eb0a7706248ac176af11ffa5681c3ec6..ca88cc06496752441280bef113d96a5b
      SharedExt = "dylib";
      SharedVersionedExt = LLVM_DYLIB_VERSION ".dylib";
 -- 
-2.55.0
+2.56.0
 

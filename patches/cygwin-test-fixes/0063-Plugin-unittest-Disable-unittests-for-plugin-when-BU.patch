@@ -1,7 +1,7 @@
-From f1c0b74b83d2b8219b0295cb45008866aaaf3f61 Mon Sep 17 00:00:00 2001
+From 1a52849bbfd68403701f6ef5f75299856dea1b7e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:56:11 +0900
-Subject: [PATCH 64/64] [Plugin][unittest] Disable unittests for plugin when
+Subject: [PATCH 63/63] [Plugin][unittest] Disable unittests for plugin when
  BUILD_SHARED_LIBS on Windows
 
 ---
@@ -10,7 +10,7 @@ Subject: [PATCH 64/64] [Plugin][unittest] Disable unittests for plugin when
  2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/llvm/unittests/Analysis/PluginInlineAdvisorAnalysisTest.cpp b/llvm/unittests/Analysis/PluginInlineAdvisorAnalysisTest.cpp
-index f891878838b0a3c4a9a34180e53e841551103bd2..48e7c84ee98fadd047be8fad14dabf4df7a4f62f 100644
+index 3cd22dba2b08458a1f1b47decddf29e7b6b751ea..aa4467e29866e9b114ebcd7f129a3bd98cd32c07 100644
 --- a/llvm/unittests/Analysis/PluginInlineAdvisorAnalysisTest.cpp
 +++ b/llvm/unittests/Analysis/PluginInlineAdvisorAnalysisTest.cpp
 @@ -246,7 +246,9 @@ define i32 @fib_check(){
@@ -25,7 +25,7 @@ index f891878838b0a3c4a9a34180e53e841551103bd2..48e7c84ee98fadd047be8fad14dabf4d
    GTEST_SKIP();
  #endif
 diff --git a/llvm/unittests/Analysis/PluginInlineOrderAnalysisTest.cpp b/llvm/unittests/Analysis/PluginInlineOrderAnalysisTest.cpp
-index f5431cd7fdc8522ecbf36ac89456c2a7dbbaf056..3e5ce1b7f799328c20563073d50805d2665b808a 100644
+index 7e29c80ce5be570bdc00361470081fc42419e37a..a60c289ea193287708bbe13c0b2c01957a644c4a 100644
 --- a/llvm/unittests/Analysis/PluginInlineOrderAnalysisTest.cpp
 +++ b/llvm/unittests/Analysis/PluginInlineOrderAnalysisTest.cpp
 @@ -223,7 +223,9 @@ define i32 @fib_check(){
@@ -40,5 +40,5 @@ index f5431cd7fdc8522ecbf36ac89456c2a7dbbaf056..3e5ce1b7f799328c20563073d50805d2
    GTEST_SKIP();
  #endif
 -- 
-2.55.0
+2.56.0
 

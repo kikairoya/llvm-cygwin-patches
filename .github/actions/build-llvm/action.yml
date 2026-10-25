@@ -85,8 +85,8 @@ runs:
         ACTION_PATH: ${{ github.action_path }}
       run: |
         ## Config, Build, Test
-        . "$ACTION_PATH/do_build.sh"
-      shell: bash
+        . (Join-Path $Env:ACTION_PATH "call_do_build.ps1")
+      shell: pwsh
 
     - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       if: ${{ inputs.save-instrument }}
@@ -163,8 +163,8 @@ runs:
         ACTION_PATH: ${{ github.action_path }}
       run: |
         ## Install
-        . "$ACTION_PATH/do_build.sh"
-      shell: bash
+        . (Join-Path $Env:ACTION_PATH "call_do_build.ps1")
+      shell: pwsh
 
     - id: archive-installs
       if: ${{ always() && inputs.install-prefix != '/' && inputs.install-retention-days >= 0 }}

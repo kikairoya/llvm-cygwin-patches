@@ -1,4 +1,4 @@
-From 81419a6132a324b92e9454719ae49ceec1b58ae8 Mon Sep 17 00:00:00 2001
+From 40afc4bc3adfe8455fcdb60fb70586fea45d39ce Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 9 Apr 2026 19:37:48 +0900
 Subject: [PATCH 26/51] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
@@ -9,10 +9,10 @@ Subject: [PATCH 26/51] [LLVM] Enable `PLUGIN_TOOL` for MinGW/Cygwin without
  1 file changed, 41 insertions(+), 4 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index 1c3bb3fa3719b2fbce9073d6f0e2e2a2363e9da6..05ca179c7a0fe3c43be810f9296aa6557d5745cb 100644
+index 118bb599af385ab947fb06e6bf06296ed4270c90..c05367dfea8e7f3af4fb86696ac030920385dc22 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
-@@ -639,6 +639,17 @@ function(llvm_add_library name)
+@@ -630,6 +630,17 @@ function(llvm_add_library name)
      if(NOT LLVM_ENABLE_PIC)
        set(ARG_DISABLE_PCH_REUSE TRUE)
      endif()
@@ -30,7 +30,7 @@ index 1c3bb3fa3719b2fbce9073d6f0e2e2a2363e9da6..05ca179c7a0fe3c43be810f9296aa655
    else()
      if(ARG_PLUGIN_TOOL)
        message(WARNING "PLUGIN_TOOL without MODULE doesn't make sense.")
-@@ -872,7 +883,7 @@ function(llvm_add_library name)
+@@ -863,7 +874,7 @@ function(llvm_add_library name)
      set(libtype PRIVATE)
    endif()
  
@@ -39,7 +39,7 @@ index 1c3bb3fa3719b2fbce9073d6f0e2e2a2363e9da6..05ca179c7a0fe3c43be810f9296aa655
      # On DLL platforms symbols are imported from the tool by linking against it.
      set(llvm_libs ${ARG_PLUGIN_TOOL})
    elseif (NOT ARG_COMPONENT_LIB)
-@@ -1548,6 +1559,21 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
+@@ -1539,6 +1550,21 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
    set_target_properties(${target} PROPERTIES INTERFACE_LINK_LIBRARIES "${other_libs}")
  endfunction()
  
@@ -61,7 +61,7 @@ index 1c3bb3fa3719b2fbce9073d6f0e2e2a2363e9da6..05ca179c7a0fe3c43be810f9296aa655
  function(export_executable_symbols target)
    if (LLVM_EXPORTED_SYMBOL_FILE)
      # The symbol file should contain the symbols we want the executable to
-@@ -1566,10 +1592,21 @@ function(export_executable_symbols target)
+@@ -1557,10 +1583,21 @@ function(export_executable_symbols target)
          CALL do_export_executable_symbols_for_plugins [[${target}]] [[${exported_symbol_file}]]
        )
      ")
@@ -87,5 +87,5 @@ index 1c3bb3fa3719b2fbce9073d6f0e2e2a2363e9da6..05ca179c7a0fe3c43be810f9296aa655
      # CMake doesn't set CMAKE_EXE_EXPORTS_${lang}_FLAG on Solaris, so
      # ENABLE_EXPORTS has no effect.  While Solaris ld defaults to -rdynamic
 -- 
-2.55.0
+2.56.0
 

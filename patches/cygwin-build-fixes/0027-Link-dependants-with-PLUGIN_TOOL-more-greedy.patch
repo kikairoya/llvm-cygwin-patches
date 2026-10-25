@@ -1,4 +1,4 @@
-From 9d3b4be354424f783d6cfe3648671bf174d2cf51 Mon Sep 17 00:00:00 2001
+From d24772de154eeb81c1edf8f16208e5b81a1e0d38 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 31 Jul 2026 22:57:24 +0900
 Subject: [PATCH 27/38] Link dependants with PLUGIN_TOOL more greedy
@@ -8,10 +8,10 @@ Subject: [PATCH 27/38] Link dependants with PLUGIN_TOOL more greedy
  1 file changed, 31 insertions(+), 35 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index 05ca179c7a0fe3c43be810f9296aa6557d5745cb..078cf0352ae33fa8aceb6f4d4b9df76f8731845f 100644
+index c05367dfea8e7f3af4fb86696ac030920385dc22..0230f07979e80034bb5af9be3d8d5431fee2b7be 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
-@@ -1515,7 +1515,11 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
+@@ -1506,7 +1506,11 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
          else()
            list(APPEND other_libs ${lib})
          endif()
@@ -24,7 +24,7 @@ index 05ca179c7a0fe3c43be810f9296aa6557d5745cb..078cf0352ae33fa8aceb6f4d4b9df76f
          foreach(transitive_lib ${transitive_libs})
            if(TARGET ${transitive_lib} AND NOT ${transitive_lib} IN_LIST link_libs)
              list(APPEND newer_libs ${transitive_lib})
-@@ -1528,31 +1532,33 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
+@@ -1519,31 +1523,33 @@ function(do_export_executable_symbols_for_plugins target exported_symbol_file)
      set(newer_libs "")
    endwhile()
    list(REMOVE_DUPLICATES static_libs)
@@ -81,7 +81,7 @@ index 05ca179c7a0fe3c43be810f9296aa6557d5745cb..078cf0352ae33fa8aceb6f4d4b9df76f
    # If something links against this executable then we want a
    # transitive link against only the libraries whose symbols
    # we aren't exporting.
-@@ -1561,17 +1567,7 @@ endfunction()
+@@ -1552,17 +1558,7 @@ endfunction()
  
  function(do_export_all_symbols_for_plugins target)
    target_link_options(${target} PRIVATE "LINKER:--export-all-symbols")
@@ -101,5 +101,5 @@ index 05ca179c7a0fe3c43be810f9296aa6557d5745cb..078cf0352ae33fa8aceb6f4d4b9df76f
  
  function(export_executable_symbols target)
 -- 
-2.55.0
+2.56.0
 

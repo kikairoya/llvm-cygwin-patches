@@ -1,7 +1,7 @@
-From 40004fe1e433bae60e11fb9145dfb36196e4b16e Mon Sep 17 00:00:00 2001
+From c694318964e8e693a1a27d40316f81db6ebb6cf4 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 3 Feb 2026 19:54:03 +0900
-Subject: [PATCH 40/64] don't use Cygwin provided stdatomic.h
+Subject: [PATCH 40/63] don't use Cygwin provided stdatomic.h
 
 ---
  clang/lib/Headers/stdatomic.h | 1 +
@@ -20,5 +20,5 @@ index 1991351f9e9efed0fc4154afe02c9a9faf200c73..76e5da0eef36562c7612e8e6819b42e1
      (!defined(_MSC_VER) || (defined(__cplusplus) && __cplusplus >= 202002L))
  # include_next <stdatomic.h>
 -- 
-2.55.0
+2.56.0
 

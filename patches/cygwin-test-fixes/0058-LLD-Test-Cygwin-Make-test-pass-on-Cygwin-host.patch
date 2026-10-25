@@ -1,7 +1,7 @@
-From 9d659793cbd26a8bf5071fb6fd8ca2e9cf50c289 Mon Sep 17 00:00:00 2001
+From 8198e49cdfe0d6965c3a483f9f4f0806b5fb441c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 21:40:48 +0900
-Subject: [PATCH 59/64] [LLD][Test][Cygwin] Make test pass on Cygwin host
+Subject: [PATCH 58/63] [LLD][Test][Cygwin] Make test pass on Cygwin host
 
 When opening file 'XXX' on Cygwin, runtime searches also 'XXX.exe'.
 Thus, a file named 'hello64.exe' created by some tests conflicts
@@ -62,5 +62,5 @@ index fbf6b43a11dfeb7df9ead0958e09f95cfed6bcec..e1255f904ca1bb48a35df7070dda72d6
  MSVC stamps uppercase references in OBJ directives, thus ensure that passing lowercase 'libcmt' and 'oldnames' to /nodefaultlib works.
  # RUN: lld-link %S/Inputs/precomp.obj %S/Inputs/precomp-a.obj %S/Inputs/precomp-b.obj /nodefaultlib:libcmt /nodefaultlib:oldnames /entry:main /debug /pdb:%t.pdb /out:%t.exe /opt:ref /opt:icf
 -- 
-2.55.0
+2.56.0
 

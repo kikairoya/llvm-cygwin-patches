@@ -1,4 +1,4 @@
-From 617d8b348653963713430a9a28cf809489b2e038 Mon Sep 17 00:00:00 2001
+From b90530b3d619394c7c6873b5ffd849aaa98f18fb Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 27/35] [libc++][Test][Cygwin] Make test runnable for Cygwin
@@ -124,5 +124,5 @@ index 5ce4b4a090e4960830778fe7d47bb77e525a70d8..da47f70378d941966bbb333d9cb9f65e
          name="windows-dll",
          when=lambda cfg: "_WIN32" in compilerMacros(cfg)
 -- 
-2.55.0
+2.56.0
 

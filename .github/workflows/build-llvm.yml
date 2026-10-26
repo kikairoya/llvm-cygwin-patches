@@ -123,7 +123,7 @@ run-name: >-
 
 jobs:
   select:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     name: Select target
 
     outputs:
@@ -672,7 +672,7 @@ jobs:
   collect-results:
     #needs: [select, collect-results, build-llvm, check-llvm, build-clang, check-clang, build-lld, check-lld, build-runtimes, check-runtimes]
     needs: [select, build-llvm, check-llvm, build-runtimes, check-runtimes]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     if: ${{ always() && ! cancelled() && ! failure()}}
 
     outputs:

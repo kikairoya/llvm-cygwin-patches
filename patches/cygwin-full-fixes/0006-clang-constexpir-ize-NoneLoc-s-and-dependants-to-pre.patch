@@ -1,4 +1,4 @@
-From 2e571c57ea8f36e7adf6efe872a21f0b7d553152 Mon Sep 17 00:00:00 2001
+From ea1d686d0e94b46a3f7b8ccb293fb3fc18d9af38 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/51] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -14,10 +14,10 @@ Subject: [PATCH 06/51] [clang] constexpir-ize `NoneLoc`s and dependants to
  6 files changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/clang/include/clang/AST/DeclTemplate.h b/clang/include/clang/AST/DeclTemplate.h
-index 5724645602d9b31078d91c3bfa9dd262a5da3525..44928da70dd42f1089f1bc5a4556f68a75dfc761 100644
+index 1a5ed48874dddbf39ffeef3c69cda46a3f683317..5c922595c59ec1b379cd189304a5c0a5afa9ffa9 100644
 --- a/clang/include/clang/AST/DeclTemplate.h
 +++ b/clang/include/clang/AST/DeclTemplate.h
-@@ -1231,7 +1231,7 @@ public:
+@@ -1230,7 +1230,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -26,7 +26,7 @@ index 5724645602d9b31078d91c3bfa9dd262a5da3525..44928da70dd42f1089f1bc5a4556f68a
      return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
    }
  
-@@ -1434,7 +1434,7 @@ public:
+@@ -1433,7 +1433,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -35,7 +35,7 @@ index 5724645602d9b31078d91c3bfa9dd262a5da3525..44928da70dd42f1089f1bc5a4556f68a
      return DefaultArgument.isSet() ? *DefaultArgument.get() : NoneLoc;
    }
  
-@@ -1716,7 +1716,7 @@ public:
+@@ -1715,7 +1715,7 @@ public:
  
    /// Retrieve the default argument, if any.
    const TemplateArgumentLoc &getDefaultArgument() const {
@@ -114,10 +114,10 @@ index 6c1a378aadedac888c61c2bb3de342bd158bfde6..249c8914fa6244e48b5ae7bd0d35e7ec
    using Base::operator=;
  
 diff --git a/llvm/include/llvm/CodeGen/SlotIndexes.h b/llvm/include/llvm/CodeGen/SlotIndexes.h
-index a5f397fd8626b49015675729f6fc5b20b1a31386..9ca0633822bd39dba54c19d43896f2698017e84b 100644
+index 78873c153b47fad3935a6a929a8c7539d68d3be3..b99a4ce8aeea256ac725853c65e1352b2a1ea672 100644
 --- a/llvm/include/llvm/CodeGen/SlotIndexes.h
 +++ b/llvm/include/llvm/CodeGen/SlotIndexes.h
-@@ -116,7 +116,7 @@ class raw_ostream;
+@@ -128,7 +128,7 @@ class raw_ostream;
      };
  
      /// Construct an invalid index.

@@ -1,4 +1,4 @@
-From e2df3434b3f7247efc1dbac2525a7fb5865cac30 Mon Sep 17 00:00:00 2001
+From fad15e6353a760f311e455d4e2e57780c9fa05b2 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 31 May 2025 23:08:39 +0900
 Subject: [PATCH 26/35] [libunwind][Cygwin] Add support for Cygwin target
@@ -20,10 +20,10 @@ Subject: [PATCH 26/35] [libunwind][Cygwin] Add support for Cygwin target
  13 files changed, 52 insertions(+), 32 deletions(-)
 
 diff --git a/libunwind/include/__libunwind_config.h b/libunwind/include/__libunwind_config.h
-index 0c7aed13375a140bc221b7ddea09355dc2f5a036..004cfc94273da1bc8f2f1c59f43e40466801826d 100644
+index 30a6e891bac5c19bdd5f9f08956301c898c3a836..a895e0032f05d69200171e1bb40727c6a603e660 100644
 --- a/libunwind/include/__libunwind_config.h
 +++ b/libunwind/include/__libunwind_config.h
-@@ -46,7 +46,7 @@
+@@ -49,7 +49,7 @@
  #  define _LIBUNWIND_HIGHEST_DWARF_REGISTER _LIBUNWIND_HIGHEST_DWARF_REGISTER_X86
  # elif defined(__x86_64__)
  #  define _LIBUNWIND_TARGET_X86_64 1
@@ -33,7 +33,7 @@ index 0c7aed13375a140bc221b7ddea09355dc2f5a036..004cfc94273da1bc8f2f1c59f43e4046
  #    ifdef __SEH__
  #      define _LIBUNWIND_CURSOR_SIZE 204
 diff --git a/libunwind/include/libunwind.h b/libunwind/include/libunwind.h
-index 6c2dfe58e53bf1f97bca6c78dacb47cc3676b8dc..b5f58b0e3fea7308fc7846f07926311122c7cf95 100644
+index 7c2f611e208923da23d6fe417b34c438a5da5dbc..56f08d9e64e4f60c90e63034b3ea5920afe7d703 100644
 --- a/libunwind/include/libunwind.h
 +++ b/libunwind/include/libunwind.h
 @@ -146,7 +146,7 @@
@@ -60,7 +60,7 @@ index 93a9d92f327d362c5c003b77f4212b75507c42eb..b33ca119352eae6ba9dc669293fcf528
  #include <ntverp.h>
  #endif
 diff --git a/libunwind/src/AddressSpace.hpp b/libunwind/src/AddressSpace.hpp
-index 3711189f57b1d115c82811b18017b56d74284e2c..a62034fae3df51629a8f100f9a39bbfe24dfe320 100644
+index d446f6abd9578f142c55331ef3f5273dbc5f6f54..2f57a62a4d180aab8ea5a4446bef6f424e68fc6d 100644
 --- a/libunwind/src/AddressSpace.hpp
 +++ b/libunwind/src/AddressSpace.hpp
 @@ -24,11 +24,12 @@
@@ -125,48 +125,51 @@ index a9d9a2ef089d6ce98e114bd305b77a65b9d1264a..0db065a3e0cfeec27d4bcc563aed1481
  if (LIBUNWIND_ENABLE_SHARED AND LIBUNWIND_SUPPORTS_SHARED_LIBRARY AND
      NOT (CXX_SUPPORTS_FNO_EXCEPTIONS_FLAG AND
 diff --git a/libunwind/src/Registers.hpp b/libunwind/src/Registers.hpp
-index 4870e315962e096961b1619120bb4a2e9e0f4dbd..b901714c5b532592d63f4af9f89c943f5aa92622 100644
+index 8a7cad848ac298e726aea76c9f939f20354fd47a..e93ea3e2272f8bc85866859dc414fbecc3ebc3e7 100644
 --- a/libunwind/src/Registers.hpp
 +++ b/libunwind/src/Registers.hpp
-@@ -351,12 +351,12 @@ private:
-     uint64_t __cs;
-     uint64_t __fs;
-     uint64_t __gs;
+@@ -356,7 +356,7 @@ private:
+     uint16_t __gs;
+     uint64_t __fs_base;
+     uint64_t __gs_base;
 -#if defined(_WIN64)
-+#if defined(_WIN64) || defined(__CYGWIN__) && defined(__x86_64__)
++#if defined(_WIN64) || (defined(__CYGWIN__) && defined(__x86_64__))
      uint64_t __padding; // 16-byte align
  #endif
    };
+@@ -366,7 +366,7 @@ private:
+                     offsetof(GPRs, __gs_base) == 160,
+                 "x86_64 segment state must match the assembly offsets");
    GPRs _registers;
 -#if defined(_WIN64)
-+#if defined(_WIN64) || defined(__CYGWIN__) && defined(__x86_64__)
++#if defined(_WIN64) || (defined(__CYGWIN__) && defined(__x86_64__))
    v128 _xmm[16];
  #endif
  };
-@@ -572,7 +572,7 @@ inline void Registers_x86_64::setFloatRegister(int, double) {
+@@ -652,7 +652,7 @@ inline void Registers_x86_64::setFloatRegister(int, double) {
  }
  
  inline bool Registers_x86_64::validVectorRegister(int regNum) const {
 -#if defined(_WIN64)
-+#if defined(_WIN64) || defined(__CYGWIN__) && defined(__x86_64__)
++#if defined(_WIN64) || (defined(__CYGWIN__) && defined(__x86_64__))
    if (regNum < UNW_X86_64_XMM0)
      return false;
    if (regNum > UNW_X86_64_XMM15)
-@@ -585,7 +585,7 @@ inline bool Registers_x86_64::validVectorRegister(int regNum) const {
+@@ -665,7 +665,7 @@ inline bool Registers_x86_64::validVectorRegister(int regNum) const {
  }
  
  inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
 -#if defined(_WIN64)
-+#if defined(_WIN64) || defined(__CYGWIN__) && defined(__x86_64__)
++#if defined(_WIN64) || (defined(__CYGWIN__) && defined(__x86_64__))
    assert(validVectorRegister(regNum));
    return _xmm[regNum - UNW_X86_64_XMM0];
  #else
-@@ -595,7 +595,7 @@ inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
+@@ -675,7 +675,7 @@ inline v128 Registers_x86_64::getVectorRegister(int regNum) const {
  }
  
  inline void Registers_x86_64::setVectorRegister(int regNum, v128 value) {
 -#if defined(_WIN64)
-+#if defined(_WIN64) || defined(__CYGWIN__) && defined(__x86_64__)
++#if defined(_WIN64) || (defined(__CYGWIN__) && defined(__x86_64__))
    assert(validVectorRegister(regNum));
    _xmm[regNum - UNW_X86_64_XMM0] = value;
  #else
@@ -193,7 +196,7 @@ index 0b1930b44d1c648b89099b6f2f796b4233f1c877..38209154729db7365599eb2f51ddea6f
    urc = pers(1, action, exc->exception_class, exc, ctx);
    _LIBUNWIND_TRACE_UNWINDING("_GCC_specific_handler() personality returned %d", urc);
 diff --git a/libunwind/src/UnwindCursor.hpp b/libunwind/src/UnwindCursor.hpp
-index f307190addadac9a8cdf84e35d7dab2255315409..31fa4059fb0b858b7184539b2168e927b0d8be0f 100644
+index dfd5b2b19e1b485cc61ec2922788899bd24b1c55..586d41504de8a24d0917638be74697969f1201db 100644
 --- a/libunwind/src/UnwindCursor.hpp
 +++ b/libunwind/src/UnwindCursor.hpp
 @@ -17,9 +17,9 @@
@@ -209,7 +212,7 @@ index f307190addadac9a8cdf84e35d7dab2255315409..31fa4059fb0b858b7184539b2168e927
  #endif
  #ifdef __APPLE__
    #include <mach-o/dyld.h>
-@@ -514,7 +514,8 @@ public:
+@@ -525,7 +525,8 @@ public:
  #endif
  };
  
@@ -219,7 +222,7 @@ index f307190addadac9a8cdf84e35d7dab2255315409..31fa4059fb0b858b7184539b2168e927
  
  /// \c UnwindCursor contains all state (including all register values) during
  /// an unwind.  This is normally stack-allocated inside a unw_cursor_t.
-@@ -2189,7 +2190,7 @@ bool UnwindCursor<A, R>::getInfoFromSEH(pint_t pc) {
+@@ -2202,7 +2203,7 @@ bool UnwindCursor<A, R>::getInfoFromSEH(pint_t pc) {
    pint_t base;
    RUNTIME_FUNCTION *unwindEntry = lookUpSEHUnwindInfo(pc, &base);
    if (!unwindEntry) {
@@ -228,7 +231,7 @@ index f307190addadac9a8cdf84e35d7dab2255315409..31fa4059fb0b858b7184539b2168e927
      return false;
    }
    _info.gp = 0;
-@@ -2930,7 +2931,8 @@ void UnwindCursor<A, R>::setInfoBasedOnIPRegister(bool isReturnAddress) {
+@@ -2944,7 +2945,8 @@ void UnwindCursor<A, R>::setInfoBasedOnIPRegister(bool isReturnAddress) {
      --pc;
  #endif
  
@@ -239,10 +242,10 @@ index f307190addadac9a8cdf84e35d7dab2255315409..31fa4059fb0b858b7184539b2168e927
    // In case of this is frame of signal handler, the IP saved in the signal
    // handler points to first non-executed instruction, while FDE/CIE expects IP
 diff --git a/libunwind/src/UnwindRegistersRestore.S b/libunwind/src/UnwindRegistersRestore.S
-index 6c9dcc48c309ad1e12084326f99a78990694ae10..99b96443b6c24dbcef40a3db8281232196ae2e99 100644
+index b1b075ba556f913ec8cda7ef8471221a13c8af3c..5968a0f7e3d7a8fa32490122b39b4b7173861a4f 100644
 --- a/libunwind/src/UnwindRegistersRestore.S
 +++ b/libunwind/src/UnwindRegistersRestore.S
-@@ -79,7 +79,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
+@@ -82,7 +82,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
  #
  # extern "C" void __libunwind_Registers_x86_64_jumpto(Registers_x86_64 *);
  #
@@ -251,7 +254,7 @@ index 6c9dcc48c309ad1e12084326f99a78990694ae10..99b96443b6c24dbcef40a3db82812321
  # On entry, thread_state pointer is in rcx; move it into rdi
  # to share restore code below. Since this routine restores and
  # overwrites all registers, we can use the same registers for
-@@ -123,7 +123,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
+@@ -126,7 +126,7 @@ DEFINE_LIBUNWIND_FUNCTION(__libunwind_Registers_x86_64_jumpto)
    # skip fs
    # skip gs
  
@@ -261,7 +264,7 @@ index 6c9dcc48c309ad1e12084326f99a78990694ae10..99b96443b6c24dbcef40a3db82812321
    movdqu 192(%rdi),%xmm1
    movdqu 208(%rdi),%xmm2
 diff --git a/libunwind/src/UnwindRegistersSave.S b/libunwind/src/UnwindRegistersSave.S
-index 81d32009952895ae707296af4189fcb0870ec2a2..eade6521effbef9f5caffc0d2007c23884f08a3c 100644
+index 1dbc1f697bc14aa01a2eb244c8d9472f3fc876b9..e6bcec6f80aecc0f064b2733376b47305d3132ff 100644
 --- a/libunwind/src/UnwindRegistersSave.S
 +++ b/libunwind/src/UnwindRegistersSave.S
 @@ -121,7 +121,7 @@ DEFINE_LIBUNWIND_FUNCTION("#__unw_getcontext")
@@ -273,9 +276,9 @@ index 81d32009952895ae707296af4189fcb0870ec2a2..eade6521effbef9f5caffc0d2007c238
  #define PTR %rcx
  #define TMP %rdx
  #else
-@@ -157,7 +157,7 @@ DEFINE_LIBUNWIND_FUNCTION(__unw_getcontext)
-   # skip fs
+@@ -196,7 +196,7 @@ DEFINE_LIBUNWIND_FUNCTION(__unw_getcontext)
    # skip gs
+ #endif
  
 -#if defined(_WIN64)
 +#if defined(_WIN64) || defined(__CYGWIN__)
@@ -283,10 +286,10 @@ index 81d32009952895ae707296af4189fcb0870ec2a2..eade6521effbef9f5caffc0d2007c238
    movdqu %xmm1,192(PTR)
    movdqu %xmm2,208(PTR)
 diff --git a/libunwind/src/assembly.h b/libunwind/src/assembly.h
-index 84c9d526f1d7594e456b5a31c11adff57f79551a..e222ea9fb2180c53d4104b78ae5a5eb5b3b55f90 100644
+index 43c2ad78f3a0baa3ba0334686ca35fdaf30cb276..1c2c4c58798be269dc8d3423e6a068f2e2ac3bd9 100644
 --- a/libunwind/src/assembly.h
 +++ b/libunwind/src/assembly.h
-@@ -165,6 +165,7 @@
+@@ -174,6 +174,7 @@
  #endif
  #define WEAK_SYMBOL(name) .weak name
  
@@ -294,7 +297,7 @@ index 84c9d526f1d7594e456b5a31c11adff57f79551a..e222ea9fb2180c53d4104b78ae5a5eb5
  #if defined(__hexagon__)
  #define WEAK_ALIAS(name, aliasname)                                            \
    EXPORT_SYMBOL(SYMBOL_NAME(aliasname)) SEPARATOR                              \
-@@ -176,6 +177,7 @@
+@@ -185,6 +186,7 @@
    WEAK_SYMBOL(SYMBOL_NAME(aliasname)) SEPARATOR                                \
    SYMBOL_NAME(aliasname) = SYMBOL_NAME(name)
  #endif
@@ -302,7 +305,7 @@ index 84c9d526f1d7594e456b5a31c11adff57f79551a..e222ea9fb2180c53d4104b78ae5a5eb5
  
  #if defined(__GNU__) || defined(__FreeBSD__) || defined(__Fuchsia__) || \
      defined(__linux__)
-@@ -184,8 +186,9 @@
+@@ -193,8 +195,9 @@
  #define NO_EXEC_STACK_DIRECTIVE
  #endif
  
@@ -313,7 +316,7 @@ index 84c9d526f1d7594e456b5a31c11adff57f79551a..e222ea9fb2180c53d4104b78ae5a5eb5
  #define SYMBOL_IS_FUNC(name)                                                   \
    .def name SEPARATOR                                                          \
      .scl 2 SEPARATOR                                                           \
-@@ -201,8 +204,10 @@
+@@ -210,8 +213,10 @@
  #define EXPORT_SYMBOL(name) EXPORT_SYMBOL2(name)
  #endif
  #define HIDDEN_SYMBOL(name)
@@ -325,7 +328,7 @@ index 84c9d526f1d7594e456b5a31c11adff57f79551a..e222ea9fb2180c53d4104b78ae5a5eb5
  #define WEAK_ALIAS(name, aliasname)                                            \
    .globl SYMBOL_NAME(aliasname) SEPARATOR                                      \
    EXPORT_SYMBOL(aliasname) SEPARATOR                                           \
-@@ -218,6 +223,7 @@
+@@ -227,6 +232,7 @@
    EXPORT_SYMBOL(SYMBOL_NAME(aliasname)) SEPARATOR                              \
    WEAK_ALIAS2(SYMBOL_NAME(name), SYMBOL_NAME(aliasname))
  #endif

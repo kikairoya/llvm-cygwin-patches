@@ -1,4 +1,4 @@
-From 7a231f6e2728f3d65b8b89cba758a8d09f3a2161 Mon Sep 17 00:00:00 2001
+From 4450fc4350a0c690caf6c8141cc02919f5b66437 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 26 Aug 2026 20:42:26 +0900
 Subject: [PATCH 34/38] [LLVM][SPIRV] Add a null check

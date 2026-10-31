@@ -1,4 +1,4 @@
-From ae8aa08cae186a7f9b9719bddf5688824d2b66b0 Mon Sep 17 00:00:00 2001
+From 63834a8b64c6b0e9e48eca48c659b04feb251a79 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 18:02:39 +0900
 Subject: [PATCH 60/63] [LLVM-Tools][Test][Cygwin](NFC) Diverge expected result
@@ -43,7 +43,7 @@ index fdcba4dcd666b0dd97b2b0dedcec25d047cc9314..f2ce4a5c53c37fa8909c644c1e8175c4
  # RUN: touch %t
  # RUN: chmod 0777 %t
 diff --git a/llvm/test/tools/llvm-ifs/fail-file-write.test b/llvm/test/tools/llvm-ifs/fail-file-write.test
-index f13500f22620593e4eaf25fb140f6e5a51dead73..0eb7a127a425940448c51709cc36c7f74ec3a762 100644
+index a068d6466dd12252bad3b3e4626e7415c1156f08..9c53d4becbca4ef6bee32b4f574bebb731e03d3b 100644
 --- a/llvm/test/tools/llvm-ifs/fail-file-write.test
 +++ b/llvm/test/tools/llvm-ifs/fail-file-write.test
 @@ -1,6 +1,6 @@

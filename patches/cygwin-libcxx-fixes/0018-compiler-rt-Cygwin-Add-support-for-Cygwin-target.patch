@@ -1,4 +1,4 @@
-From 6910002852e68f7d15b1e658da9f453a1d7dd57b Mon Sep 17 00:00:00 2001
+From 70503322717bad1526bda5ec48f3d079f1fae902 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Sep 2025 19:32:51 +0900
 Subject: [PATCH 18/35] [compiler-rt][Cygwin] Add support for Cygwin target
@@ -13,7 +13,7 @@ Subject: [PATCH 18/35] [compiler-rt][Cygwin] Add support for Cygwin target
  6 files changed, 30 insertions(+), 14 deletions(-)
 
 diff --git a/compiler-rt/cmake/config-ix.cmake b/compiler-rt/cmake/config-ix.cmake
-index d411cf014dd34b11008358f7ae96aef51d79c8fc..71a7c21e3d7a360e2a7c6c607fe7b55f88f13206 100644
+index 6b3d97d9940211ae4d10f1ae5616ca4b699c5cd5..87a87ea84d66ae945ece555a84332b9206095ca0 100644
 --- a/compiler-rt/cmake/config-ix.cmake
 +++ b/compiler-rt/cmake/config-ix.cmake
 @@ -66,6 +66,19 @@ if (C_SUPPORTS_NODEFAULTLIBS_FLAG)
@@ -36,7 +36,7 @@ index d411cf014dd34b11008358f7ae96aef51d79c8fc..71a7c21e3d7a360e2a7c6c607fe7b55f
    if (NOT TARGET unwind)
      # Don't check for a library named unwind, if there's a target with that name within
      # the same build.
-@@ -850,7 +863,7 @@ else()
+@@ -879,7 +892,7 @@ else()
  endif()
  
  if (PROFILE_SUPPORTED_ARCH AND NOT LLVM_USE_SANITIZER AND
@@ -46,7 +46,7 @@ index d411cf014dd34b11008358f7ae96aef51d79c8fc..71a7c21e3d7a360e2a7c6c607fe7b55f
  else()
    set(COMPILER_RT_HAS_PROFILE FALSE)
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index ab9c707b3db44dc9b4d896c52c7a526cd4a95c05..5a34588347adab603311414255b3dc9998584c48 100644
+index 67427a1f4b8a4979231f7a6d51ac8670f3d51474..95fda7bafa2b87c60649268e240e567984f3a9d0 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -45,6 +45,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -61,7 +61,7 @@ index ab9c707b3db44dc9b4d896c52c7a526cd4a95c05..5a34588347adab603311414255b3dc99
  endif()
  
  if (COMPILER_RT_STANDALONE_BUILD)
-@@ -410,7 +415,7 @@ if (NOT MSVC)
+@@ -416,7 +421,7 @@ if (NOT MSVC)
      x86_64/floatdidf.c
      x86_64/floatdisf.c
    )
@@ -70,7 +70,7 @@ index ab9c707b3db44dc9b4d896c52c7a526cd4a95c05..5a34588347adab603311414255b3dc99
      set(x86_64_SOURCES
        ${x86_64_SOURCES}
        x86_64/floatundidf.S
-@@ -424,10 +429,7 @@ if (NOT MSVC)
+@@ -430,10 +435,7 @@ if (NOT MSVC)
        ${x86_80_BIT_SOURCES}
        x86_64/floatdixf.c
      )
@@ -82,7 +82,7 @@ index ab9c707b3db44dc9b4d896c52c7a526cd4a95c05..5a34588347adab603311414255b3dc99
        set(x86_64_SOURCES
          ${x86_64_SOURCES}
          x86_64/floatundixf.S
-@@ -441,7 +443,7 @@ if (NOT MSVC)
+@@ -447,7 +449,7 @@ if (NOT MSVC)
    # x86_64 LFI
    set(x86_64_lfi_SOURCES ${x86_64_SOURCES})
  
@@ -91,7 +91,7 @@ index ab9c707b3db44dc9b4d896c52c7a526cd4a95c05..5a34588347adab603311414255b3dc99
      set(x86_64_SOURCES
        ${x86_64_SOURCES}
        x86_64/chkstk.S
-@@ -473,7 +475,7 @@ if (NOT MSVC)
+@@ -479,7 +481,7 @@ if (NOT MSVC)
      )
    endif()
  
@@ -100,7 +100,7 @@ index ab9c707b3db44dc9b4d896c52c7a526cd4a95c05..5a34588347adab603311414255b3dc99
      set(i386_SOURCES
        ${i386_SOURCES}
        i386/chkstk.S
-@@ -756,7 +758,7 @@ set(arm_min_SOURCES
+@@ -762,7 +764,7 @@ set(arm_min_SOURCES
    ${arm_EABI_SOURCES}
  )
  
@@ -109,7 +109,7 @@ index ab9c707b3db44dc9b4d896c52c7a526cd4a95c05..5a34588347adab603311414255b3dc99
    set(arm_SOURCES
      arm/aeabi_idivmod.S
      arm/aeabi_ldivmod.S
-@@ -867,7 +869,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
+@@ -873,7 +875,7 @@ foreach(pat cas swp ldadd ldclr ldeor ldset)
    endforeach(size)
  endforeach(pat)
  

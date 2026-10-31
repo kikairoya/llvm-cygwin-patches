@@ -1,4 +1,4 @@
-From 0865c36bb5d7f4668d5053c067943b6a84ae4a9c Mon Sep 17 00:00:00 2001
+From 28ed892d0149bd24fdb90983dc02c1aba190ebdd Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 13 Oct 2026 20:15:01 +0900
 Subject: [PATCH 23/35] [libc++][Cygwin] Add support for Cygwin target
@@ -14,10 +14,10 @@ Subject: [PATCH 23/35] [libc++][Cygwin] Add support for Cygwin target
  7 files changed, 48 insertions(+), 7 deletions(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index d163f0f579c3954f52cdc7fe84789d6d14202619..9b3fd9ef6f7df1fc0a8ed38c1efd304fd095adec 100644
+index ff6f8d1593fe2ca313c5578c1072db6721dd9547..a58af3827f8528ef9e086969b449f115e50082ea 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
-@@ -287,7 +287,7 @@ if (LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY
+@@ -288,7 +288,7 @@ if (LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY
      OR NOT LIBCXX_ENABLE_SHARED
      OR LIBCXX_CXX_ABI STREQUAL "none")
    set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE OFF)
@@ -26,7 +26,7 @@ index d163f0f579c3954f52cdc7fe84789d6d14202619..9b3fd9ef6f7df1fc0a8ed38c1efd304f
    set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE ON)
  else()
    set(ENABLE_LINKER_SCRIPT_DEFAULT_VALUE OFF)
-@@ -337,7 +337,7 @@ option(LIBCXX_ENABLE_PEDANTIC "Compile with pedantic enabled." OFF)
+@@ -338,7 +338,7 @@ option(LIBCXX_ENABLE_PEDANTIC "Compile with pedantic enabled." OFF)
  option(LIBCXX_ENABLE_WERROR "Fail and stop if a warning is triggered." OFF)
  
  set(LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT OFF)
@@ -35,7 +35,7 @@ index d163f0f579c3954f52cdc7fe84789d6d14202619..9b3fd9ef6f7df1fc0a8ed38c1efd304f
    set(LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT ON)
  endif()
  option(LIBCXX_HERMETIC_STATIC_LIBRARY
-@@ -565,6 +565,10 @@ function(cxx_add_basic_build_flags target)
+@@ -566,6 +566,10 @@ function(cxx_add_basic_build_flags target)
      target_compile_options(${target} PRIVATE -std=c++26)
    endif()
  
@@ -46,7 +46,7 @@ index d163f0f579c3954f52cdc7fe84789d6d14202619..9b3fd9ef6f7df1fc0a8ed38c1efd304f
    # When building the dylib, don't warn for unavailable aligned allocation
    # functions based on the deployment target -- they are always available
    # because they are provided by the dylib itself with the exception of z/OS.
-@@ -700,6 +704,22 @@ function(cxx_link_system_libraries target)
+@@ -701,6 +705,22 @@ function(cxx_link_system_libraries target)
    if (MINGW)
      target_link_libraries(${target} PRIVATE "${MINGW_LIBRARIES}")
    endif()
@@ -69,7 +69,7 @@ index d163f0f579c3954f52cdc7fe84789d6d14202619..9b3fd9ef6f7df1fc0a8ed38c1efd304f
  
    if (MSVC)
      # Required for standards-complaint wide character formatting functions
-@@ -774,6 +794,8 @@ elseif (RUNTIMES_USE_LIBC STREQUAL "newlib")
+@@ -776,6 +796,8 @@ elseif (RUNTIMES_USE_LIBC STREQUAL "newlib")
    config_define(1 _LIBCPP_LIBC_NEWLIB)
  elseif (RUNTIMES_USE_LIBC STREQUAL "llvm-libc")
    config_define(1 _LIBCPP_LIBC_LLVM_LIBC)
@@ -101,7 +101,7 @@ index 7a2b7e3209c765d26e976c507b6de34d9861d66d..214d466ee1ab20083e211629697a1302
  
  if (CXX_SUPPORTS_NOSTDLIBXX_FLAG OR C_SUPPORTS_NODEFAULTLIBS_FLAG)
 diff --git a/libcxx/include/__config b/libcxx/include/__config
-index ade43d42dc283de660f3a0e0d36bdb5bfccdade4..889bf99bae6c35c1326a0624b276ba22e7c63133 100644
+index 635999f8101745d53836326e18448b40654e9c99..42167516767266937896108b47c4c34fa8e10b75 100644
 --- a/libcxx/include/__config
 +++ b/libcxx/include/__config
 @@ -47,6 +47,10 @@

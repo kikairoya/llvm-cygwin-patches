@@ -1,4 +1,4 @@
-From 6b67f60c35ab198d16eef1d4afb68d24b82d4ae6 Mon Sep 17 00:00:00 2001
+From f31ea2a4581b144c045ac327622fdb75c3c09c45 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 22 Sep 2026 05:28:05 +0900
 Subject: [PATCH 01/35] Reapply "[Clang] Warn about ignored dllimport on
@@ -13,7 +13,7 @@ This reverts commit 16ff0ec65655a16f9a01c20d059d1e6ddb27f6b9.
  4 files changed, 175 insertions(+), 36 deletions(-)
 
 diff --git a/clang/include/clang/Basic/DiagnosticSemaKinds.td b/clang/include/clang/Basic/DiagnosticSemaKinds.td
-index f0e06e314e3c298cdef6336603e449073665c8d8..02e903a1093d6325db8300340d22d52caed30292 100644
+index 56cc9721781063da6898e9b377a90d875437a084..012e67e2ea6ccd69fd6e5a71aadfa7234d948502 100644
 --- a/clang/include/clang/Basic/DiagnosticSemaKinds.td
 +++ b/clang/include/clang/Basic/DiagnosticSemaKinds.td
 @@ -3896,6 +3896,9 @@ def warn_dllimport_dropped_from_inline_function : Warning<
@@ -37,7 +37,7 @@ index f0e06e314e3c298cdef6336603e449073665c8d8..02e903a1093d6325db8300340d22d52c
    "explicit instantiation declaration should not be 'dllexport'">,
    InGroup<DllexportExplicitInstantiationDecl>;
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index ec1f8077893eb3d886b760c23569ce9e800a14d9..e09137161d89b55965768a732ae6239995d42a34 100644
+index 0caf7593ca9d5bfb0afc4f6bf8f4da9bf47e86f0..db7289f8c32a5180f08cc05fbe90ee509b04bf11 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
 @@ -10361,23 +10361,32 @@ DeclResult Sema::ActOnExplicitInstantiation(

@@ -1,4 +1,4 @@
-From 70366f2f46523128630a6fb8509675cf1d34cb51 Mon Sep 17 00:00:00 2001
+From 3211198242d665f54f2183c0c57ec7cac7e3033d Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:31 +0900
 Subject: [PATCH 17/63] specialize nested
@@ -9,7 +9,7 @@ Subject: [PATCH 17/63] specialize nested
  2 files changed, 51 insertions(+), 8 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 815aed8fffdda6a1027c0afb81dab43b15cd38ba..3a3ca2aaff06f5831fb583fab1e7e744c7781950 100644
+index d520997704a9fdc2b5070d0c527ce08003fd09cf..0d806b9fee74f4670fcb4a2809c8ee2550b4ead0 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6743,6 +6743,9 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
@@ -23,7 +23,7 @@ index 815aed8fffdda6a1027c0afb81dab43b15cd38ba..3a3ca2aaff06f5831fb583fab1e7e744
        continue;
      }
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index d9f51149f9300bd2515be3ffcab3285c032ea9b9..c204af1276cb54f3ebe09ac0c73b1ae71a50e390 100644
+index b89b1bc83d18df427a6b8b7115f2ebce4fa9a1ad..3e782a668fc64dab0510d93b3e0f041b913a656d 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
 @@ -10295,8 +10295,8 @@ static bool ScopeSpecifierHasTemplateId(const CXXScopeSpec &SS) {

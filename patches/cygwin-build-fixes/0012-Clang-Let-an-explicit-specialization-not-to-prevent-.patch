@@ -1,4 +1,4 @@
-From e56da9e419a79f863678ac96db5246d681f710fe Mon Sep 17 00:00:00 2001
+From 93467f80db432694232d3fc0fffecf063253c8ae Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:29:58 +0900
 Subject: [PATCH 12/38] [Clang] Let an explicit specialization not to prevent
@@ -10,7 +10,7 @@ Subject: [PATCH 12/38] [Clang] Let an explicit specialization not to prevent
  2 files changed, 76 insertions(+), 64 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 0fe0daa71c1bcf20b2570a040f4c86d47e651dfd..5526e88448134a89f61f9f711f6b68a02a150670 100644
+index 7670b0fb22c01eabbf3a3acb866f06d11608389e..0b575edace03bcb0805772b0dfb462bcd245fa28 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
 @@ -6722,6 +6722,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
@@ -28,7 +28,7 @@ index 0fe0daa71c1bcf20b2570a040f4c86d47e651dfd..5526e88448134a89f61f9f711f6b68a0
      // Only methods and static fields inherit the attributes.
      if (!VD && !MD)
 diff --git a/clang/lib/Sema/SemaTemplate.cpp b/clang/lib/Sema/SemaTemplate.cpp
-index 93bb2c5e7075fbc64c35c146e0cc8b4830f4b144..d9f51149f9300bd2515be3ffcab3285c032ea9b9 100644
+index 359692f74a9ed6f19a698e9a7274163435ec5ea4..b89b1bc83d18df427a6b8b7115f2ebce4fa9a1ad 100644
 --- a/clang/lib/Sema/SemaTemplate.cpp
 +++ b/clang/lib/Sema/SemaTemplate.cpp
 @@ -10361,7 +10361,7 @@ DeclResult Sema::ActOnExplicitInstantiation(

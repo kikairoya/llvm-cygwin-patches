@@ -1,4 +1,4 @@
-From bb1360c86f92207e546adca572fbb76d6440db1f Mon Sep 17 00:00:00 2001
+From e018db06c9c12e8f518d54c0bf4dbd7c95c91997 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 11 Oct 2025 17:39:03 +0900
 Subject: [PATCH 57/63] [Clang][Unittest][Cygwin] Diverge expected result on
@@ -23,10 +23,10 @@ index b32d4a6d33fc62129af84644051fd250a785e5d9..c23db4b6697aa4e4916ddc5ab8eefb86
  endif()
  
 diff --git a/clang/unittests/Interpreter/InterpreterTest.cpp b/clang/unittests/Interpreter/InterpreterTest.cpp
-index 17cc6fc9b6ca8ee27a8e9db76f123b5b1c4934ca..a23a107e3819d54b1329c7c6e5fce859b996a2ac 100644
+index 41c1facc8f2f082ce15c6dfe09e208b08f0cbc8a..32eab742661fe574163e64f06f93519eb1c821d6 100644
 --- a/clang/unittests/Interpreter/InterpreterTest.cpp
 +++ b/clang/unittests/Interpreter/InterpreterTest.cpp
-@@ -287,7 +287,7 @@ TEST_F(InterpreterTest, FindMangledNameSymbol) {
+@@ -289,7 +289,7 @@ TEST_F(InterpreterTest, FindMangledNameSymbol) {
    EXPECT_FALSE(!Addr);
  
    // FIXME: Re-enable when we investigate the way we handle dllimports on Win.

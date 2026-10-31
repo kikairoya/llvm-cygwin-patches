@@ -1,4 +1,4 @@
-From a9abd88f1e64caa556b4e1509bf149c82a2829a8 Mon Sep 17 00:00:00 2001
+From 4544e3db37fea6d8681cc7ec79836b8bc7142251 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
 Subject: [PATCH 02/51] [LLVM] Annotate LLVM_TEMPLATE_ABI
@@ -15,10 +15,10 @@ Subject: [PATCH 02/51] [LLVM] Annotate LLVM_TEMPLATE_ABI
  8 files changed, 25 insertions(+), 29 deletions(-)
 
 diff --git a/llvm/include/llvm/ADT/SmallVector.h b/llvm/include/llvm/ADT/SmallVector.h
-index 98097fb97f85a143117da22872b4f6bfc3c6d8ad..c39871173187973b3b056d4d548e36939104cc14 100644
+index 9fb90e0b1ed45d89957db74bc53ced5df976c114..d411f3ef59cbde854ed181de05f8596aa36273ed 100644
 --- a/llvm/include/llvm/ADT/SmallVector.h
 +++ b/llvm/include/llvm/ADT/SmallVector.h
-@@ -1393,9 +1393,9 @@ template <typename Out, typename R> SmallVector<Out> to_vector_of(R &&Range) {
+@@ -1406,9 +1406,9 @@ template <typename Out, typename R> SmallVector<Out> to_vector_of(R &&Range) {
  }
  
  // Explicit instantiations

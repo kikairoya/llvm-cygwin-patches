@@ -1,4 +1,4 @@
-From 503591898653f8b5d2e6f1ecc8a7e4b52db62aad Mon Sep 17 00:00:00 2001
+From 68a60ca6217a394fd7137e7c105dec0cf986d8ed Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 4/6] [compiler-rt][Test][Cygwin] Make test runnable for Cygwin
@@ -48,7 +48,7 @@ index cc2b905c68bec17f93bcce2f44a37fcc1346f40d..1a240d1eb2d18d3f69739daf8dddd427
      base_lib = os.path.join(
          config.compiler_rt_libdir, "libclang_rt.builtins%s.a" % config.target_suffix
 diff --git a/compiler-rt/test/lit.common.cfg.py b/compiler-rt/test/lit.common.cfg.py
-index a7c9efaf2ddbc18c5d90b2a39abd6eba50c74a2a..73a488dd3a574bb32f626ced82e99a898abe8071 100644
+index 50d2bbbefea07c6abc536777712e5d80c20b2f93..7801ced73e91a3bb08fdad022d8b076ef471c359 100644
 --- a/compiler-rt/test/lit.common.cfg.py
 +++ b/compiler-rt/test/lit.common.cfg.py
 @@ -66,7 +66,7 @@ def find_compiler_libdir():

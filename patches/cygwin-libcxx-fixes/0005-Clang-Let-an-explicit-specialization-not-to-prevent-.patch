@@ -1,4 +1,4 @@
-From 93467f80db432694232d3fc0fffecf063253c8ae Mon Sep 17 00:00:00 2001
+From 0a3fbe06cbcc744faec951049a72e3724b4cbc05 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:29:58 +0900
 Subject: [PATCH 05/35] [Clang] Let an explicit specialization not to prevent
@@ -10,10 +10,10 @@ Subject: [PATCH 05/35] [Clang] Let an explicit specialization not to prevent
  2 files changed, 76 insertions(+), 64 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 7670b0fb22c01eabbf3a3acb866f06d11608389e..0b575edace03bcb0805772b0dfb462bcd245fa28 100644
+index 27b90e1a85ec0075f19f88c931270dd987e6ee1a..167c1784b752c3ed3fd0905aa8ecd2cbbf48d279 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
-@@ -6722,6 +6722,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6705,6 +6705,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
  
      VarDecl *VD = dyn_cast<VarDecl>(Member);
      CXXMethodDecl *MD = dyn_cast<CXXMethodDecl>(Member);

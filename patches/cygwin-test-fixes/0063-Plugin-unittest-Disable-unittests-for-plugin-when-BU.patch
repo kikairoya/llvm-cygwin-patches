@@ -1,4 +1,4 @@
-From 98e21b9c86c9b7dad78e77356d9be367497da2a8 Mon Sep 17 00:00:00 2001
+From a0f6a23e8eeaf9f96962e7a63f53a8210efaaf09 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 19:56:11 +0900
 Subject: [PATCH 63/63] [Plugin][unittest] Disable unittests for plugin when
@@ -10,7 +10,7 @@ Subject: [PATCH 63/63] [Plugin][unittest] Disable unittests for plugin when
  2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/llvm/unittests/Analysis/PluginInlineAdvisorAnalysisTest.cpp b/llvm/unittests/Analysis/PluginInlineAdvisorAnalysisTest.cpp
-index 3cd22dba2b08458a1f1b47decddf29e7b6b751ea..aa4467e29866e9b114ebcd7f129a3bd98cd32c07 100644
+index c9a1bd887d48075dcaa4a2a5b97a69ab86250ef9..f4eb61d2191ae4e573c0431c6e13260824b5f8b3 100644
 --- a/llvm/unittests/Analysis/PluginInlineAdvisorAnalysisTest.cpp
 +++ b/llvm/unittests/Analysis/PluginInlineAdvisorAnalysisTest.cpp
 @@ -246,7 +246,9 @@ define i32 @fib_check(){
@@ -25,7 +25,7 @@ index 3cd22dba2b08458a1f1b47decddf29e7b6b751ea..aa4467e29866e9b114ebcd7f129a3bd9
    GTEST_SKIP();
  #endif
 diff --git a/llvm/unittests/Analysis/PluginInlineOrderAnalysisTest.cpp b/llvm/unittests/Analysis/PluginInlineOrderAnalysisTest.cpp
-index 7e29c80ce5be570bdc00361470081fc42419e37a..a60c289ea193287708bbe13c0b2c01957a644c4a 100644
+index 1b74ead2315aa6d83aa53a2afb48f1592c15f041..84f7a416e13440b7128796f27fcc2b6288aeb767 100644
 --- a/llvm/unittests/Analysis/PluginInlineOrderAnalysisTest.cpp
 +++ b/llvm/unittests/Analysis/PluginInlineOrderAnalysisTest.cpp
 @@ -223,7 +223,9 @@ define i32 @fib_check(){

@@ -1,4 +1,4 @@
-From 68a60ca6217a394fd7137e7c105dec0cf986d8ed Mon Sep 17 00:00:00 2001
+From 4c6e1a612a899076d67541ef063ec8c7b8926239 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 25 May 2025 14:11:29 +0900
 Subject: [PATCH 20/35] [compiler-rt][Test][Cygwin] Make test runnable for
@@ -26,10 +26,10 @@ index 272e687cf91dec3c6d16d9b0fac524dc2aa90995..75b4d314686a203ae494474d47fa8e82
  
      compiler_rt_test_runtime(lsan)
 diff --git a/compiler-rt/test/builtins/Unit/lit.cfg.py b/compiler-rt/test/builtins/Unit/lit.cfg.py
-index cc2b905c68bec17f93bcce2f44a37fcc1346f40d..1a240d1eb2d18d3f69739daf8dddd427f6efe01b 100644
+index e011d6b8214c650ba4f2ed81b7afb352e676fe99..1810cb357f3c692d4f26d031e40cf8370b350c03 100644
 --- a/compiler-rt/test/builtins/Unit/lit.cfg.py
 +++ b/compiler-rt/test/builtins/Unit/lit.cfg.py
-@@ -73,6 +73,17 @@ elif config.target_os == "Windows":
+@@ -75,6 +75,17 @@ elif config.target_os == "Windows":
              + " -lmingw32 -lmoldname -lmingwex -lmsvcrt -ladvapi32 -lshell32 -luser32 -lkernel32 ",
          )
      )
@@ -48,7 +48,7 @@ index cc2b905c68bec17f93bcce2f44a37fcc1346f40d..1a240d1eb2d18d3f69739daf8dddd427
      base_lib = os.path.join(
          config.compiler_rt_libdir, "libclang_rt.builtins%s.a" % config.target_suffix
 diff --git a/compiler-rt/test/lit.common.cfg.py b/compiler-rt/test/lit.common.cfg.py
-index 50d2bbbefea07c6abc536777712e5d80c20b2f93..7801ced73e91a3bb08fdad022d8b076ef471c359 100644
+index b258f99e76cbf268dc1fa9a62ce4b0f29f50c436..e60c781b21dc28d78a300db887d3d42449aacfc0 100644
 --- a/compiler-rt/test/lit.common.cfg.py
 +++ b/compiler-rt/test/lit.common.cfg.py
 @@ -66,7 +66,7 @@ def find_compiler_libdir():
@@ -72,10 +72,10 @@ index b622e072bcbfbc28554b5bd44c178de15b016823..2b64b52bf7f1ecb3187ef74ba228056e
 +if root.target_os not in ["Windows", "CYGWIN"]:
      config.unsupported = True
 diff --git a/compiler-rt/test/profile/lit.cfg.py b/compiler-rt/test/profile/lit.cfg.py
-index f3cd3f525a58d932106568be8e7ade69b87a162a..8c7a87e63b1bdb4c7055409cb9c8cbf6df81e00d 100644
+index a9541a42e3d12124845e2713f251a9799f005bf9..da76da933d22a46cdc13b9f699755922828d0397 100644
 --- a/compiler-rt/test/profile/lit.cfg.py
 +++ b/compiler-rt/test/profile/lit.cfg.py
-@@ -168,6 +168,7 @@ if config.target_os not in [
+@@ -179,6 +179,7 @@ if config.target_os not in [
      "SunOS",
      "AIX",
      "Haiku",

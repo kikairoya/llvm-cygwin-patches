@@ -1,4 +1,4 @@
-From 2b5dca9b4d163f796cf1f38929ccbd89295f4484 Mon Sep 17 00:00:00 2001
+From 7553b7ccce7354e70878a33ff651f7cbcd2d76dd Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 2 Mar 2026 22:00:33 +0900
 Subject: [PATCH 33/38] make libcxx clang-tidy test runnable with win32 dylib
@@ -12,10 +12,10 @@ Subject: [PATCH 33/38] make libcxx clang-tidy test runnable with win32 dylib
  4 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
-index ff6f8d1593fe2ca313c5578c1072db6721dd9547..65521fc68f9c2101e3718716adab68307d173e0a 100644
+index befd8dad924da619b50d235dd2c81a5b885216eb..df8c343a5b603f5d825ebfdbff93da35e5056077 100644
 --- a/libcxx/CMakeLists.txt
 +++ b/libcxx/CMakeLists.txt
-@@ -344,6 +344,8 @@ endif()
+@@ -334,6 +334,8 @@ endif()
  option(LIBCXX_HERMETIC_STATIC_LIBRARY
    "Do not export any symbols from the static library." ${LIBCXX_HERMETIC_STATIC_LIBRARY_DEFAULT})
  

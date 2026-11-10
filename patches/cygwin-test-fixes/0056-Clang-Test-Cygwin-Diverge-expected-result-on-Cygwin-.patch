@@ -1,4 +1,4 @@
-From 9145dd61237fc086a52fca0699b12a311077f52f Mon Sep 17 00:00:00 2001
+From 38dbba672092aefb3ec12a3502dff2351b536a71 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 56/63] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -224,7 +224,7 @@ index 64828b5cdd86827664016db622a73261406535b8..172df10d8084af8f52dfaaf23c1f8f3e
  @import MOdule; // expected-error{{module 'MOdule' not found}}
  @import Module;
 diff --git a/clang/test/VFS/output-file-permissions.c b/clang/test/VFS/output-file-permissions.c
-index 4628024c031155ee5cf2864324f868fd0c5d4d72..04964d82bea2a0859e35210240f1da5f8180d97b 100644
+index 17bfd7ad25e6301665b7eb49a66bd9a86d4227f2..9faa5977255e41ce0d3943cab88d0afc575cdfad 100644
 --- a/clang/test/VFS/output-file-permissions.c
 +++ b/clang/test/VFS/output-file-permissions.c
 @@ -1,4 +1,4 @@
@@ -234,10 +234,10 @@ index 4628024c031155ee5cf2864324f868fd0c5d4d72..04964d82bea2a0859e35210240f1da5f
  // Reset test
  // rm -f %t-ref.o %t-readonly.o
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index 740a23e50b9b0d976ad5767acd43f262dc71457f..1c631edb4a989cbb0fe123600549b0c25977fe63 100644
+index bd1dac8044f73b010496446e92f6dcaca8a31ab8..ae6d312356cfbd12061e96cd48f03824a605ba3f 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
-@@ -309,7 +309,10 @@ if config.clang_default_cxx_stdlib != "":
+@@ -340,7 +340,10 @@ if config.clang_default_cxx_stdlib != "":
          "default-cxx-stdlib={}".format(config.clang_default_cxx_stdlib)
      )
  
@@ -249,7 +249,7 @@ index 740a23e50b9b0d976ad5767acd43f262dc71457f..1c631edb4a989cbb0fe123600549b0c2
  
  # ANSI escape sequences in non-dumb terminal
  if platform.system() not in ["Windows"]:
-@@ -362,7 +365,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
+@@ -393,7 +396,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
  
  # [PR18856] Depends to remove opened file. On win32, a file could be removed
  # only if all handles were closed.

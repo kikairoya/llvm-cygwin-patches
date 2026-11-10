@@ -1,4 +1,4 @@
-From ea1d686d0e94b46a3f7b8ccb293fb3fc18d9af38 Mon Sep 17 00:00:00 2001
+From b28a75380dbac29537f295978cc1245b5ba720ec Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/38] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -67,7 +67,7 @@ index f161f6561e742f699d745c29b804bfb19e16de52..dc5f27937d19670aaef7638649e1d92c
    TemplateArgumentLoc(const TemplateArgument &Argument,
                        TemplateArgumentLocInfo Opaque)
 diff --git a/llvm/include/llvm/ADT/PointerIntPair.h b/llvm/include/llvm/ADT/PointerIntPair.h
-index c2db63382e13fc0e96d27cc11219ce28eddae3f0..da98e13cc417b6711fb421539158a57297247885 100644
+index a0100d608cb5aaad4a79365f042b60b137b73726..cf41f660cbba51f0703d88daa5c506d25f070f87 100644
 --- a/llvm/include/llvm/ADT/PointerIntPair.h
 +++ b/llvm/include/llvm/ADT/PointerIntPair.h
 @@ -34,7 +34,8 @@ template <typename Ptr> struct PunnedPointer {

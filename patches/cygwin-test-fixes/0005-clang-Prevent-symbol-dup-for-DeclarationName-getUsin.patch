@@ -1,4 +1,4 @@
-From bd349ac471274f5c44dd4fddd135e7da09388ee9 Mon Sep 17 00:00:00 2001
+From 608d1e9091027ecc0c46a31ac3c495418d71b788 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:03:35 +0900
 Subject: [PATCH 05/63] [clang] Prevent symbol dup for
@@ -40,7 +40,7 @@ index 5121b561288c033bfe03591f8908e739d90fd1b1..d0030ebe4e749aa4bc081c256a87aebc
    /// Evaluates true when this declaration name is non-empty.
    explicit operator bool() const {
 diff --git a/clang/lib/AST/DeclarationName.cpp b/clang/lib/AST/DeclarationName.cpp
-index 105d2935d0c6397267aae7ef73037f8a50ea2d5c..1728c9f56d49a9639c1968c58f0da66f1b5f372a 100644
+index 13aa0affb3e9624cf50e4bf908e3553fa47393eb..192adcfe83b689d468184035680677067e172c3d 100644
 --- a/clang/lib/AST/DeclarationName.cpp
 +++ b/clang/lib/AST/DeclarationName.cpp
 @@ -37,6 +37,13 @@

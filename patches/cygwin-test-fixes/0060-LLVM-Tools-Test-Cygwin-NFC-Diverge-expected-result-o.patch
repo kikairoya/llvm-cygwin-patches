@@ -1,4 +1,4 @@
-From 63834a8b64c6b0e9e48eca48c659b04feb251a79 Mon Sep 17 00:00:00 2001
+From b17ef4383ee19aeb2bbf761f082d12b341607aa8 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 7 Jun 2025 18:02:39 +0900
 Subject: [PATCH 60/63] [LLVM-Tools][Test][Cygwin](NFC) Diverge expected result
@@ -66,7 +66,7 @@ index db785a5e4de2ab95881b3397b5ca0750041cb471..6414eeeaf92c6b83fe5e2611ca485881
  # RUN: yaml2obj %p/Inputs/x86_64-slice.yaml -o %t-x86_64.o
  
 diff --git a/llvm/test/tools/llvm-lipo/thin-executable-universal-binary.test b/llvm/test/tools/llvm-lipo/thin-executable-universal-binary.test
-index 40cf9cc7eab968e47e088a65adfd35972111a012..8bdefd2abec4971d2fb5af2a8c8b49652da76c48 100644
+index 52f00c3018467b5f932143a55f04a5a4804b4f06..b9fd13d03f0dc0102dc7784c9f806a8b619a225b 100644
 --- a/llvm/test/tools/llvm-lipo/thin-executable-universal-binary.test
 +++ b/llvm/test/tools/llvm-lipo/thin-executable-universal-binary.test
 @@ -1,5 +1,5 @@

@@ -1,4 +1,4 @@
-From 87ffc3a9d2fb6773341a3d33ad24bb5de059f196 Mon Sep 17 00:00:00 2001
+From 2c8dd69d12cbae510b7274fb774759e1a0e85e35 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:06:12 +0900
 Subject: [PATCH 04/51] [LLVM] Prevent symbol dup for
@@ -31,10 +31,10 @@ index 31e6898130e7d4b8aedb59dcf8ad654fb9b93d8a..fe1ff1d887e3e5ca531995f1ea3e12b9
  } // end namespace llvm
  
 diff --git a/llvm/lib/IR/ModuleSummaryIndex.cpp b/llvm/lib/IR/ModuleSummaryIndex.cpp
-index 763706229bff2b74b39f3bffb72107d529259f37..d6e97736133a20292c5e8734ac84da82ffa67b9d 100644
+index 7b87386418660af283c393aa6d8edf2a8c81c8ce..28cba1e167527cb0ec22896a70c3028857e376c2 100644
 --- a/llvm/lib/IR/ModuleSummaryIndex.cpp
 +++ b/llvm/lib/IR/ModuleSummaryIndex.cpp
-@@ -750,3 +750,14 @@ void ModuleSummaryIndex::exportToDot(
+@@ -754,3 +754,14 @@ void ModuleSummaryIndex::exportToDot(
  
    OS << "}";
  }

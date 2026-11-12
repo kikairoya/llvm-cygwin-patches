@@ -1,4 +1,4 @@
-From b0647051518210f9f07a3825faae5fa93fabfed7 Mon Sep 17 00:00:00 2001
+From 75cb7a3ba40bb7c8e545cf4933b061d45c20fe19 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 2 May 2025 23:16:55 +0900
 Subject: [PATCH 50/63] [Frontend][Cygwin] Handle case-mismatched path properly
@@ -10,8 +10,8 @@ So to detect case-mismatched `#include`, need to dedicated workaround
 using Win32API.
 ---
  clang/lib/Frontend/DependencyFile.cpp |  2 +-
- llvm/lib/Support/Unix/Path.inc        | 37 ++++++++++++++++++++++++++-
- 2 files changed, 37 insertions(+), 2 deletions(-)
+ llvm/lib/Support/Unix/Path.inc        | 41 +++++++++++++++++++++++++++
+ 2 files changed, 42 insertions(+), 1 deletion(-)
 
 diff --git a/clang/lib/Frontend/DependencyFile.cpp b/clang/lib/Frontend/DependencyFile.cpp
 index 5702d1dabcc8b599d3cf7f683d4585b32b62a9b1..eede8e01c91cabd2bcd6b1e8eb07d763a0a5403e 100644
@@ -27,7 +27,7 @@ index 5702d1dabcc8b599d3cf7f683d4585b32b62a9b1..eede8e01c91cabd2bcd6b1e8eb07d763
    llvm::SmallString<256> TmpPath = Filename;
    llvm::sys::path::native(TmpPath);
 diff --git a/llvm/lib/Support/Unix/Path.inc b/llvm/lib/Support/Unix/Path.inc
-index 5fee0a494f6fd36975f3e467934463eb0cde07cc..249fb79883d01536d75da7fe96155e1eab7f4a25 100644
+index b9e40d161b8332ae198238aeef33e7dd9663d31b..cb077552a59615c1f86596ab13d24d74baf16859 100644
 --- a/llvm/lib/Support/Unix/Path.inc
 +++ b/llvm/lib/Support/Unix/Path.inc
 @@ -55,6 +55,12 @@ extern char **environ;
@@ -43,58 +43,48 @@ index 5fee0a494f6fd36975f3e467934463eb0cde07cc..249fb79883d01536d75da7fe96155e1e
  // Both stdio.h and cstdio are included via different paths and
  // stdcxx's cstdio doesn't include stdio.h, so it doesn't #undef the macros
  // either.
-@@ -1034,7 +1040,7 @@ ErrorOr<basic_file_status> directory_entry::status() const {
- #define TRY_PROC_SELF_FD
- #endif
+@@ -1239,6 +1245,41 @@ std::error_code openFileForRead(const Twine &Name, int &ResultFD,
  
--#if !defined(F_GETPATH) && defined(TRY_PROC_SELF_FD)
-+#if !defined(F_GETPATH) && defined(TRY_PROC_SELF_FD) && !defined(__CYGWIN__)
- static bool hasProcSelfFD() {
-   // If we have a /proc filesystem mounted, we can quickly establish the
-   // real name of the file with readlink
-@@ -1225,6 +1231,8 @@ std::error_code openFileForRead(const Twine &Name, int &ResultFD,
-   if (!RealPath)
-     return std::error_code();
-   RealPath->clear();
-+  // ::realpath on Cygwin does not canonicalise case, so use Win32API
-+#if !defined(__CYGWIN__)
- #if defined(F_GETPATH)
-   // When F_GETPATH is availble, it is the quickest way to get
-   // the real path name.
-@@ -1251,6 +1259,33 @@ std::error_code openFileForRead(const Twine &Name, int &ResultFD,
- #if defined(TRY_PROC_SELF_FD)
-   }
- #endif
-+#endif
-+#else
-+  // FIXME: this block is copied from Windows/Path.inc, but pathes of Win32
-+  //        may be longer than PATH_MAX.
+ std::error_code getRealPathFromHandle(file_t Handle,
+                                       SmallVectorImpl<char> &RealPath) {
++#if defined(__CYGWIN__)
++  // Cygwin's ::realpath or similar functionality don't canonicalize casing, so
++  // try WinAPI first.
 +  SmallVector<wchar_t, PATH_MAX> BufferW;
 +  BufferW.resize_for_overwrite(BufferW.capacity());
-+  const auto H = reinterpret_cast<HANDLE>(::_get_osfhandle(ResultFD));
-+  ssize_t CountChars = ::GetFinalPathNameByHandleW(
-+      H, BufferW.begin(), BufferW.capacity(), FILE_NAME_NORMALIZED);
++  const auto H = reinterpret_cast<HANDLE>(::_get_osfhandle(Handle.get()));
++  ssize_t CountChars =
++      ::GetFinalPathNameByHandleW(H, BufferW.begin(), BufferW.capacity(),
++                                  FILE_NAME_NORMALIZED | VOLUME_NAME_DOS);
 +  if (CountChars > 0 && (size_t)CountChars >= BufferW.capacity()) {
++    // The buffer wasn't big enough, try again.  In this case the return value
++    // *does* indicate the size of the null terminator.
 +    BufferW.resize_for_overwrite(CountChars);
-+    CountChars = ::GetFinalPathNameByHandleW(H, BufferW.begin(), BufferW.size(),
-+                                             FILE_NAME_NORMALIZED);
++    CountChars =
++        ::GetFinalPathNameByHandleW(H, BufferW.begin(), BufferW.size(),
++                                    FILE_NAME_NORMALIZED | VOLUME_NAME_DOS);
 +  }
++  BufferW.truncate(CountChars);
 +  if (CountChars > 0) {
 +    BufferW.truncate(CountChars);
 +    CountChars =
 +        ::cygwin_conv_path(CCP_WIN_W_TO_POSIX, BufferW.begin(), nullptr, 0);
 +    if (CountChars > 0) {
-+      RealPath->resize_for_overwrite(CountChars);
++      RealPath.resize_for_overwrite(CountChars);
 +      if (::cygwin_conv_path(CCP_WIN_W_TO_POSIX, BufferW.begin(),
-+                             RealPath->begin(), RealPath->size()) < 0)
-+        RealPath->clear();
-+      else
-+        RealPath->truncate(RealPath->size() - 1);
++                             RealPath.begin(), RealPath.size()) > 0) {
++        RealPath.truncate(RealPath.size() - 1);
++        return std::error_code();
++      }
++      // On any errors, fallback to the generic implementation.
++      RealPath.clear();
 +    }
 +  }
- #endif
-   return std::error_code();
- }
++  // fallthrough
++#endif
+ #if defined(F_GETPATH)
+   char Buffer[PATH_MAX];
+   // When F_GETPATH is available, it is the quickest way to get
 -- 
 2.56.0
 

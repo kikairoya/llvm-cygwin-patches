@@ -1,7 +1,7 @@
-From 480cf2040568fc8f10ec624f869ad63c046fb69c Mon Sep 17 00:00:00 2001
+From f6c22394b8c1b9d9217abe2c6e86f490b41603b9 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 20 Sep 2026 18:00:09 +0900
-Subject: [PATCH 40/63] don't use std::shared_mutex
+Subject: [PATCH 41/51] don't use std::shared_mutex
 
 workaround for https://cygwin.com/pipermail/cygwin/2026-September/260061.html
 ---

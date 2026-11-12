@@ -1,4 +1,4 @@
-From c2c28cd53f087748d06f1d3388e632240f016ad6 Mon Sep 17 00:00:00 2001
+From 1da93a2554dc31daa5fe087e0e3c1422477c7717 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 26 Aug 2026 20:42:26 +0900
 Subject: [PATCH 34/38] [LLVM][SPIRV] Add a null check
@@ -8,10 +8,10 @@ Subject: [PATCH 34/38] [LLVM][SPIRV] Add a null check
  1 file changed, 1 insertion(+)
 
 diff --git a/llvm/lib/Target/SPIRV/SPIRVGlobalRegistry.cpp b/llvm/lib/Target/SPIRV/SPIRVGlobalRegistry.cpp
-index a7f6723eb20b74bf83e91e91f4c63e32959bea40..cb0217b34cae97ea51bce9ecb93cf5b09eef8890 100644
+index 8b33c3934ed6dffa46b3d1dba40686157dd47c38..87ab63b21126949af93fac185c5e617b2577beaa 100644
 --- a/llvm/lib/Target/SPIRV/SPIRVGlobalRegistry.cpp
 +++ b/llvm/lib/Target/SPIRV/SPIRVGlobalRegistry.cpp
-@@ -2365,6 +2365,7 @@ void SPIRVGlobalRegistry::buildAssignPtr(IRBuilder<> &B, Type *ElemTy,
+@@ -2366,6 +2366,7 @@ void SPIRVGlobalRegistry::buildAssignPtr(IRBuilder<> &B, Type *ElemTy,
    Function *CurrF =
        B.GetInsertBlock() ? B.GetInsertBlock()->getParent() : nullptr;
    if (AssignPtrTyCI == nullptr ||

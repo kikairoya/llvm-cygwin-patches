@@ -1,4 +1,4 @@
-From 38dbba672092aefb3ec12a3502dff2351b536a71 Mon Sep 17 00:00:00 2001
+From 1a50fa207415d57dd6406e8657db413846b6e4f6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 15 Apr 2026 18:55:30 +0900
 Subject: [PATCH 56/63] [Clang][Test][Cygwin] Diverge expected result on Cygwin
@@ -151,7 +151,7 @@ index 9d5833142fe9dccbc1cff5d6eae027b0977d396a..0aa2896f079215a5bbba52d4770a1038
  // RUN: %clang -v --rocm-path=%S/Inputs/rocm 2>&1 \
  // RUN:   | FileCheck -check-prefixes=FOUND %s
 diff --git a/clang/test/Driver/linux-ld.c b/clang/test/Driver/linux-ld.c
-index 922adf7a43115dcf92925753b64c248821a7d9b5..0b9d73a6f49be2978c8fbde70b05e5f296f3ff61 100644
+index 75d7f923fa4a550f389a56a4168a8f2e6e5d82f0..71619e628c4142d4c15dad584b26c80b508a86f8 100644
 --- a/clang/test/Driver/linux-ld.c
 +++ b/clang/test/Driver/linux-ld.c
 @@ -1,4 +1,4 @@
@@ -234,7 +234,7 @@ index 17bfd7ad25e6301665b7eb49a66bd9a86d4227f2..9faa5977255e41ce0d3943cab88d0afc
  // Reset test
  // rm -f %t-ref.o %t-readonly.o
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index bd1dac8044f73b010496446e92f6dcaca8a31ab8..ae6d312356cfbd12061e96cd48f03824a605ba3f 100644
+index 9be46ca41c06983425638559f08616130e2db103..556d90ff8135f4aba345ae42db42902ffadabff1 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
 @@ -340,7 +340,10 @@ if config.clang_default_cxx_stdlib != "":
@@ -249,7 +249,7 @@ index bd1dac8044f73b010496446e92f6dcaca8a31ab8..ae6d312356cfbd12061e96cd48f03824
  
  # ANSI escape sequences in non-dumb terminal
  if platform.system() not in ["Windows"]:
-@@ -393,7 +396,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
+@@ -398,7 +401,7 @@ if re.match(r"^arm64(e)?-apple-(macos|darwin)", config.target_triple):
  
  # [PR18856] Depends to remove opened file. On win32, a file could be removed
  # only if all handles were closed.

@@ -1,4 +1,4 @@
-From 8a4a6dcdb0d8c77cd661a068d86b69e848e2f154 Mon Sep 17 00:00:00 2001
+From b347de2aac2323bfcb3c6c882356eaa2b7ef94a6 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:44:20 +0900
 Subject: [PATCH 62/63] fix tests that use Bye
@@ -40,7 +40,7 @@ index a87e36c7c725c87c602f9a5c912f37e7721aaecb..e19334502a2f3710b3493d38c84e6986
  // XFAIL: target={{.*}}-aix{{.*}}
  // CHECK-INACTIVE-NOT: Bye
 diff --git a/clang/test/lit.cfg.py b/clang/test/lit.cfg.py
-index ae6d312356cfbd12061e96cd48f03824a605ba3f..05623986d003b5b41153e623b97c0aca9c3737bf 100644
+index 556d90ff8135f4aba345ae42db42902ffadabff1..7562a30f741f446050fbd746b1c5d7e00a05f1cb 100644
 --- a/clang/test/lit.cfg.py
 +++ b/clang/test/lit.cfg.py
 @@ -326,6 +326,9 @@ if "aarch64" in config.host_arch:

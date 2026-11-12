@@ -1,4 +1,4 @@
-From b28a75380dbac29537f295978cc1245b5ba720ec Mon Sep 17 00:00:00 2001
+From a42950e60cab75c66f97633989485635bd985f27 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 18:58:50 +0900
 Subject: [PATCH 06/63] [clang] constexpir-ize `NoneLoc`s and dependants to
@@ -81,7 +81,7 @@ index a0100d608cb5aaad4a79365f042b60b137b73726..cf41f660cbba51f0703d88daa5c506d2
    constexpr intptr_t asInt() const {
      intptr_t R = 0;
 diff --git a/llvm/include/llvm/ADT/PointerUnion.h b/llvm/include/llvm/ADT/PointerUnion.h
-index 6c1a378aadedac888c61c2bb3de342bd158bfde6..249c8914fa6244e48b5ae7bd0d35e7ecf2f8e3c1 100644
+index 5b6d9aaf71f25b14c21389cd1ad30a801011d770..a4f3cfbe3f53254d9fcab0fdc2d7a8090f7990bd 100644
 --- a/llvm/include/llvm/ADT/PointerUnion.h
 +++ b/llvm/include/llvm/ADT/PointerUnion.h
 @@ -135,7 +135,7 @@ class PointerUnionMembers;

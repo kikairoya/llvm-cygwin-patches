@@ -1,4 +1,4 @@
-From 75cb7a3ba40bb7c8e545cf4933b061d45c20fe19 Mon Sep 17 00:00:00 2001
+From 3de99c0be6c22ff4406fff3d4488d9485f200d62 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 2 May 2025 23:16:55 +0900
 Subject: [PATCH 50/51] [Frontend][Cygwin] Handle case-mismatched path properly
@@ -10,8 +10,8 @@ So to detect case-mismatched `#include`, need to dedicated workaround
 using Win32API.
 ---
  clang/lib/Frontend/DependencyFile.cpp |  2 +-
- llvm/lib/Support/Unix/Path.inc        | 41 +++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+), 1 deletion(-)
+ llvm/lib/Support/Unix/Path.inc        | 39 +++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+), 1 deletion(-)
 
 diff --git a/clang/lib/Frontend/DependencyFile.cpp b/clang/lib/Frontend/DependencyFile.cpp
 index 5702d1dabcc8b599d3cf7f683d4585b32b62a9b1..eede8e01c91cabd2bcd6b1e8eb07d763a0a5403e 100644
@@ -27,7 +27,7 @@ index 5702d1dabcc8b599d3cf7f683d4585b32b62a9b1..eede8e01c91cabd2bcd6b1e8eb07d763
    llvm::SmallString<256> TmpPath = Filename;
    llvm::sys::path::native(TmpPath);
 diff --git a/llvm/lib/Support/Unix/Path.inc b/llvm/lib/Support/Unix/Path.inc
-index b9e40d161b8332ae198238aeef33e7dd9663d31b..cb077552a59615c1f86596ab13d24d74baf16859 100644
+index b9e40d161b8332ae198238aeef33e7dd9663d31b..ce5ea92c8ab3f28730486a93decad433ed330d84 100644
 --- a/llvm/lib/Support/Unix/Path.inc
 +++ b/llvm/lib/Support/Unix/Path.inc
 @@ -55,6 +55,12 @@ extern char **environ;
@@ -43,7 +43,7 @@ index b9e40d161b8332ae198238aeef33e7dd9663d31b..cb077552a59615c1f86596ab13d24d74
  // Both stdio.h and cstdio are included via different paths and
  // stdcxx's cstdio doesn't include stdio.h, so it doesn't #undef the macros
  // either.
-@@ -1239,6 +1245,41 @@ std::error_code openFileForRead(const Twine &Name, int &ResultFD,
+@@ -1239,6 +1245,39 @@ std::error_code openFileForRead(const Twine &Name, int &ResultFD,
  
  std::error_code getRealPathFromHandle(file_t Handle,
                                        SmallVectorImpl<char> &RealPath) {
@@ -64,15 +64,13 @@ index b9e40d161b8332ae198238aeef33e7dd9663d31b..cb077552a59615c1f86596ab13d24d74
 +        ::GetFinalPathNameByHandleW(H, BufferW.begin(), BufferW.size(),
 +                                    FILE_NAME_NORMALIZED | VOLUME_NAME_DOS);
 +  }
-+  BufferW.truncate(CountChars);
 +  if (CountChars > 0) {
-+    BufferW.truncate(CountChars);
 +    CountChars =
 +        ::cygwin_conv_path(CCP_WIN_W_TO_POSIX, BufferW.begin(), nullptr, 0);
 +    if (CountChars > 0) {
 +      RealPath.resize_for_overwrite(CountChars);
 +      if (::cygwin_conv_path(CCP_WIN_W_TO_POSIX, BufferW.begin(),
-+                             RealPath.begin(), RealPath.size()) > 0) {
++                             RealPath.begin(), RealPath.size()) == 0) {
 +        RealPath.truncate(RealPath.size() - 1);
 +        return std::error_code();
 +      }

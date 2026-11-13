@@ -1,7 +1,7 @@
-From 22b893648818cc96c7d15aff90998d39110c066b Mon Sep 17 00:00:00 2001
+From 8841f2ee1882f8bc5945690f05a65711e04e64f0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 9 Nov 2025 20:59:22 +0900
-Subject: [PATCH 02/51] disable plugin tests for LLVM_BUILD_LLVM_DYLIB
+Subject: [PATCH 01/51] disable plugin tests for LLVM_BUILD_LLVM_DYLIB
 
 ---
  llvm/unittests/Analysis/InlineAdvisorPlugin/CMakeLists.txt | 2 +-

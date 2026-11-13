@@ -1,4 +1,4 @@
-From 2272436edd8edef31b5f68a710b577e05882ce35 Mon Sep 17 00:00:00 2001
+From 8cdcd0d5695736223267cc876a6df575e340658f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Thu, 23 Jul 2026 19:54:57 +0900
 Subject: [PATCH 52/63] [Cygwin] adjust lit test stability

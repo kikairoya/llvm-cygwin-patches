@@ -1,13 +1,14 @@
-From 0fa421d5e7ba38bda2d4e1c6a7cb4feaf2d5b5fd Mon Sep 17 00:00:00 2001
+From 09d7f75bc84ecbef4ebda74471f71a86289029b0 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 13 Dec 2025 22:22:52 +0900
 Subject: [PATCH 53/63] [LLVM][Test][Cygwin] Diverge expected result on Cygwin
  host
 
 ---
- llvm/test/Feature/load_extension.ll | 2 +-
- llvm/test/Other/can-execute.txt     | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ llvm/test/Feature/load_extension.ll      | 2 +-
+ llvm/test/Other/can-execute.txt          | 3 +++
+ llvm/test/tools/llvm-strings/locale.test | 3 +++
+ 3 files changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/llvm/test/Feature/load_extension.ll b/llvm/test/Feature/load_extension.ll
 index d5309836496167829858724b06f622674cb12dda..1f269b1d2a4d99df793d30c37906bd1f3c5e31bd 100644
@@ -35,6 +36,19 @@ index 37626e7357b28b70283a643681a54d32652a1b39..67c9e4eb4386a2afe1632243bd301c3b
  This tests that we abstract two peculiarities of unix in can_execute:
  
  * Directories are executable, but we don't want to try to execute them.
+diff --git a/llvm/test/tools/llvm-strings/locale.test b/llvm/test/tools/llvm-strings/locale.test
+index f3ed722b4133e243fb8234e077f5d2049121e42e..b9c1195216f16d2800434f92921d7c60e19c3e96 100644
+--- a/llvm/test/tools/llvm-strings/locale.test
++++ b/llvm/test/tools/llvm-strings/locale.test
+@@ -1,5 +1,8 @@
+ UNSUPPORTED: system-windows
+ 
++# Cygwin's mbrtowc results slightly different from ucrt (but it seems a bug of ucrt)
++XFAIL: system-cygwin
++
+ RUN: echo -e 'Hello\0360\0237\0230\0203' > %t
+ RUN: echo -e '\0202\0261\0202\0361\0202\0311\0202\0277\0202\0315' >> %t
+ RUN: echo -e '\033$B$3$s$K$A$O\033(B' >> %t
 -- 
 2.56.0
 

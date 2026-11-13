@@ -1,4 +1,4 @@
-From e23c9212302338791b30521a400698920929aa6f Mon Sep 17 00:00:00 2001
+From f1105e0d716ebe9e0104cd07c7b9af680f5e8f56 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 22 Sep 2026 05:28:05 +0900
 Subject: [PATCH 08/63] Reapply "[Clang] Warn about ignored dllimport on

@@ -1,4 +1,4 @@
-From d4c980d99b765b15b9258cce7fe566802b73a71d Mon Sep 17 00:00:00 2001
+From 7298d58c535e718414faa85093eb0afd4160bb01 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:29:58 +0900
 Subject: [PATCH 12/51] [Clang] Let an explicit specialization not to prevent

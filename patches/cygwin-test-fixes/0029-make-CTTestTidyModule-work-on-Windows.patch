@@ -1,7 +1,7 @@
-From b656f3c50bada317e06d8c408d182483e3cf3851 Mon Sep 17 00:00:00 2001
+From 0426ada76bd57348f0fed279798afc1f8b7aa50c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 18 Jan 2026 08:07:40 +0900
-Subject: [PATCH 29/63] make CTTestTidyModule work on Windows
+Subject: [PATCH 29/62] make CTTestTidyModule work on Windows
 
 ---
  clang-tools-extra/test/CMakeLists.txt | 11 ++---------

@@ -1,7 +1,7 @@
-From 7298d58c535e718414faa85093eb0afd4160bb01 Mon Sep 17 00:00:00 2001
+From c7d879d0a2fb9339ea561ccad659a42c6c310d1c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:29:58 +0900
-Subject: [PATCH 12/51] [Clang] Let an explicit specialization not to prevent
+Subject: [PATCH 12/50] [Clang] Let an explicit specialization not to prevent
  dllexport/dllimport-ing following explicit instantiation
 
 ---
@@ -10,10 +10,10 @@ Subject: [PATCH 12/51] [Clang] Let an explicit specialization not to prevent
  2 files changed, 76 insertions(+), 64 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index 27b90e1a85ec0075f19f88c931270dd987e6ee1a..167c1784b752c3ed3fd0905aa8ecd2cbbf48d279 100644
+index cd021c660bf7be6ccd74bfa2c77a3edb075a1b50..e9f692902774832ddf130bddc68e6d995ecf04e8 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
-@@ -6705,6 +6705,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6672,6 +6672,13 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
  
      VarDecl *VD = dyn_cast<VarDecl>(Member);
      CXXMethodDecl *MD = dyn_cast<CXXMethodDecl>(Member);

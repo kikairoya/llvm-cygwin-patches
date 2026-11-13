@@ -1,7 +1,7 @@
-From 592e02c075b56d3b7c05f4acb3028b515d66c572 Mon Sep 17 00:00:00 2001
+From aa1ad2b73d39ade40bc5aab631648ea4fabd2008 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Wed, 17 Dec 2025 19:02:44 +0900
-Subject: [PATCH 25/63] [LLVM] Support EXPORT_SYMBOLS_FOR_PLUGINS with shared
+Subject: [PATCH 25/62] [LLVM] Support EXPORT_SYMBOLS_FOR_PLUGINS with shared
  or dylib builds
 
 Resolve the incompatibilities of EXPORT_SYMBOLS_FOR_PLUGINS with
@@ -16,10 +16,10 @@ Resolve the incompatibilities of EXPORT_SYMBOLS_FOR_PLUGINS with
  1 file changed, 65 insertions(+), 49 deletions(-)
 
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index 20f10383cd0b9f4cc6f555636ece241cd84d4234..118bb599af385ab947fb06e6bf06296ed4270c90 100644
+index 84f2890759fb2b303b2b4ee100c589d1a267128a..122f6a747c2037ebc18110cc7af2351d5764e53f 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
-@@ -1472,52 +1472,44 @@ function(process_llvm_pass_plugins)
+@@ -1498,52 +1498,44 @@ function(process_llvm_pass_plugins)
    endif()
  endfunction()
  
@@ -108,7 +108,7 @@ index 20f10383cd0b9f4cc6f555636ece241cd84d4234..118bb599af385ab947fb06e6bf06296e
        set(mangling microsoft)
      else()
        set(mangling itanium)
-@@ -1536,11 +1528,35 @@ function(export_executable_symbols target)
+@@ -1562,11 +1554,35 @@ function(export_executable_symbols target)
                           ${static_libs} ${llvm_nm_target} ${llvm_readobj_target}
                         VERBATIM
                         COMMENT "Generating export list for ${target}")

@@ -1,7 +1,7 @@
-From 06050ded01d6eb5e30fca6a90a4e7f2d5a9381f1 Mon Sep 17 00:00:00 2001
+From 3f8d9427435199ff40ab37d97c60c027ac93ec4f Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 24 Mar 2026 07:34:31 +0900
-Subject: [PATCH 17/63] specialize nested
+Subject: [PATCH 17/62] specialize nested
 
 ---
  clang/lib/Sema/SemaDeclCXX.cpp  |  3 ++
@@ -9,10 +9,10 @@ Subject: [PATCH 17/63] specialize nested
  2 files changed, 51 insertions(+), 8 deletions(-)
 
 diff --git a/clang/lib/Sema/SemaDeclCXX.cpp b/clang/lib/Sema/SemaDeclCXX.cpp
-index e0b7fbebeaf5767f70c7e25d5dcae972033a07e7..78c1374c4ba505cd8879379d9f573b6ef0b2ca47 100644
+index 9b7deb05f546d4bb67475e13ec880e8357d47b57..d25a4fd1d335ca317e6808a186a8e499436994f9 100644
 --- a/clang/lib/Sema/SemaDeclCXX.cpp
 +++ b/clang/lib/Sema/SemaDeclCXX.cpp
-@@ -6726,6 +6726,9 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
+@@ -6693,6 +6693,9 @@ void Sema::checkClassLevelDLLAttribute(CXXRecordDecl *Class) {
              cast<InheritableAttr>(ClassAttr->clone(getASTContext()));
          NewAttr->setInherited(true);
          Member->addAttr(NewAttr);

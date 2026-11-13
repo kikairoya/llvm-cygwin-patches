@@ -1,4 +1,4 @@
-From f1105e0d716ebe9e0104cd07c7b9af680f5e8f56 Mon Sep 17 00:00:00 2001
+From 64c6d692f40df26f8121dac5e4b8b061bfa29c09 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 22 Sep 2026 05:28:05 +0900
 Subject: [PATCH 01/35] Reapply "[Clang] Warn about ignored dllimport on
@@ -13,10 +13,10 @@ This reverts commit 16ff0ec65655a16f9a01c20d059d1e6ddb27f6b9.
  4 files changed, 175 insertions(+), 36 deletions(-)
 
 diff --git a/clang/include/clang/Basic/DiagnosticSemaKinds.td b/clang/include/clang/Basic/DiagnosticSemaKinds.td
-index c3793aec1f732f039d771becb51f3992ee6dd24f..435585f92a0e4201acc0925307dc333bb4cb0797 100644
+index 3346d311604baa29d55a67ee702a0634418c9462..cbeb0fc9f08e3deee189df7411f19a9fbd59c80e 100644
 --- a/clang/include/clang/Basic/DiagnosticSemaKinds.td
 +++ b/clang/include/clang/Basic/DiagnosticSemaKinds.td
-@@ -3904,6 +3904,9 @@ def warn_dllimport_dropped_from_inline_function : Warning<
+@@ -3906,6 +3906,9 @@ def warn_dllimport_dropped_from_inline_function : Warning<
  def warn_nothrow_attribute_ignored : Warning<"'nothrow' attribute conflicts with"
    " exception specification; attribute ignored">,
    InGroup<IgnoredAttributes>;
@@ -26,7 +26,7 @@ index c3793aec1f732f039d771becb51f3992ee6dd24f..435585f92a0e4201acc0925307dc333b
  def warn_dllattr_ignored_exclusion_takes_precedence : Warning<
    "%0 attribute ignored; %1 takes precedence">,
    InGroup<IgnoredAttributes>;
-@@ -4027,6 +4030,9 @@ def err_attribute_dllimport_static_field_definition : Error<
+@@ -4029,6 +4032,9 @@ def err_attribute_dllimport_static_field_definition : Error<
  def warn_attribute_dllimport_static_field_definition : Warning<
    "definition of dllimport static field">,
    InGroup<DiagGroup<"dllimport-static-field-def">>;

@@ -1,7 +1,7 @@
-From 62921ef5ddcff0c895b68e544e0b578b53e65942 Mon Sep 17 00:00:00 2001
+From c60d665c95ec40f6c1f41182122b5bb978ee59df Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
-Subject: [PATCH 02/50] [LLVM] Annotate LLVM_TEMPLATE_ABI
+Subject: [PATCH 02/51] [LLVM] Annotate LLVM_TEMPLATE_ABI
 
 ---
  llvm/include/llvm/ADT/SmallVector.h           |  4 ++--

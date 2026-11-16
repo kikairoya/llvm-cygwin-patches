@@ -1,0 +1,33 @@
+From bb1dd7a9bc0fc30514df75ebadbac0b4f7e00f47 Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 17 Nov 2026 00:25:11 +0900
+Subject: [PATCH 58/64] [clang-tidy][test] Define wint_t in mocking stddef.h
+
+A test added in #210768 causes an error on Cygwin due to missing `wint_t`:
+
+```
+ # | /k/llvm/build/stage2/tools/clang/tools/extra/test/clang-tidy/checkers/bugprone/Output/macro-condition.cpp.tmp.cpp:145:5: note: Macro 'POSITIVE_DEFINITION' first checked here for definition
+ # |   145 | #if defined(POSITIVE_DEFINITION) || defined(OTHER_POSITIVE_DEFINITION)
+ # |       |     ^
+ # | /usr/include/sys/_types.h:167:5: error: unknown type name 'wint_t' [clang-diagnostic-error]
+ # |   167 |     wint_t __wch;
+ # |       |     ^
+```
+---
+ .../test/clang-tidy/checkers/Inputs/Headers/std/stddef.h         | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/clang-tools-extra/test/clang-tidy/checkers/Inputs/Headers/std/stddef.h b/clang-tools-extra/test/clang-tidy/checkers/Inputs/Headers/std/stddef.h
+index 6e210986763405f7b290896ad01696a60477f491..24c778a10c81430dcc52eff598d55833d254a51b 100644
+--- a/clang-tools-extra/test/clang-tidy/checkers/Inputs/Headers/std/stddef.h
++++ b/clang-tools-extra/test/clang-tidy/checkers/Inputs/Headers/std/stddef.h
+@@ -13,5 +13,6 @@
+ 
+ typedef __PTRDIFF_TYPE__ ptrdiff_t;
+ typedef __SIZE_TYPE__ size_t;
++typedef __WINT_TYPE__ wint_t;
+ 
+ #endif // _STDDEF_H_
+-- 
+2.56.0
+

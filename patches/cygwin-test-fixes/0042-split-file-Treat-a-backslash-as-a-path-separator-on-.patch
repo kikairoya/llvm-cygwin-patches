@@ -1,0 +1,29 @@
+From 0681fded0411437377841dbd1c7dc0584973149b Mon Sep 17 00:00:00 2001
+From: kikairoya <kikairoya@gmail.com>
+Date: Tue, 17 Nov 2026 00:17:20 +0900
+Subject: [PATCH 42/64] [split-file] Treat a backslash as a path separator on
+ Cygwin
+
+Cygwin (Windows) can't name a file with any backslash, so replase them first.
+Adding Style::posix_cygwin is more canonical but sounds overkill.
+---
+ llvm/utils/split-file/split-file.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/llvm/utils/split-file/split-file.cpp b/llvm/utils/split-file/split-file.cpp
+index 90d78c5fd3dc34f1e7f7480bbd6c99cc13114e33..f98dea0a8f4dc019499606ce9b3ebcc959ec0cd8 100644
+--- a/llvm/utils/split-file/split-file.cpp
++++ b/llvm/utils/split-file/split-file.cpp
+@@ -124,6 +124,9 @@ static int handle(MemoryBuffer &inputBuf, StringRef input, StringRef output) {
+   for (auto &keyValue : partToBegin) {
+     partPath.clear();
+     sys::path::append(partPath, output, keyValue.first);
++#ifdef __CYGWIN__
++    sys::path::native(partPath);
++#endif
+     std::error_code ec =
+         sys::fs::create_directories(sys::path::parent_path(partPath));
+     if (ec)
+-- 
+2.56.0
+

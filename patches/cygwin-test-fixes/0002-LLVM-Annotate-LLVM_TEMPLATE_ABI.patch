@@ -1,4 +1,4 @@
-From c60d665c95ec40f6c1f41182122b5bb978ee59df Mon Sep 17 00:00:00 2001
+From afec512a09ea77fa80fa307a679be3b4dd53348c Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:56:41 +0900
 Subject: [PATCH 02/64] [LLVM] Annotate LLVM_TEMPLATE_ABI
@@ -15,10 +15,10 @@ Subject: [PATCH 02/64] [LLVM] Annotate LLVM_TEMPLATE_ABI
  8 files changed, 25 insertions(+), 29 deletions(-)
 
 diff --git a/llvm/include/llvm/ADT/SmallVector.h b/llvm/include/llvm/ADT/SmallVector.h
-index 9fb90e0b1ed45d89957db74bc53ced5df976c114..d411f3ef59cbde854ed181de05f8596aa36273ed 100644
+index 7bf63c92c4e07032c8b2bb3b45fa7f72388cdf30..bbbc302cc1ad366319fc50c0707f3c122ddc5ba7 100644
 --- a/llvm/include/llvm/ADT/SmallVector.h
 +++ b/llvm/include/llvm/ADT/SmallVector.h
-@@ -1406,9 +1406,9 @@ template <typename Out, typename R> SmallVector<Out> to_vector_of(R &&Range) {
+@@ -1413,9 +1413,9 @@ template <typename Out, typename R> SmallVector<Out> to_vector_of(R &&Range) {
  }
  
  // Explicit instantiations
@@ -66,7 +66,7 @@ index f4d5ab4d55b2db9be4f70ffeb5295cc23390babf..b358bed68f6544b2cf609c3b36457a74
  /// Convenience typedef for a pass manager over functions.
  using MachineFunctionPassManager = PassManager<MachineFunction>;
 diff --git a/llvm/include/llvm/IR/Analysis.h b/llvm/include/llvm/IR/Analysis.h
-index 8ab70dd9ed594c501d2c2e388818a1b5b5ec84f3..5845cc0b8fed045e4bb2aaa894d027cd9806e8ed 100644
+index 6ee46c942bf6bcc095a3faf59ec1362ab3605ea1..a1a0c3aef6ae9d3d241101f2908e868cf39efd1b 100644
 --- a/llvm/include/llvm/IR/Analysis.h
 +++ b/llvm/include/llvm/IR/Analysis.h
 @@ -19,6 +19,7 @@ namespace llvm {

@@ -1,13 +1,14 @@
-From 358463a2dd94a15227f6c9e1d43abc23cd51ec68 Mon Sep 17 00:00:00 2001
+From 08defb29d01e7166d64c945693bbc80837fe460b Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 11 Oct 2025 17:39:03 +0900
 Subject: [PATCH 57/64] [Clang][Unittest][Cygwin] Diverge expected result on
  Cygwin host
 
 ---
- clang/unittests/Interpreter/CMakeLists.txt      | 2 +-
- clang/unittests/Interpreter/InterpreterTest.cpp | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ clang/unittests/Interpreter/CMakeLists.txt        | 2 +-
+ clang/unittests/Interpreter/InterpreterTest.cpp   | 2 +-
+ clang/unittests/Serialization/ModuleCacheTest.cpp | 3 +++
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/clang/unittests/Interpreter/CMakeLists.txt b/clang/unittests/Interpreter/CMakeLists.txt
 index b32d4a6d33fc62129af84644051fd250a785e5d9..c23db4b6697aa4e4916ddc5ab8eefb8671a290cd 100644
@@ -35,6 +36,20 @@ index 9a20e0024919e3d268fd56614b441e6e2b88ddf2..4b3ac3c9215ade5ace27149214d73ff8
    EXPECT_EQ(llvm::orc::ExecutorAddr::fromPtr(&printf), *Addr);
  #endif // _WIN32
  }
+diff --git a/clang/unittests/Serialization/ModuleCacheTest.cpp b/clang/unittests/Serialization/ModuleCacheTest.cpp
+index bca377cf58e7f7bfb5c87cc903a55b815b94d7c5..2c991b0f5a2418b071c16acb6359104f947c560e 100644
+--- a/clang/unittests/Serialization/ModuleCacheTest.cpp
++++ b/clang/unittests/Serialization/ModuleCacheTest.cpp
+@@ -437,6 +437,9 @@ TEST_F(ModuleCacheTest, WriteErrorCreateTempFileAfterCreateDirectories) {
+ // Test that failing to write the contents is reported instead of crashing in
+ // the destructor of the stream, and that the temporary file is removed.
+ TEST_F(ModuleCacheTest, WriteErrorWrite) {
++#ifdef __CYGWIN__
++  GTEST_SKIP() << "Cygwin doesn't support RLIMIT_FSIZE";
++#endif
+   SmallString<256> Path(ModuleCachePath);
+   sys::path::append(Path, "M.pcm");
+ 
 -- 
 2.56.0
 

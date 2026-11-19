@@ -1,4 +1,4 @@
-From e4a8652c8ae8c6911785cefb2954a28bbb4079d2 Mon Sep 17 00:00:00 2001
+From a2c4676475b455a5221be1b255a0a3a39580f94a Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Fri, 5 Dec 2025 20:06:12 +0900
 Subject: [PATCH 04/51] [LLVM] Prevent symbol dup for
@@ -10,10 +10,10 @@ Subject: [PATCH 04/51] [LLVM] Prevent symbol dup for
  2 files changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/llvm/include/llvm/IR/ModuleSummaryIndex.h b/llvm/include/llvm/IR/ModuleSummaryIndex.h
-index 31e6898130e7d4b8aedb59dcf8ad654fb9b93d8a..fe1ff1d887e3e5ca531995f1ea3e12b93288cebb 100644
+index 4d9326e2657e443d82639898182b3d03e3bd6ee9..891b2801fbcf830129db9cb0c14016e6ffd3b442 100644
 --- a/llvm/include/llvm/IR/ModuleSummaryIndex.h
 +++ b/llvm/include/llvm/IR/ModuleSummaryIndex.h
-@@ -2191,15 +2191,7 @@ template <> struct GraphTraits<ValueInfo> {
+@@ -2198,15 +2198,7 @@ template <> struct GraphTraits<ValueInfo> {
  
  template <>
  struct GraphTraits<ModuleSummaryIndex *> : public GraphTraits<ValueInfo> {
@@ -31,10 +31,10 @@ index 31e6898130e7d4b8aedb59dcf8ad654fb9b93d8a..fe1ff1d887e3e5ca531995f1ea3e12b9
  } // end namespace llvm
  
 diff --git a/llvm/lib/IR/ModuleSummaryIndex.cpp b/llvm/lib/IR/ModuleSummaryIndex.cpp
-index 7b87386418660af283c393aa6d8edf2a8c81c8ce..28cba1e167527cb0ec22896a70c3028857e376c2 100644
+index cdc0e0a5cc78719123778719ca9cd6c137058f92..3a0f7d3994242864179e93c0eebb06fbbb09b80e 100644
 --- a/llvm/lib/IR/ModuleSummaryIndex.cpp
 +++ b/llvm/lib/IR/ModuleSummaryIndex.cpp
-@@ -754,3 +754,14 @@ void ModuleSummaryIndex::exportToDot(
+@@ -760,3 +760,14 @@ void ModuleSummaryIndex::exportToDot(
  
    OS << "}";
  }

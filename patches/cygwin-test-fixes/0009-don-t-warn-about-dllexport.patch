@@ -1,4 +1,4 @@
-From 145d3591944e0ef91c6a77788bb0e31d2ecced97 Mon Sep 17 00:00:00 2001
+From be53ad7a105e20bb086e94b6cfd94d7b9f255634 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Mon, 21 Sep 2026 08:47:38 +0900
 Subject: [PATCH 09/64] don't warn about dllexport

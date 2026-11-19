@@ -1,4 +1,4 @@
-From 9fd076f10cf0067ff1ab049ed5a2dbd33e456066 Mon Sep 17 00:00:00 2001
+From eddfd044ac9355ac4e1a5f1fd12486d49451b62e Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Tue, 16 Dec 2025 22:36:50 +0900
 Subject: [PATCH 28/64] make export_symbols_for_plugins default if dylib or

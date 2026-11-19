@@ -1,4 +1,4 @@
-From 2753138114be8ab062f9d02c4c88d51a1a4ed2dc Mon Sep 17 00:00:00 2001
+From ec0d570d55a3d26a3345d2c539bd0faf4d07ca63 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 28 Mar 2026 12:34:01 +0900
 Subject: [PATCH 03/35] pretest
@@ -55,7 +55,7 @@ index 210bc804969b4468c1ff17b61950007dcb100bb6..5c6ef220a1fde307e1664334056f8484
  struct __declspec(dllexport) PR23308 {
    void f(InternalLinkageType*);
 diff --git a/clang/test/CodeGenCXX/dllimport.cpp b/clang/test/CodeGenCXX/dllimport.cpp
-index ed1c72c5185d3cd4f573822f0f7497b5834f5930..d0dca72e681bca2d07663c678a7ccddcd92024d6 100644
+index e63c29b0045f1bb56ec3e39a1a08575004c7fcdd..c911804257ac18e0396a4918fe63a94d57ceb3d4 100644
 --- a/clang/test/CodeGenCXX/dllimport.cpp
 +++ b/clang/test/CodeGenCXX/dllimport.cpp
 @@ -852,6 +852,7 @@ USEMEMFUNC(ExplicitInstantiationDeclImportedDefTemplate<int>, f);

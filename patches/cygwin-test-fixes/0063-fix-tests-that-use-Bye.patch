@@ -1,4 +1,4 @@
-From af3bfd5a115d5d57d0527e2d705a920d546e17a9 Mon Sep 17 00:00:00 2001
+From 8c8845f71cbbd51607080175b5f2206487884e84 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sat, 27 Dec 2025 09:44:20 +0900
 Subject: [PATCH 63/64] fix tests that use Bye
@@ -14,10 +14,10 @@ Subject: [PATCH 63/64] fix tests that use Bye
  7 files changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/clang/test/CodeGen/codegen-plugins.c b/clang/test/CodeGen/codegen-plugins.c
-index 1506563f4929536bde8e4d70b6bd6a7d628634de..3f53999c03bdea6f2f033345673054767ce13cb7 100644
+index bf482b1965a15572722f7a6e0d536d1e6a05b78c..18598b0f409cf137746dcdf93ca626a6d7322ccf 100644
 --- a/clang/test/CodeGen/codegen-plugins.c
 +++ b/clang/test/CodeGen/codegen-plugins.c
-@@ -3,7 +3,7 @@
+@@ -5,7 +5,7 @@
  // RUN: %clang_cc1 -emit-llvm < %s -fpass-plugin=%llvmshlibdir/Bye%pluginext -mllvm -last-words | FileCheck %s --check-prefix=CHECK-LLVM
  // RUN: not %clang_cc1 -emit-obj < %s -fpass-plugin=%llvmshlibdir/Bye%pluginext -mllvm -last-words 2>&1 | FileCheck %s --check-prefix=CHECK-ERR
  // REQUIRES: plugins, llvm-examples
@@ -93,12 +93,12 @@ index e283ac318565b4caecd99d75921e1328261d87c1..cfb38b8accfc31000ff717dd17e92cd1
        Bye
        ExampleIRTransforms
 diff --git a/llvm/test/Feature/codegen-plugin.ll b/llvm/test/Feature/codegen-plugin.ll
-index 571c7e348520e90693aa5026d2802b533d8e64ba..55c02224dcf96cfeb8307f37644c2f01abf336fe 100644
+index 494c020182120c4760e61ec6a81989b48713f095..1f6bad32d9aa13845907f3ed95f84c57143d1688 100644
 --- a/llvm/test/Feature/codegen-plugin.ll
 +++ b/llvm/test/Feature/codegen-plugin.ll
-@@ -3,7 +3,7 @@
- ; RUN: llc < %s %loadnewpmbye -plugin-arg=Bye,-last-words | FileCheck %s --check-prefix=CHECK-ACTIVE
- ; RUN: not llc < %s %loadnewpmbye -plugin-arg=Bye,-last-words -filetype=obj 2>&1 | FileCheck %s --check-prefix=CHECK-ERR
+@@ -14,7 +14,7 @@
+ ; RUN: not llvm-lto2 run %t.bc -o %t.err -r %t.bc,somefunk,plx -r %t.bc,junk,plx -filetype=obj %loadbye %loadnewpmbye -last-words 2>&1 | FileCheck %s --check-prefix=CHECK-LTO2-ERR
+ 
  ; REQUIRES: plugins, examples
 -; UNSUPPORTED: target={{.*windows.*}}
 +; UNSUPPORTED: (system-windows || system-cygwin) && !llvm-dylib

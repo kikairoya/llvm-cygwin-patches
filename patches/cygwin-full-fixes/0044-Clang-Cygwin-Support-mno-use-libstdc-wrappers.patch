@@ -1,4 +1,4 @@
-From 1011c77d95d12e794ebea3034637c042a1fb7e45 Mon Sep 17 00:00:00 2001
+From 1f399cc7e81a9691c468ed988ad7565a955dae48 Mon Sep 17 00:00:00 2001
 From: kikairoya <kikairoya@gmail.com>
 Date: Sun, 6 Sep 2026 13:15:09 +0900
 Subject: [PATCH 44/51] [Clang][Cygwin] Support -mno-use-libstdc-wrappers
@@ -14,7 +14,7 @@ This patch implements it to align with GCC.
  3 files changed, 29 insertions(+), 18 deletions(-)
 
 diff --git a/clang/include/clang/Options/Options.td b/clang/include/clang/Options/Options.td
-index 9156640ff67c79d16bb3ab714651a015d849a43d..76bfc802d60bd52efadff3836b5998f9c65daa95 100644
+index ef4c23266d85708dfad30129eb4c4b3eeb1a4c08..449afdf89b2962bbc6538f58f0eb4e2bacd74d03 100644
 --- a/clang/include/clang/Options/Options.td
 +++ b/clang/include/clang/Options/Options.td
 @@ -5696,6 +5696,8 @@ def mconsole : Joined<["-"], "mconsole">, Group<m_Group>;
